@@ -91,10 +91,14 @@ advanced task.
 
 The public dataset is `OSTswiss/MNLIoverSwissVotingBooklets` on Hugging Face,
 files `v1.1.parquet` and `v1.1.jsonl` (same data, somewhere between 1,000 and
-10,000 rows). An older preview showed these columns: `claim`, `claim_language`,
-`reference_string`, `entailment_label`, `booklet_id`, `booklet_language`,
-`booklet_publish_date`, `booklet_download_date`, `booklet_url`. Version 1.1 may
-differ, so inspect the file before relying on any column name.
+10,000 rows). Inspected on 2026-10-07, v1.1 has 1,488 rows and these columns:
+`claim`, `claim_language`, `reference_string`, `entailment_label`,
+`baseline_score`, `reference_language`, `booklet_publish_date`,
+`booklet_download_date`, `booklet_url`, `vote`. There is no `booklet_id` or
+`booklet_language`. `entailment_label` uses the same encoding as our output
+(0 entailment, 1 neutral, 2 contradiction), roughly 500 rows each; claim
+languages are about 500 each of de, fr, it. Reference texts are 884 to 25,425
+characters long. `data/sample_beginner.jsonl` holds rows 300 and 1281.
 
 ## Intended layout inside `track_2a/`
 
