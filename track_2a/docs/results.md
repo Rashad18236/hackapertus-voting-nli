@@ -12,6 +12,10 @@ valid submission is 0.75 on task B and 0.60 on task A.
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 2026-10-08 | `16ec6af` | **pre-contract** | beginner (= task B), dev 300 | swiss-ai/apertus-v1.5-8b | Public AI | v1-json | 0.202 (our scorer) | exact match / overlap F1: n/a (no gold evidence) | 8 | 9 | 1938 | 4118 | 6018 |
 | 2026-10-08 | `bb78f85` | official | task B, dev 300 | swiss-ai/apertus-v1.5-8b | Public AI | v2-label-only | **0.541** (official scorer; ours agrees) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
+| 2026-10-08 | session-2 ¹ | official | task B, dev 300 (Run A) | swiss-ai/apertus-v1.5-8b | Public AI | v3-topic-first | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
+| 2026-10-08 | session-2 ¹ | official | task B, dev 300 (Run C) | swiss-ai/apertus-v1.5-8b | Public AI | v4-topic-first-examples | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
+
+¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
 
 The second run also answered the 300 dev task A requests with the
 placeholder (label 1, no model call): official task A Macro-F1 0.165, the
@@ -43,3 +47,19 @@ always-neutral value. It is not a task A result.
 - 1 call failed (HTTP 502 from Public AI) and got the fallback label 1. 0 parse failures: 295 of 300 answers were exactly `{"label": n}`; 4 added text after the JSON (3 a "Reasoning" paragraph, 1 the same JSON again in a code fence), which the parser handles.
 - Mean input tokens are over the 300 task B cases (the failed call counts as 0); mean output 7.3 tokens (was 70).
 - Two changes against the pre-contract run, so the gain cannot be split between them: the evidence request was removed, and the label definitions now use the guide's wording.
+
+### 2026-10-08, session 2, Run A: v3-topic-first (task B)
+
+- Only change against `v2-label-only`: the decision rule (first check whether the reference deals with the claim's subject at all; contradiction only for an incompatible statement; missing information is never a contradiction). See `docs/neutral_analysis.md`.
+- Command: `make run CASES=output/devB/cases.jsonl OUTPUT_DIR=docs/runs/s2-A-v3-topic-first EXTRA_ARGS="--prompt-b v3-topic-first --raw /output/raw_answers.jsonl"` (+ sandbox proxy flags); `output/devB/` holds the 300 task B dev cases and their expected labels, filtered by id. 06:10 to 06:24 UTC.
+- First attempt stopped after 5 of 5 calls failed (HTTP 504, endpoint outage, log in `s2-A-v3-topic-first_attempt1/`); rerun once after a two-minute wait, as the session rule says.
+- Rerun: 5 of 300 calls failed (1.7 %, the first five cases, all gold entailment, label 1 by fallback) and 2 answers were unparseable (one was a bare `1` without JSON). Mean time includes the failed calls (about 61 s each); without them it is 1753 ms and mean input tokens 2001.
+- Confusion (rows gold E/N/C): E 95/6/1, N 0/92/7, C 2/0/97. Same-language 0.960, cross-lingual 0.940; language pairs 0.882 (de->de) to 1.000 (it->it).
+- On the 295 cases that Runs A and C both answered: v3 0.963, v4 0.933.
+
+### 2026-10-08, session 2, Run C: v4-topic-first-examples (task B)
+
+- Only change against v3: three short examples (one per label, an invented ballot, not from the dataset) before the answer format. They add exactly **168 input tokens per case** (paired difference on the same cases).
+- Same command with `--prompt-b v4-topic-first-examples`, 06:24 to 06:33 UTC. 0 failed calls, 0 parse failures.
+- Confusion (rows gold E/N/C): E 101/0/1, N 0/83/16, C 2/1/96. The examples help entailment but push more neutral cases to contradiction. Same-language 0.928, cross-lingual 0.935.
+- Not kept: lower Macro-F1 than v3 on the same cases, and 168 more input tokens per case.

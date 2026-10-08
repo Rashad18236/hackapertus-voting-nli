@@ -24,6 +24,19 @@ class ParseLabel(unittest.TestCase):
             self.assertTrue(reason, answer)
 
 
+class ParseLabelAndPages(unittest.TestCase):
+    def test_pages(self):
+        self.assertEqual(nli.parse_label_and_pages('{"label": 0, "pages": [7, "3", true, "x"]}'), (0, [7, 3], ""))
+
+    def test_missing_pages_is_not_a_failure(self):
+        self.assertEqual(nli.parse_label_and_pages('{"label": 1}'), (1, [], ""))
+
+    def test_failure_never_guesses(self):
+        label, pages, reason = nli.parse_label_and_pages('{"pages": [3]}')
+        self.assertIsNone(label)
+        self.assertTrue(reason)
+
+
 class FindVerbatim(unittest.TestCase):
     def test_exact(self):
         self.assertEqual(nli.find_verbatim("Sie kostet 5 Mio. Franken.", REF), "Sie kostet 5 Mio. Franken.")

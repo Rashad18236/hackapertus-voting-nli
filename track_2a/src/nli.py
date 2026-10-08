@@ -16,10 +16,14 @@ label and logs the failure).
 import json
 import re
 
-PROMPT_VERSION_B = "v2-label-only"
 LABEL_NAMES = {0: "entailment", 1: "neutral", 2: "contradiction"}
 
-SYSTEM_PROMPT_B = """You are a careful fact checker for official Swiss federal voting booklets.
+# Task B prompts, by version name. Every run in docs/results.md names the
+# version it used. DEFAULT_PROMPT_B is what the pipeline uses unless the
+# development flag --prompt-b selects another one.
+PROMPTS_B = {}
+
+PROMPTS_B["v2-label-only"] = """You are a careful fact checker for official Swiss federal voting booklets.
 
 You get a REFERENCE TEXT from a voting booklet and a CLAIM. They may be in different languages (German, French or Italian). The reference text is the only source of truth: do not use outside knowledge, even if you know the claim is true or false in the real world.
 
@@ -31,11 +35,94 @@ Choose exactly one label:
 Answer with one JSON object and nothing else:
 {"label": <0, 1 or 2>}"""
 
+# v3: only the decision rule changes. Subject first; contradiction needs an
+# incompatible statement; missing information is never a contradiction.
+PROMPTS_B["v3-topic-first"] = """You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. They may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
 
-def build_messages_b(reference_text, claim_text):
+Decide in this order:
+1. Does the reference text deal with the subject of the claim at all? If not, the label is 1 (neutral).
+2. If it does:
+   0 (entailment) if the reference text supports the claim;
+   2 (contradiction) only if the reference text states something that cannot be true together with the claim;
+   otherwise 1 (neutral: insufficient information).
+Missing information is never a contradiction. A claim of the form "according to the text / the committee / the Federal Council, X" is neutral when the reference text does not deal with X.
+
+Answer with one JSON object and nothing else:
+{"label": <0, 1 or 2>}"""
+
+# v4: v3 plus three short examples, one per label. Written for this purpose
+# (an invented ballot on water supply); not taken from the dataset.
+_EXAMPLES_B = """
+Examples (an invented ballot, for illustration only):
+REFERENCE TEXT: Der Bundesrat empfiehlt, das Gesetz über die Wasserversorgung anzunehmen.
+CLAIM: Selon le texte, le Conseil fédéral recommande d'accepter la loi sur l'approvisionnement en eau.
+{"label": 0}
+REFERENCE TEXT: Die Vorlage regelt die Finanzierung der Wasserversorgung in Berggebieten.
+CLAIM: Secondo il testo, la proposta prevede 12 nuove stazioni di ricarica per auto elettriche.
+{"label": 1}
+REFERENCE TEXT: Der Bund zahlt einen Beitrag von 40 Millionen Franken pro Jahr.
+CLAIM: Secondo il testo, la Confederazione versa un contributo di 80 milioni di franchi all'anno.
+{"label": 2}
+"""
+_ANSWER_B = 'Answer with one JSON object and nothing else:\n{"label": <0, 1 or 2>}'
+assert PROMPTS_B["v3-topic-first"].endswith(_ANSWER_B)
+PROMPTS_B["v4-topic-first-examples"] = (
+    PROMPTS_B["v3-topic-first"][: -len(_ANSWER_B)] + _EXAMPLES_B.lstrip("\n") + "\n" + _ANSWER_B
+)
+
+# Task A: the whole booklet, page by page. Same decision rule as task B's
+# v3-topic-first; the answer also names the pages that justify the label.
+PROMPT_VERSION_A = "A-v1-fulldoc"
+SYSTEM_PROMPT_A = """You check a CLAIM against an official Swiss federal voting booklet. The booklet is given page by page; each page starts with a line "=== PAGE n ===". A booklet can cover several ballots: use only the part about the ballot named in VOTE. The booklet and the claim may be in different languages (German, French or Italian). Use only the booklet, never outside knowledge.
+
+Decide in this order:
+1. Does the booklet's part on VOTE deal with the subject of the claim at all? If not, the label is 1 (neutral).
+2. If it does:
+   0 (entailment) if the booklet supports the claim;
+   2 (contradiction) only if the booklet states something that cannot be true together with the claim;
+   otherwise 1 (neutral: insufficient information).
+Missing information is never a contradiction. A claim of the form "according to the text / the committee / the Federal Council, X" is neutral when the booklet does not deal with X.
+
+Answer with one JSON object and nothing else:
+{"label": <0, 1 or 2>, "pages": [<for label 0 or 2: up to five page numbers whose text justifies the label, most relevant first; prefer the detailed section on the ballot over the summary at the front. For label 1: []>]}"""
+
+
+def build_messages_a(booklet_text, vote, claim_text):
+    user = f"BOOKLET:\n{booklet_text}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
+    return [
+        {"role": "system", "content": SYSTEM_PROMPT_A},
+        {"role": "user", "content": user},
+    ]
+
+
+def parse_label_and_pages(answer):
+    """Return (label or None, pages, reason). pages: list of ints as given, possibly empty."""
+    obj = _first_json_object(answer)
+    if obj is None:
+        return None, [], "no JSON object"
+    label = _read_label(obj.get("label"))
+    if label is None:
+        return None, [], f"invalid label {obj.get('label')!r}"
+    pages = []
+    raw_pages = obj.get("pages")
+    if isinstance(raw_pages, list):
+        for p in raw_pages:
+            if isinstance(p, bool):
+                continue
+            if isinstance(p, int):
+                pages.append(p)
+            elif isinstance(p, str) and p.strip().isdigit():
+                pages.append(int(p.strip()))
+    return label, pages, ""
+
+
+DEFAULT_PROMPT_B = "v3-topic-first"  # best on dev (session 2, Run A)
+
+
+def build_messages_b(reference_text, claim_text, version=DEFAULT_PROMPT_B):
     user = f"REFERENCE TEXT:\n{reference_text}\n\nCLAIM:\n{claim_text}"
     return [
-        {"role": "system", "content": SYSTEM_PROMPT_B},
+        {"role": "system", "content": PROMPTS_B[version]},
         {"role": "user", "content": user},
     ]
 

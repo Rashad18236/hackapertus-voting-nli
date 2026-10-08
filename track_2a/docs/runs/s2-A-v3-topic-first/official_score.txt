@@ -1,0 +1,22 @@
+Cases: 300  responses: 300
+
+Task B (reference, 300 cases)
+  macro-F1:       0.9466   (minimum 0.75: pass)
+  accuracy:       0.9467
+    entailment    P=0.979 R=0.931 F1=0.955 n=102
+    neutral       P=0.939 R=0.929 F1=0.934 n=99
+    contradiction P=0.924 R=0.980 F1=0.951 n=99
+
+Macro-F1 by language (source->claim):
+  B de->de   0.8821  n=34
+  B de->fr   0.9393  n=33
+  B de->it   0.9393  n=33
+  B fr->de   0.9116  n=34
+  B fr->fr   1.0000  n=33
+  B fr->it   0.9696  n=33
+  B it->de   0.9101  n=34
+  B it->fr   0.9696  n=33
+  B it->it   1.0000  n=33
+
+Self-reported usage per case: input_tokens 1968, output_tokens 8, inference_time_ms 2748
+Token and time scores are relative to other teams and are computed only in the official run.

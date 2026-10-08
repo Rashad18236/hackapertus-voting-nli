@@ -1,0 +1,81 @@
+"""Tests for the retry rule in src/llm.py (no network: requests.post is faked)."""
+
+import unittest
+from unittest import mock
+
+import requests
+
+from src import llm
+
+ENV = {"BASE_URL": "http://example.invalid", "API_KEY": "k"}
+
+
+class FakeResponse:
+    def __init__(self, status, body=None):
+        self.status_code = status
+        self._body = body
+        self.text = "error page" if body is None else str(body)
+
+    def json(self):
+        if self._body is None:
+            raise ValueError("not JSON")
+        return self._body
+
+
+def ok(tokens_in=100, tokens_out=5):
+    return FakeResponse(200, {"choices": [{"message": {"content": '{"label": 1}'}}],
+                              "usage": {"prompt_tokens": tokens_in, "completion_tokens": tokens_out}})
+
+
+def run(responses):
+    calls = list(responses)
+
+    def post(*args, **kwargs):
+        item = calls.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+    with mock.patch.dict("os.environ", ENV, clear=False), \
+         mock.patch.object(requests, "post", side_effect=post) as fake, \
+         mock.patch.object(llm.time, "sleep"):
+        try:
+            return llm.chat([{"role": "user", "content": "x"}]), fake.call_count
+        except llm.LLMError as e:
+            return e, fake.call_count
+
+
+class Retry(unittest.TestCase):
+    def test_success_needs_one_call(self):
+        result, calls = run([ok()])
+        self.assertEqual((calls, result.attempts, result.input_tokens), (1, 1, 100))
+
+    def test_5xx_is_retried_once(self):
+        result, calls = run([FakeResponse(504), ok()])
+        self.assertEqual((calls, result.attempts), (2, 2))
+
+    def test_timeout_is_retried_once(self):
+        result, calls = run([requests.Timeout(), ok()])
+        self.assertEqual((calls, result.attempts), (2, 2))
+
+    def test_second_failure_raises(self):
+        result, calls = run([FakeResponse(502), FakeResponse(504)])
+        self.assertIsInstance(result, llm.LLMError)
+        self.assertEqual(calls, 2)
+
+    def test_4xx_and_connection_errors_are_not_retried(self):
+        result, calls = run([FakeResponse(401, {"error": "bad key"})])
+        self.assertIsInstance(result, llm.LLMError)
+        self.assertEqual(calls, 1)
+        result, calls = run([requests.ConnectionError("http://secret-url")])
+        self.assertIsInstance(result, llm.LLMError)
+        self.assertNotIn("secret-url", str(result))
+        self.assertEqual(calls, 1)
+
+    def test_tokens_of_a_failed_attempt_are_counted(self):
+        failed_with_usage = FakeResponse(500, {"usage": {"prompt_tokens": 70, "completion_tokens": 0}})
+        result, calls = run([failed_with_usage, ok(100, 5)])
+        self.assertEqual((result.input_tokens, result.output_tokens), (170, 5))
+
+
+if __name__ == "__main__":
+    unittest.main()

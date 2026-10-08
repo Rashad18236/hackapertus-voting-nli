@@ -187,35 +187,26 @@ tests/          unit tests (evaluate, parser, CLI)
 - Never run on `data/test/`. Test is for the final evaluation only.
 - Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: contract alignment
+## Current stage: task B improvement, then task A baseline
 
-The beginner baseline (pre-contract) is measured: Macro-F1 0.202 on dev with
-prompt `v1-json`, see `docs/results.md` and `docs/baseline_review.md`.
+Contract alignment is finished (merged as PR #2): official CLI and Docker
+contract, starter-generated dev/test cases, starter scorer. Task B scored
+Macro-F1 0.541 on dev with prompt `v2-label-only` (minimum 0.75).
 
-Goal: make the pipeline follow the official contract and re-measure task B.
+Goal, part 1: task B Macro-F1 >= 0.75 on dev with the official scorer, by
+prompt changes only (one change per run, each prompt versioned).
+Goal, part 2: a first full-document task A baseline on dev (minimum 0.60):
+local PDF parsing with 1-based pages, the whole booklet in the prompt,
+evidence as page text. This is the reference row for later context selection.
 
-Done when:
+Rules for this stage:
 
-1. The image's entrypoint takes `--input`/`--output`, writes one line per id
-   and exits 0; `make run` builds for linux/amd64 and runs it on the examples.
-2. `BASE_URL`/`API_KEY` are read first, with `LLM_*` fallbacks; the model name
-   is configurable with default `swiss-ai/Apertus-v1.5-8B`.
-3. The official request fields work, including mixed task A/B files. Task A
-   returns a clearly marked placeholder (label 1) without crashing.
-4. No case is ever dropped: failures give label 1 and are counted on stderr.
-5. The task B prompt no longer asks for evidence; task B evidence is `[]`.
-6. Dev and test cases come from the starter's `prepare_cases.py` with our
-   split; the starter's `evaluate.py` is the scorer and ours agrees with it.
-7. Docker rules hold (read-only `/data` and root, writes only to `/output` and
-   `/tmp`, no runtime downloads, `.dockerignore` keeps `.env` and `data/` out).
-8. The task B baseline is rerun on dev and added to `docs/results.md`; the old
-   row stays, marked pre-contract.
-
-Rules: a failed case gets label 1 (the contract counts missing responses as
-wrong); parse failures and call failures are still counted and reported.
-
-Out of scope: task A beyond the placeholder, PDF parsing, retrieval, and
-prompt tuning beyond removing the evidence request.
+- Never run on `data/test/`; do not change the splits or the scorer.
+- One change per run; every run is a row in `docs/results.md` with real numbers.
+- Cases run one at a time, so time metrics stay comparable.
+- No retrieval, embeddings or rerankers yet.
+- One retry for HTTP 5xx and timeouts only; retried calls' tokens are counted.
+- PDF parsing with a permissively licensed library (not PyMuPDF, AGPL).
 
 ## Open questions (do not assume the answers)
 

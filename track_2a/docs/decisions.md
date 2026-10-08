@@ -122,3 +122,62 @@ One line per decision, with the reason. Newest stage at the bottom.
 
 - **The page asks for the README's label definitions, but the README has none (still licence-only on 2026-10-08), so the prompt keeps the guide's wording.** Quoting text that does not exist is impossible; the CLAUDE.md note says to check again before each prompt change.
 - **Local booklet parsing is assumed to be allowed until the organisers say otherwise.** The contract says "local parsing, OCR, or embeddings may run locally".
+
+## Session 2: task B improvement, then task A baseline (2026-10-08, from 05:59 UTC)
+
+### Setup
+
+- **Branch `session-2` starts from commit `854e43c`.** That was the tip of `contract-alignment`; the branch was deleted after merging, but the commit is identical in content to `main`.
+- **The dataset README was checked again before changing prompts: still `license: mit` only, at commit `9ff08597`.** CLAUDE.md requires the check; with no definitions there, the guide's wording stays.
+- **Task B prompts are versioned in `nli.PROMPTS_B` and selected with the development flag `--prompt-b`; the default stays `v2-label-only` until a run proves something better.** One image serves every run, and the default changes only on evidence.
+- **The new prompts are numbered from v3 (`v3-topic-first`).** Our numbering already used "v2" for the label-only prompt; the instruction's "prompt v2" is our `v3-topic-first`.
+- **Task B experiments run on a task-B-only copy of the dev files (`output/devB/`, git-ignored): the same 300 cases, filtered by id.** Task A cases would otherwise call the model once task A exists; the split and the scorer are unchanged.
+- **`v2-label-only` is verified byte-identical to the prompt of run `bb78f85`.** That keeps the 0.541 row a valid comparison.
+
+### Step 1 (neutral analysis, `docs/neutral_analysis.md`)
+
+- **Run B (adding the vote name) is skipped.** In all 300 task B dev cases `vote` equals the first line of the reference, so it names the reference's ballot and adds nothing the model does not already see.
+
+### Step 6: how the starter's `evaluate.py` scores task A evidence (commit `559b598`)
+
+- **Which cases count:** only task A cases whose *gold* label is 0 or 2. The predicted label does not matter, so predicting neutral (empty evidence) on a gold entailment is also an evidence miss. Neutral gold cases are not scored for evidence.
+- **The gold passage** is `reference` in `expected-labels.jsonl`, which is the row's `reference_string`.
+- **Items:** only the first five entries of `evidence` count, and only those that are objects with a string `text`. `page` is not read at all ("pages are not checked yet" locally; the contract still requires the 1-based PDF page).
+- **Normalisation, on both sides:** NFKC, soft hyphens removed, words hyphenated across a line break joined (`(\w) ?-\s*\n\s*(\w)`), whitespace collapsed, lowercased.
+- **Length rule:** an item whose *normalised* text is empty or longer than 5,000 characters does not count.
+- **Match:** `rapidfuzz.fuzz.partial_ratio(item, passage) >= 90`. partial_ratio slides the shorter text along the longer one, so a short quote matches if it lies (almost) inside the passage, and a page matches if the passage lies (almost) inside the page. A page that is only part of a longer passage matches if that page's text lies almost entirely inside the passage.
+- **Score** = cases with at least one matching item ÷ gold entailment/contradiction cases.
+- **Design that follows from this:**
+  - for labels 0 and 2, return the text of the pages the model names, most relevant first, at most five items, each cut to at most 5,000 characters (pages longer than that are split, keeping the page number);
+  - for label 1, return `[]`;
+  - the page numbers are the 1-based PDF page indexes from our parser, as the contract requires.
+
+### Endpoint outage during Run A (06:01 to 06:12 UTC)
+
+- **Run A's first attempt was stopped after 5 calls, all HTTP 504 (100 %), and a smoke call also got 504.** Above 10 % failures, the session rule says wait two minutes and rerun once; at about 61 s per failed call, letting it run on would have cost about 5 hours.
+- **The fallback URL `platform.publicai.co` was tested with one smoke call; it answered HTTP 405 from a static file server, so it is not an API and was not used.** `.env` was not changed.
+- **The rerun after the wait recovered after its first 5 calls (5 of 300 failed, 1.7 %) and was kept.** That is within the 10 % rule. The 5 failures were the first five cases, all gold entailment, so they lower that run's entailment recall slightly. The first attempt's log is kept in `docs/runs/s2-A-v3-topic-first_attempt1/`.
+
+### Run C prompt
+
+- **The three examples use an invented ballot (water supply in mountain regions), cover three language pairs and one label each, and were checked not to occur in the dataset's claims or references.** As instructed: written by us, not from dev or test.
+- **v4 is v3 plus the examples block, placed before the answer format; the v3 text is unchanged (verified).** One change per run.
+
+### Step 5: retry
+
+- **One retry, only for HTTP 5xx and `requests.Timeout`, after a 2 s pause; connection errors and 4xx are not retried.** As instructed. 5xx and timeouts are the cases where the gateway gave up but the model may answer next time; a 4xx (bad key, bad request) would fail the same way again.
+- **Usage reported by any attempt is added to the case's tokens, and `inference_time_ms` covers both attempts.** The organisers count every call. A gateway 504 returns an HTML page without usage, so we cannot know whether the backend spent tokens on it; we record what we are told.
+- **The retry was added after Runs A and C.** Those two rows ran without it, so their failed calls count as wrong (label 1).
+
+### Task A full-document baseline (prompt `A-v1-fulldoc`)
+
+- **PDF text comes from `pypdf` 6.17.0 (BSD licence, pure Python), one string per page, with page numbers being 1-based PDF page indexes.** It is permissive and light; PyMuPDF is excluded (AGPL).
+- **The parsed-booklet cache is JSON under `/tmp/booklet-cache` (env `BOOKLET_CACHE_DIR`), keyed by the PDF's SHA-256.** The key is file content, not path or case order, so predictions cannot depend on order; `/tmp` is writable in the container, and a failed cache write is ignored.
+- **The prompt is the task B v3 decision rule adapted to a booklet, plus "use only the part about the ballot named in VOTE"; the booklet comes first, then VOTE, then CLAIM.** It reuses the best task B rule. Booklets cover several ballots, and `vote` names the reference's ballot (step 1), which is the gold section. The question goes after the long document, the usual order for long inputs.
+- **The answer is `{"label", "pages"}` with at most five pages, most relevant first, preferring the detailed section over the summary.** The scorer takes the first five items, and the contract warns that summary quotes may not match the gold passage.
+- **Evidence is the full text of the named pages; pages over 5,000 characters (148 of the dev booklets' pages) are split at whitespace into pieces that keep the page number, and items are capped at five.** Longer items do not count.
+- **Unknown page numbers are dropped; label 0/2 with no valid page keeps its label, with empty evidence, counted as "no valid pages for label 0/2".** The label is still the model's answer; only the evidence is missing.
+- **`max_tokens` is 64.** That is enough for a label and five page numbers.
+- **Booklet paths are resolved against the input file's folder (`/data` in the container).** The contract says "path relative to /data", and the input is `/data/cases.jsonl`.
+- **The 60-case sample (step 8) has 20 per label, round-robin over the 9 language pairs within each label, seed 42, from dev task A cases (`output/devA60/`, git-ignored).** It is balanced as asked; a plain round-robin over 27 cells gave 24/18/18.
+- **Only the 44 dev booklets are mounted for runs (`output/booklets_dev/`, git-ignored, 51 MB).** The starter downloads all 60; test booklets are never mounted. PDFs are not committed (size; the organisers supply them at evaluation).
