@@ -1,0 +1,31 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "23:36",
+ "kind": "offline check",
+ "code": "02ecd5d (scripts/route_check.py, src/booklet.py, src/claim_router.py, src/contexts/section_route.py)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases (201 with gold label 0 or 2); the 44 dev booklets",
+ "setup": "Part 2 (session 6): booklets parsed, claims routed, and what the routed part's paragraphs hold of the gold passage",
+ "format": "offline, no model calls; paragraph matches by the starter's evidence rule as re-implemented in scripts/evidence_loss.py",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "44/44 booklets parse (131 votes); 300/300 claims routed, 299 cases routed; in 200/200 routed evidence cases a sent paragraph matches the gold passage (embed-e5-small: 0.741); 3,233 characters sent (embed-e5-small: 5,386).",
+ "results": {
+  "booklets_complete": "44/44",
+  "votes_ok": "131/131",
+  "claims_routed": "300/300",
+  "cases_routed": 299,
+  "evidence_cases_routed": 200,
+  "hit": 1.0,
+  "coverage_mean": 0.879,
+  "coverage_at_least_0.9": 0.615,
+  "pages_hold_gold": 0.84,
+  "inside_share": 0.782,
+  "mean_chars_sent": 3233
+ }
+}

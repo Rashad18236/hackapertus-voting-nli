@@ -1,0 +1,163 @@
+{
+ "booklets": 44,
+ "booklets_complete": 44,
+ "votes": 131,
+ "votes_ok": 131,
+ "booklets_by_language_year": {
+  "de 2020": "2/2",
+  "de 2021": "3/3",
+  "de 2022": "1/1",
+  "de 2023": "1/1",
+  "de 2024": "4/4",
+  "de 2025": "2/2",
+  "de 2026": "2/2",
+  "fr 2020": "2/2",
+  "fr 2021": "3/3",
+  "fr 2022": "1/1",
+  "fr 2023": "1/1",
+  "fr 2024": "4/4",
+  "fr 2025": "1/1",
+  "fr 2026": "2/2",
+  "it 2020": "2/2",
+  "it 2021": "3/3",
+  "it 2022": "1/1",
+  "it 2023": "1/1",
+  "it 2024": "4/4",
+  "it 2025": "2/2",
+  "it 2026": "2/2"
+ },
+ "booklet_problems": [],
+ "claims": 300,
+ "claims_routed": 300,
+ "routes": {
+  "detail": 43,
+  "council": 102,
+  "committee": 49,
+  "law": 39,
+  "summary": 67
+ },
+ "cases_routed": 299,
+ "fallback_reasons": {
+  "part 'committee' empty for this vote": 1
+ },
+ "unrouted_claims": [],
+ "evidence_cases": 201,
+ "evidence_cases_routed": 200,
+ "routed_evidence": {
+  "cases": 200,
+  "hit": 1.0,
+  "coverage_mean": 0.879,
+  "coverage_at_least_0.9": 0.615,
+  "pages_hold_gold": 0.84,
+  "inside_share": 0.782,
+  "mean_chars_sent": 3233,
+  "trimmed": 12
+ },
+ "by_part": {
+  "summary": {
+   "cases": 55,
+   "hit": 1.0,
+   "coverage_mean": 0.921,
+   "coverage_at_least_0.9": 0.418,
+   "pages_hold_gold": 0.873,
+   "inside_share": 0.458,
+   "mean_chars_sent": 2246,
+   "trimmed": 0
+  },
+  "council": {
+   "cases": 68,
+   "hit": 1.0,
+   "coverage_mean": 0.945,
+   "coverage_at_least_0.9": 0.882,
+   "pages_hold_gold": 0.765,
+   "inside_share": 0.964,
+   "mean_chars_sent": 3141,
+   "trimmed": 0
+  },
+  "committee": {
+   "cases": 26,
+   "hit": 1.0,
+   "coverage_mean": 0.962,
+   "coverage_at_least_0.9": 0.846,
+   "pages_hold_gold": 0.692,
+   "inside_share": 0.812,
+   "mean_chars_sent": 3102,
+   "trimmed": 0
+  },
+  "law": {
+   "cases": 25,
+   "hit": 1.0,
+   "coverage_mean": 0.61,
+   "coverage_at_least_0.9": 0.08,
+   "pages_hold_gold": 1.0,
+   "inside_share": 1.0,
+   "mean_chars_sent": 3482,
+   "trimmed": 4
+  },
+  "detail": {
+   "cases": 26,
+   "hit": 1.0,
+   "coverage_mean": 0.791,
+   "coverage_at_least_0.9": 0.615,
+   "pages_hold_gold": 0.962,
+   "inside_share": 0.753,
+   "mean_chars_sent": 5452,
+   "trimmed": 8
+  }
+ },
+ "by_language": {
+  "same-language": {
+   "cases": 67,
+   "hit": 1.0,
+   "coverage_mean": 0.889,
+   "coverage_at_least_0.9": 0.672,
+   "pages_hold_gold": 0.866,
+   "inside_share": 0.768,
+   "mean_chars_sent": 3350,
+   "trimmed": 4
+  },
+  "cross-language": {
+   "cases": 133,
+   "hit": 1.0,
+   "coverage_mean": 0.874,
+   "coverage_at_least_0.9": 0.586,
+   "pages_hold_gold": 0.827,
+   "inside_share": 0.789,
+   "mean_chars_sent": 3173,
+   "trimmed": 8
+  }
+ },
+ "by_booklet_language": {
+  "de": {
+   "cases": 66,
+   "hit": 1.0,
+   "coverage_mean": 0.881,
+   "coverage_at_least_0.9": 0.606,
+   "pages_hold_gold": 0.864,
+   "inside_share": 0.754,
+   "mean_chars_sent": 3067,
+   "trimmed": 4
+  },
+  "fr": {
+   "cases": 67,
+   "hit": 1.0,
+   "coverage_mean": 0.877,
+   "coverage_at_least_0.9": 0.642,
+   "pages_hold_gold": 0.836,
+   "inside_share": 0.8,
+   "mean_chars_sent": 3130,
+   "trimmed": 4
+  },
+  "it": {
+   "cases": 67,
+   "hit": 1.0,
+   "coverage_mean": 0.878,
+   "coverage_at_least_0.9": 0.597,
+   "pages_hold_gold": 0.821,
+   "inside_share": 0.792,
+   "mean_chars_sent": 3499,
+   "trimmed": 4
+  }
+ },
+ "mean_chars_sent_all_routed": 3274
+}
