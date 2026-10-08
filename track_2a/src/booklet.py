@@ -289,8 +289,13 @@ def parse(pages):
     return Booklet(votes=votes)
 
 
-def find_vote(booklet, vote_name, min_score=85):
-    """The Vote whose contents title holds `vote_name` best (fuzzy), or None if none is clear."""
+def find_vote(booklet, vote_name, min_score=80, min_lead=5):
+    """The Vote whose contents title holds `vote_name` best (fuzzy), or None if none is clear.
+
+    On dev the right vote scores 81 to 100 and leads the next one by at least 7.8
+    points; the lowest is "Modifica del diritto di locazione" against the title
+    "Modifica del Codice delle obbligazioni (Diritto di locazione: ...)".
+    """
     if booklet is None or not vote_name.strip():
         return None
     key = norm(vote_name)
@@ -299,7 +304,7 @@ def find_vote(booklet, vote_name, min_score=85):
     scored = sorted(((fuzz.partial_ratio(key, norm(v.title)), i) for i, v in enumerate(booklet.votes)), reverse=True)
     if not scored or scored[0][0] < min_score:
         return None
-    if len(scored) > 1 and scored[1][0] >= scored[0][0] - 2:
+    if len(scored) > 1 and scored[1][0] > scored[0][0] - min_lead:
         return None  # two votes match about equally well: do not guess
     return booklet.votes[scored[0][1]]
 
