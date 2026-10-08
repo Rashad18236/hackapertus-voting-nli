@@ -18,14 +18,23 @@ DOCKER_RUN_FLAGS ?=
 build:
 	docker build --platform $(PLATFORM) -t $(IMAGE) .
 
-# Runs the image on examples/cases.jsonl (one task A, one task B request).
+# What to run on. Defaults: the two example requests, predictions in ./output.
+# Only the cases file (and, for task A, the booklets folder) is mounted, never
+# the expected labels. Example for the dev split:
+#   make run CASES=data/dev/cases.jsonl OUTPUT_DIR=output/dev
+CASES ?= examples/cases.jsonl
+BOOKLETS ?=
+OUTPUT_DIR ?= output
+EXTRA_ARGS ?=
+BOOKLET_MOUNT := $(if $(BOOKLETS),-v "$(abspath $(BOOKLETS)):/data/booklets:ro",)
+
 # /data is mounted read-only and the container's root filesystem is read-only;
 # it can write only to /output (mounted) and /tmp (in memory).
 run: build
-	mkdir -p output
+	mkdir -p $(OUTPUT_DIR)
 	docker run --rm --platform $(PLATFORM) $(ENV_FILE) $(PASS_VARS) $(DOCKER_RUN_FLAGS) \
 		--read-only --tmpfs /tmp \
 		--user $$(id -u):$$(id -g) \
-		-v "$(CURDIR)/examples:/data:ro" \
-		-v "$(CURDIR)/output:/output" \
-		$(IMAGE) --input /data/cases.jsonl --output /output/predictions.jsonl
+		-v "$(abspath $(CASES)):/data/cases.jsonl:ro" $(BOOKLET_MOUNT) \
+		-v "$(abspath $(OUTPUT_DIR)):/output" \
+		$(IMAGE) --input /data/cases.jsonl --output /output/predictions.jsonl $(EXTRA_ARGS)
