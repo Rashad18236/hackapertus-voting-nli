@@ -41,7 +41,7 @@ def main():
     # 1. Unit tests
     suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), top_level_dir=str(ROOT))
     outcome = unittest.TextTestRunner(stream=open("/dev/null", "w"), verbosity=0).run(suite)
-    check("evaluate unit tests pass", outcome.wasSuccessful(),
+    check("unit tests pass (tests/: evaluate and parser)", outcome.wasSuccessful(),
           f"{outcome.testsRun} tests, {len(outcome.failures)} failures, {len(outcome.errors)} errors")
 
     # 2. Macro-F1 equals scikit-learn on the same data. Random predictions with

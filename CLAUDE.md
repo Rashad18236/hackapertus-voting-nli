@@ -186,5 +186,8 @@ embeddings, and prompt tuning beyond the first prompt.
 - How judges pass the held-out cases to `make run`, and where output should go.
 - Whether booklet PDFs are supplied at judging time or must live in `data/`.
 - Whether non-Apertus embedding models are allowed in the pipeline.
+- Where the official label definitions are. The brief says the dataset README,
+  but on 2026-10-08 it contains only the licence; our prompt's definitions are
+  our own.
 - How evidence matching is computed (exact string or overlap), and whether
   `page` means the PDF page index or the printed page number.

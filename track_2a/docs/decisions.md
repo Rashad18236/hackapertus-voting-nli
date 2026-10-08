@@ -49,3 +49,10 @@ One line per decision, with the reason. Newest stage at the bottom.
 - **Run outputs (predictions and raw answers) are committed in `docs/runs/`.** That lets the review and results be traced and rescored without new API calls.
 - **The 10 trial cases (dev-0001 to dev-0010) are part of the full dev run.** Only the parser was changed after seeing them; the prompt was not tuned on them.
 - **Branch `baseline-v0` was made from the setup branch, not `main`.** `main` does not contain the setup work yet; nothing is merged into `main`.
+
+### After the baseline run
+
+- **The prompt's label definitions are our own.** The brief points to definitions in the dataset README, but the README (commit `9ff08597`) contains only the licence. The 0/1/2 order is confirmed by the data; finer rules are not.
+- **Failed calls (HTTP 504) were not rerun.** Rerunning only the failures would mix two runs in one row; they count as wrong, as the rules for this stage say.
+- **Mean input tokens and mean time in `results.md` include failed calls (0 tokens, about 61 s).** These are the numbers `evaluate.py` reports; the values without failed calls are given in the run notes.
+- **Section 3b of the review uses a word-overlap measure on same-language cases only.** Word overlap across languages means nothing; it is a diagnostic, not part of the pipeline.
