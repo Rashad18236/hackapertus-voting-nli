@@ -11,6 +11,9 @@ counts a gold entailment or contradiction case as found when any of the first
 five evidence items matches the gold passage, and it does not penalise extra
 items. Filling the free slots with the next most likely pages can only add
 matches. Both settings give evidence only for labels 0 and 2.
+
+Team decision (session 5): evidence holds only pages Apertus cited, so
+"cited-then-retrieved" stays off; it is kept for the record.
 """
 
 from src import parse

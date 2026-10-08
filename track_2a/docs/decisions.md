@@ -418,3 +418,20 @@ is not touched, so #7 stays as it was).
 
 - **The report's table marks every task A row as paired or not and names its server period** (before about 13:25 UTC, current 8B, 8B thinking). Rows from different servers do not compare.
 - **E3's vote-section evidence is 0.095 (the official 0.0945 rounded); earlier notes said 0.094.** Corrected where it was written.
+
+## Session 5: where the task A evidence score is lost (2026-10-08, from 22:00 UTC)
+
+Run autonomously on Rashad's instructions, no model calls; report:
+`docs/session_5_report.md`. Branch `claude/eager-cannon-08bx1h-evidence`,
+stacked on PR #8.
+
+- **Fixed decision (Rashad): task A evidence contains only pages Apertus cited; no padding with other pages.** The `cited-then-retrieved` setting stays in the code, off, and was not used. Evidence must be traceable to what the model itself pointed at.
+- **The analysis uses E4's control answers (`embed-e5-small`, the default).** It is the latest paired run of the default; no model calls were allowed.
+- **The starter's evidence rule is re-implemented in `scripts/evidence_loss.py` and checked against the official scorer (75/201 reproduced).** The analysis needs the rule per item and per page; the starter's code is quoted briefly in the report, not copied into the repository (it has no licence).
+- **Gold pages are located with 200-character windows of the gold passage (match at 90); the gold pages are the best page and the window-holding pages within two pages of it, chained.** The dataset gives no page number. Single repeated sentences on front summary pages must not count as the gold page.
+- **The five classes are checked in a fixed order (hit, not sent, predicted neutral, sent but not cited, cited but no match).** Each case lands in exactly one class.
+- **The vote's detailed section is the selector's run of pages without gap filling (steps of at most two), anchored on the nearest kept page up to 10 pages before the gold page when needed.** Without gap filling, the front summary stays apart from the detailed section; the fallback anchor (the selector's own gap) leaves no case without a section. Done by setting `vote_section.MAX_GAP = 0` inside the script only; the variant's code is unchanged.
+- **Evidence item forms were compared on exactly the cited pages, with the official scorer: whole page 0.373, sent chunks 0.368, chunks plus neighbours 0.358.** The whole page stays best, and it is already the setting `cited` and the default, so no new setting is registered and the default does not change.
+- **The combination "whole page plus its sent chunks as a second item" (0.408) is reported but not registered.** It was outside the three forms asked for, and whether a second item from a cited page fits "cited pages only" is for the team to decide.
+- **Joined chunks that are not next to each other are not one passage copied from the PDF text.** The guide allows "a sentence, a paragraph, or the whole page, copied from the PDF text"; this would have mattered had form (b) won.
+- **Recommendation: change the citation instruction (a new prompt version), tested in a paired run.** "Gold page sent but not cited" is the largest loss (43 of 201). Proposed only, because it needs model calls.

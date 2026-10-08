@@ -1,0 +1,28 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "22:27",
+ "kind": "offline check",
+ "code": "7490a90",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, the 201 task A cases with gold label 0 or 2, E4's embed-e5-small answers",
+ "setup": "Steps 2 and 4 (session 5): where evidence is lost, and the realistic maximum with cited pages only (scripts/evidence_loss.py)",
+ "format": "offline, no model calls; the starter's evidence rule re-implemented and checked against the official score (75/201)",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (re-reads E4's answers)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Of 201 cases: hit 75, gold page not sent 23, predicted neutral 20, gold page sent but not cited 43, cited but text did not match 40; maximum with cited pages only and whole-page items: 0.657.",
+ "results": {
+  "hit": 75,
+  "gold_page_not_sent": 23,
+  "predicted_neutral": 20,
+  "gold_page_sent_not_cited": 43,
+  "cited_text_no_match": 40,
+  "mean_pages_cited": 2.91,
+  "ceiling_sent_pages_form_a": 0.657,
+  "ceiling_whole_booklet_form_a": 0.886
+ }
+}

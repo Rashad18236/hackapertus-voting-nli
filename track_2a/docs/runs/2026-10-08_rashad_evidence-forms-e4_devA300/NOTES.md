@@ -2,7 +2,7 @@
 
 - Question: with exactly the pages Apertus cited in E4's `embed-e5-small` arm (`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`), no page changed and none added, does another text per evidence item match the gold passage more often?
 - Forms: **(a)** the whole cited page, split at 5,000 characters (the pipeline today, evidence setting `cited`); **(b)** the chunks of that page that were sent to Apertus, joined in page order, cut at 5,000 characters; **(c)** form (b) plus the neighbouring chunk on each side on the same page. One item per cited page for (b) and (c); at most five items.
-- Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/evidence_forms.py --run docs/runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small --cases output/devA --out <folder> --form a|b|c`, about 22:21 UTC (commit `6f592e0`); scored with the starter's `evaluate.py`; format check clean for all three. The rebuilt chunks equal the pages E4 recorded for every case; form (a) reproduces E4's evidence exactly (0 items changed).
+- Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/evidence_forms.py --run docs/runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small --cases output/devA --out <folder> --form a|b|c`, files written 22:23 to 22:25 UTC (commit `6f592e0`); scored with the starter's `evaluate.py`; format check clean for all three. The rebuilt chunks equal the pages E4 recorded for every case; form (a) reproduces E4's evidence exactly (0 items changed).
 
 | Form | Evidence score (official) |
 |---|---|
