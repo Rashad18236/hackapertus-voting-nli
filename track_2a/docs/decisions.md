@@ -435,3 +435,16 @@ stacked on PR #8.
 - **The combination "whole page plus its sent chunks as a second item" (0.408) is reported but not registered.** It was outside the three forms asked for, and whether a second item from a cited page fits "cited pages only" is for the team to decide.
 - **Joined chunks that are not next to each other are not one passage copied from the PDF text.** The guide allows "a sentence, a paragraph, or the whole page, copied from the PDF text"; this would have mattered had form (b) won.
 - **Recommendation: change the citation instruction (a new prompt version), tested in a paired run.** "Gold page sent but not cited" is the largest loss (43 of 201). Proposed only, because it needs model calls.
+
+## Session 6: evidence pieces, and routing claims to the part of the vote they name (2026-10-08, from 23:11 UTC)
+
+Run autonomously on Rashad's instructions; report: `docs/session_6_report.md`.
+Branch `claude/eager-cannon-08bx1h`, started from `main` after PR #9.
+
+- **Fixed decision (Rashad): task A evidence contains only what Apertus cited.** Every evidence setting tried here uses only cited pages or cited paragraphs.
+- **New evidence setting `cited-pieces`: the cited pages' 1,000-character pieces, one item each, taken in turn across the pages, at most five.** A piece lying inside the gold passage matches the scorer's partial ratio; a whole page that also holds other text does not.
+- **`cited-pieces` is the default (own commit `ade5227`).** The starter's scorer confirms Rashad's re-score of E4's answers: 0.542 (109/201) against 0.373, with every label unchanged and no case lost.
+- **Claim types come from `src/claim_router.py`, written before the breakdown and used for it.** One definition of "claim type" for Part 0, the router and the report.
+- **Router patterns were written from the 300 dev claims and then checked on the 586 deduplicated rows outside dev and test (580 routed); four patterns were added for the six misses.** These rows are not the test split; after the additions they no longer count as an unseen check, which the report says.
+- **Session 5's A-v4 citation prompt is not run.** Its "prefer the detailed section over the summary" is wrong for summary claims: 34 of its 43 "sent but not cited" cases are summary claims whose gold passage is the summary page (verified on session 5's per-case file).
+- **The prototype `booklet_sections_prototype.py` was not in the repository or on any branch when this session ran; the parser was written without it.** Its notes on known gaps could not be read.
