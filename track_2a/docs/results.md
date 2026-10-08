@@ -64,11 +64,12 @@ check, the best evidence score a model could reach by citing it.
 
 ## Other offline analyses (no model calls)
 
+- [`2026-10-08_rashad_e3-embed-errors_devA300`](runs/2026-10-08_rashad_e3-embed-errors_devA300/): 2026-10-08 19:16 UTC, rashad; Part 1: was the gold passage in the chunks sent? (scripts/search_or_reading.py). Of 84 wrong answers (5 failed calls apart): 18 search misses, 39 reading errors with the gold passage sent, 27 on gold-neutral cases; 16 of the 18 misses are cross-language.
 
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (23): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`
+- **rashad** (24): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`
 
 ## Notes per run
 
@@ -210,3 +211,23 @@ check, the best evidence score a model could reach by citing it.
 ### 2026-10-08, merge check: offline retrieval check on the merged code (`9081b8b`)
 - Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/retrieval_check.py`, 15:46 to 15:59 UTC, 12 minutes on 4 CPU cores; console output in `output.txt`.
 - Every number equals the embedding branch's check, so the merge did not change what the embedding selects.
+
+### 2026-10-08, Part 1: why E3's embedding arm was wrong (search miss or reading error), no model calls
+
+- Question: for every wrong answer of E3's `embed-e5-small` arm (`2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`), was the gold passage among the chunks the model saw?
+- Command (from `track_2a/`, after `scripts/retrieval_check.py --fill-cache`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/search_or_reading.py --run docs/runs/2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small --cases output/devA --out <folder>`; finished 19:16 UTC. Output: `summary.json`, `per_case.jsonl`.
+- The chunks were rebuilt with the variant's own code; their pages equal the pages recorded in the run for all 300 cases, and the hit rate reproduces the earlier retrieval check exactly (0.741 on the 201 gold entailment and contradiction cases).
+- Rule: a wrong answer on a gold entailment or contradiction case is a *search miss* when no chunk sent matches the gold passage (the hit rule of `retrieval_check.py`), otherwise a *reading error*. Gold-neutral cases have no gold passage, so a wrong answer there is a reading error by definition. The 5 failed calls (HTTP 504, label-1 fallback) are counted apart.
+
+| Wrong answers | Search miss | Reading error | Correct | Failed call |
+|---|---|---|---|---|
+| gold entailment, same-language | 0 | 10 | 24 | 0 |
+| gold entailment, cross-language | 7 | 17 | 44 | 0 |
+| gold contradiction, same-language | 2 | 6 | 25 | 0 |
+| gold contradiction, cross-language | 9 | 6 | 51 | 0 |
+| gold neutral (no passage to find) | – | 27 (10 same-language, 17 cross) | 67 | 5 |
+| **All** | **18** | **66** | **211** | **5** |
+
+- **Most errors are reading errors: 66 of 84 wrong answers.** Better search can fix at most the 18 search misses (21 % of the wrong answers), and 16 of those are cross-language.
+- The largest single error: gold entailment answered contradiction although the gold passage was sent (21 cases). Gold contradiction answered neutral after a search miss: 10 cases.
+- Of the correct answers on gold entailment and contradiction cases, 24 % were right without the gold passage among the chunks (hit rate 0.764 for correct answers, 0.684 for wrong ones): facts repeat across the booklet, for example in the summary at the front.

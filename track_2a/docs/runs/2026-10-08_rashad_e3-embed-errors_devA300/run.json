@@ -1,0 +1,26 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "19:16",
+ "kind": "offline check",
+ "code": "df3028f",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, all 300 task A cases of E3's embed-e5-small arm",
+ "setup": "Part 1: was the gold passage in the chunks sent? (scripts/search_or_reading.py)",
+ "format": "offline, no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (re-reads E3's answers)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Of 84 wrong answers (5 failed calls apart): 18 search misses, 39 reading errors with the gold passage sent, 27 on gold-neutral cases; 16 of the 18 misses are cross-language.",
+ "results": {
+  "correct": 211,
+  "search_miss": 18,
+  "reading_error": 39,
+  "reading_error_gold_neutral": 27,
+  "failed_call": 5,
+  "hit_rate_gold_ec": 0.741
+ }
+}
