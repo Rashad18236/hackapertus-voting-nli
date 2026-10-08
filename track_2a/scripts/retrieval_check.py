@@ -283,7 +283,11 @@ def main():
                 pieces = []
             rows.append(score_selection(scorer, case, gold["reference"], pages, pieces, shown, text))
         s = summarise(rows)
+        all_pages = [any(scorer.page_ok(c["id"], normalise(g["reference"]), t) for t in pages.values()) for c, g, pages in cases]
+        full_chars = [len(parse.booklet_prompt_text(pages)) for _, _, pages in cases]
         print(f"variant {args.variant}: cases with a gold passage {s['n']} (same language {s['n_same']}, cross {s['n_cross']})")
+        print(f"evidence ceiling, all pages (full document): {sum(all_pages) / len(all_pages):.3f}; "
+              f"mean booklet chars {sum(full_chars) / len(full_chars):.0f}")
         print(f"hit rate {s['hit']:.3f} (same {s['hit_same']:.3f}, cross {s['hit_cross']:.3f})")
         print(f"evidence ceiling {s['ceiling']:.3f} (same {s['ceiling_same']:.3f}, cross {s['ceiling_cross']:.3f})")
         print(f"mean chars sent {s['chars']:.0f} ({s['share']:.1%} of the booklet)")

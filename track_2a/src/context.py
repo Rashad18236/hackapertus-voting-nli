@@ -11,6 +11,8 @@ replaced by "_"):
 - "vote-section-embed-e5-small", "embed-granite-97m-r2", "vote-section-embed-granite-97m-r2"
   (session 4): passages most similar to the claim, from the vote's section or the
   whole booklet, with e5 or Granite; shared code in contexts/retrieval.py.
+- "vote-section-embed-e5-small-k12" (session 4): as vote-section-embed-e5-small with the top 12
+  chunks, the setting the offline search grid chose.
 
 Every variant runs locally: no Apertus call, no tokens. Apertus alone makes
 the entailment decision; a variant only chooses what it reads.
@@ -27,10 +29,10 @@ new name, so every recorded run names exactly what ran.
 """
 
 from src.contexts import (embed_e5_small, embed_granite_97m_r2, full, vote_section, vote_section_embed_e5_small,
-                          vote_section_embed_granite_97m_r2)
+                          vote_section_embed_e5_small_k12, vote_section_embed_granite_97m_r2)
 
 VARIANTS = {v.NAME: v for v in (full, vote_section, embed_e5_small, vote_section_embed_e5_small, embed_granite_97m_r2,
-                                vote_section_embed_granite_97m_r2)}
+                                vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12)}
 MODES = tuple(VARIANTS)
 
 

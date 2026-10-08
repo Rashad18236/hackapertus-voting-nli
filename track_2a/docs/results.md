@@ -61,6 +61,7 @@ check, the best evidence score a model could reach by citing it.
 |---|---|---|---|---|---|---|---|---|---|
 | 2026-10-08 | – | kaan | [`2026-10-08_kaan_retrieval-check_embed-e5-small`](runs/2026-10-08_kaan_retrieval-check_embed-e5-small/) | embedding branch working tree (parent 3fa8f58) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
 | 2026-10-08 | 15:46 | rashad | [`2026-10-08_rashad_retrieval-check_embed-e5-small-merge`](runs/2026-10-08_rashad_retrieval-check_embed-e5-small-merge/) | 9081b8b (merge with session 3) | embed-e5-small: same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
+| 2026-10-08 | 19:16 | rashad | [`2026-10-08_rashad_search-grid_devA201`](runs/2026-10-08_rashad_search-grid_devA201/) | df3028f | vote-section-embed-e5-small-k12: grid of 72 settings (2 models x booklet/section x k 4/8/12 x neighbours 0/1 x cross rule same/double/section); chosen: e5-small, vote section, k 12, no neighbours, rule same - missed the targets (evidence ceiling) | 0.846 (same language 0.896, cross-language 0.821) | 0.672 | 0.856 | 8,610 / 128,537 |
 
 ## Other offline analyses (no model calls)
 
@@ -69,7 +70,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (24): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`
+- **rashad** (25): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`
 
 ## Notes per run
 
@@ -211,6 +212,28 @@ check, the best evidence score a model could reach by citing it.
 ### 2026-10-08, merge check: offline retrieval check on the merged code (`9081b8b`)
 - Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/retrieval_check.py`, 15:46 to 15:59 UTC, 12 minutes on 4 CPU cores; console output in `output.txt`.
 - Every number equals the embedding branch's check, so the merge did not change what the embedding selects.
+
+### 2026-10-08, Part 2: offline search grid (72 settings, no model calls)
+
+- Question: which way of choosing booklet text puts the gold passage in front of the model most often, cheaply? Scored on the 201 dev task A cases with a gold passage (67 same-language, 134 cross-language).
+- Models: `intfloat/multilingual-e5-small` (as `embed-e5-small`) and `ibm-granite/granite-embedding-97m-multilingual-r2` (Apache-2.0, commit `835ad14`, `onnx/model.onnx`, CLS pooling, no prefixes per its model card). Before any use, the Granite ONNX output on the model card's example pair (3 queries in English, German and Japanese against 3 passages) matched the card's cosine matrix within 0.0016, with the right passage highest for every query.
+- Commands (from `track_2a/`, with `EMBED_MODEL_DIR` and `GRANITE_MODEL_DIR` pointing into `models/`): `python3 scripts/retrieval_check.py --fill-cache` (embeds every page once into `output/embed_cache/`, timing each page's CPU seconds; 814 s wall, 18:59 to 19:13 UTC), then `python3 scripts/retrieval_check.py --grid <file>` (19:17 to 19:24 UTC, only cached embeddings), then `python3 scripts/retrieval_check.py --variant vote-section-embed-e5-small-k12` (19:25 UTC; the pipeline's own code path reproduced the grid row exactly and measured the whole-booklet ceiling 0.856 and mean booklet size 128,537 characters). Files: `grid.md` (all 72 rows), `grid.json`, `chosen_variant_per_case.jsonl`.
+- Settings: model (e5, Granite) x scope (whole booklet; vote section from `vote_section.section_pages`) x top k (4, 8, 12) x neighbours (0; 1 = also the chunk before and after each hit) x cross-language rule (same k; double k; whole vote section for cross-language cases). Whole-booklet e5 uses `embed-e5-small`'s own embedding, so that row reproduces the old check exactly: k 8, no neighbours, rule same gives hit 0.741, ceiling 0.612, 5,386 characters, as recorded before.
+- Targets: hit rate >= 0.90 overall and >= 0.85 cross-language, evidence ceiling >= 0.80, at most 10 % of booklet characters. **No setting meets all of them.** The evidence ceiling is the binding one: it reaches 0.80 only in 12 settings, all sending at least 28 % of the booklet; the best ceiling under 10 % is 0.672. The two hit-rate targets alone are met by 25 settings, the cheapest at 12.8 % of characters.
+- **Chosen by the fallback rule (best hit rate under 10 % of characters): e5-small, vote section, top 12, no neighbours, rule same**, registered as `vote-section-embed-e5-small-k12`: hit 0.846 (same-language 0.896, cross-language 0.821), ceiling 0.672 (0.687 / 0.664), 8,610 characters (9.6 % of the booklet), against 0.741, 0.612 and 5,386 for `embed-e5-small`. It **misses the targets** (hit 0.90, cross 0.85, ceiling 0.80).
+
+| Best settings under 10 % of characters | Hit (cross) | Ceiling | Characters | CPU s, first case of a booklet and vote |
+|---|---|---|---|---|
+| e5, vote section, k 12 (chosen) | 0.846 (0.821) | 0.672 | 8,610 (9.6 %) | 10.3 |
+| e5, whole booklet, k 12 | 0.821 (0.784) | 0.647 | 8,261 (9.3 %) | 28.2 |
+| Granite, vote section, k 4, neighbours 1 | 0.816 (0.799) | 0.617 | 7,963 (8.8 %) | 15.8 |
+| Granite, whole booklet, k 4, neighbours 1 | 0.811 (0.791) | 0.607 | 8,066 (8.8 %) | 37.9 |
+| Granite, vote section, k 8 | 0.801 (0.784) | 0.647 | 6,803 (7.5 %) | 15.8 |
+| e5, whole booklet, k 8 (`embed-e5-small`) | 0.741 (0.687) | 0.612 | 5,386 (6.1 %) | 28.2 |
+
+- CPU seconds to embed (process CPU time over all threads, 4 cores, measured per page while filling the cache): e5 24.0 s per whole booklet, 10.3 s for the vote section of a first case; Granite 32.4 s and 15.8 s. Embedding one claim: e5 0.071 s, Granite 0.043 s. Restricting the search to the vote section cuts the first-case cost to about a third, which addresses the p95 time seen in E3.
+- At equal settings without neighbours, Granite finds the passage more often than e5 (vote section, k 8: 0.801 against 0.761; k 12: 0.896 against 0.846), but at the same k it picks longer chunks, so it sends more characters (k 12 on the vote section: 10,272, 11.4 % of the booklet, over the limit; k 8 on the whole booklet: 6,777 against 5,386), and it costs more CPU per booklet (32.4 s against 24.0 s). Under the 10 % limit e5 at k 12 on the vote section is best. Granite is therefore not recommended and not added to the Dockerfile.
+- Cross-language cases gain most from a larger context: the rule "double" lifts cross-language hit rates by up to 0.18 (less than 0.01 when the context is already large) at the cost of more characters; "section" fixes cross-language cases at 0.858 (the section holds the passage) but sends about a third of the booklet.
 
 ### 2026-10-08, Part 1: why E3's embedding arm was wrong (search miss or reading error), no model calls
 
