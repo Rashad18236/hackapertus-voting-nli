@@ -266,3 +266,40 @@ One line per decision, with the reason. Newest stage at the bottom.
 - **The task A default is now `vote-section`.** In E2 (300 dev cases, paired) it scored Macro-F1 0.732 against 0.669 (0.741 against 0.674 on the 292 cases both arms answered), with 60 % fewer input tokens (15.9k against 39.2k per case) and a p95 time of 13.5 s against 37.1 s. Macro-F1 is the primary metric, and tokens and time are scored too.
 - **This costs evidence score (0.224 against 0.284), which is recorded and not hidden.** With a shorter context the model cites the front summary pages more often. Those pages hold the gold passage in 47 of 169 cases, so they stay in the selection; improving which pages are cited is the next step.
 - **E2 was paused during an outage (12:37 to 13:03 UTC) and resumed with `paired_run.py --resume`; a watchdog would have paused it again after 3 cases in a row failing in both arms.** Calls during an outage only produce neutral fallbacks in both arms. The 13 failed calls that happened anyway are kept as recorded (7 full, 6 section), and the paired-subset score excludes them.
+
+## Session 3, `embedding` branch (Kaan): task A context selection with embeddings (2026-10-08)
+
+- **External open models may be used for local support work such as embeddings; every LLM call stays Apertus.** Team decision; the contract allows local embeddings, and the role of the model goes into the report.
+- **The first embedding model is `intfloat/multilingual-e5-small` (MIT, 118M parameters, 384 dimensions), pinned to revision `614241f`.** Small and fast on CPU, multilingual (de/fr/it claims against a booklet in another language), simple licence. Larger models (e.g. `BAAI/bge-m3`) are a later comparison.
+- **It runs with `onnxruntime` + `tokenizers` + `numpy` on the model's own ONNX export, not with PyTorch / sentence-transformers.** Same model, far smaller image; mean pooling and normalisation are ten readable lines in `src/context.py`.
+- **The weights are downloaded at image build time (`ADD` of the pinned URL) and baked in; nothing is downloaded at run time.** Contract rule. `models/` (local copy for development) is git- and docker-ignored.
+- **Chunks are pieces of at most 1,000 characters of one page, split at whitespace, each keeping its page number.** Well under e5's 512-token limit; the page number keeps evidence and page citations working.
+- **The query is the claim alone, with e5's `query: ` / `passage: ` prefixes; the top 8 chunks by cosine similarity are kept and shown in page order with the usual `=== PAGE n ===` markers.** Claim-only is the simplest variant; adding the vote name is a separate, later change. Page order reads more naturally than score order.
+- **Prompt `A-v3-excerpts` is `A-v3-fulldoc` with only the sentence describing the input changed ("only excerpts ... the passages most similar to the claim"); the user message heading is `BOOKLET EXCERPTS`.** The decision rule and the answer format stay identical, so the comparison isolates the context.
+- **Evidence stays the full text of the pages the model names.** Same as the baseline, so evidence scores are comparable.
+- **Chunk embeddings are cached in memory per booklet (key: SHA-256 of the booklet text); the first case of a booklet pays about 5 s of embedding.** Booklets repeat across cases; predictions do not depend on order, only the first case's time does.
+- **The variant is chosen with `--context-a` (`fulldoc` default, `embed-e5-small`); `make compare` runs each variant on the same cases into `OUTPUT_DIR/<variant>/` with raw answers.** One switch per change keeps runs comparable; the default changes only after a measured win on dev.
+- **If context selection fails (e.g. model files missing), the case gets the label-1 fallback and is counted as "context selection failed".** Same never-drop rule as every other failure.
+- **`scripts/retrieval_check.py` measures retrieval without any model call: hit@k (a selected chunk lies in the gold passage) and the evidence ceiling (a selected page would pass the evidence check).** Retrieval quality can be compared for free before spending tokens.
+- **Dev booklets are fetched with `scripts/fetch_dev_booklets.py` into `output/booklets_dev/` (git-ignored), only those the dev cases reference.** Reproducible without the starter checkout; test booklets are never downloaded.
+
+## Merge of session 3 and the `embedding` branch (2026-10-08, from 15:35 UTC)
+
+Both lines started from session 2 and both wrote a `src/context.py`, so the
+branch was merged by hand (a merge commit keeps both histories).
+
+- **Model rule, as set by the team: only Apertus v1.5 is called as the language model, every remote call goes through `BASE_URL`; local parsing, OCR and embedding models are allowed if they are open-weight, baked into the image (no run-time downloads), run on CPU and are described in the report; Apertus makes the entailment decision.** Our copy of the contract states the Apertus, `BASE_URL`, local-embedding, no-GPU and baked-weights parts; open weights, the report and "Apertus decides" are the team's own additions, all stricter. e5-small meets every point: MIT, open weights, CPU via onnxruntime, it only picks passages.
+- **One `src/context.py` with three modes (`full`, `vote-section`, `embed-e5-small`) and one entry point, `context.select(pages, vote, claim, mode)`, which returns the prompt text and the pages it comes from.** The CLI needs one call for every mode; each mode's code is unchanged from its branch.
+- **The mode name is `full` (session 3), not `fulldoc` (embedding branch).** Same behaviour and prompt (`A-v3-fulldoc`); one name avoids confusion. Older raw answers keep the name they were run with.
+- **Every context mode uses the json_schema answer (max_tokens 128), including `embed-e5-small`.** It removed unparseable answers by construction in E1; the embedding run used a prompt-only JSON answer with 64 tokens.
+- **The prompt per mode: `A-v3-fulldoc` for `full` and `vote-section`, `A-v3-excerpts` for `embed-e5-small`.** Unchanged from both branches, so their earlier runs stay comparable.
+- **Evidence comes only from pages whose text was sent; for `embed-e5-small` that is the full text of the pages the selected chunks come from.** Same rule as `vote-section`: the model can only have checked what it saw. In the embedding branch a cited page outside the excerpts also counted; this changes evidence only when the model cites a page it was not shown.
+- **The default stays `vote-section` until a paired run on dev beats it.** The embedding's 0.767 is promising but was not paired, ran about six hours after its reference, and had no schema.
+- **`make compare` now defaults to all three modes; numbers for `docs/results.md` come from `scripts/paired_run.py`.** `make compare` runs the modes one after the other in Docker (a check that each works in the image); paired runs control for drift.
+
+### Checks after the merge
+
+- **Unit tests: 54 pass (45 from session 3, plus the embedding branch's tests and a test that every context mode sends the answer schema); all 14 self-checks pass.**
+- **The image builds with the model inside (2 GB); the model files' SHA-256 equal the pinned download, and e5 runs in the container with `--network none`.** This shows nothing is fetched at run time.
+- **`make run` on the two example cases, exit 0 and format check clean in both modes.** `vote-section`: same answer as at the end of session 3 (entailment, pages 4, 58 to 61, 15,579 input tokens). `embed-e5-small`: entailment, pages 60, 62, 63, 64 (no page from another ballot), 1,934 input tokens, but 35.9 s for the task A case.
+- **The embedding has a one-off cost per booklet: the first case of a booklet embeds every chunk of it (about 20 to 35 s on CPU here and in the embedding branch's run, where the median case took 1.8 s and the slowest 33.9 s).** Time is scored, so the paired run must report mean and p95 time with this cost included.

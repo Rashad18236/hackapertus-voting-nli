@@ -1,6 +1,10 @@
-"""Tests for src/context.py (page selection for task A)."""
+"""Tests for src/context.py: page selection for task A, and embedding selection with a
+fake embedder (no model files needed)."""
 
 import unittest
+from unittest import mock
+
+import numpy as np
 
 from src import context
 
@@ -14,9 +18,6 @@ class Full(unittest.TestCase):
         with self.assertRaises(ValueError):
             context.select_pages({1: "a"}, "v", "nonsense")
 
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class VoteSection(unittest.TestCase):
@@ -50,3 +51,73 @@ class VoteSection(unittest.TestCase):
     def test_no_match_falls_back_to_all_pages(self):
         self.assertEqual(context.vote_section(self.PAGES, "Völlig andere Vorlage zum Thema Velowege"), sorted(self.PAGES))
         self.assertEqual(context.vote_section(self.PAGES, "   "), sorted(self.PAGES))
+
+VOCAB = ["apple", "tax", "train", "vote"]
+
+
+class FakeEmbedder:
+    """Word counts over VOCAB, normalised: texts sharing words are similar."""
+
+    def __init__(self):
+        self.calls = 0
+
+    def embed(self, texts):
+        self.calls += 1
+        vectors = []
+        for text in texts:
+            words = text.lower().split()
+            v = np.array([words.count(w) for w in VOCAB], dtype=float) + 1e-6
+            vectors.append(v / np.linalg.norm(v))
+        return np.array(vectors)
+
+
+class Chunking(unittest.TestCase):
+    def test_long_page_gives_several_chunks_with_its_page(self):
+        chunks = context.chunk_pages({2: "word " * 500, 1: "short"}, max_chars=1000)
+        self.assertEqual([n for n, _ in chunks], [1, 2, 2, 2])
+        self.assertTrue(all(len(text) <= 1000 for _, text in chunks))
+
+    def test_empty_page_gives_no_chunk(self):
+        self.assertEqual(context.chunk_pages({1: "  ", 2: "text"}), [(2, "text")])
+
+
+class Selection(unittest.TestCase):
+    def setUp(self):
+        context._chunk_cache.clear()
+
+    def test_top_k_in_page_order(self):
+        pages = {1: "apple apple", 2: "tax tax", 3: "train vote", 4: "tax train"}
+        selected = context.select_chunks(pages, "tax", FakeEmbedder(), top_k=2)
+        self.assertEqual(selected, [(2, "tax tax"), (4, "tax train")])
+
+    def test_booklet_embedded_once(self):
+        pages = {1: "apple", 2: "tax"}
+        embedder = FakeEmbedder()
+        context.select_chunks(pages, "tax", embedder)
+        context.select_chunks(pages, "apple", embedder)
+        self.assertEqual(embedder.calls, 3)  # chunks once, plus one query per claim
+
+    def test_prompt_text_has_page_markers(self):
+        text = context.excerpts_prompt_text([(3, "a"), (7, "b")])
+        self.assertEqual(text, "=== PAGE 3 ===\na\n\n=== PAGE 7 ===\nb")
+
+
+class Select(unittest.TestCase):
+    """context.select: the prompt text plus the full pages it was taken from (evidence comes from these)."""
+
+    PAGES = {1: "intro", 2: "a long page about the tax and more", 3: "train timetable"}
+
+    def test_page_modes_send_whole_pages(self):
+        text, shown = context.select(self.PAGES, "any vote", "claim", "full")
+        self.assertEqual(shown, self.PAGES)
+        self.assertTrue(text.startswith("=== PAGE 1 ===\nintro"))
+
+    def test_embedding_mode_shows_chunks_but_keeps_whole_pages_for_evidence(self):
+        with mock.patch.object(context, "select_chunks", return_value=[(2, "about the tax")]):
+            text, shown = context.select(self.PAGES, "any vote", "tax", "embed-e5-small")
+        self.assertEqual(text, "=== PAGE 2 ===\nabout the tax")
+        self.assertEqual(shown, {2: self.PAGES[2]})
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -60,10 +60,13 @@ and `evaluate.py` unchanged.
   `/output` and `/tmp`. All dependencies and any local model weights are baked
   into the image; nothing is downloaded at run time. No API keys or `.env` in
   the image.
-- Only Apertus v1.5 models (`swiss-ai/Apertus-v1.5-...`). Every remote model
-  call must go to `BASE_URL`. Local parsing, OCR or embeddings may run locally;
-  whether a non-Apertus local embedding model is acceptable is still unclear,
-  so do not add one without asking us.
+- Model rule (`docs/official_contract.md`, with the team's additions of
+  2026-10-08): only Apertus v1.5 (`swiss-ai/Apertus-v1.5-...`) may be called
+  as the language model, and every remote model call must go through
+  `BASE_URL`. Local parsing, OCR and embedding models are allowed. They must
+  be open-weight, baked into the Docker image with no downloads at run time,
+  run on CPU, and be described in the technical report. Apertus must make the
+  entailment decision; a local model may only choose what Apertus reads.
 - Variables: `BASE_URL` and `API_KEY`, environment first, then local
   configuration. At evaluation the organisers inject a token-counting proxy as
   `BASE_URL` and a team key as `API_KEY`. For local use we fall back to
@@ -164,11 +167,14 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
-  context.py    task A context selection: full booklet or the vote's section (default)
+  context.py    task A context: full booklet, vote section (default) or top-k chunks by
+                multilingual-e5-small (ONNX, local CPU)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, decisions, results, reviews, run artefacts
-scripts/        dataset profile, splits, self-checks, format check, offline re-parse
+scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
+                paired runs, retrieval check, dev booklet download
+models/         local copy of the embedding model (git-ignored; the image downloads its own at build time)
 tests/          unit tests (evaluate, parser, CLI)
 ```
 
@@ -187,42 +193,47 @@ tests/          unit tests (evaluate, parser, CLI)
 - Never run on `data/test/`. Test is for the final evaluation only.
 - Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: task A answer format and selected context
+## Current stage: task A context, embeddings against the vote section
 
-Session 2 (merged as PR #3): task B dev Macro-F1 0.947 with `v3-topic-first`
-(default); task A full-document baseline `A-v3-fulldoc` 0.589 on all 300 dev
-cases (0.608 with the prose-label parser), evidence 0.209, about 40k input
-tokens and 11.5 s per case. 37 % of task A answers were not valid JSON.
+Two lines of work from 2026-10-08 are merged:
 
-Goal, step 1 (approach 1a): reliable task A answers through schema-constrained
-output (`response_format: json_schema` with `pages` and `label`).
-Goal, step 2 (approach 2a): the central experiment. Give the model only the
-vote's section of the booklet, found deterministically from the `vote` title
-(no embeddings), and compare it with the full document on the same cases:
-Macro-F1, evidence score, input tokens, mean and p95 time.
+- **Session 3** (PR #4, `track_2a/docs/session_3_report.md`): task A answers
+  are schema-constrained (`response_format: json_schema`, 0 unparseable), and
+  the deterministic vote-section selector beat the full booklet in a paired
+  run on all 300 dev cases: Macro-F1 0.732 against 0.669, 15.9k against
+  39.2k input tokens per case, p95 13.5 s against 37.1 s, evidence 0.224
+  against 0.284.
+- **The `embedding` branch** (Kaan): `embed-e5-small` sends the top 8 chunks
+  of at most 1,000 characters by `intfloat/multilingual-e5-small`. On all 300
+  dev cases: Macro-F1 0.767, evidence 0.383, 1.9k input tokens per case. Not
+  paired, about six hours after its reference, and without the json_schema
+  answer (session 3 was not in that branch yet).
+
+`--context-a` picks the task A context: `full` (reference), `vote-section`
+(default) or `embed-e5-small`. Every mode uses the json_schema answer.
+
+Goal: a paired run of `embed-e5-small` against `vote-section` on all 300 dev
+task A cases; the default changes only on a paired win. Then build on the
+embedding (one change per run).
 
 Rules for this stage:
 
 - Never run on `data/test/`; do not change the splits or the scorer.
 - One change per comparison; every run is a row in `docs/results.md`.
-- Comparisons are paired: both configurations run on the same case back to
-  back, because the endpoint's output drifted during session 2.
-- Measure the section selector offline first (does the selected context contain
-  the gold page, and how large is it) before spending model calls.
+- Comparisons are paired (`scripts/paired_run.py`): both configurations run
+  on the same case back to back, because the endpoint's output drifts.
+- Measure offline first (`scripts/retrieval_check.py` for the embedding,
+  selector recall for the vote section) before spending model calls.
 - Cases run one at a time; one retry for HTTP 5xx and timeouts only.
-- Still no embeddings or non-Apertus models.
+- Local models only under the model rule above. Ask before adding another one
+  (each is a heavy dependency).
 
-Status at the end of session 3 (details: `track_2a/docs/session_3_report.md`):
-task A answers are schema-constrained (0 unparseable) and task A sends only
-the vote's section (`src/context.py`). E2, 300 dev cases, paired: section
-Macro-F1 0.732 against 0.669 for the full booklet, 15.9k against 39.2k input
-tokens per case, p95 13.5 s against 37.1 s; evidence 0.224 against 0.284.
-Task B unchanged at 0.947.
+Earlier: session 2 (PR #3) set task B to 0.947 with `v3-topic-first`
+(default, unchanged since) and measured the task A full-document baseline
+(0.589, 37 % of answers not valid JSON).
 
 ## Open questions (do not assume the answers)
 
-- Whether a non-Apertus local embedding model is acceptable (the guide allows
-  local embeddings but also says "only Apertus v1.5 models").
 - Whether the evidence page is checked against the 1-based PDF page in the
   official run (the starter says pages are "not checked yet").
 - Formula combining Macro-F1, tokens and time in the final score (the starter
