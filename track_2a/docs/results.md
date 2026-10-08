@@ -24,6 +24,7 @@ valid submission is 0.75 on task B and 0.60 on task A.
 | 2026-10-08 | session-3 ⁵ | official, paired (E1) | task A, dev sample 60 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, max_tokens 128 | 0.850 (E 0.857, N 0.865, C 0.829) | evidence score 0.325 (13/40) | 0 | 1 | 39834 | 6972 | 17960 |
 | 2026-10-08 | session-3 ⁵ | official, paired (E2) | **task A, all 300 dev cases** | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, **full booklet** | **0.669** (E 0.700, N 0.723, C 0.583) | evidence score 0.284 (57/201) | 0 | 7 | 39206 | 12717 | 37079 |
 | 2026-10-08 | session-3 ⁵ | official, paired (E2) | **task A, all 300 dev cases** | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, **vote section** | **0.732** (E 0.845, N 0.674, C 0.676) | evidence score 0.224 (45/201) | 0 | 6 | 15868 | 8248 | 13513 |
+| 2026-10-08 | embedding branch ⁶ | official | **task A, all 300 dev cases**, context `embed-e5-small` | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-excerpts, answer format by prompt, max_tokens 64 (not paired) | **0.767** (E 0.806, N 0.764, C 0.732) | evidence score 0.383 (77/201) | 0 | 0 | 1868 | 3770 | 14392 |
 
 ¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
 
@@ -32,6 +33,8 @@ valid submission is 0.75 on task B and 0.60 on task A.
 ⁴ JSON mode = `--json-mode-a` (`response_format: json_object`), the only change against the 60-case row; code committed with session 2's last commit. Mean input tokens count the 16 failed calls as 0. The rerun after the two-minute wait was stopped at 7 failed calls in 24 cases (over 10 % certain) and has no score (`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/run.log`).
 
 ³ The max_tokens run used commit `60e9eb1` with `--max-tokens-a 256`. "Re-parsed" rows apply the current parser (which also reads an explicit prose label statement) to the saved raw answers of the run above them, with `scripts/reparse_run.py`: no new model calls, tokens and time copied, scored with the official scorer.
+
+⁶ `embedding` branch (Kaan, session 3), uncommitted working tree on parent `3fa8f58`: `--context-a embed-e5-small`, the only change against the reference row `s2-A300-A-v3-fulldoc` besides the prompt sentence describing the input (`A-v3-excerpts`). Run 13:46 to 14:04 UTC, about six hours after the reference row, so endpoint drift (see ³) is not ruled out; no same-time `fulldoc` control was run. Times were measured under amd64 emulation on an Apple M4 Pro (the reference row ran elsewhere), so they are not comparable; the first case of each booklet includes parsing and embedding it. A first attempt was stopped after 27 cases that all failed to connect (endpoint outage). Files: `docs/runs/s3-A300-embed-e5-small/`.
 
 ² Task A runs used code identical to commit `4e90ddc` (prompt `A-v3-fulldoc`, retry active).
 
@@ -131,3 +134,21 @@ always-neutral value. It is not a task A result.
 - **Evidence is worse with the section (0.224 against 0.284).** With the shorter context the model's first cited page is more often on the front summary pages (65 of 145 cases against 50 of 147). These pages cannot simply be removed: for 47 of the 169 gold cases with a gold page, the gold page is *only* on the front summary (removing the first 15 % of pages would drop recall from 0.988 to 0.710).
 - **Kept:** `vote-section` is now the task A default. It wins on Macro-F1 (the primary metric), tokens and time, at the cost of evidence score.
 - The full-booklet arm (0.669) is far above session 2's reference row (0.589): json_schema removed the unparseable answers, and the endpoint's behaviour has changed since then.
+
+## Offline retrieval checks (no model calls)
+
+`scripts/retrieval_check.py` on the 201 dev task A cases with a gold passage
+(labels 0 and 2), booklets from `scripts/fetch_dev_booklets.py`. No tokens are
+used; these numbers say how much of the gold passage reaches the model, not
+how well it labels. Matching re-implements the starter's normalisation
+(partial ratio >= 90), so it approximates the official evidence check.
+
+| Date | Commit | Context | hit@k | Evidence ceiling, selected pages | Evidence ceiling, all pages | Mean chars sent (selected / full) |
+|---|---|---|---|---|---|---|
+| 2026-10-08 | uncommitted (session 3) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
+| 2026-10-08 | `9081b8b` (merge with session 3) | same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
+
+hit@k: a selected chunk lies inside the gold passage. Evidence ceiling: a
+selected page (or, for the full document, any page) would pass the evidence
+check, the best evidence score a model could reach by citing it. By label:
+hit@8 0.784 for entailment, 0.697 for contradiction.

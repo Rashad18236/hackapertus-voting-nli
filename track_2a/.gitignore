@@ -29,3 +29,6 @@ build/
 # Predictions written by make run
 output/
 .pytest_cache/
+
+# Local copy of the embedding model (the Docker image downloads its own at build time)
+models/

@@ -6,9 +6,10 @@ Usage (the official entrypoint contract):
 
 Each request has exactly one of `booklet` (task A) or `reference` (task B).
 Task B: one model call with the reference passage, label only.
-Task A: one model call with the booklet's pages (all of them, or the selected
-context, see src/context.py), the vote name and the claim; the answer names up
-to five pages, whose text becomes the evidence.
+Task A: one model call with booklet text (the whole booklet, the vote's
+section, or the passages most similar to the claim; see src/context.py), the
+vote name and the claim; the answer names up to five pages, whose text becomes
+the evidence.
 Booklet paths are relative to the input file's folder (/data in the container).
 
 No case is ever dropped. If a request is malformed, the model call fails or
@@ -38,7 +39,16 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "vote-section"  # which booklet pages task A sends: see context.MODES (session 3, E2)
+    context_a: str = "vote-section"  # which booklet text task A sends: see context.MODES (session 3, E2)
+
+
+# Task A prompt per context mode. The excerpts prompt differs from A-v3-fulldoc
+# only in the sentence describing the input (src/nli.py).
+PROMPT_A_FOR_CONTEXT = {
+    "full": "A-v3-fulldoc",
+    "vote-section": "A-v3-fulldoc",
+    "embed-e5-small": "A-v3-excerpts",
+}
 
 log = logging.getLogger("cli")
 
@@ -79,11 +89,16 @@ def predict_a(case, data_dir, start, raw, settings):
         raw["error"] = f"PDF parsing failed ({type(e).__name__})"
         return response(case_id, FALLBACK_LABEL, start=start), "booklet could not be parsed"
 
-    selected = context.select_pages(pages, vote, settings.context_a)
-    raw["prompt_version"], raw["context"] = nli.PROMPT_VERSION_A, settings.context_a
-    raw["pages_sent"], raw["pages_total"] = len(selected), len(pages)
+    prompt_version = PROMPT_A_FOR_CONTEXT[settings.context_a]
+    raw["prompt_version"], raw["context"] = prompt_version, settings.context_a
     try:
-        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(selected), vote, claim_text),
+        booklet_text, shown = context.select(pages, vote, claim_text, settings.context_a)
+    except Exception as e:  # e.g. embedding model files missing; must not stop the run
+        raw["error"] = f"context selection failed ({type(e).__name__}: {e})"
+        return response(case_id, FALLBACK_LABEL, start=start), "context selection failed"
+    raw["pages_sent"], raw["pages_total"], raw["context_pages"] = len(shown), len(pages), sorted(shown)
+    try:
+        result = llm.chat(nli.build_messages_a(booklet_text, vote, claim_text, prompt_version),
                           max_tokens=settings.max_tokens_a, json_mode=settings.json_mode_a,
                           json_schema=nli.ANSWER_SCHEMA_A if settings.schema_a else None)
     except llm.LLMError as e:
@@ -96,7 +111,7 @@ def predict_a(case, data_dir, start, raw, settings):
         raw["parse_reason"] = reason
         return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
     # Evidence comes from the pages that were sent; a page number outside them is ignored.
-    evidence = parse.evidence_items(selected, page_numbers) if label in (0, 2) else []
+    evidence = parse.evidence_items(shown, page_numbers) if label in (0, 2) else []
     status = "ok" if label == 1 or evidence else "no valid pages for label 0/2"
     return response(case_id, label, result.input_tokens, result.output_tokens, start, evidence), status
 
@@ -152,7 +167,7 @@ def main():
     parser.add_argument("--schema-a", action="store_true", default=defaults.schema_a,
                         help="development only: force the task A answer schema (response_format json_schema)")
     parser.add_argument("--context-a", default=defaults.context_a, choices=context.MODES,
-                        help="development only: which booklet pages task A sends")
+                        help="development only: which booklet text task A sends")
     args = parser.parse_args()
     settings = Settings(prompt_b=args.prompt_b, max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a)
