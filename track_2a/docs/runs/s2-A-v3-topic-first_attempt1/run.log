@@ -1,0 +1,7 @@
+INFO [1/300] v1.1-row-2-B -> neutral (fallback: model call failed)
+INFO [2/300] v1.1-row-4-B -> neutral (fallback: model call failed)
+INFO [3/300] v1.1-row-5-B -> neutral (fallback: model call failed)
+INFO [4/300] v1.1-row-9-B -> neutral (fallback: model call failed)
+INFO [5/300] v1.1-row-18-B -> neutral (fallback: model call failed)
+make: *** [Makefile:35: run] Error 137
+make exit 2

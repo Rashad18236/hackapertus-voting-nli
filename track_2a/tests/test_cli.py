@@ -26,7 +26,7 @@ def fake_chat(answers):
     """Return a chat() replacement that gives the next answer each call (an exception is raised)."""
     answers = list(answers)
 
-    def chat(messages, max_tokens=256):
+    def chat(messages, max_tokens=256, json_mode=False):
         answer = answers.pop(0)
         if isinstance(answer, Exception):
             raise answer
@@ -68,6 +68,22 @@ class NeverDropACase(unittest.TestCase):
         for p in out:
             self.assertEqual(p["evidence"], [])
             self.assertEqual(sorted(p["metrics"]), ["inference_time_ms", "input_tokens", "output_tokens"])
+
+    def test_task_a_evidence_from_pages(self):
+        pages = {1: "intro", 2: "word " * 1500, 3: "details"}
+        lines = [json.dumps(a_case("a-entail")), json.dumps(a_case("a-neutral")), json.dumps(a_case("a-nopages"))]
+        answers = ['{"label": 0, "pages": [2, 99]}', '{"label": 1, "pages": [3]}', '{"label": 2, "pages": []}']
+        with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+             mock.patch.object(cli.Path, "is_file", return_value=True):
+            code, out = run_cli(lines, answers)
+        by_id = {p["id"]: p for p in out}
+        self.assertEqual(code, 0)
+        ev = by_id["a-entail"]["evidence"]
+        self.assertEqual([e["page"] for e in ev], [2, 2])  # long page split, unknown page 99 skipped
+        self.assertTrue(all(len(e["text"]) <= 5000 for e in ev))
+        self.assertEqual(by_id["a-neutral"]["evidence"], [])   # neutral: no evidence
+        self.assertEqual(by_id["a-nopages"]["label"], 2)       # label kept, evidence empty
+        self.assertEqual(by_id["a-nopages"]["evidence"], [])
 
     def test_input_equals_output_is_refused(self):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):

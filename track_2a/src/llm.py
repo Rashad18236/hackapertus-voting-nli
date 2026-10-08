@@ -13,8 +13,11 @@ API_KEY. Values are never printed or logged, not even in error messages.
 Every call returns the token counts reported by the server and the elapsed
 wall-clock time, because the organisers score input tokens and speed.
 
-There are no automatic retries: the organisers count every token, retries
-included, so a failed call raises an error instead of being repeated silently.
+Retries: exactly one, and only for HTTP 5xx answers and timeouts, where the
+request most likely never produced an answer (e.g. Public AI's gateway 504
+after about 61 s). The organisers count every token, retries included, so any
+usage reported by a failed attempt is added to the result, and the elapsed
+time covers both attempts. All other failures raise LLMError at once.
 """
 
 import logging
@@ -27,6 +30,8 @@ import requests
 # Public AI rejects requests without a User-Agent header.
 USER_AGENT = "hackapertus-voting-nli/0.1"
 TIMEOUT_SECONDS = 120
+MAX_ATTEMPTS = 2          # the first call plus one retry
+RETRY_PAUSE_SECONDS = 2
 
 
 class LLMError(RuntimeError):
@@ -39,6 +44,7 @@ class LLMResult:
     input_tokens: int
     output_tokens: int
     elapsed_ms: int
+    attempts: int = 1
 
 
 DEFAULT_MODEL = "swiss-ai/Apertus-v1.5-8B"
@@ -64,8 +70,12 @@ def _settings():
     return _first_set("MODEL", "LLM_NAME") or DEFAULT_MODEL, base, key
 
 
-def chat(messages, max_tokens=256):
-    """Send one chat request and return the answer with usage and timing."""
+def chat(messages, max_tokens=256, json_mode=False):
+    """Send one chat request and return the answer with usage and timing.
+
+    json_mode=True asks the endpoint for a JSON object (OpenAI `response_format`),
+    so the model cannot answer in prose.
+    """
     model, base, key = _settings()
     payload = {
         "model": model,
@@ -73,30 +83,56 @@ def chat(messages, max_tokens=256):
         "temperature": 0,
         "max_tokens": max_tokens,
     }
+    if json_mode:
+        payload["response_format"] = {"type": "json_object"}
     headers = {"Authorization": f"Bearer {key}", "User-Agent": USER_AGENT}
 
     start = time.perf_counter()
-    try:
-        response = requests.post(
-            f"{base}/chat/completions", json=payload, headers=headers, timeout=TIMEOUT_SECONDS
-        )
-    except requests.Timeout:
-        raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s") from None
-    except requests.ConnectionError as e:
-        # `from None` drops the original exception, whose text includes the URL.
-        raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})") from None
+    input_tokens = output_tokens = 0  # summed over attempts that report usage
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = requests.post(
+                f"{base}/chat/completions", json=payload, headers=headers, timeout=TIMEOUT_SECONDS
+            )
+        except requests.Timeout:
+            if attempt < MAX_ATTEMPTS:
+                logging.warning("LLM call timed out; retrying once")
+                time.sleep(RETRY_PAUSE_SECONDS)
+                continue
+            raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({attempt} attempts)") from None
+        except requests.ConnectionError as e:
+            # `from None` drops the original exception, whose text includes the URL.
+            raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})") from None
+
+        usage = _usage(response)
+        input_tokens += usage.get("prompt_tokens", 0)
+        output_tokens += usage.get("completion_tokens", 0)
+        if response.status_code >= 500 and attempt < MAX_ATTEMPTS:
+            logging.warning("LLM call failed with HTTP %d; retrying once", response.status_code)
+            time.sleep(RETRY_PAUSE_SECONDS)
+            continue
+        break
     elapsed_ms = round((time.perf_counter() - start) * 1000)
 
     if response.status_code != 200:
-        raise LLMError(f"LLM call failed with HTTP {response.status_code}: {response.text[:300]}")
+        raise LLMError(f"LLM call failed with HTTP {response.status_code} ({attempt} attempts): "
+                       f"{response.text[:300]}")
 
     data = response.json()
-    usage = data.get("usage") or {}
-    if "prompt_tokens" not in usage:
+    if "prompt_tokens" not in (data.get("usage") or {}):
         logging.warning("Endpoint returned no token usage; recording 0 tokens")
     return LLMResult(
         text=data["choices"][0]["message"]["content"] or "",
-        input_tokens=usage.get("prompt_tokens", 0),
-        output_tokens=usage.get("completion_tokens", 0),
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
         elapsed_ms=elapsed_ms,
+        attempts=attempt,
     )
+
+
+def _usage(response):
+    """Token usage from a response body, or {} if there is none (e.g. an HTML error page)."""
+    try:
+        return response.json().get("usage") or {}
+    except ValueError:
+        return {}

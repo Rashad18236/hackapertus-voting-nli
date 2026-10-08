@@ -163,12 +163,12 @@ src/
   nli.py        prompts and label parsing
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
-  parse.py      PDF to passages with page numbers            (later stage)
-  context.py    context selection, starts as "return all"    (later stage)
+  parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
+  context.py    context selection for task A                  (next stage)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, decisions, results, reviews, run artefacts
-scripts/        dataset profile, splits, self-checks
+scripts/        dataset profile, splits, self-checks, format check, offline re-parse
 tests/          unit tests (evaluate, parser, CLI)
 ```
 
@@ -187,35 +187,33 @@ tests/          unit tests (evaluate, parser, CLI)
 - Never run on `data/test/`. Test is for the final evaluation only.
 - Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: contract alignment
+## Current stage: task B improvement, then task A baseline
 
-The beginner baseline (pre-contract) is measured: Macro-F1 0.202 on dev with
-prompt `v1-json`, see `docs/results.md` and `docs/baseline_review.md`.
+Contract alignment is finished (merged as PR #2): official CLI and Docker
+contract, starter-generated dev/test cases, starter scorer. Task B scored
+Macro-F1 0.541 on dev with prompt `v2-label-only` (minimum 0.75).
 
-Goal: make the pipeline follow the official contract and re-measure task B.
+Goal, part 1: task B Macro-F1 >= 0.75 on dev with the official scorer, by
+prompt changes only (one change per run, each prompt versioned).
+Goal, part 2: a first full-document task A baseline on dev (minimum 0.60):
+local PDF parsing with 1-based pages, the whole booklet in the prompt,
+evidence as page text. This is the reference row for later context selection.
 
-Done when:
+Rules for this stage:
 
-1. The image's entrypoint takes `--input`/`--output`, writes one line per id
-   and exits 0; `make run` builds for linux/amd64 and runs it on the examples.
-2. `BASE_URL`/`API_KEY` are read first, with `LLM_*` fallbacks; the model name
-   is configurable with default `swiss-ai/Apertus-v1.5-8B`.
-3. The official request fields work, including mixed task A/B files. Task A
-   returns a clearly marked placeholder (label 1) without crashing.
-4. No case is ever dropped: failures give label 1 and are counted on stderr.
-5. The task B prompt no longer asks for evidence; task B evidence is `[]`.
-6. Dev and test cases come from the starter's `prepare_cases.py` with our
-   split; the starter's `evaluate.py` is the scorer and ours agrees with it.
-7. Docker rules hold (read-only `/data` and root, writes only to `/output` and
-   `/tmp`, no runtime downloads, `.dockerignore` keeps `.env` and `data/` out).
-8. The task B baseline is rerun on dev and added to `docs/results.md`; the old
-   row stays, marked pre-contract.
+- Never run on `data/test/`; do not change the splits or the scorer.
+- One change per run; every run is a row in `docs/results.md` with real numbers.
+- Cases run one at a time, so time metrics stay comparable.
+- No retrieval, embeddings or rerankers yet.
+- One retry for HTTP 5xx and timeouts only; retried calls' tokens are counted.
+- PDF parsing with a permissively licensed library (not PyMuPDF, AGPL).
 
-Rules: a failed case gets label 1 (the contract counts missing responses as
-wrong); parse failures and call failures are still counted and reported.
-
-Out of scope: task A beyond the placeholder, PDF parsing, retrieval, and
-prompt tuning beyond removing the evidence request.
+Status at the end of session 2 (details: `track_2a/docs/session_2_report.md`):
+task B dev Macro-F1 0.947 with `v3-topic-first` (now the default); task A
+full-document baseline `A-v3-fulldoc` 0.589 on all 300 dev cases (0.608 with
+the prose-label parser, re-parsed offline), evidence 0.209, about 40k input
+tokens and 11.5 s per case. Many task A answers come back as prose instead of
+JSON, and the endpoint's output drifted during the session.
 
 ## Open questions (do not assume the answers)
 

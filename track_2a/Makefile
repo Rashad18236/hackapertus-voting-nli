@@ -18,12 +18,13 @@ DOCKER_RUN_FLAGS ?=
 build:
 	docker build --platform $(PLATFORM) -t $(IMAGE) .
 
-# What to run on. Defaults: the two example requests, predictions in ./output.
+# What to run on. Defaults: the two example requests (with the booklet the task A
+# example needs, from examples/booklets/), predictions in ./output.
 # Only the cases file (and, for task A, the booklets folder) is mounted, never
 # the expected labels. Example for the dev split:
 #   make run CASES=data/dev/cases.jsonl OUTPUT_DIR=output/dev
 CASES ?= examples/cases.jsonl
-BOOKLETS ?=
+BOOKLETS ?= $(if $(wildcard examples/booklets),examples/booklets,)
 OUTPUT_DIR ?= output
 EXTRA_ARGS ?=
 BOOKLET_MOUNT := $(if $(BOOKLETS),-v "$(abspath $(BOOKLETS)):/data/booklets:ro",)
