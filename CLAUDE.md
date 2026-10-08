@@ -87,6 +87,24 @@ advanced task.
 - Speed: mean and p95 of `inference_time_ms`.
 - Results are broken down by language and by same-language versus cross-lingual.
 
+## Model endpoint (development)
+
+- Provider: Public AI, OpenAI-compatible chat-completions API (confirmed by a
+  real call on 2026-10-08; the response includes `usage` token counts).
+- Model: `swiss-ai/apertus-v1.5-8b` (official Apertus v1.5, 262K context).
+- Base URL: `https://api.publicai.co/v1`. Fallback if that gives not-found or
+  connection errors: `https://platform.publicai.co/v1`. Both live only in
+  `.env`, never in code.
+- Public AI requires a `User-Agent` header on every request; `src/llm.py`
+  sends `hackapertus-voting-nli/0.1`.
+- The key is temporary and will be rotated; provider or model may change too.
+  All three values live only in `track_2a/.env` (or the shell). Never copy the
+  key anywhere else.
+- Even a one-line message costs about 71 input tokens: the chat template adds
+  text of its own to every call.
+- In sandboxes where Docker containers cannot reach the internet directly,
+  pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
+
 ## Data
 
 The public dataset is `OSTswiss/MNLIoverSwissVotingBooklets` on Hugging Face,
@@ -153,8 +171,6 @@ evaluation code, and anything to do with retrieval.
 
 - How judges pass the held-out cases to `make run`, and where output should go.
 - Whether booklet PDFs are supplied at judging time or must live in `data/`.
-- Whether `LLM_BASE_URL` is the token-counting proxy. The endpoint is probably
-  OpenAI-compatible; confirm that with the first call.
 - Whether non-Apertus embedding models are allowed in the pipeline.
 - How evidence matching is computed (exact string or overlap), and whether
   `page` means the PDF page index or the printed page number.
