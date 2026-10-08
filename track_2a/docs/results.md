@@ -62,6 +62,9 @@ check, the best evidence score a model could reach by citing it.
 | 2026-10-08 | – | kaan | [`2026-10-08_kaan_retrieval-check_embed-e5-small`](runs/2026-10-08_kaan_retrieval-check_embed-e5-small/) | embedding branch working tree (parent 3fa8f58) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
 | 2026-10-08 | 15:46 | rashad | [`2026-10-08_rashad_retrieval-check_embed-e5-small-merge`](runs/2026-10-08_rashad_retrieval-check_embed-e5-small-merge/) | 9081b8b (merge with session 3) | embed-e5-small: same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
 
+## Other offline analyses (no model calls)
+
+
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`

@@ -10,7 +10,15 @@ from pathlib import Path
 from unittest import mock
 
 from src import cli, llm
-from src.contexts import embed_e5_small
+from src.contexts import embed_e5_small, retrieval
+
+
+class OneVectorEmbedder:
+    """Stands in for an embedding model: every text gets the same unit vector."""
+
+    def embed(self, texts):
+        import numpy as np
+        return np.ones((len(texts), 4)) / 2.0
 
 
 def b_case(case_id):
@@ -103,7 +111,8 @@ class NeverDropACase(unittest.TestCase):
                 with mock.patch.object(llm, "chat", chat), \
                      mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
                      mock.patch.object(cli.Path, "is_file", return_value=True), \
-                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]):
+                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]), \
+                     mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()):
                     resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a=mode))
                 self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)  # the default for every mode
                 self.assertEqual(seen["max_tokens"], 128)
