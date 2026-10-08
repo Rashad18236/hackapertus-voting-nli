@@ -72,8 +72,7 @@ PROMPTS_B["v4-topic-first-examples"] = (
 
 # Task A: the whole booklet, page by page. Same decision rule as task B's
 # v3-topic-first; the answer also names the pages that justify the label.
-PROMPT_VERSION_A = "A-v1-fulldoc"
-SYSTEM_PROMPT_A = """You check a CLAIM against an official Swiss federal voting booklet. The booklet is given page by page; each page starts with a line "=== PAGE n ===". A booklet can cover several ballots: use only the part about the ballot named in VOTE. The booklet and the claim may be in different languages (German, French or Italian). Use only the booklet, never outside knowledge.
+_RULE_A = """You check a CLAIM against an official Swiss federal voting booklet. The booklet is given page by page; each page starts with a line "=== PAGE n ===". A booklet can cover several ballots: use only the part about the ballot named in VOTE. The booklet and the claim may be in different languages (German, French or Italian). Use only the booklet, never outside knowledge.
 
 Decide in this order:
 1. Does the booklet's part on VOTE deal with the subject of the claim at all? If not, the label is 1 (neutral).
@@ -82,9 +81,28 @@ Decide in this order:
    2 (contradiction) only if the booklet states something that cannot be true together with the claim;
    otherwise 1 (neutral: insufficient information).
 Missing information is never a contradiction. A claim of the form "according to the text / the committee / the Federal Council, X" is neutral when the booklet does not deal with X.
+"""
 
+PROMPTS_A = {}
+# A-v1: stopped after 2 cases: the model always returned "pages": [] with this format line.
+PROMPTS_A["A-v1-fulldoc"] = _RULE_A + """
 Answer with one JSON object and nothing else:
 {"label": <0, 1 or 2>, "pages": [<for label 0 or 2: up to five page numbers whose text justifies the label, most relevant first; prefer the detailed section on the ballot over the summary at the front. For label 1: []>]}"""
+# A-v2: same rule; concrete example and an explicit page rule. Tried on 3 cases: still "pages": [].
+PROMPTS_A["A-v2-fulldoc"] = _RULE_A + """
+Also name the pages that justify your label: the numbers n from the "=== PAGE n ===" lines, at most five, most relevant first. Prefer pages from the detailed section on the ballot over the short summary at the front of the booklet. For label 0 or 2 you must name at least one page. Only for label 1, use an empty list.
+
+Answer with one JSON object and nothing else, for example:
+{"label": 0, "pages": [14, 15]}"""
+# A-v3: same rule; pages are asked for FIRST, before the label. On the same 3 cases
+# the model then named pages every time. This is the full-document baseline prompt.
+PROMPTS_A["A-v3-fulldoc"] = _RULE_A + """
+First find the pages of the booklet that are relevant to the claim: the numbers n from the "=== PAGE n ===" lines, at most five, most relevant first, preferring the detailed section on the ballot over the short summary at the front. Then decide the label.
+
+Answer with one JSON object and nothing else, pages first, for example:
+{"pages": [14, 15], "label": 0}"""
+PROMPT_VERSION_A = "A-v3-fulldoc"
+SYSTEM_PROMPT_A = PROMPTS_A[PROMPT_VERSION_A]
 
 
 def build_messages_a(booklet_text, vote, claim_text):

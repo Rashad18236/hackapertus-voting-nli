@@ -181,3 +181,17 @@ One line per decision, with the reason. Newest stage at the bottom.
 - **Booklet paths are resolved against the input file's folder (`/data` in the container).** The contract says "path relative to /data", and the input is `/data/cases.jsonl`.
 - **The 60-case sample (step 8) has 20 per label, round-robin over the 9 language pairs within each label, seed 42, from dev task A cases (`output/devA60/`, git-ignored).** It is balanced as asked; a plain round-robin over 27 cells gave 24/18/18.
 - **Only the 44 dev booklets are mounted for runs (`output/booklets_dev/`, git-ignored, 51 MB).** The starter downloads all 60; test booklets are never mounted. PDFs are not committed (size; the organisers supply them at evaluation).
+
+### Task A answer format (before the scored run)
+
+- **`A-v1-fulldoc` was stopped after 2 of 60 cases: one raw answer showed `{"label": 0, "pages": []}`, i.e. a label but no pages.** Evidence would have been empty for every case, wasting the run.
+- **`A-v2-fulldoc` (a concrete example `{"label": 0, "pages": [14, 15]}` and "for label 0 or 2 you must name at least one page") still gave `"pages": []` on 3 sample cases.** With the label first, the model stops paying attention to the page list over 45k to 77k tokens of context.
+- **`A-v3-fulldoc` asks for the pages *first* (`{"pages": [...], "label": n}`), and on the same 3 cases the model named pages every time; it is the prompt of the full-document baseline.** Checked on 2 gold-entailment cases: the named pages included one matching the gold passage under the official rule (94 ≥ 90) in one case and a neighbouring page (87.7) in the other.
+- **These 7 diagnostic calls and the stopped 2-case run are not results rows; their input tokens are counted in the session total (estimated where the count was not printed).** Only scored runs go into `results.md`; every token still counts against the budget.
+
+### Step 8: task A runs
+
+- **The 60-case sample (`s2-A60-A-v3-fulldoc`) scored Macro-F1 0.767 and evidence 0.375; the format check found no errors.** Reading 10 results showed sound labels; when the model cites the detailed section the pages match well (96, 98, 92), and it often cites the summary pages at the front, which do not match.
+- **6 of 60 answers were unparseable (page lists over the 64-token limit, two stray `<|inner_prefix|>` tokens, two prose answers); they keep the label-1 fallback.** This is the baseline; fixing it (`max_tokens`, a stricter page limit) is a separate, later change.
+- **The full task A dev result is the 60-case run plus a run on the other 240 task A dev cases (`s2-A240-A-v3-fulldoc`), with an identical image, prompt and settings.** Cases are independent (one call each, temperature 0, cache keyed by file content), so the two parts form one 300-case result; rerunning the 60 would cost about 2.5M tokens and 10 minutes for nothing new. The combined predictions are scored once with the official scorer.
+- **Cases ran one at a time, as all runs did.** That keeps the time metrics comparable.
