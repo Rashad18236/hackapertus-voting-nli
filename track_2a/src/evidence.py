@@ -1,11 +1,11 @@
 """Task A evidence settings (Settings.evidence_a in src/cli.py).
 
-- "cited" (default): the text of the pages the model cited, split at 5,000
-  characters, at most five items.
+- "cited": the text of the pages the model cited, split at 5,000 characters,
+  at most five items (the default until session 6).
 - "cited-then-retrieved" (session 4): the same items first, then the other
   pages the model was shown, most similar to the claim first (e5-small, a
   page's best chunk), until there are five items.
-- "cited-pieces" (session 6): only the pages the model cited, each split into
+- "cited-pieces" (session 6, default): only the pages the model cited, each split into
   the pipeline's pieces of at most 1,000 characters (as the embedding chunks,
   src/contexts/embed_e5_small.py). Each piece is its own item with its page.
   Pieces are taken in turn across the cited pages, in the model's order: the
