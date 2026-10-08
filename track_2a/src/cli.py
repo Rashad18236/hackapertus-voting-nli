@@ -6,8 +6,11 @@ Usage (the official entrypoint contract):
 
 Each request has exactly one of `booklet` (task A) or `reference` (task B).
 Task B: one model call with the reference passage, label only.
-Task A: one model call with the whole booklet (page by page), the vote name and
-the claim; the answer names up to five pages, whose text becomes the evidence.
+Task A: one model call with the booklet text, the vote name and the claim; the
+answer names up to five pages, whose text becomes the evidence. --context-a
+chooses what booklet text the model sees (CONTEXTS_A): the whole booklet
+("fulldoc", the default and reference baseline) or only the passages most
+similar to the claim ("embed-e5-small", see src/context.py).
 Booklet paths are relative to the input file's folder (/data in the container).
 
 No case is ever dropped. If a request is malformed, the model call fails or
@@ -24,11 +27,19 @@ import time
 from collections import Counter
 from pathlib import Path
 
-from src import env, llm, nli, parse
+from src import context, env, llm, nli, parse
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 MAX_TOKENS_A = 64  # answer budget for task A ({"pages": [...], "label": n})
 JSON_MODE_A = False  # ask the endpoint for a JSON object in task A (response_format)
+
+# Task A context variants: name -> prompt version. Every variant's name appears in
+# the raw answers, so each run in docs/results.md says which one it used.
+CONTEXTS_A = {
+    "fulldoc": "A-v3-fulldoc",          # whole booklet, page by page
+    "embed-e5-small": "A-v3-excerpts",  # top context.TOP_K chunks by multilingual-e5-small similarity
+}
+DEFAULT_CONTEXT_A = "fulldoc"  # the measured baseline; switch only after a variant beats it on dev
 
 log = logging.getLogger("cli")
 
@@ -53,7 +64,8 @@ def task_of(case):
     return "A" if has_booklet else "B"
 
 
-def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A):
+def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A,
+              context_a=DEFAULT_CONTEXT_A):
     """Task A: whole booklet in one call. Returns (response, status)."""
     case_id = case["id"]
     try:
@@ -69,9 +81,20 @@ def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A, json_mode_a
         raw["error"] = f"PDF parsing failed ({type(e).__name__})"
         return response(case_id, FALLBACK_LABEL, start=start), "booklet could not be parsed"
 
-    raw["prompt_version"] = nli.PROMPT_VERSION_A
+    prompt_version = CONTEXTS_A[context_a]
+    raw["context_a"], raw["prompt_version"] = context_a, prompt_version
+    if context_a == "fulldoc":
+        booklet_text = parse.booklet_prompt_text(pages)
+    else:
+        try:
+            chunks = context.select_chunks(pages, claim_text)
+        except Exception as e:  # e.g. model files missing; must not stop the run
+            raw["error"] = f"context selection failed ({type(e).__name__}: {e})"
+            return response(case_id, FALLBACK_LABEL, start=start), "context selection failed"
+        raw["context_pages"] = [n for n, _ in chunks]
+        booklet_text = context.excerpts_prompt_text(chunks)
     try:
-        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(pages), vote, claim_text), max_tokens=max_tokens_a,
+        result = llm.chat(nli.build_messages_a(booklet_text, vote, claim_text, prompt_version), max_tokens=max_tokens_a,
                           json_mode=json_mode_a)
     except llm.LLMError as e:
         raw["error"] = str(e)
@@ -87,7 +110,8 @@ def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A, json_mode_a
     return response(case_id, label, result.input_tokens, result.output_tokens, start, evidence), status
 
 
-def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A):
+def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A,
+            context_a=DEFAULT_CONTEXT_A):
     """Return (response, status, raw). status is 'ok' or a failure kind; raw keeps details for analysis."""
     start = time.perf_counter()  # timed around the whole case, not only the model call
     case_id = case["id"]
@@ -97,7 +121,7 @@ def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_
     if task is None:
         return response(case_id, FALLBACK_LABEL, start=start), "invalid request (needs exactly one of booklet/reference)", raw
     if task == "A":
-        resp, status = predict_a(case, data_dir, start, raw, max_tokens_a, json_mode_a)
+        resp, status = predict_a(case, data_dir, start, raw, max_tokens_a, json_mode_a, context_a)
         return resp, status, raw
 
     try:
@@ -133,6 +157,8 @@ def main():
                         help="development only: answer token budget for task A")
     parser.add_argument("--json-mode-a", action="store_true", default=JSON_MODE_A,
                         help="development only: request a JSON object (response_format) for task A")
+    parser.add_argument("--context-a", default=DEFAULT_CONTEXT_A, choices=sorted(CONTEXTS_A),
+                        help="task A context: whole booklet or embedding-selected excerpts")
     args = parser.parse_args()
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
@@ -156,7 +182,7 @@ def main():
             continue
         try:
             resp, status, raw = predict(case, args.prompt_b, args.input.resolve().parent, args.max_tokens_a,
-                                          args.json_mode_a)
+                                          args.json_mode_a, args.context_a)
         except Exception as e:  # never let one case stop the run
             resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
         if status != "ok":

@@ -102,13 +102,22 @@ First find the pages of the booklet that are relevant to the claim: the numbers 
 Answer with one JSON object and nothing else, pages first, for example:
 {"pages": [14, 15], "label": 0}"""
 PROMPT_VERSION_A = "A-v3-fulldoc"
-SYSTEM_PROMPT_A = PROMPTS_A[PROMPT_VERSION_A]
+
+# A-v3-excerpts: A-v3-fulldoc with only the description of the input changed, for
+# selected context (src/context.py): the model sees the passages most similar
+# to the claim, not the whole booklet. Rule and answer format are identical.
+_INPUT_FULLDOC = 'The booklet is given page by page; each page starts with a line "=== PAGE n ===".'
+_INPUT_EXCERPTS = ('You get only excerpts of the booklet: the passages most similar to the claim, in page order; '
+                   'each excerpt starts with a line "=== PAGE n ===" naming its page.')
+assert _INPUT_FULLDOC in PROMPTS_A["A-v3-fulldoc"]
+PROMPTS_A["A-v3-excerpts"] = PROMPTS_A["A-v3-fulldoc"].replace(_INPUT_FULLDOC, _INPUT_EXCERPTS)
 
 
-def build_messages_a(booklet_text, vote, claim_text):
-    user = f"BOOKLET:\n{booklet_text}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
+def build_messages_a(booklet_text, vote, claim_text, version=PROMPT_VERSION_A):
+    heading = "BOOKLET EXCERPTS" if version == "A-v3-excerpts" else "BOOKLET"
+    user = f"{heading}:\n{booklet_text}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
     return [
-        {"role": "system", "content": SYSTEM_PROMPT_A},
+        {"role": "system", "content": PROMPTS_A[version]},
         {"role": "user", "content": user},
     ]
 

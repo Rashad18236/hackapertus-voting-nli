@@ -22,11 +22,16 @@ def a_case(case_id):
             "booklet": {"path": "booklets/x.pdf", "language": "it"}}
 
 
-def fake_chat(answers):
-    """Return a chat() replacement that gives the next answer each call (an exception is raised)."""
+def fake_chat(answers, seen=None):
+    """Return a chat() replacement that gives the next answer each call (an exception is raised).
+
+    If seen is a list, the messages of every call are appended to it.
+    """
     answers = list(answers)
 
     def chat(messages, max_tokens=256, json_mode=False):
+        if seen is not None:
+            seen.append(messages)
         answer = answers.pop(0)
         if isinstance(answer, Exception):
             raise answer
@@ -34,12 +39,12 @@ def fake_chat(answers):
     return chat
 
 
-def run_cli(lines, answers):
+def run_cli(lines, answers, extra_args=(), seen=None):
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "cases.jsonl", Path(tmp) / "out" / "predictions.jsonl"
         inp.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        with mock.patch.object(llm, "chat", fake_chat(answers)), \
-             mock.patch("sys.argv", ["cli", "--input", str(inp), "--output", str(out)]), \
+        with mock.patch.object(llm, "chat", fake_chat(answers, seen)), \
+             mock.patch("sys.argv", ["cli", "--input", str(inp), "--output", str(out), *extra_args]), \
              mock.patch.object(cli.env, "load_env_file"):
             code = cli.main()
         return code, [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
@@ -84,6 +89,29 @@ class NeverDropACase(unittest.TestCase):
         self.assertEqual(by_id["a-neutral"]["evidence"], [])   # neutral: no evidence
         self.assertEqual(by_id["a-nopages"]["label"], 2)       # label kept, evidence empty
         self.assertEqual(by_id["a-nopages"]["evidence"], [])
+
+    def test_embedding_context_sends_only_selected_chunks(self):
+        pages = {1: "intro", 2: "details on the tax", 3: "other ballot"}
+        seen = []
+        with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+             mock.patch.object(cli.Path, "is_file", return_value=True), \
+             mock.patch.object(cli.context, "select_chunks", return_value=[(2, "details on the tax")]):
+            code, out = run_cli([json.dumps(a_case("a"))], ['{"pages": [2], "label": 0}'],
+                                ["--context-a", "embed-e5-small"], seen)
+        self.assertEqual(code, 0)
+        system, user = seen[0][0]["content"], seen[0][1]["content"]
+        self.assertIn("only excerpts of the booklet", system)
+        self.assertIn("=== PAGE 2 ===\ndetails on the tax", user)
+        self.assertNotIn("other ballot", user)
+        self.assertEqual(out[0]["evidence"], [{"page": 2, "text": "details on the tax"}])  # whole page text
+
+    def test_context_selection_failure_falls_back(self):
+        with mock.patch.object(cli.parse, "load_pages", return_value={1: "text"}), \
+             mock.patch.object(cli.Path, "is_file", return_value=True), \
+             mock.patch.object(cli.context, "select_chunks", side_effect=FileNotFoundError("model.onnx")):
+            code, out = run_cli([json.dumps(a_case("a"))], [], ["--context-a", "embed-e5-small"])
+        self.assertEqual(code, 0)
+        self.assertEqual((out[0]["label"], out[0]["evidence"]), (1, []))
 
     def test_input_equals_output_is_refused(self):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):

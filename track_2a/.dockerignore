@@ -12,3 +12,4 @@ scripts/
 **/*.pyc
 .venv/
 .pytest_cache/
+models/

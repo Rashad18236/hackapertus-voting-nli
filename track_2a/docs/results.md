@@ -20,12 +20,15 @@ valid submission is 0.75 on task B and 0.60 on task A.
 | 2026-10-08 | session-2 ³ | official | task A, dev sample 60, max_tokens 256 (endpoint drift, see notes) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.398 (E 0.276, N 0.467, C 0.452) | evidence score 0.150 (6/40) | 34 | 0 | 41124 | 11660 | 31684 |
 | 2026-10-08 | session-2 ³ | re-parsed offline (no new calls) | task A, dev sample 60, max_tokens 256 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + prose-label parser | 0.553 (E 0.595, N 0.520, C 0.545) | evidence score 0.150 (6/40) | 14 | 0 | 41124 | 11660 | 31684 |
 | 2026-10-08 | session-2 ⁴ | official | task A, dev sample 60, JSON mode (attempt 1; 27 % failed calls) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.378 (E 0.357, N 0.483, C 0.294) | evidence score 0.125 (5/40) | 15 | 16 | 21041 | 15766 | 58256 |
+| 2026-10-08 | session-3 ⁵ | official | **task A, all 300 dev cases**, context `embed-e5-small` | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-excerpts | **0.767** (E 0.806, N 0.764, C 0.732) | evidence score 0.383 (77/201) | 0 | 0 | 1868 | 3770 | 14392 |
 
 ¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
 
 ⁴ JSON mode = `--json-mode-a` (`response_format: json_object`), the only change against the 60-case row; code committed with session 2's last commit. Mean input tokens count the 16 failed calls as 0. The rerun after the two-minute wait was stopped at 7 failed calls in 24 cases (over 10 % certain) and has no score (`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/run.log`).
 
 ³ The max_tokens run used commit `60e9eb1` with `--max-tokens-a 256`. "Re-parsed" rows apply the current parser (which also reads an explicit prose label statement) to the saved raw answers of the run above them, with `scripts/reparse_run.py`: no new model calls, tokens and time copied, scored with the official scorer.
+
+⁵ Session 3, uncommitted working tree on parent `3fa8f58`: `--context-a embed-e5-small`, the only change against the reference row `s2-A300-A-v3-fulldoc` besides the prompt sentence describing the input (`A-v3-excerpts`). Run 13:46 to 14:04 UTC, about six hours after the reference row, so endpoint drift (see ³) is not ruled out; no same-time `fulldoc` control was run. Times were measured under amd64 emulation on an Apple M4 Pro (the reference row ran elsewhere), so they are not comparable; the first case of each booklet includes parsing and embedding it. A first attempt was stopped after 27 cases that all failed to connect (endpoint outage). Files: `docs/runs/s3-A300-embed-e5-small/`.
 
 ² Task A runs used code identical to commit `4e90ddc` (prompt `A-v3-fulldoc`, retry active).
 
@@ -102,3 +105,20 @@ always-neutral value. It is not a task A result.
 
 - `--json-mode-a` asks the endpoint for a JSON object (`response_format: json_object`); the only change against the 60-case row. Attempt 1 (07:53 to 08:09 UTC): 0.378, with 16 of 60 calls failing even after the retry (15 × HTTP 503, 1 × 504), so the run is invalid by the 10 % rule. The rerun after the two-minute wait (08:12 to 08:24) failed 7 of its first 24 calls and was stopped, as the session rule says.
 - What JSON mode did do: no prose answers, but 15 answers used an invented schema such as `{"display_answers": {"answers": ["0"]}}` with no `label` key. JSON mode guarantees JSON, not our JSON. Not adopted; the default stays off.
+
+## Offline retrieval checks (no model calls)
+
+`scripts/retrieval_check.py` on the 201 dev task A cases with a gold passage
+(labels 0 and 2), booklets from `scripts/fetch_dev_booklets.py`. No tokens are
+used; these numbers say how much of the gold passage reaches the model, not
+how well it labels. Matching re-implements the starter's normalisation
+(partial ratio >= 90), so it approximates the official evidence check.
+
+| Date | Commit | Context | hit@k | Evidence ceiling, selected pages | Evidence ceiling, all pages | Mean chars sent (selected / full) |
+|---|---|---|---|---|---|---|
+| 2026-10-08 | uncommitted (session 3) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
+
+hit@k: a selected chunk lies inside the gold passage. Evidence ceiling: a
+selected page (or, for the full document, any page) would pass the evidence
+check, the best evidence score a model could reach by citing it. By label:
+hit@8 0.784 for entailment, 0.697 for contradiction.

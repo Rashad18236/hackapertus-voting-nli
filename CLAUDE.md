@@ -61,9 +61,10 @@ and `evaluate.py` unchanged.
   into the image; nothing is downloaded at run time. No API keys or `.env` in
   the image.
 - Only Apertus v1.5 models (`swiss-ai/Apertus-v1.5-...`). Every remote model
-  call must go to `BASE_URL`. Local parsing, OCR or embeddings may run locally;
-  whether a non-Apertus local embedding model is acceptable is still unclear,
-  so do not add one without asking us.
+  call must go to `BASE_URL`. Local parsing, OCR or embeddings may run locally.
+  External (non-Apertus) open models are allowed for local support work such
+  as embeddings (confirmed by the team on 2026-10-08); every LLM call is still
+  Apertus. Its role must be described in the report.
 - Variables: `BASE_URL` and `API_KEY`, environment first, then local
   configuration. At evaluation the organisers inject a token-counting proxy as
   `BASE_URL` and a team key as `API_KEY`. For local use we fall back to
@@ -164,7 +165,7 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
-  context.py    context selection for task A                  (next stage)
+  context.py    task A context selection: top-k chunks by multilingual-e5-small (ONNX, local CPU)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, decisions, results, reviews, run artefacts
@@ -187,7 +188,17 @@ tests/          unit tests (evaluate, parser, CLI)
 - Never run on `data/test/`. Test is for the final evaluation only.
 - Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: task B improvement, then task A baseline
+## Current stage: task A context selection (from 2026-10-08, session 3)
+
+The full-document baseline has measured numbers, so retrieval is now in scope.
+`--context-a` picks the task A context variant (`fulldoc` = reference,
+`embed-e5-small` = top 8 chunks of at most 1,000 characters by
+`intfloat/multilingual-e5-small`); `make compare` runs every variant on the
+same cases. `fulldoc` stays the default until a variant beats it on dev.
+`scripts/retrieval_check.py` measures retrieval offline against the gold
+passages (no tokens). Still: one change per run, never `data/test/`.
+
+## Previous stage: task B improvement, then task A baseline
 
 Contract alignment is finished (merged as PR #2): official CLI and Docker
 contract, starter-generated dev/test cases, starter scorer. Task B scored
@@ -217,8 +228,6 @@ JSON, and the endpoint's output drifted during the session.
 
 ## Open questions (do not assume the answers)
 
-- Whether a non-Apertus local embedding model is acceptable (the guide allows
-  local embeddings but also says "only Apertus v1.5 models").
 - Whether the evidence page is checked against the 1-based PDF page in the
   official run (the starter says pages are "not checked yet").
 - Formula combining Macro-F1, tokens and time in the final score (the starter
