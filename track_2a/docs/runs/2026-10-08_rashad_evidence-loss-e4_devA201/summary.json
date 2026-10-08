@@ -1,0 +1,75 @@
+{
+ "cases": 201,
+ "sent_pages_differ_from_run": 0,
+ "classes": {
+  "all": {
+   "hit": 75,
+   "gold page not sent": 23,
+   "predicted neutral": 20,
+   "gold page sent but not cited": 43,
+   "cited but text did not match": 40
+  },
+  "same-language": {
+   "hit": 27,
+   "gold page not sent": 2,
+   "predicted neutral": 7,
+   "gold page sent but not cited": 14,
+   "cited but text did not match": 17
+  },
+  "cross-language": {
+   "hit": 48,
+   "gold page not sent": 21,
+   "predicted neutral": 13,
+   "gold page sent but not cited": 29,
+   "cited but text did not match": 23
+  }
+ },
+ "cases_same_language": 67,
+ "cases_cross_language": 134,
+ "mean_pages_cited_label_0_2": 2.91,
+ "mean_pages_in_answer_label_0_2": 3.07,
+ "answers_label_0_2": 176,
+ "wrongly_cited_pages": 347,
+ "wrongly_cited_before_detailed_section": 32,
+ "answers_with_a_wrong_page_before_the_section": 18,
+ "wrongly_cited_inside_detailed_section": 118,
+ "wrongly_cited_after_detailed_section": 197,
+ "cases_without_section": 0,
+ "cited_but_no_match_breakdown": {
+  "cases": 40,
+  "only the first or last gold page cited": 27,
+  "another sent gold page would match as a whole page": 7,
+  "no whole page of the booklet matches": 16
+ },
+ "form_b_items_from_non_adjacent_chunks": 31,
+ "form_b_items": 513,
+ "evidence_score_by_form": {
+  "a": 0.373,
+  "b": 0.368,
+  "c": 0.358,
+  "a+b": 0.408
+ },
+ "evidence_found_by_form": {
+  "a": 75,
+  "b": 74,
+  "c": 72,
+  "a+b": 82
+ },
+ "ceiling_if_right_sent_page_cited": {
+  "a": 0.657,
+  "b": 0.642,
+  "c": 0.642,
+  "a+b": 0.756
+ },
+ "ceiling_whole_booklet_form_a": 0.886,
+ "no_whole_page_match": {
+  "cases": 23,
+  "reasons": {
+   "page break: the passage runs over several pages": 21,
+   "passage over 5,000 characters, over several pages": 2
+  },
+  "gold_page_sent": 21,
+  "form_b_could_match": 11,
+  "form_c_could_match": 2
+ }
+}

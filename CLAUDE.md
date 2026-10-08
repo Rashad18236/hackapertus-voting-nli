@@ -179,7 +179,7 @@ src/
                 multilingual-e5-small, ONNX, local CPU), and since session 4
                 vote_section_embed_e5_small(_k12).py, embed_granite_97m_r2.py,
                 vote_section_embed_granite_97m_r2.py; shared code in retrieval.py
-  evidence.py   task A evidence settings: cited (default) or cited-then-retrieved
+  evidence.py   task A evidence settings: cited (default; only cited pages) or cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, reports, reviews
@@ -188,7 +188,7 @@ docs/           official contract, reports, reviews
   results.md, decisions.md   generated from runs/ and decisions/ by scripts/build_docs.py
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
-                search_or_reading.py, pad_evidence.py
+                search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -259,7 +259,8 @@ Two lines of work from 2026-10-08 are merged (PR #5):
 
 `--context-a` picks the task A context (all modes in `src/context.py`); the
 default is `embed-e5-small` since session 4. Every mode uses the json_schema
-answer. `--evidence-a cited-then-retrieved` pads the evidence (off by default).
+answer. `--evidence-a cited-then-retrieved` pads the evidence; it stays off
+(team decision, session 5: evidence holds only pages Apertus cited).
 
 E3 (paired, all 300 task A dev cases, both json_schema; details in
 `track_2a/docs/runs/2026-10-08_rashad_embed-vs-section_devA300/NOTES.md`):
@@ -286,8 +287,17 @@ Session 4 (`track_2a/docs/session_4_report.md`, decisions in
   E3's evidence score from 0.383 to 0.522 without changing labels.
 - The default is now `embed-e5-small`.
 
-Next: work on reading errors (the prompt), not on search; switch on padded
-evidence once the organisers confirm extra items are not penalised.
+Session 5 (`track_2a/docs/session_5_report.md`, no model calls): task A
+evidence contains **only pages Apertus cited** (fixed decision; the
+`cited-then-retrieved` padding stays in the code, off). On E4's control
+answers, of 201 gold cases: 75 hit, 23 gold page not sent, 20 predicted
+neutral, 43 gold page sent but not cited, 40 cited but the text did not match
+(mostly only the first or last page of a passage spanning pages). Whole-page
+items stay best (0.373 against 0.368 and 0.358 for sent chunks). Realistic
+maximum with cited pages only and today's search: 0.657.
+
+Next: a new citation instruction (new prompt version, paired run), and work
+on reading errors (true statements called contradictions).
 
 Rules for this stage:
 
