@@ -1,0 +1,30 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "06:24",
+ "kind": "model run",
+ "code": "session-2 working tree",
+ "task": "B",
+ "cases": "dev, 300 task B cases (Run C)",
+ "setup": "v4-topic-first-examples",
+ "format": "official",
+ "results": {
+  "macro_f1": 0.933,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.907,
+   "contradiction": 0.906
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 2162,
+  "mean_time_ms": 1765,
+  "p95_time_ms": 2986
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "variant": null,
+ "paired_with": null,
+ "highlight": false,
+ "notes": "NOTES.md"
+}

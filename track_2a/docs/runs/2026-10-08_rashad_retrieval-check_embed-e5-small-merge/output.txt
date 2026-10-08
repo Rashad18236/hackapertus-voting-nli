@@ -1,0 +1,21 @@
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/CQASNU+MinionPro-Regular', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(366, 0, 140480929018368), '/LastChar': 117, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [227, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 356, 228, 0, 480, 480, 480, 480, 480, 480, 480, 480, 480, 480, 228, 0, 0, 0, 0, 0, 0, 691, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 500, 0, 0, 508, 423, 528, 425, 296, 468, 534, 268, 0, 0, 0, 819, 547, 510, 0, 0, 371, 367, 305, 531]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+40/201
+60/201
+80/201
+100/201
+120/201
+140/201
+160/201
+180/201
+200/201
+cases with a gold passage: 201, top_k 8, chunk 1000 chars
+hit@8 (a selected chunk lies in the gold passage): 0.741
+evidence ceiling, selected pages: 0.612
+evidence ceiling, all pages (full document): 0.856
+mean chars sent: selected 5386, full 128537
+
+real	12m18.048s
+user	29m54.758s
+sys	0m11.946s
+
+[exited with code 0]

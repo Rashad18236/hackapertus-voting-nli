@@ -1,0 +1,19 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "06:49",
+ "kind": "part of another run",
+ "part_of": "s2-A300-A-v3-fulldoc",
+ "code": "4e90ddc",
+ "task": "A",
+ "variant": "full",
+ "cases": "dev, the 240 task A cases outside the 60-case sample",
+ "setup": "A-v3-fulldoc",
+ "format": "official",
+ "results": null,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "highlight": false,
+ "notes": "../s2-A300-A-v3-fulldoc/NOTES.md"
+}

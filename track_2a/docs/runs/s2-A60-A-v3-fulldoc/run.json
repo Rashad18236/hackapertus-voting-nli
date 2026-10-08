@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "06:39",
+ "kind": "model run",
+ "code": "4e90ddc",
+ "task": "A",
+ "variant": "full",
+ "cases": "dev sample, 60 task A cases (20 per label)",
+ "setup": "A-v3-fulldoc",
+ "format": "official",
+ "highlight": true,
+ "results": {
+  "macro_f1": 0.767,
+  "f1": {
+   "entailment": 0.872,
+   "neutral": 0.744,
+   "contradiction": 0.684
+  },
+  "evidence": {
+   "score": 0.375,
+   "found": 15,
+   "cases": 40
+  },
+  "parse_failures": 6,
+  "failed_calls": 0,
+  "mean_input_tokens": 41124,
+  "mean_time_ms": 9617,
+  "p95_time_ms": 23331
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "notes": "NOTES.md"
+}

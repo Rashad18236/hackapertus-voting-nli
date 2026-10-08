@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "06:39",
+ "kind": "re-parse",
+ "code": "session-2 working tree (prose-label parser), answers of s2-A300-A-v3-fulldoc",
+ "task": "A",
+ "variant": "full",
+ "cases": "dev, all 300 task A cases",
+ "setup": "A-v3-fulldoc + prose-label parser",
+ "format": "re-parsed offline (no new calls)",
+ "results": {
+  "macro_f1": 0.608,
+  "f1": {
+   "entailment": 0.686,
+   "neutral": 0.647,
+   "contradiction": 0.491
+  },
+  "evidence": {
+   "score": 0.209,
+   "found": 42,
+   "cases": 201
+  },
+  "parse_failures": 97,
+  "failed_calls": 3,
+  "mean_input_tokens": 39706,
+  "mean_time_ms": 11501,
+  "p95_time_ms": 30334
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "highlight": false,
+ "notes": "../s2-A60-A-v3-fulldoc-max256/NOTES.md"
+}

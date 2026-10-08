@@ -1,0 +1,5 @@
+### 2026-10-08, session 2: task A JSON mode (60-case sample)
+
+- `--json-mode-a` asks the endpoint for a JSON object (`response_format: json_object`); the only change against the 60-case row. Attempt 1 (07:53 to 08:09 UTC): 0.378, with 16 of 60 calls failing even after the retry (15 × HTTP 503, 1 × 504), so the run is invalid by the 10 % rule. The rerun after the two-minute wait (08:12 to 08:24) failed 7 of its first 24 calls and was stopped, as the session rule says.
+- What JSON mode did do: no prose answers, but 15 answers used an invented schema such as `{"display_answers": {"answers": ["0"]}}` with no `label` key. JSON mode guarantees JSON, not our JSON. Not adopted; the default stays off.
+- JSON mode = `--json-mode-a` (`response_format: json_object`), the only change against the 60-case row; code committed with session 2's last commit. Mean input tokens count the 16 failed calls as 0. The rerun after the two-minute wait was stopped at 7 failed calls in 24 cases (over 10 % certain) and has no score (`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/run.log`).

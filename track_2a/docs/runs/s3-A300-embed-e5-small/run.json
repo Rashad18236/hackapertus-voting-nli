@@ -1,0 +1,35 @@
+{
+ "person": "kaan",
+ "date": "2026-10-08",
+ "start_utc": "13:46",
+ "kind": "model run",
+ "code": "embedding branch working tree (parent 3fa8f58)",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, all 300 task A cases",
+ "setup": "A-v3-excerpts, answer format by prompt, max_tokens 64 (not paired)",
+ "format": "official",
+ "highlight": true,
+ "results": {
+  "macro_f1": 0.767,
+  "f1": {
+   "entailment": 0.806,
+   "neutral": 0.764,
+   "contradiction": 0.732
+  },
+  "evidence": {
+   "score": 0.383,
+   "found": 77,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1868,
+  "mean_time_ms": 3770,
+  "p95_time_ms": 14392
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "notes": "NOTES.md"
+}

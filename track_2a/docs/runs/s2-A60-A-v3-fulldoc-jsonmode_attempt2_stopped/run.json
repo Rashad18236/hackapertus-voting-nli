@@ -1,0 +1,18 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "08:12",
+ "kind": "stopped",
+ "code": "1569e6f with --json-mode-a",
+ "task": "A",
+ "variant": "full",
+ "cases": "dev sample, 60 task A cases (stopped after 24)",
+ "setup": "A-v3-fulldoc, JSON mode (attempt 2)",
+ "format": "official",
+ "results": null,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "highlight": false,
+ "notes": "../s2-A60-A-v3-fulldoc-jsonmode_attempt1/NOTES.md"
+}
