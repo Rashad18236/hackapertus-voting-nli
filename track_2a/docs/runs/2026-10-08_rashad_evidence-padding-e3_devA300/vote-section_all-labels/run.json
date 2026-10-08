@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "17:01",
+ "kind": "re-score",
+ "code": "df3028f (src/evidence.py, scripts/pad_evidence.py), answers of docs/runs/2026-10-08_rashad_embed-vs-section_devA300/vote-section",
+ "task": "A",
+ "variant": "vote-section",
+ "cases": "dev, all 300 task A cases",
+ "setup": "E3's answers, evidence cited-then-retrieved for all labels (information only: the pipeline gives no evidence for label 1)",
+ "format": "re-scored offline (no new calls), official scorer",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b (cases 1-180), swiss-ai/apertus-v1.5-8b-thinking (cases 181-300)",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.561,
+  "f1": {
+   "entailment": 0.459,
+   "neutral": 0.627,
+   "contradiction": 0.597
+  },
+  "evidence": {
+   "score": 0.358,
+   "found": 72,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 6,
+  "mean_input_tokens": 15863,
+  "mean_time_ms": 5967,
+  "p95_time_ms": 9268
+ }
+}
