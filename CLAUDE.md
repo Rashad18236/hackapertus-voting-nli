@@ -164,7 +164,7 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
-  context.py    context selection for task A                  (next stage)
+  context.py    task A context selection: full booklet or the vote's section (default)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, decisions, results, reviews, run artefacts
@@ -211,6 +211,13 @@ Rules for this stage:
   the gold page, and how large is it) before spending model calls.
 - Cases run one at a time; one retry for HTTP 5xx and timeouts only.
 - Still no embeddings or non-Apertus models.
+
+Status at the end of session 3 (details: `track_2a/docs/session_3_report.md`):
+task A answers are schema-constrained (0 unparseable) and task A sends only
+the vote's section (`src/context.py`). E2, 300 dev cases, paired: section
+Macro-F1 0.732 against 0.669 for the full booklet, 15.9k against 39.2k input
+tokens per case, p95 13.5 s against 37.1 s; evidence 0.224 against 0.284.
+Task B unchanged at 0.947.
 
 ## Open questions (do not assume the answers)
 

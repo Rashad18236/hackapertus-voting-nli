@@ -38,7 +38,7 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "full"     # which booklet pages task A sends: see context.MODES
+    context_a: str = "vote-section"  # which booklet pages task A sends: see context.MODES (session 3, E2)
 
 log = logging.getLogger("cli")
 

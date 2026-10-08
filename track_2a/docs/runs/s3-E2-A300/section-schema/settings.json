@@ -1,0 +1,8 @@
+{
+ "name": "section-schema",
+ "prompt_b": "v3-topic-first",
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "vote-section"
+}

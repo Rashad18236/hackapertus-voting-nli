@@ -260,3 +260,9 @@ One line per decision, with the reason. Newest stage at the bottom.
 
 - **json_schema (max_tokens 128) is the new task A default: in E1 (60 cases, paired) it scored 0.850 against 0.817, with 0 unparseable answers against 3, and on the 58 cases both arms answered 0.863 against 0.846; mean time was 7.0 s against 10.2 s.** It solves the format problem by construction, with no cost in input tokens.
 - **E2 (full booklet against vote section) runs on all 300 task A dev cases directly, paired, both arms with the schema; there was no separate 60-case step.** The section path differs from the full path only in which pages are sent; it was verified offline (recall 0.988) and on 2 live cases. Running the 60 first would have cost about 2.5M tokens and 20 minutes for no new information.
+
+### E2 result and default
+
+- **The task A default is now `vote-section`.** In E2 (300 dev cases, paired) it scored Macro-F1 0.732 against 0.669 (0.741 against 0.674 on the 292 cases both arms answered), with 60 % fewer input tokens (15.9k against 39.2k per case) and a p95 time of 13.5 s against 37.1 s. Macro-F1 is the primary metric, and tokens and time are scored too.
+- **This costs evidence score (0.224 against 0.284), which is recorded and not hidden.** With a shorter context the model cites the front summary pages more often. Those pages hold the gold passage in 47 of 169 cases, so they stay in the selection; improving which pages are cited is the next step.
+- **E2 was paused during an outage (12:37 to 13:03 UTC) and resumed with `paired_run.py --resume`; a watchdog would have paused it again after 3 cases in a row failing in both arms.** Calls during an outage only produce neutral fallbacks in both arms. The 13 failed calls that happened anyway are kept as recorded (7 full, 6 section), and the paired-subset score excludes them.

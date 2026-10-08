@@ -1,0 +1,29 @@
+Issues: missing 0, duplicated ids 0, unknown ids 0
+
+=== Task A: 300 cases, invalid or missing 0
+Macro-F1: 0.732   accuracy: 0.730
+confusion (rows gold, columns predicted):
+               entailm  neutral  contrad  invalid
+entailment          82        8       12        0
+neutral              2       63       34        0
+contradiction        8       17       74        0
+Input tokens: sum 4760417, mean 15868.057   Output tokens: mean 23.133   Time ms: mean 8248.400, p95 13513
+
+group                n    macro_f1  accuracy  invalid
+same-language        100  0.737     0.740     0
+cross-lingual        200  0.727     0.725     0
+claim de             102  0.703     0.706     0
+claim fr             99   0.795     0.798     0
+claim it             99   0.686     0.687     0
+source de            100  0.723     0.720     0
+source fr            100  0.702     0.700     0
+source it            100  0.768     0.770     0
+de->de               34   0.704     0.706     0
+de->fr               33   0.849     0.848     0
+de->it               33   0.586     0.606     0
+fr->de               34   0.700     0.706     0
+fr->fr               33   0.722     0.727     0
+fr->it               33   0.667     0.667     0
+it->de               34   0.705     0.706     0
+it->fr               33   0.811     0.818     0
+it->it               33   0.784     0.788     0
