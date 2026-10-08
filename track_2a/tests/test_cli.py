@@ -10,7 +10,15 @@ from pathlib import Path
 from unittest import mock
 
 from src import cli, llm
-from src.contexts import embed_e5_small
+from src.contexts import embed_e5_small, retrieval
+
+
+class OneVectorEmbedder:
+    """Stands in for an embedding model: every text gets the same unit vector."""
+
+    def embed(self, texts):
+        import numpy as np
+        return np.ones((len(texts), 4)) / 2.0
 
 
 def b_case(case_id):
@@ -81,7 +89,7 @@ class NeverDropACase(unittest.TestCase):
         answers = ['{"label": 0, "pages": [2, 99]}', '{"label": 1, "pages": [3]}', '{"label": 2, "pages": []}']
         with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
              mock.patch.object(cli.Path, "is_file", return_value=True):
-            code, out = run_cli(lines, answers)
+            code, out = run_cli(lines, answers, ["--context-a", "full"])  # every page shown, so cited pages count
         by_id = {p["id"]: p for p in out}
         self.assertEqual(code, 0)
         ev = by_id["a-entail"]["evidence"]
@@ -103,7 +111,8 @@ class NeverDropACase(unittest.TestCase):
                 with mock.patch.object(llm, "chat", chat), \
                      mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
                      mock.patch.object(cli.Path, "is_file", return_value=True), \
-                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]):
+                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]), \
+                     mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()):
                     resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a=mode))
                 self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)  # the default for every mode
                 self.assertEqual(seen["max_tokens"], 128)
@@ -137,6 +146,12 @@ class NeverDropACase(unittest.TestCase):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):
             with self.assertRaises(SystemExit):
                 cli.main()
+
+
+class Defaults(unittest.TestCase):
+    def test_task_a_default_is_embed_e5_small_with_cited_evidence(self):
+        settings = cli.Settings()
+        self.assertEqual((settings.context_a, settings.evidence_a, settings.schema_a), ("embed-e5-small", "cited", True))
 
 
 if __name__ == "__main__":

@@ -58,15 +58,17 @@ Folders from before 2026-10-08 16:29 UTC keep their old names (`s2-...`,
 |---|---|
 | `person` | who ran it (lower case first name); runs done in a Claude Code session count as the person who ran that session |
 | `date`, `start_utc` | when the model calls started (UTC). A re-parse carries the start of the run whose answers it re-reads. `null` if not recorded; never guess |
-| `kind` | `model run`, `re-parse` (no new calls), `offline check` (no model calls), `stopped`, or `part of another run` (then also `part_of`) |
+| `kind` | `model run`, `re-parse` (answers re-read, no new calls), `re-score` (answers kept, evidence rebuilt, no new calls), `offline check` (no model calls), `stopped`, or `part of another run` (then also `part_of`) |
 | `code` | the commit that ran, or the working tree it ran from |
 | `task` | `A` or `B` |
 | `variant` | task A context variant (`src/context.py`), or `null` |
 | `cases`, `setup`, `format` | which cases; prompt and settings; scorer and whether the run is paired |
 | `paired_with` | the other arm of a paired run, or `null` |
 | `highlight` | shown in bold in the results table |
+| `model`, `endpoint` | the Apertus model name and the endpoint. One run uses one model name; the only exception is E3 (`2026-10-08_rashad_embed-vs-section_devA300`, recorded before this rule), whose `model` says which cases used which |
+| `summary` | optional one-line result for an offline analysis that has no retrieval numbers |
 | `notes` | path of the notes file, relative to this folder |
-| `results` | the numbers; `null` for stopped runs. Offline checks use their own keys (`hit_at_k`, `evidence_ceiling_selected`, ...) |
+| `results` | the numbers; `null` for stopped runs. Retrieval checks use their own keys (`hit_at_k`, `evidence_ceiling_selected`, ...); other offline analyses may hold any keys |
 
 `python3 scripts/build_docs.py --check` compares `results` with the run's own
 files where they exist (`official_score.json`, `predictions.jsonl`,

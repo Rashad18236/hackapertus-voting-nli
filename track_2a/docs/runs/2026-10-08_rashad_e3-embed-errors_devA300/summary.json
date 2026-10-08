@@ -1,0 +1,95 @@
+{
+ "cases": 300,
+ "pages_differ_from_run": 0,
+ "all": {
+  "correct": 211,
+  "search miss": 18,
+  "reading error": 39,
+  "reading error (gold neutral)": 27,
+  "failed call": 5
+ },
+ "by_gold": {
+  "entailment": {
+   "correct": 68,
+   "search miss": 7,
+   "reading error": 27,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  },
+  "neutral": {
+   "correct": 67,
+   "search miss": 0,
+   "reading error": 0,
+   "reading error (gold neutral)": 27,
+   "failed call": 5
+  },
+  "contradiction": {
+   "correct": 76,
+   "search miss": 11,
+   "reading error": 12,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  }
+ },
+ "by_language": {
+  "same-language": {
+   "correct": 71,
+   "search miss": 2,
+   "reading error": 16,
+   "reading error (gold neutral)": 10,
+   "failed call": 1
+  },
+  "cross-language": {
+   "correct": 140,
+   "search miss": 16,
+   "reading error": 23,
+   "reading error (gold neutral)": 17,
+   "failed call": 4
+  }
+ },
+ "by_gold_and_language": {
+  "entailment, same-language": {
+   "correct": 24,
+   "search miss": 0,
+   "reading error": 10,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  },
+  "contradiction, same-language": {
+   "correct": 25,
+   "search miss": 2,
+   "reading error": 6,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  },
+  "entailment, cross-language": {
+   "correct": 44,
+   "search miss": 7,
+   "reading error": 17,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  },
+  "contradiction, cross-language": {
+   "correct": 51,
+   "search miss": 9,
+   "reading error": 6,
+   "reading error (gold neutral)": 0,
+   "failed call": 0
+  }
+ },
+ "hit_rate": {
+  "all gold E/C cases": 0.7412935323383084,
+  "correct answers": 0.7638888888888888,
+  "wrong answers": 0.6842105263157895
+ },
+ "wrong_gold_ec_by_pred": {
+  "reading error: gold entailment -> contradiction": 21,
+  "search miss: gold entailment -> contradiction": 6,
+  "reading error: gold entailment -> neutral": 6,
+  "search miss: gold entailment -> neutral": 1,
+  "search miss: gold contradiction -> neutral": 10,
+  "reading error: gold contradiction -> entailment": 5,
+  "reading error: gold contradiction -> neutral": 7,
+  "search miss: gold contradiction -> entailment": 1
+ }
+}

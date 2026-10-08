@@ -50,8 +50,8 @@ TITLE_MIN_RATIO = 90  # fuzzy match score (0-100) for the full-title match
 _WORD = re.compile(r"[^\W\d_]{4,}")
 
 
-def select(pages, vote, claim_text):
-    """Return (prompt_text, shown): the section's pages, in page order."""
+def select(pages, vote, claim_text, cross_language=False):
+    """Return (prompt_text, shown): the section's pages, in page order. Languages play no role."""
     shown = {p: pages[p] for p in section_pages(pages, vote)}
     return parse.booklet_prompt_text(shown), shown
 

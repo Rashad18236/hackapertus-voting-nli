@@ -1,0 +1,29 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "19:16",
+ "kind": "offline check",
+ "code": "df3028f",
+ "task": "A",
+ "variant": "vote-section-embed-e5-small-k12",
+ "cases": "dev, the 201 task A cases with a gold passage (labels 0 and 2)",
+ "setup": "grid of 72 settings (2 models x booklet/section x k 4/8/12 x neighbours 0/1 x cross rule same/double/section); chosen: e5-small, vote section, k 12, no neighbours, rule same - missed the targets (evidence ceiling)",
+ "format": "scripts/retrieval_check.py --grid (no model calls)",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (local embeddings: multilingual-e5-small, granite-embedding-97m-multilingual-r2)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "results": {
+  "hit_at_k": 0.846,
+  "hit_at_k_same_language": 0.896,
+  "hit_at_k_cross_language": 0.821,
+  "evidence_ceiling_selected": 0.672,
+  "evidence_ceiling_all_pages": 0.856,
+  "mean_chars_selected": 8610,
+  "mean_chars_full": 128537,
+  "share_of_booklet": 0.096,
+  "cpu_s_first_case_of_booklet_and_vote": 10.3,
+  "meets_targets": false
+ }
+}

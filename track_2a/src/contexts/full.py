@@ -9,7 +9,7 @@ NAME = "full"
 PROMPT_VERSION = "A-v3-fulldoc"
 
 
-def select(pages, vote, claim_text):
-    """Return (prompt_text, shown): the whole booklet, and every page."""
+def select(pages, vote, claim_text, cross_language=False):
+    """Return (prompt_text, shown): the whole booklet, and every page. Languages play no role."""
     shown = dict(sorted(pages.items()))
     return parse.booklet_prompt_text(shown), shown

@@ -27,7 +27,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from src import context, env, llm, nli, parse
+from src import context, env, evidence, llm, nli, parse
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 
@@ -39,7 +39,9 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "vote-section"  # which booklet text task A sends: see context.MODES (session 3, E2)
+    context_a: str = "embed-e5-small"  # which booklet text task A sends: see context.MODES (session 4: won E3,
+                                       # 0.721 vs vote-section 0.561, and held in E4 against vote-section-embed-e5-small-k12)
+    evidence_a: str = "cited"   # task A evidence items: see evidence.MODES (session 4)
 
 
 log = logging.getLogger("cli")
@@ -84,7 +86,8 @@ def predict_a(case, data_dir, start, raw, settings):
     prompt_version = context.prompt_version(settings.context_a)  # each variant names its prompt
     raw["prompt_version"], raw["context"] = prompt_version, settings.context_a
     try:
-        booklet_text, shown = context.select(pages, vote, claim_text, settings.context_a)
+        cross_language = case["claim"].get("language") != case["booklet"].get("language")
+        booklet_text, shown = context.select(pages, vote, claim_text, settings.context_a, cross_language)
     except Exception as e:  # e.g. embedding model files missing; must not stop the run
         raw["error"] = f"context selection failed ({type(e).__name__}: {e})"
         return response(case_id, FALLBACK_LABEL, start=start), "context selection failed"
@@ -103,9 +106,10 @@ def predict_a(case, data_dir, start, raw, settings):
         raw["parse_reason"] = reason
         return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
     # Evidence comes from the pages that were sent; a page number outside them is ignored.
-    evidence = parse.evidence_items(shown, page_numbers) if label in (0, 2) else []
-    status = "ok" if label == 1 or evidence else "no valid pages for label 0/2"
-    return response(case_id, label, result.input_tokens, result.output_tokens, start, evidence), status
+    cited = parse.evidence_items(shown, page_numbers) if label in (0, 2) else []
+    status = "ok" if label == 1 or cited else "no valid pages for label 0/2"
+    items = evidence.items(settings.evidence_a, cited, shown, claim_text) if label in (0, 2) else []
+    return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
 
 
 def predict(case, data_dir=".", settings=None):
@@ -160,9 +164,12 @@ def main():
                         help="development only: force the task A answer schema (response_format json_schema)")
     parser.add_argument("--context-a", default=defaults.context_a, choices=context.MODES,
                         help="development only: which booklet text task A sends")
+    parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
+                        help="development only: which task A evidence items to return")
     args = parser.parse_args()
     settings = Settings(prompt_b=args.prompt_b, max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
-                        schema_a=args.schema_a, context_a=args.context_a)
+                        schema_a=args.schema_a, context_a=args.context_a,
+                        evidence_a=args.evidence_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

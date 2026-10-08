@@ -40,9 +40,9 @@ BATCH_SIZE = 32
 MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-small"))
 
 
-def select(pages, vote, claim_text):
+def select(pages, vote, claim_text, cross_language=False):
     """Return (prompt_text, shown): the selected chunks, and the full pages they come from
-    (evidence is the full text of the pages the model cites)."""
+    (evidence is the full text of the pages the model cites). Languages play no role."""
     chunks = select_chunks(pages, claim_text)
     return excerpts_prompt_text(chunks), {n: pages[n] for n, _ in chunks}
 

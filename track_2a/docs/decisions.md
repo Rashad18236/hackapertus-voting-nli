@@ -358,7 +358,63 @@ Run: `docs/runs/2026-10-08_rashad_embed-vs-section_devA300/` (notes there).
 - **Cases 181 to 300 ran on `swiss-ai/apertus-v1.5-8b-thinking`.** It is an Apertus v1.5 model, so allowed. With json_schema it answered like the 8B: on 20 cases already answered by the 8B, 38 of 40 labels and 35 of 40 answer texts were the same, input tokens identical (run `2026-10-08_rashad_thinking-equivalence_devA20`). Both arms of every case still ran on the same model, so the comparison stays paired; `run.json` names both models with their case ranges. Rejected: waiting (unknown length), `apertus-v1.5-70b` (a different model; all 300 cases again, not comparable), CSCS or our Hugging Face endpoint (no key in `.env`).
 - **The 11 failed calls (6 vote-section, 5 embed-e5-small) stay as recorded; nothing was re-run.** Same rule as E2; the paired-subset score leaves them out.
 - **Finding: Public AI's `apertus-v1.5-8b` changed behaviour at about 13:25 UTC, during E2.** Same prompts (equal input tokens) and temperature 0, yet E2's answers on cases 1 to 150 differ from E3's (same label in about half, identical text rarely), while from about case 155 on they agree almost always. E2's cases 1 to about 150, and probably E1, came from an earlier server. Consequences: absolute numbers from before about 13:25 are not comparable with later runs; E2's comparison stays fair case by case but mixes two servers; on the current server (E2's cases 151 to 300) the vote section still beat the full booklet (accuracy 0.727 against 0.573). Paired runs are the only safe comparison, and `run.json` now records the model of every run.
-- **Result on the current server: the embedding beats the vote section clearly.** Macro-F1 0.721 against 0.561 (paired subset 0.714 against 0.552); where they differ, the embedding is right 74 times and the vote section 30; evidence 0.383 against 0.094; input tokens 1,831 against 15,863 per case (−88 %). The vote section is below the 0.60 minimum here, mainly because it calls 44 of 102 gold entailments contradiction.
+- **Result on the current server: the embedding beats the vote section clearly.** Macro-F1 0.721 against 0.561 (paired subset 0.714 against 0.552); where they differ, the embedding is right 74 times and the vote section 30; evidence 0.383 against 0.095; input tokens 1,831 against 15,863 per case (−88 %). The vote section is below the 0.60 minimum here, mainly because it calls 44 of 102 gold entailments contradiction.
 - **The default stays `vote-section` in this change; switching it to `embed-e5-small` is proposed to the team.** The win is paired and large, but the model changed at case 181, and which Apertus server the organisers' evaluation will use is unknown. Changing the default is a separate, one-line change once both agree.
 - **The embedding's tail time needs watching.** p95 16.1 s against 9.3 s: the first case of each booklet embeds the whole booklet (here twice, because the restart at 18:24 emptied the in-memory cache). Medians are equal or lower (2.4 to 2.6 s against 2.6 to 3.0 s). Time is scored.
 - **E2's notes and the session 3 report got a short "later finding" note** pointing here, so nobody reads E2's absolute numbers as current-server numbers.
+
+## Session 4: search misses against reading errors, search grid, evidence padding, new default (2026-10-08, from 18:57 UTC)
+
+Run autonomously on Rashad's instructions; report: `docs/session_4_report.md`.
+Branch `claude/eager-cannon-08bx1h-search`, stacked on PR #7 (its branch
+is not touched, so #7 stays as it was).
+
+### Setup
+
+- **The session's start is the first recorded action, the Granite download at 18:57 UTC.** Nothing earlier was recorded.
+- **Model rule for the session: `swiss-ai/apertus-v1.5-8b` on Public AI; if down, probe every 5 minutes for up to 30 minutes, then run a whole paired run on `apertus-v1.5-8b-thinking`; never two model names in one run.** Set by Rashad. `docs/runs/README.md` now states the one-model rule and names E3 as the one recorded exception.
+- **Session input tokens stayed far below the 10 million stop limit**: about 1.4 million (E4: 300 cases x 1,868 + 2,777 tokens, plus a few probes).
+
+### Part 1: search misses against reading errors (no model calls)
+
+- **A wrong answer on a gold entailment or contradiction case counts as a search miss when no chunk sent matches the gold passage (the hit rule of `retrieval_check.py`), otherwise as a reading error; wrong answers on gold-neutral cases are reading errors, since there is no passage to find.** The same rule as the hit rate, so the two analyses agree.
+- **The chunks are rebuilt with `embed-e5-small`'s own code and checked against the pages the run recorded (equal in all 300 cases).** The analysis must describe what Apertus actually saw.
+- Result: 18 search misses, 66 reading errors (`2026-10-08_rashad_e3-embed-errors_devA300`).
+
+### Part 2: new variants and the search grid (no model calls)
+
+- **Three new variants with fixed settings (top 8, no neighbours, rule "same"): `vote-section-embed-e5-small`, `embed-granite-97m-r2`, `vote-section-embed-granite-97m-r2`, built on a shared `src/contexts/retrieval.py`.** One file per variant, as the versioning rules say; their settings are part of their names' meaning.
+- **The new variants embed lazily per page and cache by the page text's SHA-256, each page in its own batch.** Only the pages a case needs are embedded, and the vectors never depend on which cases ran before (a unit test checks this).
+- **`embed-e5-small` keeps its own whole-booklet code.** Changing it to per-page embedding could change last digits and so its behaviour; its name must keep its meaning.
+- **Existing variants only gain an ignored `cross_language` argument; `cli.py` computes it from the claim's and the booklet's language.** The new cross-language rules need it; nothing else changes.
+- **Granite: `ibm-granite/granite-embedding-97m-multilingual-r2` (Apache-2.0), `onnx/model.onnx` and `tokenizer.json` pinned to commit `835ad14`, in the git-ignored `models/`; CLS pooling, no prefixes, truncation at 512 tokens.** As its model card says; chunks of 1,000 characters stay far below 512 tokens. Its output on the card's example pair matched within 0.0016 before any use.
+- **`retrieval_check.py` caches every page's embedding on disk (`output/embed_cache/`) with the CPU seconds it took.** The grid then re-embeds nothing, and CPU costs come from the same measurement.
+- **CPU seconds are process CPU time over all threads, measured per page while nothing else ran; models are loaded before timing starts.** Loading a model is a one-off and is not embedding.
+- **Cross-language rule "section" sends the whole vote section for a cross-language case (in both scopes); "double" doubles k.** The two simplest ways to give cross-language claims more context.
+- **The chosen setting is the cheapest that meets all targets (fewest characters, then least CPU); since none did, the best hit rate under 10 % of characters: e5, vote section, top 12, registered as `vote-section-embed-e5-small-k12`.** The rule set for the session; a new name because k differs from the base variant.
+- **Granite is not recommended and not added to the Dockerfile.** Under the 10 % limit e5 is better, and Granite costs more CPU per booklet.
+
+### Part 3: evidence padding (no model calls)
+
+- **The starter's scorer does not penalise extra evidence items** (read in full: any of the first five items may match; nothing else counts).
+- **Padding = the cited items, then the other pages the model was shown, ranked by e5 similarity to the claim, until five items; labels 0 and 2 only.** It uses only text the model saw, so the evidence stays traceable; label-1 answers get no evidence, as before.
+- **Kept as `--evidence-a cited-then-retrieved`, off by default.** It helped (0.383 to 0.522 on E3's embedding answers) and nothing is penalised by the starter, but the official evaluation may differ; that is an open question for the organisers.
+- **Padding label-1 answers too (0.567) is recorded for information only.** Evidence on a neutral answer is not what the contract asks for.
+
+### Part 4: paired run E4
+
+- **E4 ran: the chosen setting's hit rate (0.846) was more than 0.05 above `embed-e5-small`'s (0.741).** The rule set for the session.
+- **The whole run used `apertus-v1.5-8b-thinking`.** The 8B was down at 19:38 and 19:44 UTC; Rashad then asked to start on the thinking model at once instead of probing for the full 30 minutes. One model name for the whole run.
+- **Both arms start with an empty embedding cache, as a real run would; nothing else ran during the run.** So the times include each arm's embedding cost and stay comparable.
+- **Verdict: `embed-e5-small` stays.** Macro-F1 0.711 against 0.674 is more than 0.02 lower for the new setting, so it loses although its evidence (0.403 against 0.373) and p95 time (5.8 s against 11.4 s) are better.
+
+### Part 5: default
+
+- **The task A default is now `embed-e5-small` (was `vote-section`), in a commit of its own.** It won both paired runs on the current server; `vote-section` scores 0.561 there, below the 0.60 minimum.
+- **One test now names `--context-a full`.** It checks page-based evidence and had relied on the old page-based default; a new test pins the defaults.
+- **The 8B answered again at 20:20 UTC, so `make run` used the default model.** `make run` exits 0, the format check is clean, and the task A example sends 1,934 input tokens.
+
+### Part 6
+
+- **The report's table marks every task A row as paired or not and names its server period** (before about 13:25 UTC, current 8B, 8B thinking). Rows from different servers do not compare.
+- **E3's vote-section evidence is 0.095 (the official 0.0945 rounded); earlier notes said 0.094.** Corrected where it was written.
