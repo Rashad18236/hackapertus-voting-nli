@@ -1,0 +1,26 @@
+{
+ "person": "kaan",
+ "date": "2026-10-08",
+ "start_utc": null,
+ "kind": "offline check",
+ "code": "embedding branch working tree (parent 3fa8f58)",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, the 201 task A cases with a gold passage (labels 0 and 2)",
+ "setup": "top 8 chunks of ≤ 1,000 chars, claim as query",
+ "format": "scripts/retrieval_check.py (no model calls)",
+ "results": {
+  "hit_at_k": 0.741,
+  "hit_at_k_same_language": 0.851,
+  "hit_at_k_cross_language": 0.687,
+  "evidence_ceiling_selected": 0.612,
+  "evidence_ceiling_all_pages": 0.856,
+  "mean_chars_selected": 5386,
+  "mean_chars_full": 128537
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "paired_with": null,
+ "highlight": false,
+ "notes": "NOTES.md"
+}

@@ -65,7 +65,8 @@ and `evaluate.py` unchanged.
   as the language model, and every remote model call must go through
   `BASE_URL`. Local parsing, OCR and embedding models are allowed. They must
   be open-weight, baked into the Docker image with no downloads at run time,
-  run on CPU, and be described in the technical report. Apertus must make the
+  run on CPU, and be described in the technical report, with instructions for
+  running the project with them (organisers' template README). Apertus must make the
   entailment decision; a local model may only choose what Apertus reads.
 - Variables: `BASE_URL` and `API_KEY`, environment first, then local
   configuration. At evaluation the organisers inject a token-counting proxy as
@@ -167,16 +168,25 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
-  context.py    task A context: full booklet, vote section (default) or top-k chunks by
-                multilingual-e5-small (ONNX, local CPU)
+  context.py    registry of task A context variants: names, prompt per variant, select()
+  contexts/     one file per variant: full.py, vote_section.py (default),
+                embed_e5_small.py (multilingual-e5-small, ONNX, local CPU)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
-docs/           official contract, decisions, results, reviews, run artefacts
+docs/           official contract, reports, reviews
+  runs/         one folder per run: run.json, NOTES.md and the run's files (see runs/README.md)
+  decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
+  results.md, decisions.md   generated from runs/ and decisions/ by scripts/build_docs.py
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
-                paired runs, retrieval check, dev booklet download
+                paired runs, retrieval check, dev booklet download, build_docs.py
 models/         local copy of the embedding model (git-ignored; the image downloads its own at build time)
-tests/          unit tests (evaluate, parser, CLI)
+tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
+
+Outside `track_2a/`: `CLAUDE.md` and `.github/pull_request_template.md`. The
+organisers' template layout of `track_2a/` (`README.md`, `technical_report.md`,
+`Makefile`, `src/`, `data/`, `docs/`) must stay as it is: never rename or move
+those; new files go inside `src/` and `docs/`.
 
 ## How we work
 
@@ -191,11 +201,39 @@ tests/          unit tests (evaluate, parser, CLI)
 - Score with the starter's `evaluate.py`; `scripts/self_checks.py` verifies
   that our `evaluate.py` gives the same Macro-F1.
 - Never run on `data/test/`. Test is for the final evaluation only.
-- Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
+- Record every decision with a one-line reason in the stage's or session's
+  file in `track_2a/docs/decisions/` (a new file for a new stage or session).
+
+## How we work together (two people, one repository)
+
+- **Branches:** one short branch per change, named `person/topic` (e.g.
+  `kaan/embed-vote-query`), started from a freshly pulled `main`. Claude Code
+  cloud sessions get an automatic `claude/...` name; that branch belongs to
+  the person who runs the session.
+- **Merge early:** into `main` through a pull request, at least once a day.
+  When `main` moves while you work, merge `main` into your branch at once.
+  Never rebase, amend or force-push a branch someone else may have pulled.
+  After its pull request is merged, a branch is finished; start the next
+  change from `main`.
+- **Pull requests** follow `.github/pull_request_template.md`: summary, who
+  built it, results, what changed, checks.
+- **Context variants:** one file per variant in `src/contexts/`, plus one
+  line in `src/context.py`. A variant's name never changes meaning; changed
+  behaviour gets a new name (`embed-e5-small-v2`), like prompt versions.
+- **Runs:** one folder per run in `docs/runs/`, named
+  `YYYY-MM-DD_person_variant_cases`, with `run.json` and `NOTES.md` (fields
+  in `docs/runs/README.md`).
+- **Generated pages:** `docs/results.md` and `docs/decisions.md` are built by
+  `python3 scripts/build_docs.py`; never edit them by hand. After a merge
+  conflict in either, rerun the script and commit its output. The unit tests
+  fail if they are out of date or a `run.json` disagrees with its run's files.
+- **Milestones** are git tags on `main` (`v0.1-...`); `git checkout <tag> &&
+  make build` rebuilds that version. The final submission gets the tag
+  `submission`.
 
 ## Current stage: task A context, embeddings against the vote section
 
-Two lines of work from 2026-10-08 are merged:
+Two lines of work from 2026-10-08 are merged (PR #5):
 
 - **Session 3** (PR #4, `track_2a/docs/session_3_report.md`): task A answers
   are schema-constrained (`response_format: json_schema`, 0 unparseable), and
@@ -219,7 +257,8 @@ embedding (one change per run).
 Rules for this stage:
 
 - Never run on `data/test/`; do not change the splits or the scorer.
-- One change per comparison; every run is a row in `docs/results.md`.
+- One change per comparison; every run gets a folder with `run.json` in
+  `docs/runs/` and so a row in the generated `docs/results.md`.
 - Comparisons are paired (`scripts/paired_run.py`): both configurations run
   on the same case back to back, because the endpoint's output drifts.
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,

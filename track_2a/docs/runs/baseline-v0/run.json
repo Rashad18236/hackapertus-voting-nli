@@ -1,0 +1,30 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "04:56",
+ "kind": "model run",
+ "code": "16ec6af",
+ "task": "B",
+ "cases": "dev, 300 rows (beginner task = task B, pre-contract input format)",
+ "setup": "v1-json",
+ "format": "pre-contract, our scorer",
+ "highlight": false,
+ "results": {
+  "macro_f1": 0.202,
+  "f1": {
+   "entailment": 0.0,
+   "neutral": 0.0,
+   "contradiction": 0.606
+  },
+  "parse_failures": 8,
+  "failed_calls": 9,
+  "mean_input_tokens": 1938,
+  "mean_time_ms": 4118,
+  "p95_time_ms": 6018
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "variant": null,
+ "paired_with": null,
+ "notes": "NOTES.md"
+}

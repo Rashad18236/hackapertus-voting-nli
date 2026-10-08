@@ -10,6 +10,7 @@ from pathlib import Path
 from unittest import mock
 
 from src import cli, llm
+from src.contexts import embed_e5_small
 
 
 def b_case(case_id):
@@ -102,7 +103,7 @@ class NeverDropACase(unittest.TestCase):
                 with mock.patch.object(llm, "chat", chat), \
                      mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
                      mock.patch.object(cli.Path, "is_file", return_value=True), \
-                     mock.patch.object(cli.context, "select_chunks", return_value=[(1, "page one")]):
+                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]):
                     resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a=mode))
                 self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)  # the default for every mode
                 self.assertEqual(seen["max_tokens"], 128)
@@ -114,7 +115,7 @@ class NeverDropACase(unittest.TestCase):
         seen = []
         with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
              mock.patch.object(cli.Path, "is_file", return_value=True), \
-             mock.patch.object(cli.context, "select_chunks", return_value=[(2, "details on the tax")]):
+             mock.patch.object(embed_e5_small, "select_chunks", return_value=[(2, "details on the tax")]):
             code, out = run_cli([json.dumps(a_case("a"))], ['{"pages": [2], "label": 0}'],
                                 ["--context-a", "embed-e5-small"], seen)
         self.assertEqual(code, 0)
@@ -127,7 +128,7 @@ class NeverDropACase(unittest.TestCase):
     def test_context_selection_failure_falls_back(self):
         with mock.patch.object(cli.parse, "load_pages", return_value={1: "text"}), \
              mock.patch.object(cli.Path, "is_file", return_value=True), \
-             mock.patch.object(cli.context, "select_chunks", side_effect=FileNotFoundError("model.onnx")):
+             mock.patch.object(embed_e5_small, "select_chunks", side_effect=FileNotFoundError("model.onnx")):
             code, out = run_cli([json.dumps(a_case("a"))], [], ["--context-a", "embed-e5-small"])
         self.assertEqual(code, 0)
         self.assertEqual((out[0]["label"], out[0]["evidence"]), (1, []))

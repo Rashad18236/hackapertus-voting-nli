@@ -1,0 +1,14 @@
+### 2026-10-08, session 3, E2: full booklet vs vote section (task A, all 300 dev cases, paired) — the central experiment
+
+- Both arms: prompt `A-v3-fulldoc`, json_schema answers, 128 tokens. The only difference is which pages are sent: all of them, or `context.vote_section` (title match, running-header match, facing page, gap filling up to 10 pages; see `src/context.py`).
+- Command: `python3 scripts/paired_run.py --cases output/devA/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/s3-E2-A300 --arm '{"name": "fulldoc-schema", "schema_a": true, "max_tokens_a": 128, "context_a": "full"}' --arm '{"name": "section-schema", "schema_a": true, "max_tokens_a": 128, "context_a": "vote-section"}'`, 12:06 to 14:17 UTC. It was paused from 12:37 to 13:03 during a Public AI outage (HTTP 504 even for one-line calls) and resumed with `--resume`; nothing was re-run.
+- Failed calls: full 7, section 6 (both arms hit at the same moments). 0 unparseable answers in both. Order balanced (150 first each).
+- **On the 292 cases where both arms got an answer: full 0.674, section 0.741.** Same label in 200; where they differ (92), section right 49, full right 30.
+- **Input tokens: section 15,868 per case against 39,206 (−60 %); total 4.76M against 11.76M.** Per case, section/full: mean 49 %, median 40 %. Pages sent: 55 % of the booklet on average.
+- **Time: mean 8.2 s against 12.7 s; p95 13.5 s against 37.1 s.**
+- Confusion (rows gold E/N/C): full E 76/9/17, N 10/69/20, C 29/14/56; section E 82/8/12, N 2/63/34, C 8/17/74. The section arm is much better on entailment and contradiction but calls more neutral claims contradiction (34 against 20).
+- Same-language / cross-lingual: full 0.725 / 0.640, section 0.737 / 0.727. By booklet language: full de 0.681, fr 0.624, it 0.699; section de 0.723, fr 0.702, it 0.768. Cross-lingual cases gain the most.
+- **Evidence is worse with the section (0.224 against 0.284).** With the shorter context the model's first cited page is more often on the front summary pages (65 of 145 cases against 50 of 147). These pages cannot simply be removed: for 47 of the 169 gold cases with a gold page, the gold page is *only* on the front summary (removing the first 15 % of pages would drop recall from 0.988 to 0.710).
+- **Kept:** `vote-section` is now the task A default. It wins on Macro-F1 (the primary metric), tokens and time, at the cost of evidence score.
+- The full-booklet arm (0.669) is far above session 2's reference row (0.589): json_schema removed the unparseable answers, and the endpoint's behaviour has changed since then.
+- Session 3 paired runs (`scripts/paired_run.py`): both configurations on the same case back to back, alternating order, warm booklet cache, run on the host with the entrypoint's code (`cli.predict`). Rows of one comparison are only comparable with each other.

@@ -1,0 +1,18 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "06:01",
+ "kind": "stopped",
+ "code": "session-2 working tree",
+ "task": "B",
+ "cases": "dev, 300 task B cases (stopped after 5)",
+ "setup": "v3-topic-first",
+ "format": "official",
+ "results": null,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "variant": null,
+ "paired_with": null,
+ "highlight": false,
+ "notes": "../s2-A-v3-topic-first/NOTES.md"
+}

@@ -1,7 +1,7 @@
 requests==2.32.3
 pypdf==6.17.0
 rapidfuzz==3.14.6
-# Task A context selection (src/context.py): multilingual-e5-small in ONNX format, CPU only.
+# Task A context variant embed-e5-small (src/contexts/embed_e5_small.py): multilingual-e5-small in ONNX format, CPU only.
 # onnxruntime instead of PyTorch keeps the image small; tokenizers reads the model's tokenizer.json.
 onnxruntime==1.30.0
 tokenizers==0.23.2

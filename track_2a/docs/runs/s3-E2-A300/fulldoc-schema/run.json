@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "12:06",
+ "kind": "model run",
+ "code": "session-3 working tree",
+ "task": "A",
+ "variant": "full",
+ "cases": "dev, all 300 task A cases",
+ "setup": "A-v3-fulldoc + json_schema, full booklet",
+ "format": "official, paired (E2)",
+ "paired_with": "s3-E2-A300/section-schema",
+ "highlight": true,
+ "results": {
+  "macro_f1": 0.669,
+  "f1": {
+   "entailment": 0.7,
+   "neutral": 0.723,
+   "contradiction": 0.583
+  },
+  "evidence": {
+   "score": 0.284,
+   "found": 57,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 7,
+  "mean_input_tokens": 39206,
+  "mean_time_ms": 12717,
+  "p95_time_ms": 37079
+ },
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md"
+}

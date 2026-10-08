@@ -116,7 +116,7 @@ ANSWER_SCHEMA_A = {
 }
 
 # A-v3-excerpts: A-v3-fulldoc with only the description of the input changed, for
-# selected context (src/context.py): the model sees the passages most similar
+# selected context (src/contexts/embed_e5_small.py): the model sees the passages most similar
 # to the claim, not the whole booklet. Rule and answer format are identical.
 _INPUT_FULLDOC = 'The booklet is given page by page; each page starts with a line "=== PAGE n ===".'
 _INPUT_EXCERPTS = ('You get only excerpts of the booklet: the passages most similar to the claim, in page order; '
