@@ -1,0 +1,9 @@
+{
+ "name": "embed-e5-small",
+ "prompt_b": "v3-topic-first",
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "embed-e5-small",
+ "evidence_a": "cited"
+}

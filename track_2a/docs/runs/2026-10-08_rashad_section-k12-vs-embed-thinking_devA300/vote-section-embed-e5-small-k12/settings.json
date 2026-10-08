@@ -1,0 +1,9 @@
+{
+ "name": "vote-section-embed-e5-small-k12",
+ "prompt_b": "v3-topic-first",
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "vote-section-embed-e5-small-k12",
+ "evidence_a": "cited"
+}

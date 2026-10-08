@@ -1,0 +1,93 @@
+{
+ "embed-e5-small": {
+  "macro_f1": 0.7109962276573517,
+  "f1": {
+   "entailment": 0.7204301075268817,
+   "neutral": 0.7216494845360825,
+   "contradiction": 0.6909090909090909
+  },
+  "evidence": 0.373134328358209,
+  "evidence_found": 75,
+  "paired_subset_macro_f1": 0.7109962276573517,
+  "mean_input_tokens": 1868.1366666666668,
+  "median_ms": 1685,
+  "mean_ms": 3030.5133333333333,
+  "p95_ms": 11447,
+  "max_ms": 30171,
+  "same_language_macro_f1": 0.7202874516307353,
+  "cross_language_macro_f1": 0.7067487758462163,
+  "n_same": 100,
+  "n_cross": 200,
+  "confusion_rows_gold_E_N_C": [
+   [
+    67,
+    8,
+    27
+   ],
+   [
+    11,
+    70,
+    18
+   ],
+   [
+    6,
+    17,
+    76
+   ]
+  ],
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 0,
+  "order_first": 150
+ },
+ "vote-section-embed-e5-small-k12": {
+  "macro_f1": 0.6735407601651359,
+  "f1": {
+   "entailment": 0.6857142857142857,
+   "neutral": 0.6989247311827957,
+   "contradiction": 0.6359832635983264
+  },
+  "evidence": 0.40298507462686567,
+  "evidence_found": 81,
+  "paired_subset_macro_f1": 0.6735407601651359,
+  "mean_input_tokens": 2776.7466666666664,
+  "median_ms": 2216,
+  "mean_ms": 2863.483333333333,
+  "p95_ms": 5754,
+  "max_ms": 31513,
+  "same_language_macro_f1": 0.6748726655348047,
+  "cross_language_macro_f1": 0.6721405024148158,
+  "n_same": 100,
+  "n_cross": 200,
+  "confusion_rows_gold_E_N_C": [
+   [
+    60,
+    8,
+    34
+   ],
+   [
+    4,
+    65,
+    30
+   ],
+   [
+    9,
+    14,
+    76
+   ]
+  ],
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 0,
+  "order_first": 150
+ },
+ "paired": {
+  "both_answered": 300,
+  "counts": {
+   "both right": 173,
+   "embed-e5-small right, vote-section-embed-e5-small-k12 wrong": 40,
+   "both wrong": 59,
+   "vote-section-embed-e5-small-k12 right, embed-e5-small wrong": 28
+  }
+ }
+}

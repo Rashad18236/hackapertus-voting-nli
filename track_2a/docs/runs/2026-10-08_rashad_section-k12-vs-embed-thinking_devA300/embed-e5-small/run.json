@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "19:47",
+ "kind": "model run",
+ "code": "663c330",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, all 300 task A cases",
+ "setup": "A-v3-excerpts + json_schema, max_tokens 128, top 8 e5 chunks of the whole booklet (control)",
+ "format": "official, paired (E4)",
+ "paired_with": "2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b-thinking",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.711,
+  "f1": {
+   "entailment": 0.72,
+   "neutral": 0.722,
+   "contradiction": 0.691
+  },
+  "evidence": {
+   "score": 0.373,
+   "found": 75,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1868,
+  "mean_time_ms": 3031,
+  "p95_time_ms": 11447
+ }
+}
