@@ -211,7 +211,7 @@ check, the best evidence score a model could reach by citing it.
 | E3 arm | Evidence before (E3) | Padded, labels 0 and 2 | Padded, all labels (information only) |
 |---|---|---|---|
 | embed-e5-small | 0.383 (77/201) | **0.522 (105/201)** | 0.567 (114/201) |
-| vote-section | 0.094 (19/201) | **0.264 (53/201)** | 0.358 (72/201) |
+| vote-section | 0.095 (19/201) | **0.264 (53/201)** | 0.358 (72/201) |
 
 - Macro-F1 does not change (0.721 and 0.561): labels are untouched.
 - Evidence changed in 159 of 300 embedding answers and 108 of 300 vote-section answers; the rest had no room (five items already) or label 1.

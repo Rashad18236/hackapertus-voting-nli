@@ -143,6 +143,8 @@ Response:
   https://status.publicai.co ("Suppliers by Model"). When `apertus-v1.5-8b` is
   down, `swiss-ai/apertus-v1.5-8b-thinking` answered like it with json_schema
   (task A); select it with `LLM_NAME` in the environment, never in code.
+  The 8B was down on 2026-10-08 from about 17:30 until at least 19:44 UTC
+  (answering again at 20:20); E4 ran entirely on the thinking model.
 - In sandboxes where Docker containers cannot reach the internet directly,
   pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
@@ -173,8 +175,11 @@ src/
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
   context.py    registry of task A context variants: names, prompt per variant, select()
-  contexts/     one file per variant: full.py, vote_section.py (default),
-                embed_e5_small.py (multilingual-e5-small, ONNX, local CPU)
+  contexts/     one file per variant: full.py, vote_section.py, embed_e5_small.py (default;
+                multilingual-e5-small, ONNX, local CPU), and since session 4
+                vote_section_embed_e5_small(_k12).py, embed_granite_97m_r2.py,
+                vote_section_embed_granite_97m_r2.py; shared code in retrieval.py
+  evidence.py   task A evidence settings: cited (default) or cited-then-retrieved
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, reports, reviews
@@ -182,8 +187,9 @@ docs/           official contract, reports, reviews
   decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
   results.md, decisions.md   generated from runs/ and decisions/ by scripts/build_docs.py
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
-                paired runs, retrieval check, dev booklet download, build_docs.py
-models/         local copy of the embedding model (git-ignored; the image downloads its own at build time)
+                paired runs, retrieval check and grid, dev booklet download, build_docs.py,
+                search_or_reading.py, pad_evidence.py
+models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
 
@@ -251,13 +257,14 @@ Two lines of work from 2026-10-08 are merged (PR #5):
   paired, about six hours after its reference, and without the json_schema
   answer (session 3 was not in that branch yet).
 
-`--context-a` picks the task A context: `full` (reference), `vote-section`
-(default) or `embed-e5-small`. Every mode uses the json_schema answer.
+`--context-a` picks the task A context (all modes in `src/context.py`); the
+default is `embed-e5-small` since session 4. Every mode uses the json_schema
+answer. `--evidence-a cited-then-retrieved` pads the evidence (off by default).
 
 E3 (paired, all 300 task A dev cases, both json_schema; details in
 `track_2a/docs/runs/2026-10-08_rashad_embed-vs-section_devA300/NOTES.md`):
 `embed-e5-small` 0.721 against `vote-section` 0.561 (below the 0.60 minimum),
-evidence 0.383 against 0.094, 1.8k against 15.9k input tokens per case; p95
+evidence 0.383 against 0.095, 1.8k against 15.9k input tokens per case; p95
 time 16.1 s against 9.3 s (each booklet is embedded on its first case).
 Cases 181 to 300 ran on `apertus-v1.5-8b-thinking` because `apertus-v1.5-8b`
 was down; with json_schema it answers like the 8B.
@@ -266,8 +273,21 @@ Public AI's `apertus-v1.5-8b` changed behaviour at about 13:25 UTC on
 2026-10-08 (same prompts, temperature 0, different answers): E1 and E2's
 first ~150 cases came from an earlier server. Only paired runs compare.
 
-Next: decide whether `embed-e5-small` becomes the default (proposed, not yet
-changed), then build on the embedding (one change per run).
+Session 4 (`track_2a/docs/session_4_report.md`, decisions in
+`docs/decisions/2026-10-08-1857_rashad_session-4.md`):
+
+- Of E3's 84 wrong embedding answers, 18 were search misses and 66 reading
+  errors (mostly true statements called contradictions).
+- A 72-setting offline search grid met no target set; its best setting under
+  10 % of characters (`vote-section-embed-e5-small-k12`, hit 0.846 against
+  0.741) lost the paired run E4 on `apertus-v1.5-8b-thinking`: Macro-F1 0.674
+  against 0.711 for `embed-e5-small`.
+- Padding evidence to five items (no penalty in the starter's scorer) lifted
+  E3's evidence score from 0.383 to 0.522 without changing labels.
+- The default is now `embed-e5-small`.
+
+Next: work on reading errors (the prompt), not on search; switch on padded
+evidence once the organisers confirm extra items are not penalised.
 
 Rules for this stage:
 
@@ -296,3 +316,7 @@ Earlier: session 2 (PR #3) set task B to 0.947 with `v3-topic-first`
   assumption: local parsing is allowed (contract wording), until told otherwise.
 - Where the dataset README's label definitions are (the README is still
   licence-only as of 2026-10-08).
+- Which Apertus model and server the evaluation calls (8B or another v1.5
+  variant; CSCS or Public AI), and on what hardware the image runs.
+- Whether the official evaluation, like the starter, ignores extra evidence
+  items, and whether evidence on a neutral answer counts.
