@@ -108,7 +108,7 @@ def predict_a(case, data_dir, start, raw, settings):
     # Evidence comes from the pages that were sent; a page number outside them is ignored.
     cited = parse.evidence_items(shown, page_numbers) if label in (0, 2) else []
     status = "ok" if label == 1 or cited else "no valid pages for label 0/2"
-    items = evidence.items(settings.evidence_a, cited, shown, claim_text) if label in (0, 2) else []
+    items = evidence.items(settings.evidence_a, cited, shown, claim_text, page_numbers) if label in (0, 2) else []
     return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
 
 

@@ -48,5 +48,23 @@ class Padding(unittest.TestCase):
         self.assertEqual(evidence.items("cited-then-retrieved", cited, self.SHOWN, "tax"), cited)
 
 
+class CitedPieces(unittest.TestCase):
+    def test_pieces_are_taken_in_turn_across_cited_pages_at_most_five(self):
+        shown = {3: "a" * 999 + " " + "b" * 999 + " " + "c" * 10, 7: "x" * 999 + " " + "y" * 5, 9: "z"}
+        got = evidence.items("cited-pieces", [], shown, "claim", cited_pages=[7, 3, 9])
+        self.assertEqual([(g["page"], g["text"][0]) for g in got], [(7, "x"), (3, "a"), (9, "z"), (7, "y"), (3, "b")])
+
+    def test_only_cited_pages_that_were_shown_once_each(self):
+        shown = {1: "one", 2: "two", 3: "three"}
+        got = evidence.items("cited-pieces", [], shown, "claim", cited_pages=[2, 5, 2])
+        self.assertEqual(got, [{"page": 2, "text": "two"}])
+
+    def test_every_piece_is_at_most_1000_characters_and_verbatim(self):
+        text = " ".join(f"word{i}" for i in range(600))
+        got = evidence.pieces({4: text}, [4])
+        self.assertTrue(all(len(g["text"]) <= 1000 and g["text"] in text for g in got))
+        self.assertEqual(len(got), 5)
+
+
 if __name__ == "__main__":
     unittest.main()
