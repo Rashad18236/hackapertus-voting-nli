@@ -212,3 +212,51 @@ One line per decision, with the reason. Newest stage at the bottom.
 - **The task A example's booklet (`examples/booklets/2020_09_27_fr.pdf`, 0.9 MB, a public federal booklet) is committed, and `make run` mounts `examples/booklets/` by default.** Without it, `make run` cannot show task A at all (the request would always fall back for a missing booklet). `examples/` is excluded from the image by `.dockerignore`.
 - **Final `make run` (08:26 UTC): exit 0, two valid responses.** Task B entailment; task A a real 36k-token call whose answer was prose cut at 64 tokens, so it got the label-1 fallback. This is the known format issue, listed as next step 1.
 - **Session input tokens: about 18.3 million (from self-reported usage, with estimates for some diagnostic calls), under the 40 million limit.**
+
+## Session 3: task A answer format (1a) and selected context (2a) (2026-10-08, from 11:44 UTC)
+
+### Setup
+
+- **This session works on `claude/eager-cannon-08bx1h`, restarted from `main` (`3fa8f58`).** It is the session's designated branch, and its earlier work is already merged.
+- **For the open questions: stay on Public AI, add `rapidfuzz` to the pipeline, and run paired comparisons.** These are the suggestions the user accepted with "go with 1a and 2a".
+- **The CLI's task A options are now a `Settings` dataclass (prompt_b, max_tokens_a, json_mode_a, schema_a, context_a); the defaults are what judges get.** One object per configuration makes paired runs simple and keeps `make run` unchanged.
+
+### 1a: schema-constrained answers
+
+- **`--schema-a` sends `response_format: {"type": "json_schema", "strict": true}` with the schema `{"pages": array of ≤5 ints, "label": 0|1|2}`.** Plain JSON mode (session 2) invented its own keys; a schema fixes the keys and types.
+- **Probes: a toy prompt padded the JSON with blank lines until the token limit; with the real task A prompt, 3 cases returned compact JSON in 18 to 34 tokens, with maxItems respected.** The schema is enforced by the endpoint, and the padding risk is covered by the token budget.
+- **The schema arm uses `max_tokens` 128 (the control stays at 64).** This is part of the mechanism: a schema answer cut by the budget would be invalid JSON. Output tokens are not scored, and the answers used 18 to 34.
+
+### Paired runs
+
+- **`scripts/paired_run.py` runs both configurations on every case back to back, alternating which goes first.** The endpoint drifted over time in session 2, and it caches prompt prefixes (`cached_tokens`), so a fixed order would favour the second arm's times.
+- **Booklets are parsed before timing starts (warm cache).** PDF parsing time stays out of both arms; in a real run it is paid once per booklet.
+- **Results are written after every case.** A stopped run keeps its finished cases; session 2 lost a whole run that way.
+- **Paired runs execute on the host with the same code as the entrypoint (`cli.predict`), not in Docker.** Both arms share the same environment, which is what matters for the comparison; Docker was verified separately with `make run`.
+
+### 2a: vote-section selection (`src/context.py`, `--context-a vote-section`)
+
+- **Gold pages were measured first: for each of the 201 gold entailment/contradiction dev cases, the pages whose text matches the gold passage under the official rule (top 12 pages by word overlap, then rapidfuzz partial ratio ≥ 90).** 169 cases (0.841) have at least one; that is the ceiling for page-text evidence and the yardstick for the selector, at zero model cost.
+- **Selection uses the booklet's running headers, matched to the `vote` title in the booklet's own language.** Every page of a ballot's part starts with a header naming the ballot. It works for all claim languages, which keyword search with claim words would not (two-thirds of cases are cross-lingual).
+- **Rules:** keep pages that contain the full vote title (fuzzy); keep pages whose header (first 160 characters) scores at least 0.5 of the best running-header page, where each title word is weighted by its rarity among headers; add the facing page; fill gaps of up to 10 pages; and if nothing matches, keep every page. Each rule was measured on recall and size; see the next items.
+- **Measured variants (recall on 169 cases / share of the booklet's characters):**
+
+  | Variant | Recall | Characters |
+  |---|---|---|
+  | header score only | 0.72 | 24 % |
+  | + gap filling of 8 pages | 0.959 | 34 % |
+  | gap of 10 pages | 0.988 | 37 % |
+  | gap of 12 pages | 0.994 | 42 % |
+  | per-word threshold | 1.000 | 66 % |
+  | **threshold from running-header pages (chosen)** | **0.988** | **47 %** |
+
+  Gap filling fixed most misses: pages such as "Arguments of the Federal Council" inside a section do not repeat the ballot's name.
+- **The threshold comes from the running-header pages, not from all pages.** A unit test with a small two-ballot booklet showed that full-title pages can set the bar too high for the short running header and drop a whole section. On dev the original only worked because the voting-text page repeats the title within 10 pages. The robust rule has the same dev recall (0.988) and costs 10 points more text (47 % instead of 37 %); we prefer robustness on unseen booklets.
+- **Recall is stable across booklet dates (two halves: 0.980 and 1.000) and booklet languages (de 0.983, fr 0.981, it 1.000).** The parameters were tuned on dev; the held-out test split will show whether this generalises.
+- **Evidence comes only from the pages that were sent, and page numbers stay the original 1-based PDF numbers.** The model can only cite what it saw, and the contract asks for PDF page numbers.
+- **`rapidfuzz` 3.14.6 (MIT) is now a pipeline dependency, used for the fuzzy full-title match.** It is small, has prebuilt wheels for linux/amd64, and the organisers' scorer uses the same library.
+
+### E1 result
+
+- **json_schema (max_tokens 128) is the new task A default: in E1 (60 cases, paired) it scored 0.850 against 0.817, with 0 unparseable answers against 3, and on the 58 cases both arms answered 0.863 against 0.846; mean time was 7.0 s against 10.2 s.** It solves the format problem by construction, with no cost in input tokens.
+- **E2 (full booklet against vote section) runs on all 300 task A dev cases directly, paired, both arms with the schema; there was no separate 60-case step.** The section path differs from the full path only in which pages are sent; it was verified offline (recall 0.988) and on 2 live cases. Running the 60 first would have cost about 2.5M tokens and 20 minutes for no new information.

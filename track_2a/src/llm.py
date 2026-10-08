@@ -70,11 +70,13 @@ def _settings():
     return _first_set("MODEL", "LLM_NAME") or DEFAULT_MODEL, base, key
 
 
-def chat(messages, max_tokens=256, json_mode=False):
+def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
     """Send one chat request and return the answer with usage and timing.
 
-    json_mode=True asks the endpoint for a JSON object (OpenAI `response_format`),
-    so the model cannot answer in prose.
+    json_mode=True asks the endpoint for any JSON object (`response_format`
+    json_object). json_schema (a JSON Schema dict) asks for an answer that
+    matches that schema exactly (`response_format` json_schema, strict), which
+    also fixes the keys; it takes precedence over json_mode.
     """
     model, base, key = _settings()
     payload = {
@@ -83,7 +85,10 @@ def chat(messages, max_tokens=256, json_mode=False):
         "temperature": 0,
         "max_tokens": max_tokens,
     }
-    if json_mode:
+    if json_schema is not None:
+        payload["response_format"] = {"type": "json_schema",
+                                      "json_schema": {"name": "answer", "schema": json_schema, "strict": True}}
+    elif json_mode:
         payload["response_format"] = {"type": "json_object"}
     headers = {"Authorization": f"Bearer {key}", "User-Agent": USER_AGENT}
 

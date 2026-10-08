@@ -26,7 +26,7 @@ def fake_chat(answers):
     """Return a chat() replacement that gives the next answer each call (an exception is raised)."""
     answers = list(answers)
 
-    def chat(messages, max_tokens=256, json_mode=False):
+    def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
         answer = answers.pop(0)
         if isinstance(answer, Exception):
             raise answer
@@ -84,6 +84,22 @@ class NeverDropACase(unittest.TestCase):
         self.assertEqual(by_id["a-neutral"]["evidence"], [])   # neutral: no evidence
         self.assertEqual(by_id["a-nopages"]["label"], 2)       # label kept, evidence empty
         self.assertEqual(by_id["a-nopages"]["evidence"], [])
+
+    def test_schema_flag_sends_the_answer_schema(self):
+        seen = {}
+
+        def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
+            seen["schema"], seen["max_tokens"] = json_schema, max_tokens
+            return llm.LLMResult(text='{"pages": [1], "label": 0}', input_tokens=9, output_tokens=3, elapsed_ms=1)
+        settings = cli.Settings(schema_a=True, max_tokens_a=128)
+        with mock.patch.object(llm, "chat", chat), \
+             mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
+             mock.patch.object(cli.Path, "is_file", return_value=True):
+            resp, status, raw = cli.predict(a_case("s"), ".", settings)
+        self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)
+        self.assertEqual(seen["max_tokens"], 128)
+        self.assertEqual((resp["label"], status, raw["pages_sent"]), (0, "ok", 1))
+        self.assertEqual(resp["evidence"], [{"page": 1, "text": "page one"}])
 
     def test_input_equals_output_is_refused(self):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):

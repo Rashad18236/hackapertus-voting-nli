@@ -187,33 +187,30 @@ tests/          unit tests (evaluate, parser, CLI)
 - Never run on `data/test/`. Test is for the final evaluation only.
 - Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: task B improvement, then task A baseline
+## Current stage: task A answer format and selected context
 
-Contract alignment is finished (merged as PR #2): official CLI and Docker
-contract, starter-generated dev/test cases, starter scorer. Task B scored
-Macro-F1 0.541 on dev with prompt `v2-label-only` (minimum 0.75).
+Session 2 (merged as PR #3): task B dev Macro-F1 0.947 with `v3-topic-first`
+(default); task A full-document baseline `A-v3-fulldoc` 0.589 on all 300 dev
+cases (0.608 with the prose-label parser), evidence 0.209, about 40k input
+tokens and 11.5 s per case. 37 % of task A answers were not valid JSON.
 
-Goal, part 1: task B Macro-F1 >= 0.75 on dev with the official scorer, by
-prompt changes only (one change per run, each prompt versioned).
-Goal, part 2: a first full-document task A baseline on dev (minimum 0.60):
-local PDF parsing with 1-based pages, the whole booklet in the prompt,
-evidence as page text. This is the reference row for later context selection.
+Goal, step 1 (approach 1a): reliable task A answers through schema-constrained
+output (`response_format: json_schema` with `pages` and `label`).
+Goal, step 2 (approach 2a): the central experiment. Give the model only the
+vote's section of the booklet, found deterministically from the `vote` title
+(no embeddings), and compare it with the full document on the same cases:
+Macro-F1, evidence score, input tokens, mean and p95 time.
 
 Rules for this stage:
 
 - Never run on `data/test/`; do not change the splits or the scorer.
-- One change per run; every run is a row in `docs/results.md` with real numbers.
-- Cases run one at a time, so time metrics stay comparable.
-- No retrieval, embeddings or rerankers yet.
-- One retry for HTTP 5xx and timeouts only; retried calls' tokens are counted.
-- PDF parsing with a permissively licensed library (not PyMuPDF, AGPL).
-
-Status at the end of session 2 (details: `track_2a/docs/session_2_report.md`):
-task B dev Macro-F1 0.947 with `v3-topic-first` (now the default); task A
-full-document baseline `A-v3-fulldoc` 0.589 on all 300 dev cases (0.608 with
-the prose-label parser, re-parsed offline), evidence 0.209, about 40k input
-tokens and 11.5 s per case. Many task A answers come back as prose instead of
-JSON, and the endpoint's output drifted during the session.
+- One change per comparison; every run is a row in `docs/results.md`.
+- Comparisons are paired: both configurations run on the same case back to
+  back, because the endpoint's output drifted during session 2.
+- Measure the section selector offline first (does the selected context contain
+  the gold page, and how large is it) before spending model calls.
+- Cases run one at a time; one retry for HTTP 5xx and timeouts only.
+- Still no embeddings or non-Apertus models.
 
 ## Open questions (do not assume the answers)
 
