@@ -30,7 +30,7 @@ so we match the two without caring which language the claim is in:
 
 Measured offline on the 169 dev task A cases that have a gold page: the
 selection contains a page matching the gold passage in 98.8 % of them, with
-37 % of the booklet's characters on average (docs/decisions.md, session 3).
+47 % of the booklet's characters on average (docs/decisions.md, session 3).
 """
 
 import math
