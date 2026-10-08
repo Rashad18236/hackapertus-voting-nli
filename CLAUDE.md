@@ -174,12 +174,17 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
+  booklet.py    booklet -> votes and parts (summary, detail, committee, parliament, council, law)
+                from the contents lines, checked against page headings; boxes per voice; paragraphs
+  claim_router.py  claim opening -> part (summary, council, committee, law, detail), de/fr/it, or None
   context.py    registry of task A context variants: names, prompt per variant, select()
   contexts/     one file per variant: full.py, vote_section.py, embed_e5_small.py (default;
                 multilingual-e5-small, ONNX, local CPU), and since session 4
                 vote_section_embed_e5_small(_k12).py, embed_granite_97m_r2.py,
-                vote_section_embed_granite_97m_r2.py; shared code in retrieval.py
-  evidence.py   task A evidence settings: cited (default; only cited pages) or cited-then-retrieved (off, not used)
+                vote_section_embed_granite_97m_r2.py; shared code in retrieval.py; since
+                session 6 section_route.py (the part the claim names, as numbered paragraphs)
+  evidence.py   task A evidence settings: cited-pieces (default since session 6: 1,000-character pieces
+                of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, reports, reviews
@@ -188,7 +193,8 @@ docs/           official contract, reports, reviews
   results.md, decisions.md   generated from runs/ and decisions/ by scripts/build_docs.py
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
-                search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py
+                search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
+                rescore_evidence.py, route_check.py, paired_analysis.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
