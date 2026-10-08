@@ -146,6 +146,7 @@ how well it labels. Matching re-implements the starter's normalisation
 | Date | Commit | Context | hit@k | Evidence ceiling, selected pages | Evidence ceiling, all pages | Mean chars sent (selected / full) |
 |---|---|---|---|---|---|---|
 | 2026-10-08 | uncommitted (session 3) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
+| 2026-10-08 | `9081b8b` (merge with session 3) | same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
 
 hit@k: a selected chunk lies inside the gold passage. Evidence ceiling: a
 selected page (or, for the full document, any page) would pass the evidence
