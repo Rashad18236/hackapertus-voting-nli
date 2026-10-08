@@ -102,6 +102,18 @@ First find the pages of the booklet that are relevant to the claim: the numbers 
 Answer with one JSON object and nothing else, pages first, for example:
 {"pages": [14, 15], "label": 0}"""
 PROMPT_VERSION_A = "A-v3-fulldoc"
+
+# The task A answer as a JSON Schema, for schema-constrained output (--schema-a):
+# the endpoint can then only produce {"pages": [up to 5 ints], "label": 0|1|2}.
+ANSWER_SCHEMA_A = {
+    "type": "object",
+    "properties": {
+        "pages": {"type": "array", "items": {"type": "integer"}, "maxItems": 5},
+        "label": {"type": "integer", "enum": [0, 1, 2]},
+    },
+    "required": ["pages", "label"],
+    "additionalProperties": False,
+}
 SYSTEM_PROMPT_A = PROMPTS_A[PROMPT_VERSION_A]
 
 

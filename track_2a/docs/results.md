@@ -20,8 +20,14 @@ valid submission is 0.75 on task B and 0.60 on task A.
 | 2026-10-08 | session-2 ³ | official | task A, dev sample 60, max_tokens 256 (endpoint drift, see notes) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.398 (E 0.276, N 0.467, C 0.452) | evidence score 0.150 (6/40) | 34 | 0 | 41124 | 11660 | 31684 |
 | 2026-10-08 | session-2 ³ | re-parsed offline (no new calls) | task A, dev sample 60, max_tokens 256 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + prose-label parser | 0.553 (E 0.595, N 0.520, C 0.545) | evidence score 0.150 (6/40) | 14 | 0 | 41124 | 11660 | 31684 |
 | 2026-10-08 | session-2 ⁴ | official | task A, dev sample 60, JSON mode (attempt 1; 27 % failed calls) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.378 (E 0.357, N 0.483, C 0.294) | evidence score 0.125 (5/40) | 15 | 16 | 21041 | 15766 | 58256 |
+| 2026-10-08 | session-3 ⁵ | official, paired (E1) | task A, dev sample 60 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc, answer format by prompt (control) | 0.817 (E 0.811, N 0.810, C 0.829) | evidence score 0.350 (14/40) | 3 | 2 | 39077 | 10235 | 18711 |
+| 2026-10-08 | session-3 ⁵ | official, paired (E1) | task A, dev sample 60 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, max_tokens 128 | 0.850 (E 0.857, N 0.865, C 0.829) | evidence score 0.325 (13/40) | 0 | 1 | 39834 | 6972 | 17960 |
+| 2026-10-08 | session-3 ⁵ | official, paired (E2) | **task A, all 300 dev cases** | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, **full booklet** | **0.669** (E 0.700, N 0.723, C 0.583) | evidence score 0.284 (57/201) | 0 | 7 | 39206 | 12717 | 37079 |
+| 2026-10-08 | session-3 ⁵ | official, paired (E2) | **task A, all 300 dev cases** | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + json_schema, **vote section** | **0.732** (E 0.845, N 0.674, C 0.676) | evidence score 0.224 (45/201) | 0 | 6 | 15868 | 8248 | 13513 |
 
 ¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
+
+⁵ Session 3 paired runs (`scripts/paired_run.py`): both configurations on the same case back to back, alternating order, warm booklet cache, run on the host with the entrypoint's code (`cli.predict`). Rows of one comparison are only comparable with each other.
 
 ⁴ JSON mode = `--json-mode-a` (`response_format: json_object`), the only change against the 60-case row; code committed with session 2's last commit. Mean input tokens count the 16 failed calls as 0. The rerun after the two-minute wait was stopped at 7 failed calls in 24 cases (over 10 % certain) and has no score (`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/run.log`).
 
@@ -102,3 +108,26 @@ always-neutral value. It is not a task A result.
 
 - `--json-mode-a` asks the endpoint for a JSON object (`response_format: json_object`); the only change against the 60-case row. Attempt 1 (07:53 to 08:09 UTC): 0.378, with 16 of 60 calls failing even after the retry (15 × HTTP 503, 1 × 504), so the run is invalid by the 10 % rule. The rerun after the two-minute wait (08:12 to 08:24) failed 7 of its first 24 calls and was stopped, as the session rule says.
 - What JSON mode did do: no prose answers, but 15 answers used an invented schema such as `{"display_answers": {"answers": ["0"]}}` with no `label` key. JSON mode guarantees JSON, not our JSON. Not adopted; the default stays off.
+
+### 2026-10-08, session 3, E1: answer format by prompt vs json_schema (task A, 60-case sample, paired)
+
+- Command: `python3 scripts/paired_run.py --cases output/devA60/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/s3-E1-A60 --arm '{"name": "fulldoc-prompt"}' --arm '{"name": "fulldoc-schema", "schema_a": true, "max_tokens_a": 128}'` (the control used the then-default settings: prompt format, 64 tokens), 11:47 to 12:04 UTC. Scored per arm with the official scorer.
+- Unparseable answers: prompt 3, schema 0. Failed calls (HTTP 504 through the retry): prompt 2, schema 1. Order balanced (30 first each).
+- On the 58 cases where both arms got an answer: prompt 0.846, schema 0.863.
+- Schema mean time 7.0 s against 10.2 s; input tokens equal (same prompt).
+- The control produced far fewer prose answers than in session 2 (3/60 against 43 %): endpoint drift, which is why comparisons are now paired.
+- **Kept:** json_schema with max_tokens 128 is now the task A default (`Settings.schema_a=True`, `max_tokens_a=128`).
+
+### 2026-10-08, session 3, E2: full booklet vs vote section (task A, all 300 dev cases, paired) — the central experiment
+
+- Both arms: prompt `A-v3-fulldoc`, json_schema answers, 128 tokens. The only difference is which pages are sent: all of them, or `context.vote_section` (title match, running-header match, facing page, gap filling up to 10 pages; see `src/context.py`).
+- Command: `python3 scripts/paired_run.py --cases output/devA/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/s3-E2-A300 --arm '{"name": "fulldoc-schema", "schema_a": true, "max_tokens_a": 128, "context_a": "full"}' --arm '{"name": "section-schema", "schema_a": true, "max_tokens_a": 128, "context_a": "vote-section"}'`, 12:06 to 14:17 UTC. It was paused from 12:37 to 13:03 during a Public AI outage (HTTP 504 even for one-line calls) and resumed with `--resume`; nothing was re-run.
+- Failed calls: full 7, section 6 (both arms hit at the same moments). 0 unparseable answers in both. Order balanced (150 first each).
+- **On the 292 cases where both arms got an answer: full 0.674, section 0.741.** Same label in 200; where they differ (92), section right 49, full right 30.
+- **Input tokens: section 15,868 per case against 39,206 (−60 %); total 4.76M against 11.76M.** Per case, section/full: mean 49 %, median 40 %. Pages sent: 55 % of the booklet on average.
+- **Time: mean 8.2 s against 12.7 s; p95 13.5 s against 37.1 s.**
+- Confusion (rows gold E/N/C): full E 76/9/17, N 10/69/20, C 29/14/56; section E 82/8/12, N 2/63/34, C 8/17/74. The section arm is much better on entailment and contradiction but calls more neutral claims contradiction (34 against 20).
+- Same-language / cross-lingual: full 0.725 / 0.640, section 0.737 / 0.727. By booklet language: full de 0.681, fr 0.624, it 0.699; section de 0.723, fr 0.702, it 0.768. Cross-lingual cases gain the most.
+- **Evidence is worse with the section (0.224 against 0.284).** With the shorter context the model's first cited page is more often on the front summary pages (65 of 145 cases against 50 of 147). These pages cannot simply be removed: for 47 of the 169 gold cases with a gold page, the gold page is *only* on the front summary (removing the first 15 % of pages would drop recall from 0.988 to 0.710).
+- **Kept:** `vote-section` is now the task A default. It wins on Macro-F1 (the primary metric), tokens and time, at the cost of evidence score.
+- The full-booklet arm (0.669) is far above session 2's reference row (0.589): json_schema removed the unparseable answers, and the endpoint's behaviour has changed since then.

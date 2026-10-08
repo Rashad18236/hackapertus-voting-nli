@@ -53,6 +53,18 @@ class JsonMode(unittest.TestCase):
             self.assertEqual(fake.call_args.kwargs["json"].get("response_format"), expected)
 
 
+class JsonSchema(unittest.TestCase):
+    def test_schema_payload_and_precedence(self):
+        schema = {"type": "object"}
+        with mock.patch.dict("os.environ", ENV, clear=False), \
+             mock.patch.object(requests, "post", return_value=ok()) as fake:
+            llm.chat([{"role": "user", "content": "x"}], json_mode=True, json_schema=schema)
+        fmt = fake.call_args.kwargs["json"]["response_format"]
+        self.assertEqual(fmt["type"], "json_schema")
+        self.assertEqual(fmt["json_schema"]["schema"], schema)
+        self.assertTrue(fmt["json_schema"]["strict"])
+
+
 class Retry(unittest.TestCase):
     def test_success_needs_one_call(self):
         result, calls = run([ok()])

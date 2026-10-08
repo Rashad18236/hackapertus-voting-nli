@@ -1,0 +1,8 @@
+{
+ "name": "fulldoc-prompt",
+ "prompt_b": "v3-topic-first",
+ "max_tokens_a": 64,
+ "json_mode_a": false,
+ "schema_a": false,
+ "context_a": "full"
+}
