@@ -1,28 +1,29 @@
-"""Score a predictions file against a gold file.
+"""Per-language breakdown of a predictions file. NOT the official score.
 
-Usage:  python -m src.evaluate PREDICTIONS GOLD [--json OUT.json]
+The source of truth for scores is the starter's evaluate.py (official rules,
+see docs/official_contract.md). This script exists for the breakdowns the
+starter does not print: same-language versus cross-lingual, per claim
+language, per source language, a confusion matrix, and p95 time.
 
-Plain Python on purpose, so every number can be traced by hand.
-Definitions (also in docs/decisions.md):
+Usage:
+    python -m src.evaluate --predictions P.jsonl --expected E.jsonl --cases C.jsonl [--json OUT]
 
-- A gold case with no prediction, or a prediction whose label is not 0, 1
-  or 2 (e.g. a parse failure), counts as wrong. It is a false negative for
-  its gold class and a false positive for no class, which is what
-  scikit-learn does when such cases get a label outside labels=[0, 1, 2].
-- Per-class precision/recall/F1 are 0 when their denominator is 0.
-- Macro-F1 is the unweighted mean of the three per-class F1 scores.
-- Evidence is scored only on gold cases that have gold evidence. Exact match
-  compares texts after normalisation (see normalise_evidence); overlap F1 is
-  word-level F1 between the normalised texts. With several predicted
-  passages we keep the best one.
-- p95 uses the nearest-rank method: the value at position ceil(0.95 * n) in
-  the sorted list.
+The validity rules copy the starter, so the per-task Macro-F1 printed here must
+equal the starter's on the same files (scripts/self_checks.py verifies this):
+- a missing response, a duplicated id, a label outside 0/1/2, or a label_name
+  that does not match the label counts as wrong: a false negative for the gold
+  class and a false positive for no class;
+- per-class precision/recall/F1 are 0 when their denominator is 0;
+- Macro-F1 averages F1 over the classes that occur in the gold labels or the
+  valid predictions (with all three present, that is the plain mean of three).
+p95 uses the nearest-rank method: the value at position ceil(0.95 * n).
+Language pairs are written source->claim, as in the starter.
 """
 
 import argparse
 import json
 import math
-import re
+from collections import Counter
 
 LABELS = [0, 1, 2]
 LABEL_NAMES = {0: "entailment", 1: "neutral", 2: "contradiction"}
@@ -36,19 +37,22 @@ def load_jsonl(path):
 
 # ---------- labels ----------
 
-def valid_label(value):
-    """Return the label as 0/1/2, or None if it is missing or not a label."""
-    if isinstance(value, bool):
+def valid_label(prediction):
+    """Return the label as 0/1/2, or None if the response breaks the contract."""
+    if not prediction:
         return None
-    if isinstance(value, int) and value in LABELS:
-        return value
-    return None
+    label = prediction.get("label")
+    if isinstance(label, bool) or not isinstance(label, int) or label not in LABELS:
+        return None
+    if prediction.get("label_name") != LABEL_NAMES[label]:
+        return None
+    return label
 
 
 def label_scores(gold_labels, pred_labels):
     """Per-class precision/recall/F1, Macro-F1, accuracy and confusion matrix.
 
-    pred_labels may contain None for missing or unparseable predictions.
+    pred_labels may contain None for missing or invalid responses.
     """
     confusion = {g: {p: 0 for p in LABELS + [INVALID]} for g in LABELS}
     for g, p in zip(gold_labels, pred_labels):
@@ -62,86 +66,18 @@ def label_scores(gold_labels, pred_labels):
         precision = tp / (tp + fp) if tp + fp else 0.0
         recall = tp / (tp + fn) if tp + fn else 0.0
         f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
-        per_class[LABEL_NAMES[c]] = {
-            "precision": precision, "recall": recall, "f1": f1, "support": tp + fn,
-        }
+        per_class[LABEL_NAMES[c]] = {"precision": precision, "recall": recall, "f1": f1, "support": tp + fn}
 
+    present = set(gold_labels) | {p for p in pred_labels if p is not None}
     n = len(gold_labels)
-    correct = sum(1 for g, p in zip(gold_labels, pred_labels) if g == p)
     return {
         "n": n,
-        "macro_f1": sum(v["f1"] for v in per_class.values()) / len(LABELS),
-        "accuracy": correct / n if n else 0.0,
+        "macro_f1": sum(per_class[LABEL_NAMES[c]]["f1"] for c in present) / len(present) if present else 0.0,
+        "accuracy": sum(1 for g, p in zip(gold_labels, pred_labels) if g == p) / n if n else 0.0,
         "per_class": per_class,
-        "confusion": {LABEL_NAMES[g]: {(LABEL_NAMES[p] if p != INVALID else p): v
-                                       for p, v in row.items()}
+        "confusion": {LABEL_NAMES[g]: {(LABEL_NAMES[p] if p != INVALID else p): v for p, v in row.items()}
                       for g, row in confusion.items()},
         "invalid": sum(1 for p in pred_labels if p is None),
-    }
-
-
-# ---------- evidence ----------
-
-def normalise_evidence(text):
-    """Undo line-break hyphenation, collapse whitespace, lowercase.
-
-    "Abstim-\\nmung" becomes "abstimmung". A hyphen followed by a line break
-    between two letters is treated as hyphenation; other hyphens stay.
-    """
-    text = re.sub(r"(\w)-[ \t]*\n\s*(\w)", r"\1\2", text)
-    text = re.sub(r"\s+", " ", text)
-    return text.strip().lower()
-
-
-def overlap_f1(pred, gold):
-    """Word-level F1 between two texts after normalisation (bag of words)."""
-    pred_words = normalise_evidence(pred).split()
-    gold_words = normalise_evidence(gold).split()
-    if not pred_words or not gold_words:
-        return 0.0
-    remaining = list(gold_words)
-    common = 0
-    for w in pred_words:
-        if w in remaining:
-            remaining.remove(w)
-            common += 1
-    if common == 0:
-        return 0.0
-    precision = common / len(pred_words)
-    recall = common / len(gold_words)
-    return 2 * precision * recall / (precision + recall)
-
-
-def gold_passages(gold_evidence):
-    """Gold evidence may be None, a string, or a list of {"text": ...} / strings."""
-    if not gold_evidence:
-        return []
-    if isinstance(gold_evidence, str):
-        return [gold_evidence]
-    return [e["text"] if isinstance(e, dict) else e for e in gold_evidence]
-
-
-def pred_passages(prediction):
-    if not prediction:
-        return []
-    return [e.get("text", "") for e in prediction.get("evidence") or [] if isinstance(e, dict)]
-
-
-def evidence_scores(golds, preds_by_id):
-    exact, overlaps = [], []
-    for g in golds:
-        targets = gold_passages(g.get("evidence"))
-        if not targets:
-            continue
-        quotes = pred_passages(preds_by_id.get(g["id"]))
-        exact.append(any(normalise_evidence(q) == normalise_evidence(t) for q in quotes for t in targets))
-        overlaps.append(max((overlap_f1(q, t) for q in quotes for t in targets), default=0.0))
-    if not exact:
-        return {"n_with_gold_evidence": 0, "exact_match": None, "overlap_f1": None}
-    return {
-        "n_with_gold_evidence": len(exact),
-        "exact_match": sum(exact) / len(exact),
-        "overlap_f1": sum(overlaps) / len(overlaps),
     }
 
 
@@ -169,89 +105,97 @@ def cost_scores(predictions):
 
 # ---------- everything together ----------
 
-def evaluate(predictions, golds):
-    preds_by_id = {p["id"]: p for p in predictions}
-    gold_ids = {g["id"] for g in golds}
-    pred_labels = [valid_label((preds_by_id.get(g["id"]) or {}).get("label")) for g in golds]
-    gold_labels = [g["label"] for g in golds]
+def task_of(case):
+    return "A" if "booklet" in case else "B"
 
-    def subset(keep):
-        idx = [i for i, g in enumerate(golds) if keep(g)]
-        s = label_scores([gold_labels[i] for i in idx], [pred_labels[i] for i in idx])
-        return {"n": s["n"], "macro_f1": s["macro_f1"], "accuracy": s["accuracy"], "invalid": s["invalid"]}
 
-    pairs = sorted({(g["claim_language"], g["reference_language"]) for g in golds})
-    present = [preds_by_id[g["id"]] for g in golds if g["id"] in preds_by_id]
-    return {
-        "labels": label_scores(gold_labels, pred_labels),
-        "missing_predictions": sum(1 for g in golds if g["id"] not in preds_by_id),
-        "parse_failures": sum(1 for p in present if p.get("parse_failure")),
-        "extra_predictions": sum(1 for p in predictions if p["id"] not in gold_ids),
-        "evidence": evidence_scores(golds, preds_by_id),
-        "evidence_given_rate": _evidence_given_rate(present),
-        "cost": cost_scores(present),
-        "by_language_pair": {
-            f"{c}->{r}": subset(lambda g, c=c, r=r: (g["claim_language"], g["reference_language"]) == (c, r))
-            for c, r in pairs
-        },
-        "same_vs_cross": {
-            "same-language": subset(lambda g: g["claim_language"] == g["reference_language"]),
-            "cross-lingual": subset(lambda g: g["claim_language"] != g["reference_language"]),
-        },
+def source_language(case):
+    return (case.get("booklet") or case.get("reference") or {}).get("language", "?")
+
+
+def evaluate(predictions, expected, cases):
+    """Scores per task, with breakdowns. cases maps id -> request."""
+    counts = Counter(p.get("id") for p in predictions)
+    preds_by_id = {p.get("id"): p for p in predictions if counts[p.get("id")] == 1}  # duplicates are invalid
+    issues = {
+        "missing": sum(1 for e in expected if e["id"] not in counts),
+        "duplicated ids": sum(1 for v in counts.values() if v > 1),
+        "unknown ids": sum(1 for i in counts if i not in {e["id"] for e in expected}),
     }
 
+    report = {"issues": issues, "tasks": {}}
+    for task in sorted({task_of(cases[e["id"]]) for e in expected}):
+        rows = [e for e in expected if task_of(cases[e["id"]]) == task]
+        gold = [e["label"] for e in rows]
+        pred = [valid_label(preds_by_id.get(e["id"])) for e in rows]
 
-def _evidence_given_rate(predictions):
-    """Share of entailment/contradiction predictions that include evidence."""
-    needing = [p for p in predictions if valid_label(p.get("label")) in (0, 2)]
-    if not needing:
-        return None
-    return sum(1 for p in needing if pred_passages(p)) / len(needing)
+        def subset(keep):
+            idx = [i for i, e in enumerate(rows) if keep(cases[e["id"]])]
+            s = label_scores([gold[i] for i in idx], [pred[i] for i in idx])
+            return {"n": s["n"], "macro_f1": s["macro_f1"], "accuracy": s["accuracy"], "invalid": s["invalid"]}
+
+        def lang_pair(c):
+            return f"{source_language(c)}->{c['claim']['language']}"
+
+        pairs = sorted({lang_pair(cases[e["id"]]) for e in rows})
+        languages = sorted({c["claim"]["language"] for c in cases.values()})
+        report["tasks"][task] = {
+            "labels": label_scores(gold, pred),
+            "cost": cost_scores([preds_by_id[e["id"]] for e in rows if e["id"] in preds_by_id]),
+            "same_vs_cross": {
+                "same-language": subset(lambda c: source_language(c) == c["claim"]["language"]),
+                "cross-lingual": subset(lambda c: source_language(c) != c["claim"]["language"]),
+            },
+            "by_claim_language": {lang: subset(lambda c, lang=lang: c["claim"]["language"] == lang)
+                                  for lang in languages},
+            "by_source_language": {lang: subset(lambda c, lang=lang: source_language(c) == lang)
+                                   for lang in languages},
+            "by_language_pair": {pair: subset(lambda c, pair=pair: lang_pair(c) == pair) for pair in pairs},
+        }
+    return report
 
 
-def format_report(r):
+def format_report(report):
     f = lambda x: "n/a" if x is None else f"{x:.3f}"  # noqa: E731
-    lab = r["labels"]
-    lines = [
-        f"Cases: {lab['n']}   missing predictions: {r['missing_predictions']}   "
-        f"parse failures: {r['parse_failures']}   invalid labels (incl. missing): {lab['invalid']}",
-        f"Macro-F1: {f(lab['macro_f1'])}   accuracy: {f(lab['accuracy'])}",
-        "",
-        "label          precision  recall  f1     support",
-    ]
-    for name, s in lab["per_class"].items():
-        lines.append(f"{name:<14} {s['precision']:.3f}      {s['recall']:.3f}   {s['f1']:.3f}  {s['support']}")
-    lines += ["", "confusion (rows gold, columns predicted):",
-              "               " + "  ".join(f"{c[:7]:>7}" for c in list(LABEL_NAMES.values()) + [INVALID])]
-    for g, row in lab["confusion"].items():
-        lines.append(f"{g:<14} " + "  ".join(f"{v:>7}" for v in row.values()))
-    ev, cost = r["evidence"], r["cost"]
-    lines += [
-        "",
-        f"Evidence: {ev['n_with_gold_evidence']} cases with gold evidence; exact match {f(ev['exact_match'])}; "
-        f"overlap F1 {f(ev['overlap_f1'])}; evidence given for entail/contra predictions {f(r['evidence_given_rate'])}",
-        f"Input tokens: sum {cost['input_tokens_sum']}, mean {f(cost['input_tokens_mean'])}   "
-        f"Output tokens: sum {cost['output_tokens_sum']}, mean {f(cost['output_tokens_mean'])}",
-        f"Time ms: mean {f(cost['time_ms_mean'])}, p95 {cost['time_ms_p95']}",
-        "",
-        "group            n    macro_f1  accuracy  invalid",
-    ]
-    for name, s in list(r["same_vs_cross"].items()) + list(r["by_language_pair"].items()):
-        lines.append(f"{name:<16} {s['n']:<4} {s['macro_f1']:.3f}     {s['accuracy']:.3f}     {s['invalid']}")
+    lines = ["Issues: " + ", ".join(f"{k} {v}" for k, v in report["issues"].items())]
+    for task, r in report["tasks"].items():
+        lab, cost = r["labels"], r["cost"]
+        lines += [
+            "", f"=== Task {task}: {lab['n']} cases, invalid or missing {lab['invalid']}",
+            f"Macro-F1: {f(lab['macro_f1'])}   accuracy: {f(lab['accuracy'])}",
+            "confusion (rows gold, columns predicted):",
+            "               " + "  ".join(f"{c[:7]:>7}" for c in list(LABEL_NAMES.values()) + [INVALID]),
+        ]
+        for g, row in lab["confusion"].items():
+            lines.append(f"{g:<14} " + "  ".join(f"{v:>7}" for v in row.values()))
+        lines += [
+            f"Input tokens: sum {cost['input_tokens_sum']}, mean {f(cost['input_tokens_mean'])}   "
+            f"Output tokens: mean {f(cost['output_tokens_mean'])}   "
+            f"Time ms: mean {f(cost['time_ms_mean'])}, p95 {cost['time_ms_p95']}",
+            "", "group                n    macro_f1  accuracy  invalid",
+        ]
+        groups = (list(r["same_vs_cross"].items())
+                  + [(f"claim {k}", v) for k, v in r["by_claim_language"].items()]
+                  + [(f"source {k}", v) for k, v in r["by_source_language"].items()]
+                  + list(r["by_language_pair"].items()))
+        for name, s in groups:
+            lines.append(f"{name:<20} {s['n']:<4} {s['macro_f1']:.3f}     {s['accuracy']:.3f}     {s['invalid']}")
     return "\n".join(lines)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Score predictions against gold labels.")
-    parser.add_argument("predictions")
-    parser.add_argument("gold")
+    parser = argparse.ArgumentParser(description="Per-language breakdown (not the official score).")
+    parser.add_argument("--predictions", required=True)
+    parser.add_argument("--expected", required=True)
+    parser.add_argument("--cases", required=True)
     parser.add_argument("--json", help="also write the full result as JSON")
     args = parser.parse_args()
-    result = evaluate(load_jsonl(args.predictions), load_jsonl(args.gold))
-    print(format_report(result))
+    cases = {c["id"]: c for c in load_jsonl(args.cases)}
+    report = evaluate(load_jsonl(args.predictions), load_jsonl(args.expected), cases)
+    print(format_report(report))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as f:
-            json.dump(result, f, indent=2)
+            json.dump(report, f, indent=2)
 
 
 if __name__ == "__main__":

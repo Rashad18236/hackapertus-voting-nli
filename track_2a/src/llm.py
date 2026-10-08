@@ -1,9 +1,14 @@
 """The only module that talks to Apertus.
 
 The endpoint speaks the OpenAI chat-completions protocol
-(POST {LLM_BASE_URL}/chat/completions). Connection details come only from the
-environment variables LLM_NAME, LLM_BASE_URL and LLM_API_KEY; their values are
-never printed or logged, not even in error messages.
+(POST {base URL}/chat/completions). Configuration, environment first:
+
+- base URL: BASE_URL (official contract), else LLM_BASE_URL (our local .env)
+- API key:  API_KEY  (official contract), else LLM_API_KEY
+- model:    MODEL, else LLM_NAME, else DEFAULT_MODEL
+
+At evaluation the organisers inject BASE_URL (a token-counting proxy) and
+API_KEY. Values are never printed or logged, not even in error messages.
 
 Every call returns the token counts reported by the server and the elapsed
 wall-clock time, because the organisers score input tokens and speed.
@@ -36,15 +41,27 @@ class LLMResult:
     elapsed_ms: int
 
 
+DEFAULT_MODEL = "swiss-ai/Apertus-v1.5-8B"
+
+
+def _first_set(*names):
+    for name in names:
+        if os.environ.get(name):
+            return os.environ[name]
+    return None
+
+
 def _settings():
-    missing = [n for n in ("LLM_NAME", "LLM_BASE_URL", "LLM_API_KEY") if not os.environ.get(n)]
+    base = _first_set("BASE_URL", "LLM_BASE_URL")
+    key = _first_set("API_KEY", "LLM_API_KEY")
+    missing = [n for n, v in (("BASE_URL (or LLM_BASE_URL)", base), ("API_KEY (or LLM_API_KEY)", key)) if not v]
     if missing:
         raise LLMError(f"Missing environment variables: {', '.join(missing)}")
-    base = os.environ["LLM_BASE_URL"].rstrip("/")
+    base = base.rstrip("/")
     # Accept the base URL with or without a trailing /v1.
     if not base.endswith("/v1"):
         base += "/v1"
-    return os.environ["LLM_NAME"], base, os.environ["LLM_API_KEY"]
+    return _first_set("MODEL", "LLM_NAME") or DEFAULT_MODEL, base, key
 
 
 def chat(messages, max_tokens=256):

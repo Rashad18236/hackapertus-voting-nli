@@ -7,15 +7,22 @@ import unittest
 
 from src import evaluate as ev
 
-
-def pred(case_id, label, evidence=(), tokens=100, ms=1000, **extra):
-    return {"id": case_id, "label": label, "evidence": [{"text": t} for t in evidence],
-            "metrics": {"input_tokens": tokens, "output_tokens": 10, "inference_time_ms": ms}, **extra}
+NAMES = {0: "entailment", 1: "neutral", 2: "contradiction"}
 
 
-def gold(case_id, label, cl="de", rl="de", evidence=None):
-    return {"id": case_id, "label": label, "evidence": evidence,
-            "claim_language": cl, "reference_language": rl}
+def pred(case_id, label, tokens=100, ms=1000, name=None):
+    return {"id": case_id, "label": label, "label_name": name or NAMES.get(label), "evidence": [],
+            "metrics": {"input_tokens": tokens, "output_tokens": 10, "inference_time_ms": ms}}
+
+
+def case_b(case_id, claim="de", source="de"):
+    return {"id": case_id, "vote": "v", "claim": {"text": "c", "language": claim},
+            "reference": {"text": "r", "language": source}}
+
+
+def case_a(case_id, claim="de", source="de"):
+    return {"id": case_id, "vote": "v", "claim": {"text": "c", "language": claim},
+            "booklet": {"path": "booklets/x.pdf", "language": source}}
 
 
 class LabelScores(unittest.TestCase):
@@ -36,51 +43,22 @@ class LabelScores(unittest.TestCase):
         self.assertAlmostEqual(s["accuracy"], 0.5)
         self.assertEqual(s["invalid"], 1)
         self.assertEqual(s["confusion"]["contradiction"]["invalid"], 1)
-        self.assertEqual(s["confusion"]["entailment"]["neutral"], 1)
-
-    def test_perfect(self):
-        s = ev.label_scores([0, 1, 2], [0, 1, 2])
-        self.assertEqual(s["macro_f1"], 1.0)
 
     def test_always_neutral(self):
         # gold 0 1 2, pred 1 1 1: neutral P 1/3, R 1, F1 1/2; others 0 -> Macro-F1 1/6
-        s = ev.label_scores([0, 1, 2], [1, 1, 1])
-        self.assertAlmostEqual(s["macro_f1"], 1 / 6)
+        self.assertAlmostEqual(ev.label_scores([0, 1, 2], [1, 1, 1])["macro_f1"], 1 / 6)
+
+    def test_absent_class_is_not_averaged(self):
+        # gold 0 0, pred 0 None: only class 0 occurs. tp 1, fn 1 -> P 1, R 1/2, F1 2/3.
+        # Macro-F1 averages over present classes only (starter rule): 2/3, not 2/9.
+        self.assertAlmostEqual(ev.label_scores([0, 0], [0, None])["macro_f1"], 2 / 3)
 
     def test_valid_label(self):
-        self.assertEqual(ev.valid_label(2), 2)
+        self.assertEqual(ev.valid_label(pred("a", 2)), 2)
+        self.assertIsNone(ev.valid_label(pred("a", 2, name="neutral")))  # name does not match
         for bad in (None, 3, -1, "0", True, 1.0):
-            self.assertIsNone(ev.valid_label(bad), bad)
-
-
-class Evidence(unittest.TestCase):
-    def test_normalise(self):
-        self.assertEqual(ev.normalise_evidence("Abstim-\nmung  ist\tGUT "), "abstimmung ist gut")
-        # A hyphen that is not at a line break stays.
-        self.assertEqual(ev.normalise_evidence("Covid-19 Gesetz"), "covid-19 gesetz")
-
-    def test_overlap_f1(self):
-        # pred 4 words, gold 6 words, common: der, lehnt, ab = 3
-        # P 3/4, R 3/6, F1 = 2 * 0.375 / 1.25 = 0.6
-        self.assertAlmostEqual(ev.overlap_f1("der Rat lehnt ab", "Der Bundesrat lehnt die Initiative ab"), 0.6)
-        self.assertEqual(ev.overlap_f1("", "anything"), 0.0)
-        self.assertEqual(ev.overlap_f1("a b", "c d"), 0.0)
-
-    def test_exact_match_after_normalising(self):
-        golds = [gold("a", 0, evidence="Der Bundesrat empfiehlt die Ab-\nlehnung."),
-                 gold("b", 2, evidence="Das Gesetz tritt 2025 in Kraft."),
-                 gold("c", 1)]  # no gold evidence: not scored
-        preds = {"a": pred("a", 0, ["der Bundesrat  empfiehlt die Ablehnung."]),
-                 "b": pred("b", 2, ["Das Gesetz tritt in Kraft."])}
-        s = ev.evidence_scores(golds, preds)
-        self.assertEqual(s["n_with_gold_evidence"], 2)
-        self.assertAlmostEqual(s["exact_match"], 0.5)
-        # b: pred 5 words, gold 6 words, all 5 shared -> P 1, R 5/6, F1 10/11
-        self.assertAlmostEqual(s["overlap_f1"], (1.0 + 10 / 11) / 2)
-
-    def test_no_gold_evidence_gives_none(self):
-        s = ev.evidence_scores([gold("a", 0)], {"a": pred("a", 0, ["x"])})
-        self.assertIsNone(s["exact_match"])
+            self.assertIsNone(ev.valid_label({"label": bad, "label_name": "neutral"}), bad)
+        self.assertIsNone(ev.valid_label(None))
 
 
 class CostAndTime(unittest.TestCase):
@@ -97,30 +75,37 @@ class CostAndTime(unittest.TestCase):
 
 
 class WholeEvaluation(unittest.TestCase):
-    def test_missing_and_failed_predictions_are_wrong(self):
-        golds = [gold("a", 0), gold("b", 1, cl="fr"), gold("c", 2, cl="it", rl="fr")]
-        preds = [pred("a", 0), pred("b", None, parse_failure=True), pred("z", 1)]  # c missing, z extra
-        r = ev.evaluate(preds, golds)
-        self.assertEqual(r["missing_predictions"], 1)
-        self.assertEqual(r["parse_failures"], 1)
-        self.assertEqual(r["extra_predictions"], 1)
-        self.assertEqual(r["labels"]["invalid"], 2)
-        # only "a" right: class 0 F1 1, others 0 -> Macro-F1 1/3
-        self.assertAlmostEqual(r["labels"]["macro_f1"], 1 / 3)
-        # a: de->de, b: fr->de, c: it->fr. Same-language = {a}, cross = {b, c}
-        self.assertEqual(r["same_vs_cross"]["same-language"]["n"], 1)
-        self.assertEqual(r["same_vs_cross"]["cross-lingual"]["n"], 2)
-        self.assertEqual(r["by_language_pair"]["de->de"]["accuracy"], 1.0)
-        self.assertEqual(r["by_language_pair"]["it->fr"]["invalid"], 1)
+    def test_tasks_breakdowns_and_invalid_responses(self):
+        cases = {c["id"]: c for c in [
+            case_b("b1", "de", "de"), case_b("b2", "fr", "de"), case_b("b3", "it", "fr"),
+            case_a("a1", "de", "it"),
+        ]}
+        expected = [{"id": "b1", "label": 0}, {"id": "b2", "label": 1}, {"id": "b3", "label": 2},
+                    {"id": "a1", "label": 2}]
+        preds = [pred("b1", 0), pred("b2", 1, name="contradiction"),  # b2: name mismatch -> invalid
+                 pred("a1", 2), pred("a1", 2),                         # a1 duplicated -> invalid
+                 pred("zz", 1)]                                         # unknown; b3 missing
+        r = ev.evaluate(preds, expected, cases)
+        self.assertEqual(r["issues"], {"missing": 1, "duplicated ids": 1, "unknown ids": 1})
+        b = r["tasks"]["B"]
+        # Task B: only b1 right. Class 0 F1 1; classes 1 and 2 present in gold with F1 0 -> 1/3
+        self.assertAlmostEqual(b["labels"]["macro_f1"], 1 / 3)
+        self.assertEqual(b["labels"]["invalid"], 2)
+        # b1 de->de same-language; b2 de->fr and b3 fr->it cross-lingual (source->claim)
+        self.assertEqual(b["same_vs_cross"]["same-language"]["n"], 1)
+        self.assertEqual(b["same_vs_cross"]["cross-lingual"]["n"], 2)
+        self.assertEqual(b["by_language_pair"]["de->de"]["accuracy"], 1.0)
+        self.assertEqual(b["by_language_pair"]["fr->it"]["invalid"], 1)
+        self.assertEqual(b["by_claim_language"]["fr"]["n"], 1)
+        self.assertEqual(b["by_source_language"]["de"]["n"], 2)
+        # Task A: the only case is a duplicate -> invalid -> Macro-F1 0
+        self.assertEqual(r["tasks"]["A"]["labels"]["macro_f1"], 0.0)
 
     def test_gold_against_itself(self):
-        golds = [gold("a", 0, evidence="x y"), gold("b", 1), gold("c", 2, cl="fr", evidence="z")]
-        preds = [{"id": g["id"], "label": g["label"],
-                  "evidence": [{"text": t} for t in ev.gold_passages(g["evidence"])]} for g in golds]
-        r = ev.evaluate(preds, golds)
-        self.assertEqual(r["labels"]["macro_f1"], 1.0)
-        self.assertEqual(r["evidence"]["exact_match"], 1.0)
-        self.assertEqual(r["evidence"]["overlap_f1"], 1.0)
+        cases = {c["id"]: c for c in [case_b("a"), case_b("b", "fr"), case_b("c", "it", "fr")]}
+        expected = [{"id": "a", "label": 0}, {"id": "b", "label": 1}, {"id": "c", "label": 2}]
+        r = ev.evaluate([pred(e["id"], e["label"]) for e in expected], expected, cases)
+        self.assertEqual(r["tasks"]["B"]["labels"]["macro_f1"], 1.0)
 
 
 if __name__ == "__main__":
