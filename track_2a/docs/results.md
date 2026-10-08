@@ -14,8 +14,12 @@ valid submission is 0.75 on task B and 0.60 on task A.
 | 2026-10-08 | `bb78f85` | official | task B, dev 300 | swiss-ai/apertus-v1.5-8b | Public AI | v2-label-only | **0.541** (official scorer; ours agrees) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
 | 2026-10-08 | session-2 ¹ | official | task B, dev 300 (Run A) | swiss-ai/apertus-v1.5-8b | Public AI | v3-topic-first | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
 | 2026-10-08 | session-2 ¹ | official | task B, dev 300 (Run C) | swiss-ai/apertus-v1.5-8b | Public AI | v4-topic-first-examples | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
+| 2026-10-08 | session-2 ² | official | task A, dev sample 60 (20 per label) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | **0.767** (E 0.872, N 0.744, C 0.684) | evidence score 0.375 (15/40) | 6 | 0 | 41124 | 9617 | 23331 |
+| 2026-10-08 | session-2 ² | official | **task A, all 300 dev cases** (reference row) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | **0.589** (E 0.671, N 0.635, C 0.462) | evidence score 0.209 (42/201) | 110 | 3 | 39706 | 11501 | 30334 |
 
 ¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
+
+² Task A runs used code identical to commit `4e90ddc` (prompt `A-v3-fulldoc`, retry active).
 
 The second run also answered the 300 dev task A requests with the
 placeholder (label 1, no model call): official task A Macro-F1 0.165, the
@@ -63,3 +67,20 @@ always-neutral value. It is not a task A result.
 - Same command with `--prompt-b v4-topic-first-examples`, 06:24 to 06:33 UTC. 0 failed calls, 0 parse failures.
 - Confusion (rows gold E/N/C): E 101/0/1, N 0/83/16, C 2/1/96. The examples help entailment but push more neutral cases to contradiction. Same-language 0.928, cross-lingual 0.935.
 - Not kept: lower Macro-F1 than v3 on the same cases, and 168 more input tokens per case.
+
+### 2026-10-08, session 2: task A full-document baseline, 60-case sample (A-v3-fulldoc)
+
+- Whole booklet in one call (pypdf text, `=== PAGE n ===` before each page), then VOTE and CLAIM; the answer is `{"pages": [...], "label": n}`; evidence = the cited pages' text (split at 5,000 characters, at most five items). Prompts A-v1 and A-v2 (pages after the label) never named pages and were not scored; see `decisions.md`.
+- Sample: 20 task A dev cases per label, round-robin over the 9 language pairs, seed 42 (`output/devA60/`, filtered by id from `data/dev/`). Booklets: the 44 dev booklets from the starter's `prepare_cases.py --download-booklets`, mounted read-only at `/data/booklets`.
+- Command: `make run CASES=output/devA60/cases.jsonl BOOKLETS=output/booklets_dev OUTPUT_DIR=docs/runs/s2-A60-A-v3-fulldoc EXTRA_ARGS="--raw /output/raw_answers.jsonl"` (+ sandbox proxy flags), 06:39 to 06:49 UTC. 0 failed calls; 6 unparseable answers (label-1 fallback); format check: no errors.
+- Confusion (rows gold E/N/C): E 17/2/1, N 0/16/4, C 2/5/13.
+- Input tokens per case: mean 41,124 (the whole booklet). Time: mean 9.6 s, p95 23.3 s.
+
+### 2026-10-08, session 2: task A full-document baseline, all 300 dev cases (A-v3-fulldoc) — reference row
+
+- The 60-case sample run plus a run on the other 240 task A dev cases (`s2-A240-A-v3-fulldoc`, 06:49 to 07:37 UTC), with the same image, prompt and settings, merged in `docs/runs/s2-A300-A-v3-fulldoc/` and scored once with the official scorer on all 300 task A dev cases (`output/devA/`, filtered by id from `data/dev/`). Format check: no errors.
+- **This is the reference row for every later context-selection experiment:** 39,706 input tokens per case on average (the whole booklet), mean 11.5 s, p95 30.3 s.
+- Below the 0.60 minimum, mostly because of unparseable answers: 110 of 300 (37 %). 84 of the 104 in the 240-case part were reasoning in prose that hit the 64-token answer limit before the JSON, 16 were a stray `<|inner_prefix|>` token, and 4 were page lists that were too long. All got the label-1 fallback, which is why 55 gold contradictions came out neutral. The 60-case sample had only 6 such answers (10 %), so its 0.767 was optimistic.
+- Diagnostic only (not an official number): on the 187 cases with a parsed answer, Macro-F1 is 0.765.
+- Confusion (rows gold E/N/C): E 57/33/12, N 3/87/9, C 8/55/36. Same-language 0.647, cross-lingual 0.560; by booklet language de 0.522, fr 0.588, it 0.656.
+- Evidence: an upper bound measured on the 60-case sample shows that at least 35 of its 40 gold entailment/contradiction cases have a page that matches the gold passage under the official rule (0.875), against 15/40 actually cited. So the evidence gap is page choice, not page text.

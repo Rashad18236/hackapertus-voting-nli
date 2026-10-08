@@ -1,0 +1,1 @@
+Merged from s2-A60-A-v3-fulldoc (06:39-06:49 UTC) and s2-A240-A-v3-fulldoc (06:49-07:37 UTC): same image (code = commit 4e90ddc), prompt A-v3-fulldoc, max_tokens 64. Scored once on all 300 task A dev cases.

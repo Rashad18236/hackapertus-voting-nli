@@ -27,6 +27,7 @@ from pathlib import Path
 from src import env, llm, nli, parse
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
+MAX_TOKENS_A = 64  # answer budget for task A ({"pages": [...], "label": n})
 
 log = logging.getLogger("cli")
 
@@ -51,7 +52,7 @@ def task_of(case):
     return "A" if has_booklet else "B"
 
 
-def predict_a(case, data_dir, start, raw):
+def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A):
     """Task A: whole booklet in one call. Returns (response, status)."""
     case_id = case["id"]
     try:
@@ -69,12 +70,12 @@ def predict_a(case, data_dir, start, raw):
 
     raw["prompt_version"] = nli.PROMPT_VERSION_A
     try:
-        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(pages), vote, claim_text), max_tokens=64)
+        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(pages), vote, claim_text), max_tokens=max_tokens_a)
     except llm.LLMError as e:
         raw["error"] = str(e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
 
-    raw["answer"], raw["attempts"] = result.text, result.attempts
+    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
     label, page_numbers, reason = nli.parse_label_and_pages(result.text)
     if label is None:
         raw["parse_reason"] = reason
@@ -84,7 +85,7 @@ def predict_a(case, data_dir, start, raw):
     return response(case_id, label, result.input_tokens, result.output_tokens, start, evidence), status
 
 
-def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir="."):
+def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_TOKENS_A):
     """Return (response, status, raw). status is 'ok' or a failure kind; raw keeps details for analysis."""
     start = time.perf_counter()  # timed around the whole case, not only the model call
     case_id = case["id"]
@@ -94,7 +95,7 @@ def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir="."):
     if task is None:
         return response(case_id, FALLBACK_LABEL, start=start), "invalid request (needs exactly one of booklet/reference)", raw
     if task == "A":
-        resp, status = predict_a(case, data_dir, start, raw)
+        resp, status = predict_a(case, data_dir, start, raw, max_tokens_a)
         return resp, status, raw
 
     try:
@@ -126,6 +127,8 @@ def main():
     parser.add_argument("--raw", type=Path, help="development only: also write raw model answers here")
     parser.add_argument("--prompt-b", default=nli.DEFAULT_PROMPT_B, choices=sorted(nli.PROMPTS_B),
                         help="development only: task B prompt version")
+    parser.add_argument("--max-tokens-a", type=int, default=MAX_TOKENS_A,
+                        help="development only: answer token budget for task A")
     args = parser.parse_args()
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
@@ -148,7 +151,7 @@ def main():
             log.error("line %d: unreadable JSON or missing id; skipped", number)
             continue
         try:
-            resp, status, raw = predict(case, args.prompt_b, args.input.resolve().parent)
+            resp, status, raw = predict(case, args.prompt_b, args.input.resolve().parent, args.max_tokens_a)
         except Exception as e:  # never let one case stop the run
             resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
         if status != "ok":
