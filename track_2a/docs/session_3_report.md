@@ -81,6 +81,8 @@ fr 0.981, it 1.000).
 
 ### E2: the central comparison (all 300 task A dev cases, paired, both with json_schema)
 
+> **Later finding (E3, same evening):** Public AI's `apertus-v1.5-8b` changed behaviour at about 13:25 UTC, during E2: cases 1 to about 150 came from an earlier server. The comparison below stays fair case by case, but its absolute numbers are not comparable with later runs. On the current server the vote section scored 0.561 and the embedding 0.721 (E3, paired). See `docs/decisions/2026-10-08-1701_rashad_embed-vs-section.md`.
+
 | | Full booklet | Vote section |
 |---|---|---|
 | **Macro-F1 (official)** | 0.669 | **0.732** |
