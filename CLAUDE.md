@@ -150,22 +150,36 @@ judges will supply the held-out cases.
 - Keep dependencies few and well known. Ask before adding a heavy one.
 - When `evaluate.py` is written, include tests small enough to verify by hand.
 
-## Current stage: setup
+## Current stage: beginner baseline
 
-Goal: a walking skeleton. On a fresh clone, `make run` builds a Docker image,
-runs the CLI on two sample beginner cases, calls Apertus once per case with a
-simple hardcoded prompt, and writes predictions in the output format above.
+Setup is finished (walking skeleton, `make run` passes on a fresh clone).
+
+Goal: a measured full-context baseline for the beginner task. One model call
+per case with the whole reference text in the prompt, scored on a frozen dev
+split, so every later change can be compared against real numbers.
 
 Done when:
 
-1. `.env.example` lists the three variable names with placeholder values.
-2. `src/llm.py` makes one successful Apertus call using only those variables.
-3. `src/cli.py` reads the sample file and writes a valid predictions file.
-4. `Dockerfile` and `Makefile` make `make run` do step 3 in a container.
-5. `make run` passes in a second, freshly cloned copy of the repository.
+1. `docs/dataset_profile.md` profiles `data/raw/v1.1.parquet`.
+2. Dev and test splits are frozen by booklet (voting date), seed 42, with
+   inputs and gold answers in separate files; `data/README.md` explains how.
+3. `src/evaluate.py` reports Macro-F1, per-label scores, confusion matrix,
+   evidence metrics, tokens, time and per-language breakdowns, with tests in
+   `tests/` that can be checked on paper.
+4. `scripts/self_checks.py` passes (tests, sklearn agreement, dummy
+   baselines, gold-vs-gold, no leakage).
+5. Prompt `v1-json` in `src/nli.py` runs on `data/dev_inputs.jsonl` and the
+   result is the first row of `docs/results.md`.
+6. `docs/baseline_review.md` and `docs/decisions.md` are written.
 
-Out of scope for this stage: PDF parsing, the advanced task, prompt tuning,
-evaluation code, and anything to do with retrieval.
+Rules for this stage:
+
+- Never run on `data/test_inputs.jsonl`. Test is for the final evaluation only.
+- Every number in `docs/` comes from an actual run; record the commit.
+- Parse failures are recorded as such, never replaced by a guessed label.
+
+Out of scope: PDF parsing, the advanced task, retrieval, chunking,
+embeddings, and prompt tuning beyond the first prompt.
 
 ## Open questions (do not assume the answers)
 
