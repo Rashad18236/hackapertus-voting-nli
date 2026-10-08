@@ -39,7 +39,8 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "vote-section"  # which booklet text task A sends: see context.MODES (session 3, E2)
+    context_a: str = "embed-e5-small"  # which booklet text task A sends: see context.MODES (session 4: won E3,
+                                       # 0.721 vs vote-section 0.561, and held in E4 against vote-section-embed-e5-small-k12)
     evidence_a: str = "cited"   # task A evidence items: see evidence.MODES (session 4)
 
 
