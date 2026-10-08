@@ -28,6 +28,7 @@ from src import env, llm, nli, parse
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 MAX_TOKENS_A = 64  # answer budget for task A ({"pages": [...], "label": n})
+JSON_MODE_A = False  # ask the endpoint for a JSON object in task A (response_format)
 
 log = logging.getLogger("cli")
 
@@ -52,7 +53,7 @@ def task_of(case):
     return "A" if has_booklet else "B"
 
 
-def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A):
+def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A):
     """Task A: whole booklet in one call. Returns (response, status)."""
     case_id = case["id"]
     try:
@@ -70,7 +71,8 @@ def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A):
 
     raw["prompt_version"] = nli.PROMPT_VERSION_A
     try:
-        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(pages), vote, claim_text), max_tokens=max_tokens_a)
+        result = llm.chat(nli.build_messages_a(parse.booklet_prompt_text(pages), vote, claim_text), max_tokens=max_tokens_a,
+                          json_mode=json_mode_a)
     except llm.LLMError as e:
         raw["error"] = str(e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
@@ -85,7 +87,7 @@ def predict_a(case, data_dir, start, raw, max_tokens_a=MAX_TOKENS_A):
     return response(case_id, label, result.input_tokens, result.output_tokens, start, evidence), status
 
 
-def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_TOKENS_A):
+def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_TOKENS_A, json_mode_a=JSON_MODE_A):
     """Return (response, status, raw). status is 'ok' or a failure kind; raw keeps details for analysis."""
     start = time.perf_counter()  # timed around the whole case, not only the model call
     case_id = case["id"]
@@ -95,7 +97,7 @@ def predict(case, prompt_b=nli.DEFAULT_PROMPT_B, data_dir=".", max_tokens_a=MAX_
     if task is None:
         return response(case_id, FALLBACK_LABEL, start=start), "invalid request (needs exactly one of booklet/reference)", raw
     if task == "A":
-        resp, status = predict_a(case, data_dir, start, raw, max_tokens_a)
+        resp, status = predict_a(case, data_dir, start, raw, max_tokens_a, json_mode_a)
         return resp, status, raw
 
     try:
@@ -129,6 +131,8 @@ def main():
                         help="development only: task B prompt version")
     parser.add_argument("--max-tokens-a", type=int, default=MAX_TOKENS_A,
                         help="development only: answer token budget for task A")
+    parser.add_argument("--json-mode-a", action="store_true", default=JSON_MODE_A,
+                        help="development only: request a JSON object (response_format) for task A")
     args = parser.parse_args()
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
@@ -151,7 +155,8 @@ def main():
             log.error("line %d: unreadable JSON or missing id; skipped", number)
             continue
         try:
-            resp, status, raw = predict(case, args.prompt_b, args.input.resolve().parent, args.max_tokens_a)
+            resp, status, raw = predict(case, args.prompt_b, args.input.resolve().parent, args.max_tokens_a,
+                                          args.json_mode_a)
         except Exception as e:  # never let one case stop the run
             resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
         if status != "ok":

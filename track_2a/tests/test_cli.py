@@ -26,7 +26,7 @@ def fake_chat(answers):
     """Return a chat() replacement that gives the next answer each call (an exception is raised)."""
     answers = list(answers)
 
-    def chat(messages, max_tokens=256):
+    def chat(messages, max_tokens=256, json_mode=False):
         answer = answers.pop(0)
         if isinstance(answer, Exception):
             raise answer

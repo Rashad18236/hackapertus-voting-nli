@@ -113,10 +113,33 @@ def build_messages_a(booklet_text, vote, claim_text):
     ]
 
 
+# An explicit label statement in prose, e.g. "Therefore, the label is 0 (entailment)".
+_PROSE_LABEL = re.compile(r"\blabel\s*(?:is|:|=)\s*\(?\s*([012])\b", re.IGNORECASE)
+
+
+def label_from_prose(answer):
+    """Return the label stated in prose, or None.
+
+    Only an explicit "label is N" / "label: N" counts, and only if every such
+    statement in the answer names the same label; conflicting statements (for
+    example an echo of the instructions) give None. This reads the model's own
+    answer; it never guesses.
+    """
+    found = {int(m) for m in _PROSE_LABEL.findall(answer)}
+    return found.pop() if len(found) == 1 else None
+
+
 def parse_label_and_pages(answer):
-    """Return (label or None, pages, reason). pages: list of ints as given, possibly empty."""
+    """Return (label or None, pages, reason). pages: list of ints as given, possibly empty.
+
+    A JSON object is preferred. Without one, an explicit label statement in
+    prose is accepted (no pages then); see label_from_prose.
+    """
     obj = _first_json_object(answer)
     if obj is None:
+        label = label_from_prose(answer)
+        if label is not None:
+            return label, [], ""
         return None, [], "no JSON object"
     label = _read_label(obj.get("label"))
     if label is None:

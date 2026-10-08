@@ -163,12 +163,12 @@ src/
   nli.py        prompts and label parsing
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
-  parse.py      PDF to passages with page numbers            (later stage)
-  context.py    context selection, starts as "return all"    (later stage)
+  parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
+  context.py    context selection for task A                  (next stage)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, decisions, results, reviews, run artefacts
-scripts/        dataset profile, splits, self-checks
+scripts/        dataset profile, splits, self-checks, format check, offline re-parse
 tests/          unit tests (evaluate, parser, CLI)
 ```
 
@@ -207,6 +207,13 @@ Rules for this stage:
 - No retrieval, embeddings or rerankers yet.
 - One retry for HTTP 5xx and timeouts only; retried calls' tokens are counted.
 - PDF parsing with a permissively licensed library (not PyMuPDF, AGPL).
+
+Status at the end of session 2 (details: `track_2a/docs/session_2_report.md`):
+task B dev Macro-F1 0.947 with `v3-topic-first` (now the default); task A
+full-document baseline `A-v3-fulldoc` 0.589 on all 300 dev cases (0.608 with
+the prose-label parser, re-parsed offline), evidence 0.209, about 40k input
+tokens and 11.5 s per case. Many task A answers come back as prose instead of
+JSON, and the endpoint's output drifted during the session.
 
 ## Open questions (do not assume the answers)
 

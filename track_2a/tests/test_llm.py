@@ -44,6 +44,15 @@ def run(responses):
             return e, fake.call_count
 
 
+class JsonMode(unittest.TestCase):
+    def test_response_format_only_when_asked(self):
+        for flag, expected in ((False, None), (True, {"type": "json_object"})):
+            with mock.patch.dict("os.environ", ENV, clear=False), \
+                 mock.patch.object(requests, "post", return_value=ok()) as fake:
+                llm.chat([{"role": "user", "content": "x"}], json_mode=flag)
+            self.assertEqual(fake.call_args.kwargs["json"].get("response_format"), expected)
+
+
 class Retry(unittest.TestCase):
     def test_success_needs_one_call(self):
         result, calls = run([ok()])

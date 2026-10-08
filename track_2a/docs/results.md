@@ -16,8 +16,16 @@ valid submission is 0.75 on task B and 0.60 on task A.
 | 2026-10-08 | session-2 ¹ | official | task B, dev 300 (Run C) | swiss-ai/apertus-v1.5-8b | Public AI | v4-topic-first-examples | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
 | 2026-10-08 | session-2 ² | official | task A, dev sample 60 (20 per label) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | **0.767** (E 0.872, N 0.744, C 0.684) | evidence score 0.375 (15/40) | 6 | 0 | 41124 | 9617 | 23331 |
 | 2026-10-08 | session-2 ² | official | **task A, all 300 dev cases** (reference row) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | **0.589** (E 0.671, N 0.635, C 0.462) | evidence score 0.209 (42/201) | 110 | 3 | 39706 | 11501 | 30334 |
+| 2026-10-08 | session-2 ³ | re-parsed offline (no new calls) | task A, all 300 dev cases | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + prose-label parser | 0.608 (E 0.686, N 0.647, C 0.491) | evidence score 0.209 (42/201) | 97 | 3 | 39706 | 11501 | 30334 |
+| 2026-10-08 | session-2 ³ | official | task A, dev sample 60, max_tokens 256 (endpoint drift, see notes) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.398 (E 0.276, N 0.467, C 0.452) | evidence score 0.150 (6/40) | 34 | 0 | 41124 | 11660 | 31684 |
+| 2026-10-08 | session-2 ³ | re-parsed offline (no new calls) | task A, dev sample 60, max_tokens 256 | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc + prose-label parser | 0.553 (E 0.595, N 0.520, C 0.545) | evidence score 0.150 (6/40) | 14 | 0 | 41124 | 11660 | 31684 |
+| 2026-10-08 | session-2 ⁴ | official | task A, dev sample 60, JSON mode (attempt 1; 27 % failed calls) | swiss-ai/apertus-v1.5-8b | Public AI | A-v3-fulldoc | 0.378 (E 0.357, N 0.483, C 0.294) | evidence score 0.125 (5/40) | 15 | 16 | 21041 | 15766 | 58256 |
 
 ¹ Runs A and C ran from the `session-2` working tree before its first commit: the code equals the first session-2 commit except that `llm.py` had no retry yet and the task A path was still the placeholder (B-only input never reaches it). Per-label F1 is shown as E/N/C.
+
+⁴ JSON mode = `--json-mode-a` (`response_format: json_object`), the only change against the 60-case row; code committed with session 2's last commit. Mean input tokens count the 16 failed calls as 0. The rerun after the two-minute wait was stopped at 7 failed calls in 24 cases (over 10 % certain) and has no score (`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/run.log`).
+
+³ The max_tokens run used commit `60e9eb1` with `--max-tokens-a 256`. "Re-parsed" rows apply the current parser (which also reads an explicit prose label statement) to the saved raw answers of the run above them, with `scripts/reparse_run.py`: no new model calls, tokens and time copied, scored with the official scorer.
 
 ² Task A runs used code identical to commit `4e90ddc` (prompt `A-v3-fulldoc`, retry active).
 
@@ -84,3 +92,13 @@ always-neutral value. It is not a task A result.
 - Diagnostic only (not an official number): on the 187 cases with a parsed answer, Macro-F1 is 0.765.
 - Confusion (rows gold E/N/C): E 57/33/12, N 3/87/9, C 8/55/36. Same-language 0.647, cross-lingual 0.560; by booklet language de 0.522, fr 0.588, it 0.656.
 - Evidence: an upper bound measured on the 60-case sample shows that at least 35 of its 40 gold entailment/contradiction cases have a page that matches the gold passage under the official rule (0.875), against 15/40 actually cited. So the evidence gap is page choice, not page text.
+
+### 2026-10-08, session 2: task A max_tokens 256 (60-case sample) and offline re-parses
+
+- **max_tokens 256** (`s2-A60-A-v3-fulldoc-max256`, 07:38 to 07:50 UTC, the only change against the 60-case row): 0.398, 34 of 60 unparseable, mostly complete prose answers without JSON. **Not attributable to max_tokens**: at 07:50 the same two cases that gave clean JSON at 06:39 were repeated with the original settings; one now answered in prose and the other cited different pages. The endpoint's output drifted during the session (unparseable rate 10 % at 06:39, 43 % from 06:49 to 07:37, 57 % from 07:38 to 07:50). Default kept at 64.
+- **Prose-label parser, re-parsed offline:** full 300 0.589 → **0.608** (13 previously unparseable answers now read, 5 responses changed); max256 sample 0.398 → 0.553 (20 now read); the first 60-case run is unchanged at 0.767 (it had no prose answers with a stated label), a sanity check. Most 64-token prose answers were cut before stating a label, so parsing alone recovers little there.
+
+### 2026-10-08, session 2: task A JSON mode (60-case sample)
+
+- `--json-mode-a` asks the endpoint for a JSON object (`response_format: json_object`); the only change against the 60-case row. Attempt 1 (07:53 to 08:09 UTC): 0.378, with 16 of 60 calls failing even after the retry (15 × HTTP 503, 1 × 504), so the run is invalid by the 10 % rule. The rerun after the two-minute wait (08:12 to 08:24) failed 7 of its first 24 calls and was stopped, as the session rule says.
+- What JSON mode did do: no prose answers, but 15 answers used an invented schema such as `{"display_answers": {"answers": ["0"]}}` with no `label` key. JSON mode guarantees JSON, not our JSON. Not adopted; the default stays off.

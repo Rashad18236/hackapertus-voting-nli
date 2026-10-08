@@ -1,0 +1,35 @@
+INFO [1/60] v1.1-row-4-A -> neutral (fallback: unparseable answer)
+WARNING LLM call failed with HTTP 503; retrying once
+INFO [2/60] v1.1-row-5-A -> neutral (fallback: model call failed)
+INFO [3/60] v1.1-row-27-A -> contradiction
+INFO [4/60] v1.1-row-49-A -> entailment
+INFO [5/60] v1.1-row-93-A -> contradiction
+INFO [6/60] v1.1-row-146-A -> neutral
+WARNING LLM call failed with HTTP 503; retrying once
+INFO [7/60] v1.1-row-160-A -> neutral (fallback: model call failed)
+WARNING LLM call failed with HTTP 503; retrying once
+INFO [8/60] v1.1-row-167-A -> neutral (fallback: model call failed)
+INFO [9/60] v1.1-row-179-A -> neutral (fallback: unparseable answer)
+INFO [10/60] v1.1-row-212-A -> neutral (fallback: unparseable answer)
+INFO [11/60] v1.1-row-216-A -> entailment
+WARNING LLM call failed with HTTP 500; retrying once
+INFO [12/60] v1.1-row-260-A -> neutral (fallback: model call failed)
+INFO [13/60] v1.1-row-263-A -> entailment
+INFO [14/60] v1.1-row-308-A -> neutral
+INFO [15/60] v1.1-row-347-A -> neutral (fallback: unparseable answer)
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [16/60] v1.1-row-418-A -> entailment
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [17/60] v1.1-row-429-A -> neutral (fallback: model call failed)
+INFO [18/60] v1.1-row-471-A -> contradiction
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [19/60] v1.1-row-492-A -> entailment
+INFO [20/60] v1.1-row-493-A -> contradiction
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [21/60] v1.1-row-517-A -> neutral (fallback: model call failed)
+INFO [22/60] v1.1-row-528-A -> contradiction
+INFO [23/60] v1.1-row-538-A -> neutral (fallback: unparseable answer)
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [24/60] v1.1-row-556-A -> neutral (fallback: model call failed)
+make: *** [Makefile:35: run] Error 137
+make exit 2

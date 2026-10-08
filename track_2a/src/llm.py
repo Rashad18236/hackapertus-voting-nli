@@ -70,8 +70,12 @@ def _settings():
     return _first_set("MODEL", "LLM_NAME") or DEFAULT_MODEL, base, key
 
 
-def chat(messages, max_tokens=256):
-    """Send one chat request and return the answer with usage and timing."""
+def chat(messages, max_tokens=256, json_mode=False):
+    """Send one chat request and return the answer with usage and timing.
+
+    json_mode=True asks the endpoint for a JSON object (OpenAI `response_format`),
+    so the model cannot answer in prose.
+    """
     model, base, key = _settings()
     payload = {
         "model": model,
@@ -79,6 +83,8 @@ def chat(messages, max_tokens=256):
         "temperature": 0,
         "max_tokens": max_tokens,
     }
+    if json_mode:
+        payload["response_format"] = {"type": "json_object"}
     headers = {"Authorization": f"Bearer {key}", "User-Agent": USER_AGENT}
 
     start = time.perf_counter()

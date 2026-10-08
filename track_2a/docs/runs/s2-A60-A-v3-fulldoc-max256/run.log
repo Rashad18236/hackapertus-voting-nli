@@ -1,0 +1,64 @@
+INFO [1/60] v1.1-row-4-A -> neutral (fallback: unparseable answer)
+INFO [2/60] v1.1-row-5-A -> entailment
+INFO [3/60] v1.1-row-27-A -> neutral (fallback: unparseable answer)
+INFO [4/60] v1.1-row-49-A -> neutral (fallback: unparseable answer)
+INFO [5/60] v1.1-row-93-A -> contradiction
+INFO [6/60] v1.1-row-146-A -> neutral (fallback: unparseable answer)
+INFO [7/60] v1.1-row-160-A -> entailment
+INFO [8/60] v1.1-row-167-A -> entailment
+INFO [9/60] v1.1-row-179-A -> neutral (fallback: unparseable answer)
+INFO [10/60] v1.1-row-212-A -> neutral (fallback: unparseable answer)
+INFO [11/60] v1.1-row-216-A -> neutral (fallback: unparseable answer)
+INFO [12/60] v1.1-row-260-A -> entailment
+INFO [13/60] v1.1-row-263-A -> neutral (fallback: unparseable answer)
+INFO [14/60] v1.1-row-308-A -> neutral
+INFO [15/60] v1.1-row-347-A -> neutral (fallback: unparseable answer)
+INFO [16/60] v1.1-row-418-A -> neutral (fallback: unparseable answer)
+INFO [17/60] v1.1-row-429-A -> neutral (fallback: unparseable answer)
+INFO [18/60] v1.1-row-471-A -> contradiction
+INFO [19/60] v1.1-row-492-A -> neutral (fallback: unparseable answer)
+INFO [20/60] v1.1-row-493-A -> neutral (fallback: unparseable answer)
+INFO [21/60] v1.1-row-517-A -> neutral (fallback: unparseable answer)
+INFO [22/60] v1.1-row-528-A -> neutral (fallback: unparseable answer)
+INFO [23/60] v1.1-row-538-A -> neutral
+INFO [24/60] v1.1-row-556-A -> entailment
+INFO [25/60] v1.1-row-608-A -> entailment
+INFO [26/60] v1.1-row-629-A -> contradiction
+INFO [27/60] v1.1-row-645-A -> neutral (fallback: unparseable answer)
+INFO [28/60] v1.1-row-666-A -> neutral (fallback: unparseable answer)
+WARNING LLM call failed with HTTP 504; retrying once
+INFO [29/60] v1.1-row-670-A -> contradiction
+INFO [30/60] v1.1-row-679-A -> neutral (fallback: unparseable answer)
+INFO [31/60] v1.1-row-762-A -> entailment
+INFO [32/60] v1.1-row-797-A -> neutral
+INFO [33/60] v1.1-row-800-A -> neutral (fallback: unparseable answer)
+INFO [34/60] v1.1-row-826-A -> neutral (fallback: unparseable answer)
+INFO [35/60] v1.1-row-836-A -> neutral
+INFO [36/60] v1.1-row-869-A -> neutral (fallback: unparseable answer)
+INFO [37/60] v1.1-row-932-A -> neutral (fallback: unparseable answer)
+INFO [38/60] v1.1-row-944-A -> neutral
+INFO [39/60] v1.1-row-953-A -> entailment
+INFO [40/60] v1.1-row-981-A -> neutral (fallback: unparseable answer)
+INFO [41/60] v1.1-row-1003-A -> neutral (fallback: unparseable answer)
+INFO [42/60] v1.1-row-1011-A -> contradiction
+INFO [43/60] v1.1-row-1015-A -> neutral (fallback: unparseable answer)
+INFO [44/60] v1.1-row-1022-A -> neutral (fallback: unparseable answer)
+INFO [45/60] v1.1-row-1039-A -> neutral (fallback: unparseable answer)
+INFO [46/60] v1.1-row-1098-A -> contradiction
+INFO [47/60] v1.1-row-1138-A -> neutral (fallback: unparseable answer)
+INFO [48/60] v1.1-row-1169-A -> neutral (fallback: unparseable answer)
+INFO [49/60] v1.1-row-1183-A -> contradiction
+INFO [50/60] v1.1-row-1198-A -> contradiction
+INFO [51/60] v1.1-row-1205-A -> contradiction
+INFO [52/60] v1.1-row-1219-A -> neutral (fallback: unparseable answer)
+INFO [53/60] v1.1-row-1230-A -> contradiction
+INFO [54/60] v1.1-row-1267-A -> entailment
+INFO [55/60] v1.1-row-1341-A -> contradiction
+INFO [56/60] v1.1-row-1383-A -> neutral (fallback: unparseable answer)
+INFO [57/60] v1.1-row-1403-A -> neutral (fallback: unparseable answer)
+INFO [58/60] v1.1-row-1421-A -> neutral (fallback: unparseable answer)
+INFO [59/60] v1.1-row-1424-A -> neutral
+INFO [60/60] v1.1-row-1456-A -> neutral (fallback: unparseable answer)
+INFO Wrote 60 responses to /output/predictions.jsonl
+WARNING Fallback or skipped cases: unparseable answer: 34
+make exit 0
