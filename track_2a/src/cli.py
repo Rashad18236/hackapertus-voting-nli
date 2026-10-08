@@ -9,7 +9,9 @@ Task B: one model call with the reference passage, label only.
 Task A: one model call with booklet text (the whole booklet, the vote's
 section, or the passages most similar to the claim; see src/context.py), the
 vote name and the claim; the answer names up to five pages, whose text becomes
-the evidence.
+the evidence. A routing variant ("section-route") instead sends one part of the
+vote as numbered paragraphs; the answer names up to three paragraphs, whose
+verbatim text becomes the evidence.
 Booklet paths are relative to the input file's folder (/data in the container).
 
 No case is ever dropped. If a request is malformed, the model call fails or
@@ -84,14 +86,22 @@ def predict_a(case, data_dir, start, raw, settings):
         raw["error"] = f"PDF parsing failed ({type(e).__name__})"
         return response(case_id, FALLBACK_LABEL, start=start), "booklet could not be parsed"
 
-    prompt_version = context.prompt_version(settings.context_a)  # each variant names its prompt
-    raw["prompt_version"], raw["context"] = prompt_version, settings.context_a
+    raw["context"] = settings.context_a
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
-        booklet_text, shown = context.select(pages, vote, claim_text, settings.context_a, cross_language)
+        routed = context.route(pages, vote, claim_text, settings.context_a)
+        if routed is None:
+            mode = context.fallback(settings.context_a)
+            booklet_text, shown = context.select(pages, vote, claim_text, mode, cross_language)
     except Exception as e:  # e.g. embedding model files missing; must not stop the run
         raw["error"] = f"context selection failed ({type(e).__name__}: {e})"
         return response(case_id, FALLBACK_LABEL, start=start), "context selection failed"
+    if routed is not None:
+        return predict_a_paragraphs(case_id, routed, vote, claim_text, start, raw, settings, len(pages))
+    if mode != settings.context_a:
+        raw["fallback"] = mode  # the variant could not route this case
+    prompt_version = context.prompt_version(mode)  # each variant names its prompt
+    raw["prompt_version"] = prompt_version
     raw["pages_sent"], raw["pages_total"], raw["context_pages"] = len(shown), len(pages), sorted(shown)
     try:
         result = llm.chat(nli.build_messages_a(booklet_text, vote, claim_text, prompt_version),
@@ -110,6 +120,33 @@ def predict_a(case, data_dir, start, raw, settings):
     cited = parse.evidence_items(shown, page_numbers) if label in (0, 2) else []
     status = "ok" if label == 1 or cited else "no valid pages for label 0/2"
     items = evidence.items(settings.evidence_a, cited, shown, claim_text, page_numbers) if label in (0, 2) else []
+    return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
+
+
+def predict_a_paragraphs(case_id, routed, vote, claim_text, start, raw, settings, pages_total):
+    """Task A for a routed case: one part of the vote as numbered paragraphs; the answer cites paragraphs,
+    whose verbatim text and page become the evidence. Returns (response, status)."""
+    variant = context.VARIANTS[settings.context_a]
+    part, paragraphs = routed
+    raw["prompt_version"], raw["route"] = variant.PROMPT_VERSION, part
+    raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
+    raw["pages_total"], raw["context_pages"] = pages_total, sorted({page for page, _ in paragraphs})
+    try:
+        messages = nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in paragraphs],
+                                                   vote, claim_text, variant.PROMPT_VERSION)
+        result = llm.chat(messages, max_tokens=settings.max_tokens_a,
+                          json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
+    except llm.LLMError as e:
+        raw["error"] = str(e)
+        return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
+
+    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
+    label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
+    if label is None:
+        raw["parse_reason"] = reason
+        return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
+    items = variant.evidence_items(paragraphs, numbers) if label in (0, 2) else []
+    status = "ok" if label == 1 or items else "no valid paragraphs for label 0/2"
     return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
 
 
