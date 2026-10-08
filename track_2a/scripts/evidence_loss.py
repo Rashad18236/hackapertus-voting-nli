@@ -22,16 +22,21 @@ For every dev case with gold label 0 or 2 (they have a gold passage):
 3. Each case falls into exactly one class, checked in this order: hit (the
    answer's evidence matched); gold page not sent; predicted neutral; gold
    page sent but not cited; cited but text did not match.
-4. Wrongly cited pages (cited, not gold pages) are compared with the start
-   of the vote's detailed section: the run of pages, in steps of at most two,
-   that the vote-section selector keeps around the main gold page when its
-   gap filling is switched off (vote_section.MAX_GAP = 0 inside this script
-   only; the variant's code is not changed).
+4. Wrongly cited pages (cited, not gold pages) are placed before, inside or
+   after the vote's detailed section: the run of pages, in steps of at most
+   two, that the vote-section selector keeps around the main gold page when
+   its gap filling is switched off (vote_section.MAX_GAP = 0 inside this
+   script only; the variant's code is not changed). If the selector does not
+   keep the main gold page, the run is anchored on the nearest kept page at
+   most 10 pages before it (the selector's own gap rule); the run always
+   reaches at least the last gold page.
 5. Evidence item forms for the same pages (see --forms in scripts/evidence_forms.py):
    (a) whole page, split at 5,000 characters; (b) the chunks of that page
    that were sent, joined; (c) those chunks plus the neighbouring chunk on
-   each side on the same page. For cases where no whole page of the booklet
-   matches, the script says why and whether (b) or (c) could match.
+   each side on the same page. Also reported, outside the three forms: the
+   whole page and its sent chunks as two items of the same page ("a+b").
+   For cases where no whole page of the booklet matches, the script says why
+   and whether (b) or (c) could match.
 
 Writes per_case.jsonl and summary.json.
 """
@@ -111,20 +116,24 @@ def gold_pages(pages, gold_norm):
     return main, sorted(keep), dict(held), found / len(wins)
 
 
-def detailed_section_start(pages, vote, main):
-    """First page of the vote's detailed section around `main` (selector without gap filling, steps of <= 2)."""
+def detailed_section(pages, vote, main, gold):
+    """(first, last) page of the vote's detailed section around `main` (selector without gap filling,
+    steps of <= 2; anchored on the nearest kept page at most 10 below `main` if `main` is not kept)."""
     saved = vote_section.MAX_GAP
     vote_section.MAX_GAP = 0
     try:
         kept = set(vote_section.section_pages(pages, vote))
     finally:
         vote_section.MAX_GAP = saved
-    if main not in kept:
-        return None
-    start = main
+    anchor = main if main in kept else max([k for k in kept if k < main and main - k <= 10], default=None)
+    if anchor is None:
+        return None, None
+    start = end = anchor
     while start - 1 in kept or start - 2 in kept:
         start = start - 1 if start - 1 in kept else start - 2
-    return start
+    while end + 1 in kept or end + 2 in kept:
+        end = end + 1 if end + 1 in kept else end + 2
+    return start, max(end, max(gold))
 
 
 # ---------------------------------------------------------------- item forms for one cited page
@@ -140,6 +149,8 @@ def form_items(form, pages, page, sent_chunks):
     """Evidence items for one cited page in form a, b or c (each at most 5,000 characters)."""
     if form == "a":
         return parse.evidence_items(pages, [page])
+    if form == "a+b":
+        return form_items("a", pages, page, sent_chunks) + form_items("b", pages, page, sent_chunks)
     pieces, idx = sent_chunk_indices(pages, page, sent_chunks)
     if form == "c":
         idx = sorted({j for i in idx for j in (i - 1, i, i + 1) if 0 <= j < len(pieces)})
@@ -199,16 +210,23 @@ def main():
             cls = "gold page sent but not cited"
         else:
             cls = "cited but text did not match"
-        start = detailed_section_start(pages, case["vote"], main_p) if main_p else None
+        start, end = detailed_section(pages, case["vote"], main_p, gp) if main_p else (None, None)
         wrong = [p for p in cited_pages if p not in gp]
         whole_page_ok = [p for p in pages if any(item_matches(it["text"], g) for it in parse.evidence_items(pages, [p]))]
         row = {"id": cid, "gold": LABEL[gold[cid]["label"]], "pred": LABEL[pred["label"]], "cross": rc.cross(case),
                "class": cls, "sent_pages": sent, "cited_pages": cited_pages, "model_pages": model_pages,
                "gold_pages": gp, "main_gold_page": main_p, "windows_found_share": round(found_share, 3),
-               "detailed_section_start": start, "wrongly_cited": wrong,
+               "detailed_section": [start, end], "wrongly_cited": wrong,
                "wrongly_cited_before_section": [p for p in wrong if start is not None and p < start],
+               "wrongly_cited_inside_section": [p for p in wrong if start is not None and start <= p <= end],
+               "wrongly_cited_after_section": [p for p in wrong if end is not None and p > end],
+               "cited_gold_pages_only_first_or_last": bool(set(cited_pages) & set(gp))
+               and all(p in (gp[0], gp[-1]) for p in cited_pages if p in gp) and len(gp) >= 2,
+               "b_items_joined_from_non_adjacent_chunks": sum(
+                   1 for p in cited_pages if (lambda idx: bool(idx) and idx[-1] - idx[0] + 1 != len(idx))(
+                       sent_chunk_indices(pages, p, sent_chunks)[1])),
                "whole_page_matches": whole_page_ok, "gold_chars": len(g)}
-        for form in ("a", "b", "c"):
+        for form in ("a", "b", "c", "a+b"):
             row[f"evidence_{form}"] = evidence_found(evidence_for(form, pages, cited_pages, sent_chunks), g) if pred["label"] in (0, 2) else False
             # could this form match if the model cited the right sent page? (any sent page, this form)
             row[f"sent_ceiling_{form}"] = any(evidence_found(form_items(form, pages, p, sent_chunks), g) for p in sent)
@@ -255,10 +273,21 @@ def summarise(rows, mismatch):
         "answers_label_0_2": len(answered),
         "wrongly_cited_pages": wrong_total, "wrongly_cited_before_detailed_section": before,
         "answers_with_a_wrong_page_before_the_section": sum(1 for r in rows if r["wrongly_cited_before_section"]),
-        "cases_without_section_start": sum(1 for r in rows if r["detailed_section_start"] is None),
-        "evidence_score_by_form": {f: round(sum(r[f"evidence_{f}"] for r in rows) / n, 3) for f in "abc"},
-        "evidence_found_by_form": {f: sum(r[f"evidence_{f}"] for r in rows) for f in "abc"},
-        "ceiling_if_right_sent_page_cited": {f: round(sum(r[f"sent_ceiling_{f}"] for r in rows) / n, 3) for f in "abc"},
+        "wrongly_cited_inside_detailed_section": sum(len(r["wrongly_cited_inside_section"]) for r in rows),
+        "wrongly_cited_after_detailed_section": sum(len(r["wrongly_cited_after_section"]) for r in rows),
+        "cases_without_section": sum(1 for r in rows if r["detailed_section"][0] is None),
+        "cited_but_no_match_breakdown": {
+            "cases": sum(r["class"] == "cited but text did not match" for r in rows),
+            "only the first or last gold page cited": sum(r["class"] == "cited but text did not match" and r["cited_gold_pages_only_first_or_last"] for r in rows),
+            "another sent gold page would match as a whole page": sum(
+                r["class"] == "cited but text did not match" and any(p in r["whole_page_matches"] for p in r["gold_pages"] if p in r["sent_pages"]) for r in rows),
+            "no whole page of the booklet matches": sum(r["class"] == "cited but text did not match" and not r["whole_page_matches"] for r in rows),
+        },
+        "form_b_items_from_non_adjacent_chunks": sum(r["b_items_joined_from_non_adjacent_chunks"] for r in rows),
+        "form_b_items": sum(len(r["cited_pages"]) for r in rows),
+        "evidence_score_by_form": {f: round(sum(r[f"evidence_{f}"] for r in rows) / n, 3) for f in ("a", "b", "c", "a+b")},
+        "evidence_found_by_form": {f: sum(r[f"evidence_{f}"] for r in rows) for f in ("a", "b", "c", "a+b")},
+        "ceiling_if_right_sent_page_cited": {f: round(sum(r[f"sent_ceiling_{f}"] for r in rows) / n, 3) for f in ("a", "b", "c", "a+b")},
         "ceiling_whole_booklet_form_a": round(sum(bool(r["whole_page_matches"]) for r in rows) / n, 3),
         "no_whole_page_match": {
             "cases": len(no_whole),
