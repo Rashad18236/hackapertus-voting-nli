@@ -7,7 +7,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Embedding model for task A context selection (src/context.py): intfloat/multilingual-e5-small,
+# Embedding model for task A context selection (src/contexts/embed_e5_small.py): intfloat/multilingual-e5-small,
 # MIT licence, ONNX export from the model's own repository, pinned to a commit. Downloaded at build
 # time only; at run time nothing is downloaded. ADD gives remote files mode 600, so make them readable
 # for the non-root user the container runs as.

@@ -5,7 +5,7 @@ Run from track_2a/ (after scripts/fetch_dev_booklets.py, with the model in model
     EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/retrieval_check.py
 
 For every dev task A case with a gold passage (labels 0 and 2), select chunks
-as the pipeline does (src/context.py) and report:
+as the pipeline does (src/contexts/embed_e5_small.py) and report:
 
 - hit@k: share of cases where at least one selected chunk lies inside the gold
   passage (rapidfuzz partial_ratio of chunk vs gold >= 90). The gold passages
@@ -31,7 +31,8 @@ from rapidfuzz import fuzz
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src import context, parse  # noqa: E402
+from src import parse  # noqa: E402
+from src.contexts import embed_e5_small  # noqa: E402
 
 THRESHOLD = 90
 
@@ -49,7 +50,7 @@ def normalise(text):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--booklets", type=Path, default=ROOT / "output" / "booklets_dev")
-    ap.add_argument("--top-k", type=int, default=context.TOP_K)
+    ap.add_argument("--top-k", type=int, default=embed_e5_small.TOP_K)
     ap.add_argument("--output", type=Path, help="optional JSONL with per-case results")
     args = ap.parse_args()
 
@@ -64,7 +65,7 @@ def main():
     rows = []
     for i, case in enumerate(cases, start=1):
         pages = parse.load_pages(args.booklets / Path(case["booklet"]["path"]).name)
-        chunks = context.select_chunks(pages, case["claim"]["text"], top_k=args.top_k)
+        chunks = embed_e5_small.select_chunks(pages, case["claim"]["text"], top_k=args.top_k)
         g = normalise(gold[case["id"]])
         selected_pages = sorted({n for n, _ in chunks})
         selected_page_ok = any(passes(g, normalise(pages[n])) for n in selected_pages)
@@ -74,7 +75,7 @@ def main():
             "selected_page_ok": selected_page_ok,
             "any_page_ok": selected_page_ok or any(passes(g, normalise(pages[n])) for n in pages if n not in selected_pages),
             "selected_pages": selected_pages,
-            "chars_selected": len(context.excerpts_prompt_text(chunks)),
+            "chars_selected": len(embed_e5_small.excerpts_prompt_text(chunks)),
             "chars_full": len(parse.booklet_prompt_text(pages)),
         })
         if i % 20 == 0:
@@ -82,7 +83,7 @@ def main():
 
     n = len(rows)
     share = lambda key: sum(r[key] for r in rows) / n  # noqa: E731
-    print(f"cases with a gold passage: {n}, top_k {args.top_k}, chunk {context.CHUNK_CHARS} chars")
+    print(f"cases with a gold passage: {n}, top_k {args.top_k}, chunk {embed_e5_small.CHUNK_CHARS} chars")
     print(f"hit@{args.top_k} (a selected chunk lies in the gold passage): {share('hit'):.3f}")
     print(f"evidence ceiling, selected pages: {share('selected_page_ok'):.3f}")
     print(f"evidence ceiling, all pages (full document): {share('any_page_ok'):.3f}")

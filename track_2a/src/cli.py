@@ -42,14 +42,6 @@ class Settings:
     context_a: str = "vote-section"  # which booklet text task A sends: see context.MODES (session 3, E2)
 
 
-# Task A prompt per context mode. The excerpts prompt differs from A-v3-fulldoc
-# only in the sentence describing the input (src/nli.py).
-PROMPT_A_FOR_CONTEXT = {
-    "full": "A-v3-fulldoc",
-    "vote-section": "A-v3-fulldoc",
-    "embed-e5-small": "A-v3-excerpts",
-}
-
 log = logging.getLogger("cli")
 
 
@@ -89,7 +81,7 @@ def predict_a(case, data_dir, start, raw, settings):
         raw["error"] = f"PDF parsing failed ({type(e).__name__})"
         return response(case_id, FALLBACK_LABEL, start=start), "booklet could not be parsed"
 
-    prompt_version = PROMPT_A_FOR_CONTEXT[settings.context_a]
+    prompt_version = context.prompt_version(settings.context_a)  # each variant names its prompt
     raw["prompt_version"], raw["context"] = prompt_version, settings.context_a
     try:
         booklet_text, shown = context.select(pages, vote, claim_text, settings.context_a)

@@ -45,7 +45,7 @@ instead of 43 %), the drift that made pairing necessary.
 
 ## 3. Step 2 (approach 2a): the vote's section instead of the whole booklet
 
-### How the context is selected (`src/context.py`)
+### How the context is selected (`src/context.py`; since the restructuring later on 2026-10-08, `src/contexts/vote_section.py`)
 
 A voting booklet covers several ballots. Every page of a ballot's part starts
 with a running header naming it ("Deuxième objet : loi sur la chasse",
@@ -117,7 +117,7 @@ Notes:
 - **`vote-section` context for task A** (default since E2). It wins on the
   primary metric, tokens and time. The evidence score drops, as recorded
   above.
-- **The tools behind the experiments:** `src/context.py` (the selector, with
+- **The tools behind the experiments:** `src/context.py` (the selector, now in `src/contexts/vote_section.py`, with
   tests), `scripts/paired_run.py` (paired runs with `--resume`), and
   `rapidfuzz` as a pipeline dependency.
 
