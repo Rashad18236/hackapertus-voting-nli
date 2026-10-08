@@ -1,0 +1,6 @@
+# Development only: profiling, splits, self-checks and tests.
+# Not installed in the Docker image; the pipeline needs only requirements.txt.
+pandas==3.0.5
+pyarrow==25.0.1
+scikit-learn==1.9.1
+pytest==9.1.1
