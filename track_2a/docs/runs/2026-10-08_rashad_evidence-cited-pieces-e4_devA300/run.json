@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "19:47",
+ "kind": "re-score",
+ "code": "3081d38 (scripts/rescore_evidence.py, src/evidence.py), answers of 2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev, all 300 task A cases",
+ "setup": "E4 control answers, evidence setting cited-pieces: the cited pages' 1,000-character pieces, in turn across the pages, at most five",
+ "format": "re-scored offline (no new calls), official scorer",
+ "paired_with": null,
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b-thinking",
+ "endpoint": "Public AI",
+ "notes": "NOTES.md",
+ "results": {
+  "macro_f1": 0.711,
+  "f1": {
+   "entailment": 0.72,
+   "neutral": 0.722,
+   "contradiction": 0.691
+  },
+  "evidence": {
+   "score": 0.542,
+   "found": 109,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1868,
+  "mean_time_ms": 3031,
+  "p95_time_ms": 11447
+ }
+}
