@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-08",
+ "start_utc": "18:18",
+ "kind": "model run",
+ "code": "3e7fb75",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "dev sample, 20 task A cases already answered by apertus-v1.5-8b in E3 (cases 1-172, evenly spaced)",
+ "setup": "A-v3-excerpts + json_schema, max_tokens 128, top 8 e5 chunks",
+ "format": "official, paired (check: is 8b-thinking the same as 8b?)",
+ "paired_with": "2026-10-08_rashad_thinking-equivalence_devA20/vote-section",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b-thinking",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.52,
+  "f1": {
+   "entailment": 0.727,
+   "neutral": 0.833,
+   "contradiction": 0.0
+  },
+  "evidence": {
+   "score": 0.385,
+   "found": 5,
+   "cases": 13
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1832,
+  "mean_time_ms": 8823,
+  "p95_time_ms": 15506
+ }
+}

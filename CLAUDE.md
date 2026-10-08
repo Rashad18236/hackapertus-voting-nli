@@ -138,7 +138,11 @@ Response:
   `src/llm.py` always sends `hackapertus-voting-nli/0.1`. These values live only
   in `track_2a/.env` as `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`.
 - The key is temporary and will be rotated. Never copy it anywhere else.
-- Public AI sometimes returns HTTP 504 after about 61 s; we do not retry.
+- Public AI sometimes returns HTTP 504 after about 61 s (Cloudflare gives up on a
+  model backend); `src/llm.py` retries once. Status per model:
+  https://status.publicai.co ("Suppliers by Model"). When `apertus-v1.5-8b` is
+  down, `swiss-ai/apertus-v1.5-8b-thinking` answered like it with json_schema
+  (task A); select it with `LLM_NAME` in the environment, never in code.
 - In sandboxes where Docker containers cannot reach the internet directly,
   pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
@@ -250,9 +254,20 @@ Two lines of work from 2026-10-08 are merged (PR #5):
 `--context-a` picks the task A context: `full` (reference), `vote-section`
 (default) or `embed-e5-small`. Every mode uses the json_schema answer.
 
-Goal: a paired run of `embed-e5-small` against `vote-section` on all 300 dev
-task A cases; the default changes only on a paired win. Then build on the
-embedding (one change per run).
+E3 (paired, all 300 task A dev cases, both json_schema; details in
+`track_2a/docs/runs/2026-10-08_rashad_embed-vs-section_devA300/NOTES.md`):
+`embed-e5-small` 0.721 against `vote-section` 0.561 (below the 0.60 minimum),
+evidence 0.383 against 0.094, 1.8k against 15.9k input tokens per case; p95
+time 16.1 s against 9.3 s (each booklet is embedded on its first case).
+Cases 181 to 300 ran on `apertus-v1.5-8b-thinking` because `apertus-v1.5-8b`
+was down; with json_schema it answers like the 8B.
+
+Public AI's `apertus-v1.5-8b` changed behaviour at about 13:25 UTC on
+2026-10-08 (same prompts, temperature 0, different answers): E1 and E2's
+first ~150 cases came from an earlier server. Only paired runs compare.
+
+Next: decide whether `embed-e5-small` becomes the default (proposed, not yet
+changed), then build on the embedding (one change per run).
 
 Rules for this stage:
 
