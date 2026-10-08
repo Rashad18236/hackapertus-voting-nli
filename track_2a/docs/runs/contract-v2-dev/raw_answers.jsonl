@@ -1,0 +1,600 @@
+{"id": "v1.1-row-2-A", "task": "A"}
+{"id": "v1.1-row-2-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-4-A", "task": "A"}
+{"id": "v1.1-row-4-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-5-A", "task": "A"}
+{"id": "v1.1-row-5-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-9-A", "task": "A"}
+{"id": "v1.1-row-9-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-18-A", "task": "A"}
+{"id": "v1.1-row-18-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-21-A", "task": "A"}
+{"id": "v1.1-row-21-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 1}"}
+{"id": "v1.1-row-22-A", "task": "A"}
+{"id": "v1.1-row-22-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-26-A", "task": "A"}
+{"id": "v1.1-row-26-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-27-A", "task": "A"}
+{"id": "v1.1-row-27-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-31-A", "task": "A"}
+{"id": "v1.1-row-31-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-35-A", "task": "A"}
+{"id": "v1.1-row-35-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-36-A", "task": "A"}
+{"id": "v1.1-row-36-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-40-A", "task": "A"}
+{"id": "v1.1-row-40-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-48-A", "task": "A"}
+{"id": "v1.1-row-48-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-49-A", "task": "A"}
+{"id": "v1.1-row-49-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-68-A", "task": "A"}
+{"id": "v1.1-row-68-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-75-A", "task": "A"}
+{"id": "v1.1-row-75-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-76-A", "task": "A"}
+{"id": "v1.1-row-76-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-80-A", "task": "A"}
+{"id": "v1.1-row-80-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-84-A", "task": "A"}
+{"id": "v1.1-row-84-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-85-A", "task": "A"}
+{"id": "v1.1-row-85-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-86-A", "task": "A"}
+{"id": "v1.1-row-86-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-93-A", "task": "A"}
+{"id": "v1.1-row-93-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-94-A", "task": "A"}
+{"id": "v1.1-row-94-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-95-A", "task": "A"}
+{"id": "v1.1-row-95-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-109-A", "task": "A"}
+{"id": "v1.1-row-109-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-116-A", "task": "A"}
+{"id": "v1.1-row-116-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-133-A", "task": "A"}
+{"id": "v1.1-row-133-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-134-A", "task": "A"}
+{"id": "v1.1-row-134-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-135-A", "task": "A"}
+{"id": "v1.1-row-135-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-146-A", "task": "A"}
+{"id": "v1.1-row-146-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-150-A", "task": "A"}
+{"id": "v1.1-row-150-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-154-A", "task": "A"}
+{"id": "v1.1-row-154-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-160-A", "task": "A"}
+{"id": "v1.1-row-160-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 1}"}
+{"id": "v1.1-row-161-A", "task": "A"}
+{"id": "v1.1-row-161-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-162-A", "task": "A"}
+{"id": "v1.1-row-162-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-166-A", "task": "A"}
+{"id": "v1.1-row-166-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-167-A", "task": "A"}
+{"id": "v1.1-row-167-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-168-A", "task": "A"}
+{"id": "v1.1-row-168-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-170-A", "task": "A"}
+{"id": "v1.1-row-170-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-179-A", "task": "A"}
+{"id": "v1.1-row-179-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-180-A", "task": "A"}
+{"id": "v1.1-row-180-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-188-A", "task": "A"}
+{"id": "v1.1-row-188-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-189-A", "task": "A"}
+{"id": "v1.1-row-189-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-198-A", "task": "A"}
+{"id": "v1.1-row-198-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-205-A", "task": "A"}
+{"id": "v1.1-row-205-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-212-A", "task": "A"}
+{"id": "v1.1-row-212-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-216-A", "task": "A"}
+{"id": "v1.1-row-216-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-223-A", "task": "A"}
+{"id": "v1.1-row-223-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-228-A", "task": "A"}
+{"id": "v1.1-row-228-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-232-A", "task": "A"}
+{"id": "v1.1-row-232-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-237-A", "task": "A"}
+{"id": "v1.1-row-237-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-240-A", "task": "A"}
+{"id": "v1.1-row-240-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-241-A", "task": "A"}
+{"id": "v1.1-row-241-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-247-A", "task": "A"}
+{"id": "v1.1-row-247-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-260-A", "task": "A"}
+{"id": "v1.1-row-260-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-262-A", "task": "A"}
+{"id": "v1.1-row-262-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-263-A", "task": "A"}
+{"id": "v1.1-row-263-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-269-A", "task": "A"}
+{"id": "v1.1-row-269-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-273-A", "task": "A"}
+{"id": "v1.1-row-273-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-288-A", "task": "A"}
+{"id": "v1.1-row-288-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-290-A", "task": "A"}
+{"id": "v1.1-row-290-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-293-A", "task": "A"}
+{"id": "v1.1-row-293-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-303-A", "task": "A"}
+{"id": "v1.1-row-303-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-304-A", "task": "A"}
+{"id": "v1.1-row-304-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-308-A", "task": "A"}
+{"id": "v1.1-row-308-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-310-A", "task": "A"}
+{"id": "v1.1-row-310-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-313-A", "task": "A"}
+{"id": "v1.1-row-313-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-330-A", "task": "A"}
+{"id": "v1.1-row-330-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-331-A", "task": "A"}
+{"id": "v1.1-row-331-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-333-A", "task": "A"}
+{"id": "v1.1-row-333-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-339-A", "task": "A"}
+{"id": "v1.1-row-339-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-345-A", "task": "A"}
+{"id": "v1.1-row-345-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-347-A", "task": "A"}
+{"id": "v1.1-row-347-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-350-A", "task": "A"}
+{"id": "v1.1-row-350-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-359-A", "task": "A"}
+{"id": "v1.1-row-359-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-363-A", "task": "A"}
+{"id": "v1.1-row-363-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-367-A", "task": "A"}
+{"id": "v1.1-row-367-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-370-A", "task": "A"}
+{"id": "v1.1-row-370-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-371-A", "task": "A"}
+{"id": "v1.1-row-371-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-380-A", "task": "A"}
+{"id": "v1.1-row-380-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-408-A", "task": "A"}
+{"id": "v1.1-row-408-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-412-A", "task": "A"}
+{"id": "v1.1-row-412-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-414-A", "task": "A"}
+{"id": "v1.1-row-414-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-418-A", "task": "A"}
+{"id": "v1.1-row-418-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-419-A", "task": "A"}
+{"id": "v1.1-row-419-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-424-A", "task": "A"}
+{"id": "v1.1-row-424-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-429-A", "task": "A"}
+{"id": "v1.1-row-429-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-430-A", "task": "A"}
+{"id": "v1.1-row-430-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-431-A", "task": "A"}
+{"id": "v1.1-row-431-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-439-A", "task": "A"}
+{"id": "v1.1-row-439-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-450-A", "task": "A"}
+{"id": "v1.1-row-450-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-455-A", "task": "A"}
+{"id": "v1.1-row-455-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-458-A", "task": "A"}
+{"id": "v1.1-row-458-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-469-A", "task": "A"}
+{"id": "v1.1-row-469-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-471-A", "task": "A"}
+{"id": "v1.1-row-471-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-474-A", "task": "A"}
+{"id": "v1.1-row-474-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-478-A", "task": "A"}
+{"id": "v1.1-row-478-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-482-A", "task": "A"}
+{"id": "v1.1-row-482-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-491-A", "task": "A"}
+{"id": "v1.1-row-491-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-492-A", "task": "A"}
+{"id": "v1.1-row-492-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-493-A", "task": "A"}
+{"id": "v1.1-row-493-B", "task": "B", "prompt_version": "v2-label-only", "error": "LLM call failed with HTTP 502: <!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!"}
+{"id": "v1.1-row-500-A", "task": "A"}
+{"id": "v1.1-row-500-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-501-A", "task": "A"}
+{"id": "v1.1-row-501-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-507-A", "task": "A"}
+{"id": "v1.1-row-507-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-510-A", "task": "A"}
+{"id": "v1.1-row-510-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-511-A", "task": "A"}
+{"id": "v1.1-row-511-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-515-A", "task": "A"}
+{"id": "v1.1-row-515-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-517-A", "task": "A"}
+{"id": "v1.1-row-517-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-521-A", "task": "A"}
+{"id": "v1.1-row-521-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-528-A", "task": "A"}
+{"id": "v1.1-row-528-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-531-A", "task": "A"}
+{"id": "v1.1-row-531-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 1}"}
+{"id": "v1.1-row-538-A", "task": "A"}
+{"id": "v1.1-row-538-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-549-A", "task": "A"}
+{"id": "v1.1-row-549-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-554-A", "task": "A"}
+{"id": "v1.1-row-554-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-556-A", "task": "A"}
+{"id": "v1.1-row-556-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-564-A", "task": "A"}
+{"id": "v1.1-row-564-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-566-A", "task": "A"}
+{"id": "v1.1-row-566-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-567-A", "task": "A"}
+{"id": "v1.1-row-567-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-568-A", "task": "A"}
+{"id": "v1.1-row-568-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-577-A", "task": "A"}
+{"id": "v1.1-row-577-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-580-A", "task": "A"}
+{"id": "v1.1-row-580-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-608-A", "task": "A"}
+{"id": "v1.1-row-608-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-614-A", "task": "A"}
+{"id": "v1.1-row-614-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-616-A", "task": "A"}
+{"id": "v1.1-row-616-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-619-A", "task": "A"}
+{"id": "v1.1-row-619-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-623-A", "task": "A"}
+{"id": "v1.1-row-623-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-629-A", "task": "A"}
+{"id": "v1.1-row-629-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-633-A", "task": "A"}
+{"id": "v1.1-row-633-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-637-A", "task": "A"}
+{"id": "v1.1-row-637-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-638-A", "task": "A"}
+{"id": "v1.1-row-638-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-640-A", "task": "A"}
+{"id": "v1.1-row-640-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-645-A", "task": "A"}
+{"id": "v1.1-row-645-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-648-A", "task": "A"}
+{"id": "v1.1-row-648-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-656-A", "task": "A"}
+{"id": "v1.1-row-656-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-662-A", "task": "A"}
+{"id": "v1.1-row-662-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-665-A", "task": "A"}
+{"id": "v1.1-row-665-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-666-A", "task": "A"}
+{"id": "v1.1-row-666-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-668-A", "task": "A"}
+{"id": "v1.1-row-668-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-670-A", "task": "A"}
+{"id": "v1.1-row-670-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-679-A", "task": "A"}
+{"id": "v1.1-row-679-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-682-A", "task": "A"}
+{"id": "v1.1-row-682-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-688-A", "task": "A"}
+{"id": "v1.1-row-688-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-691-A", "task": "A"}
+{"id": "v1.1-row-691-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-692-A", "task": "A"}
+{"id": "v1.1-row-692-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-700-A", "task": "A"}
+{"id": "v1.1-row-700-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-711-A", "task": "A"}
+{"id": "v1.1-row-711-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-713-A", "task": "A"}
+{"id": "v1.1-row-713-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-720-A", "task": "A"}
+{"id": "v1.1-row-720-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-724-A", "task": "A"}
+{"id": "v1.1-row-724-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-726-A", "task": "A"}
+{"id": "v1.1-row-726-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-731-A", "task": "A"}
+{"id": "v1.1-row-731-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-739-A", "task": "A"}
+{"id": "v1.1-row-739-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-746-A", "task": "A"}
+{"id": "v1.1-row-746-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-757-A", "task": "A"}
+{"id": "v1.1-row-757-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-762-A", "task": "A"}
+{"id": "v1.1-row-762-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-767-A", "task": "A"}
+{"id": "v1.1-row-767-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-770-A", "task": "A"}
+{"id": "v1.1-row-770-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-777-A", "task": "A"}
+{"id": "v1.1-row-777-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 1}"}
+{"id": "v1.1-row-782-A", "task": "A"}
+{"id": "v1.1-row-782-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-793-A", "task": "A"}
+{"id": "v1.1-row-793-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-797-A", "task": "A"}
+{"id": "v1.1-row-797-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-798-A", "task": "A"}
+{"id": "v1.1-row-798-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-800-A", "task": "A"}
+{"id": "v1.1-row-800-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-810-A", "task": "A"}
+{"id": "v1.1-row-810-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-820-A", "task": "A"}
+{"id": "v1.1-row-820-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-821-A", "task": "A"}
+{"id": "v1.1-row-821-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-826-A", "task": "A"}
+{"id": "v1.1-row-826-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-830-A", "task": "A"}
+{"id": "v1.1-row-830-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-836-A", "task": "A"}
+{"id": "v1.1-row-836-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-841-A", "task": "A"}
+{"id": "v1.1-row-841-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-843-A", "task": "A"}
+{"id": "v1.1-row-843-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-844-A", "task": "A"}
+{"id": "v1.1-row-844-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-849-A", "task": "A"}
+{"id": "v1.1-row-849-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 1}"}
+{"id": "v1.1-row-852-A", "task": "A"}
+{"id": "v1.1-row-852-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-853-A", "task": "A"}
+{"id": "v1.1-row-853-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-854-A", "task": "A"}
+{"id": "v1.1-row-854-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-869-A", "task": "A"}
+{"id": "v1.1-row-869-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-875-A", "task": "A"}
+{"id": "v1.1-row-875-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-876-A", "task": "A"}
+{"id": "v1.1-row-876-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-896-A", "task": "A"}
+{"id": "v1.1-row-896-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-899-A", "task": "A"}
+{"id": "v1.1-row-899-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-901-A", "task": "A"}
+{"id": "v1.1-row-901-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-904-A", "task": "A"}
+{"id": "v1.1-row-904-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-909-A", "task": "A"}
+{"id": "v1.1-row-909-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-920-A", "task": "A"}
+{"id": "v1.1-row-920-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-930-A", "task": "A"}
+{"id": "v1.1-row-930-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-932-A", "task": "A"}
+{"id": "v1.1-row-932-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-935-A", "task": "A"}
+{"id": "v1.1-row-935-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-939-A", "task": "A"}
+{"id": "v1.1-row-939-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-944-A", "task": "A"}
+{"id": "v1.1-row-944-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-946-A", "task": "A"}
+{"id": "v1.1-row-946-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-947-A", "task": "A"}
+{"id": "v1.1-row-947-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-948-A", "task": "A"}
+{"id": "v1.1-row-948-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-951-A", "task": "A"}
+{"id": "v1.1-row-951-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-953-A", "task": "A"}
+{"id": "v1.1-row-953-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-965-A", "task": "A"}
+{"id": "v1.1-row-965-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-977-A", "task": "A"}
+{"id": "v1.1-row-977-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-980-A", "task": "A"}
+{"id": "v1.1-row-980-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-981-A", "task": "A"}
+{"id": "v1.1-row-981-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-988-A", "task": "A"}
+{"id": "v1.1-row-988-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-994-A", "task": "A"}
+{"id": "v1.1-row-994-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1000-A", "task": "A"}
+{"id": "v1.1-row-1000-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1003-A", "task": "A"}
+{"id": "v1.1-row-1003-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1011-A", "task": "A"}
+{"id": "v1.1-row-1011-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1014-A", "task": "A"}
+{"id": "v1.1-row-1014-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1015-A", "task": "A"}
+{"id": "v1.1-row-1015-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1016-A", "task": "A"}
+{"id": "v1.1-row-1016-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1020-A", "task": "A"}
+{"id": "v1.1-row-1020-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1022-A", "task": "A"}
+{"id": "v1.1-row-1022-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1023-A", "task": "A"}
+{"id": "v1.1-row-1023-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1026-A", "task": "A"}
+{"id": "v1.1-row-1026-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1039-A", "task": "A"}
+{"id": "v1.1-row-1039-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1052-A", "task": "A"}
+{"id": "v1.1-row-1052-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1056-A", "task": "A"}
+{"id": "v1.1-row-1056-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1063-A", "task": "A"}
+{"id": "v1.1-row-1063-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1064-A", "task": "A"}
+{"id": "v1.1-row-1064-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n"}
+{"id": "v1.1-row-1067-A", "task": "A"}
+{"id": "v1.1-row-1067-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1074-A", "task": "A"}
+{"id": "v1.1-row-1074-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1080-A", "task": "A"}
+{"id": "v1.1-row-1080-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1083-A", "task": "A"}
+{"id": "v1.1-row-1083-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1085-A", "task": "A"}
+{"id": "v1.1-row-1085-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1092-A", "task": "A"}
+{"id": "v1.1-row-1092-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1098-A", "task": "A"}
+{"id": "v1.1-row-1098-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1100-A", "task": "A"}
+{"id": "v1.1-row-1100-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1102-A", "task": "A"}
+{"id": "v1.1-row-1102-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1110-A", "task": "A"}
+{"id": "v1.1-row-1110-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1115-A", "task": "A"}
+{"id": "v1.1-row-1115-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1117-A", "task": "A"}
+{"id": "v1.1-row-1117-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n**Reasoning:**\nThe reference text states in Art. 33 Abs. 3 that the deduction applies for children who have"}
+{"id": "v1.1-row-1118-A", "task": "A"}
+{"id": "v1.1-row-1118-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1128-A", "task": "A"}
+{"id": "v1.1-row-1128-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n"}
+{"id": "v1.1-row-1138-A", "task": "A"}
+{"id": "v1.1-row-1138-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n**Reasoning:**\nThe reference text explicitly states: \"75 % der Einnahmen sollen an die Kantone, 25"}
+{"id": "v1.1-row-1144-A", "task": "A"}
+{"id": "v1.1-row-1144-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1152-A", "task": "A"}
+{"id": "v1.1-row-1152-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1161-A", "task": "A"}
+{"id": "v1.1-row-1161-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1166-A", "task": "A"}
+{"id": "v1.1-row-1166-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1167-A", "task": "A"}
+{"id": "v1.1-row-1167-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-1169-A", "task": "A"}
+{"id": "v1.1-row-1169-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1177-A", "task": "A"}
+{"id": "v1.1-row-1177-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1183-A", "task": "A"}
+{"id": "v1.1-row-1183-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1194-A", "task": "A"}
+{"id": "v1.1-row-1194-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1198-A", "task": "A"}
+{"id": "v1.1-row-1198-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1203-A", "task": "A"}
+{"id": "v1.1-row-1203-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1205-A", "task": "A"}
+{"id": "v1.1-row-1205-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1208-A", "task": "A"}
+{"id": "v1.1-row-1208-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1219-A", "task": "A"}
+{"id": "v1.1-row-1219-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1223-A", "task": "A"}
+{"id": "v1.1-row-1223-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1230-A", "task": "A"}
+{"id": "v1.1-row-1230-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n**Reasoning:** The reference text states that the cost of introducing the 13th AHV pension would be approximately **4"}
+{"id": "v1.1-row-1238-A", "task": "A"}
+{"id": "v1.1-row-1238-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1243-A", "task": "A"}
+{"id": "v1.1-row-1243-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1246-A", "task": "A"}
+{"id": "v1.1-row-1246-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1251-A", "task": "A"}
+{"id": "v1.1-row-1251-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1253-A", "task": "A"}
+{"id": "v1.1-row-1253-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}\n```json\n{\"label\": 2}\n```"}
+{"id": "v1.1-row-1258-A", "task": "A"}
+{"id": "v1.1-row-1258-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1263-A", "task": "A"}
+{"id": "v1.1-row-1263-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1265-A", "task": "A"}
+{"id": "v1.1-row-1265-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1267-A", "task": "A"}
+{"id": "v1.1-row-1267-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1271-A", "task": "A"}
+{"id": "v1.1-row-1271-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1276-A", "task": "A"}
+{"id": "v1.1-row-1276-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1280-A", "task": "A"}
+{"id": "v1.1-row-1280-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1283-A", "task": "A"}
+{"id": "v1.1-row-1283-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1291-A", "task": "A"}
+{"id": "v1.1-row-1291-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1297-A", "task": "A"}
+{"id": "v1.1-row-1297-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1302-A", "task": "A"}
+{"id": "v1.1-row-1302-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1304-A", "task": "A"}
+{"id": "v1.1-row-1304-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1308-A", "task": "A"}
+{"id": "v1.1-row-1308-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1320-A", "task": "A"}
+{"id": "v1.1-row-1320-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1324-A", "task": "A"}
+{"id": "v1.1-row-1324-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1326-A", "task": "A"}
+{"id": "v1.1-row-1326-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1335-A", "task": "A"}
+{"id": "v1.1-row-1335-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1341-A", "task": "A"}
+{"id": "v1.1-row-1341-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1342-A", "task": "A"}
+{"id": "v1.1-row-1342-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1343-A", "task": "A"}
+{"id": "v1.1-row-1343-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1350-A", "task": "A"}
+{"id": "v1.1-row-1350-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1364-A", "task": "A"}
+{"id": "v1.1-row-1364-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1369-A", "task": "A"}
+{"id": "v1.1-row-1369-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1375-A", "task": "A"}
+{"id": "v1.1-row-1375-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1376-A", "task": "A"}
+{"id": "v1.1-row-1376-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1381-A", "task": "A"}
+{"id": "v1.1-row-1381-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1383-A", "task": "A"}
+{"id": "v1.1-row-1383-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1384-A", "task": "A"}
+{"id": "v1.1-row-1384-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1391-A", "task": "A"}
+{"id": "v1.1-row-1391-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1396-A", "task": "A"}
+{"id": "v1.1-row-1396-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1403-A", "task": "A"}
+{"id": "v1.1-row-1403-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1407-A", "task": "A"}
+{"id": "v1.1-row-1407-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1416-A", "task": "A"}
+{"id": "v1.1-row-1416-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1421-A", "task": "A"}
+{"id": "v1.1-row-1421-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1424-A", "task": "A"}
+{"id": "v1.1-row-1424-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1436-A", "task": "A"}
+{"id": "v1.1-row-1436-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1444-A", "task": "A"}
+{"id": "v1.1-row-1444-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1451-A", "task": "A"}
+{"id": "v1.1-row-1451-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1456-A", "task": "A"}
+{"id": "v1.1-row-1456-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1459-A", "task": "A"}
+{"id": "v1.1-row-1459-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1464-A", "task": "A"}
+{"id": "v1.1-row-1464-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1468-A", "task": "A"}
+{"id": "v1.1-row-1468-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 0}"}
+{"id": "v1.1-row-1472-A", "task": "A"}
+{"id": "v1.1-row-1472-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1474-A", "task": "A"}
+{"id": "v1.1-row-1474-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1477-A", "task": "A"}
+{"id": "v1.1-row-1477-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1478-A", "task": "A"}
+{"id": "v1.1-row-1478-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}
+{"id": "v1.1-row-1481-A", "task": "A"}
+{"id": "v1.1-row-1481-B", "task": "B", "prompt_version": "v2-label-only", "answer": "{\"label\": 2}"}

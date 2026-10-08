@@ -2,12 +2,13 @@
 
 ## What this project is
 
-A hackathon submission for the OST challenge in Hack Apertus (Track 2A). Given an
-official Swiss federal voting booklet and a claim in German, French or Italian,
-the system decides whether the booklet entails (0), is neutral towards (1), or
-contradicts (2) the claim, and returns the passage that justifies the decision.
-The reference point is always the booklet, never outside knowledge: a true claim
-the booklet does not cover is neutral.
+A hackathon submission for the OST challenge in Hack Apertus (Track 2A). Given a
+claim in German, French or Italian and a source from an official Swiss federal
+voting booklet, the system decides whether the source entails (0), is neutral
+towards (1), or contradicts (2) the claim. The reference point is always the
+supplied source, never outside knowledge: supports = entailment; insufficient
+information = neutral; refutes = contradiction. A true claim the source does
+not cover is neutral.
 
 Submission deadline: 16 October 2026, 12:00 CEST, no extension.
 
@@ -18,107 +19,158 @@ clever code, and tell us briefly why you chose an approach.
 Claude is a development tool here. It is not part of the solution and must never
 be called by anything the pipeline runs.
 
+## The official contract is the authority
+
+`track_2a/docs/official_contract.md` is the organisers' Getting Started guide
+(copied 2026-10-08). Wherever it conflicts with this file, it wins. The
+organisers' starter repository is `https://gitlab.com/ifsoftware/hackapertus-starter`
+(read at commit `559b598`). It has no licence file, so we do not copy its code
+into this public repository; we clone it outside and run its `prepare_cases.py`
+and `evaluate.py` unchanged.
+
+## Notes from the official challenge page (added 2026-10-08)
+
+- **The central experiment is "full document -> Apertus" versus "selected
+  context -> Apertus".** Both must be measured and reported, with the same
+  scorer and the same dev split.
+- **Use the label definitions from the dataset's README in the NLI prompt.**
+  Caveat: on 2026-10-08 the README (dataset commit `9ff08597`) contains only
+  `license: mit`, no definitions. Until it has them, the prompt uses the
+  official guide's wording (supports = entailment, insufficient information =
+  neutral, refutes = contradiction). Check the README again before each prompt
+  change and quote its definitions word for word once they appear.
+- **The technical report must document how document context is prepared and
+  supplied to the model** (parsing, page numbers, what is selected, what the
+  prompt contains).
+- **Outputs must not be presented as political advice and must be traceable
+  to the source booklet.** State this in `track_2a/README.md` and in
+  `track_2a/technical_report.md` (not done yet).
+- **Booklet parsing is assumed to be allowed locally** (not with Apertus), per
+  the contract's "local parsing, OCR, or embeddings may run locally", until
+  the organisers say otherwise.
+
 ## Constraints set by the organisers
 
 - `track_2a/` is the project root. Do not rename it or move the files the
-  template put there. Judges run `make run` from inside it, on a clean checkout,
-  in Docker, with nothing pre-installed.
-- Apertus v1.5 (8B and 70B) is the only language model allowed inside the
-  pipeline. Whether a non-Apertus embedding model is allowed is unresolved, so
-  do not add one without asking us.
-- Model access comes from three environment variables: `LLM_NAME`,
-  `LLM_BASE_URL`, `LLM_API_KEY`. Never hardcode, print, log or commit their
-  values. `.env` is git-ignored; keep `.env.example` up to date with the names.
-- `make run` has to work both when those variables are exported in the shell
-  (how judges will probably run it) and when they sit in a local `.env`.
+  template put there. Judges run the Docker image; `make run` is our wrapper.
+- Docker entrypoint: `<entrypoint> --input /data/cases.jsonl --output
+  /output/predictions.jsonl`. One JSON line per input id, any order, exit 0.
+  Missing or invalid responses count as wrong.
+- Docker rules: `linux/amd64`, no GPU. `/data` is read-only; write only to
+  `/output` and `/tmp`. All dependencies and any local model weights are baked
+  into the image; nothing is downloaded at run time. No API keys or `.env` in
+  the image.
+- Only Apertus v1.5 models (`swiss-ai/Apertus-v1.5-...`). Every remote model
+  call must go to `BASE_URL`. Local parsing, OCR or embeddings may run locally;
+  whether a non-Apertus local embedding model is acceptable is still unclear,
+  so do not add one without asking us.
+- Variables: `BASE_URL` and `API_KEY`, environment first, then local
+  configuration. At evaluation the organisers inject a token-counting proxy as
+  `BASE_URL` and a team key as `API_KEY`. For local use we fall back to
+  `LLM_BASE_URL` / `LLM_API_KEY`. The model name comes from `MODEL`, else
+  `LLM_NAME`, else `swiss-ai/Apertus-v1.5-8B`. Never hardcode, print, log or
+  commit their values. `.env` is git-ignored; keep `.env.example` current.
+- **Minimum Macro-F1 for a valid submission: 0.75 on task B and 0.60 on
+  task A** (starter's `evaluate.py`).
 - `track_2a/data/` must stay under 100 MB.
-- The repository will be public. Treat everything committed as published.
+- The repository is public. Treat everything committed as published.
 
 ## The two tasks
 
-Beginner task: compare the claim directly with a supplied reference text.
+Every request has `id`, `vote` (vote name in the source language), `claim`
+(`text`, `language`), and exactly one source:
+
+- **Task A, document:** `booklet` with `path` (relative to `/data`, e.g.
+  `booklets/2024_09_22_de.pdf`) and `language`. Find the relevant passage in
+  the PDF, then decide. Use `vote` to find the right proposal in the booklet.
+  Start with a full-document baseline before retrieval or compression.
+- **Task B, reference:** `reference` with `text` and `language`. Decide against
+  that passage.
+
+Input files can mix both tasks. All nine source/claim language combinations of
+de, fr and it must work.
+
+Response:
 
 ```json
 {
-  "id": "case-0043",
-  "reference": { "text": "Der Bundesrat und der Nationalrat lehnen die Volksinitiative ab. ..." },
-  "claim": { "text": "Le Conseil fédéral recommande d'accepter l'initiative." }
-}
-```
-
-Advanced task: find the evidence inside the booklet PDF, then classify.
-
-```json
-{
-  "id": "case-0042",
-  "booklet": { "path": "booklets/2024_11_24_de.pdf" },
-  "vote": "Étape d'aménagement 2023 des routes nationales",
-  "claim": { "text": "La proposition entraînera une augmentation de la TVA." }
-}
-```
-
-The claim and the reference or booklet can be in different languages. All nine
-combinations of German, French and Italian must work.
-
-Output for both tasks:
-
-```json
-{
-  "id": "case-0042",
+  "id": "v1.1-row-60-A",
   "label": 0,
   "label_name": "entailment",
-  "evidence": [ { "page": 7, "text": "...verbatim supporting passage..." } ],
-  "metrics": { "input_tokens": 8431, "output_tokens": 112, "inference_time_ms": 1820 }
+  "evidence": [ { "page": 43, "text": "...verbatim quote in the source language..." } ],
+  "metrics": { "input_tokens": 1304, "output_tokens": 46, "inference_time_ms": 776 }
 }
 ```
 
-Evidence is required for entailment and contradiction and may be empty for
-neutral. Evidence text must be verbatim from the source. `page` applies to the
-advanced task.
+- `label_name` must match `label`, or the response is invalid.
+- `metrics`: total LLM input and output tokens (incl. reasoning) over all calls
+  for the case, and the case's wall-clock time in ms.
+- Task A, labels 0 and 2: at least one evidence item with a **1-based PDF page**
+  and a verbatim quote in the source language (or the text of the page). Each
+  item at most about 5,000 characters; only the first five count. Quote the
+  detailed section on the vote, not the summary at the front; cite every place
+  a fact appears as separate items, most relevant first.
+- Task B: evidence is optional and not scored. We return `[]`; if we ever
+  include it, `page` must be `null`.
 
 ## How submissions are scored
 
-- Macro-F1 over the three labels on a held-out benchmark. This is the primary
-  metric and is reported separately for the beginner and advanced tasks.
-- Evidence: does the returned passage match the gold passage, and for the
-  advanced task, does the PDF page match.
-- Tokens: the sum of input tokens. The organisers count them with their own
-  proxy and their count wins, so every model call matters, retries included.
-- Speed: mean and p95 of `inference_time_ms`.
-- Results are broken down by language and by same-language versus cross-lingual.
+- Macro-F1 per task (A and B separately), from labels only. Missing, duplicated
+  or invalid responses count as wrong. Thresholds above.
+- Task A evidence score: share of gold entailment/contradiction cases where
+  one of the first five evidence items fuzzy-matches the gold passage
+  (`reference_string`; rapidfuzz partial ratio >= 90 after normalising case,
+  whitespace and line-break hyphenation). Pages are not checked locally yet.
+- Tokens and time: measured by the organisers' proxy, scored relative to other
+  teams. Every model call counts, retries included.
+- Final evaluation uses a held-out private set.
+
+## Model endpoint (development)
+
+- The guide's development endpoint is CSCS: `https://api.inference.cscs.ch/v1`.
+- We currently develop on Public AI (OpenAI-compatible): model
+  `swiss-ai/apertus-v1.5-8b`, base URL `https://api.publicai.co/v1` (fallback
+  `https://platform.publicai.co/v1`). Public AI requires a `User-Agent` header;
+  `src/llm.py` always sends `hackapertus-voting-nli/0.1`. These values live only
+  in `track_2a/.env` as `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`.
+- The key is temporary and will be rotated. Never copy it anywhere else.
+- Public AI sometimes returns HTTP 504 after about 61 s; we do not retry.
+- In sandboxes where Docker containers cannot reach the internet directly,
+  pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
 ## Data
 
-The public dataset is `OSTswiss/MNLIoverSwissVotingBooklets` on Hugging Face,
-files `v1.1.parquet` and `v1.1.jsonl` (same data, somewhere between 1,000 and
-10,000 rows). Inspected on 2026-10-07, v1.1 has 1,488 rows and these columns:
-`claim`, `claim_language`, `reference_string`, `entailment_label`,
-`baseline_score`, `reference_language`, `booklet_publish_date`,
-`booklet_download_date`, `booklet_url`, `vote`. There is no `booklet_id` or
-`booklet_language`. `entailment_label` uses the same encoding as our output
-(0 entailment, 1 neutral, 2 contradiction), roughly 500 rows each; claim
-languages are about 500 each of de, fr, it. Reference texts are 884 to 25,425
-characters long. `data/sample_beginner.jsonl` holds rows 300 and 1281.
+The dataset is `OSTswiss/MNLIoverSwissVotingBooklets` v1.1 (commit
+`9ff08597`, MIT): 1,488 rows, 335 of them exact duplicates. Columns: `claim`,
+`claim_language`, `reference_string`, `entailment_label`, `baseline_score`,
+`reference_language`, `booklet_publish_date`, `booklet_download_date`,
+`booklet_url`, `vote`. Each row gives one task A and one task B case. Neutral
+rows pair the claim with an unrelated passage, so they have no gold passage.
+See `track_2a/docs/dataset_profile.md`.
 
-## Intended layout inside `track_2a/`
+Our cases are generated by the starter's `prepare_cases.py` and filtered to our
+split (`track_2a/data/README.md`): split by voting date, seed 42, duplicates
+excluded. `data/dev/` has 300 rows (600 cases), `data/test/` 267 rows (534
+cases). `expected-labels.jsonl` files never go into the prediction container.
+
+## Layout inside `track_2a/`
 
 ```
-Makefile, Dockerfile, .env.example, requirements.txt
+Makefile, Dockerfile, .dockerignore, .env.example, requirements.txt, requirements-dev.txt
 src/
-  cli.py        reads cases from a file, writes predictions to a file
-  llm.py        the only module that calls Apertus; records input tokens,
-                output tokens and elapsed milliseconds for every call
-  nli.py        prompt construction and label parsing
+  cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case
+  llm.py        the only module that calls Apertus; records tokens and time per call
+  nli.py        prompts and label parsing
+  env.py        minimal .env reader (environment wins)
+  evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      PDF to passages with page numbers            (later stage)
   context.py    context selection, starts as "return all"    (later stage)
-  evaluate.py   Macro-F1, evidence match, per-language tables (later stage)
-data/           sample cases, dev split, raw dataset
-docs/           results log, diagrams
+examples/       cases.jsonl for make run (one task A, one task B request, from dev)
+data/           raw dataset, dev/ and test/ splits, splits.json
+docs/           official contract, decisions, results, reviews, run artefacts
+scripts/        dataset profile, splits, self-checks
+tests/          unit tests (evaluate, parser, CLI)
 ```
-
-The CLI takes an input path and an output path as arguments, with defaults
-pointing at a small sample file in `data/`, because we do not yet know how
-judges will supply the held-out cases.
 
 ## How we work
 
@@ -130,31 +182,50 @@ judges will supply the held-out cases.
 - Never write a result that did not come from an actual run. If you cannot run
   something, for example because the session has no API key, say so plainly.
 - Keep dependencies few and well known. Ask before adding a heavy one.
-- When `evaluate.py` is written, include tests small enough to verify by hand.
+- Score with the starter's `evaluate.py`; `scripts/self_checks.py` verifies
+  that our `evaluate.py` gives the same Macro-F1.
+- Never run on `data/test/`. Test is for the final evaluation only.
+- Record every decision in `track_2a/docs/decisions.md` with a one-line reason.
 
-## Current stage: setup
+## Current stage: contract alignment
 
-Goal: a walking skeleton. On a fresh clone, `make run` builds a Docker image,
-runs the CLI on two sample beginner cases, calls Apertus once per case with a
-simple hardcoded prompt, and writes predictions in the output format above.
+The beginner baseline (pre-contract) is measured: Macro-F1 0.202 on dev with
+prompt `v1-json`, see `docs/results.md` and `docs/baseline_review.md`.
+
+Goal: make the pipeline follow the official contract and re-measure task B.
 
 Done when:
 
-1. `.env.example` lists the three variable names with placeholder values.
-2. `src/llm.py` makes one successful Apertus call using only those variables.
-3. `src/cli.py` reads the sample file and writes a valid predictions file.
-4. `Dockerfile` and `Makefile` make `make run` do step 3 in a container.
-5. `make run` passes in a second, freshly cloned copy of the repository.
+1. The image's entrypoint takes `--input`/`--output`, writes one line per id
+   and exits 0; `make run` builds for linux/amd64 and runs it on the examples.
+2. `BASE_URL`/`API_KEY` are read first, with `LLM_*` fallbacks; the model name
+   is configurable with default `swiss-ai/Apertus-v1.5-8B`.
+3. The official request fields work, including mixed task A/B files. Task A
+   returns a clearly marked placeholder (label 1) without crashing.
+4. No case is ever dropped: failures give label 1 and are counted on stderr.
+5. The task B prompt no longer asks for evidence; task B evidence is `[]`.
+6. Dev and test cases come from the starter's `prepare_cases.py` with our
+   split; the starter's `evaluate.py` is the scorer and ours agrees with it.
+7. Docker rules hold (read-only `/data` and root, writes only to `/output` and
+   `/tmp`, no runtime downloads, `.dockerignore` keeps `.env` and `data/` out).
+8. The task B baseline is rerun on dev and added to `docs/results.md`; the old
+   row stays, marked pre-contract.
 
-Out of scope for this stage: PDF parsing, the advanced task, prompt tuning,
-evaluation code, and anything to do with retrieval.
+Rules: a failed case gets label 1 (the contract counts missing responses as
+wrong); parse failures and call failures are still counted and reported.
+
+Out of scope: task A beyond the placeholder, PDF parsing, retrieval, and
+prompt tuning beyond removing the evidence request.
 
 ## Open questions (do not assume the answers)
 
-- How judges pass the held-out cases to `make run`, and where output should go.
-- Whether booklet PDFs are supplied at judging time or must live in `data/`.
-- Whether `LLM_BASE_URL` is the token-counting proxy. The endpoint is probably
-  OpenAI-compatible; confirm that with the first call.
-- Whether non-Apertus embedding models are allowed in the pipeline.
-- How evidence matching is computed (exact string or overlap), and whether
-  `page` means the PDF page index or the printed page number.
+- Whether a non-Apertus local embedding model is acceptable (the guide allows
+  local embeddings but also says "only Apertus v1.5 models").
+- Whether the evidence page is checked against the 1-based PDF page in the
+  official run (the starter says pages are "not checked yet").
+- Formula combining Macro-F1, tokens and time in the final score (the starter
+  refers to "evaluation notes" we have not seen).
+- Whether booklet parsing must use Apertus or may be local. Working
+  assumption: local parsing is allowed (contract wording), until told otherwise.
+- Where the dataset README's label definitions are (the README is still
+  licence-only as of 2026-10-08).

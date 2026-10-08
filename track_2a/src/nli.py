@@ -1,59 +1,101 @@
-"""Prompt construction and answer parsing for the beginner task.
+"""Prompt construction and answer parsing.
 
-We ask for a fixed two-line answer instead of JSON: it is easier for a small
-model to follow and easier for us to parse and explain.
+Task B (reference passage): the model answers {"label": 0|1|2}. Evidence is
+not scored for task B (official contract), so we no longer ask for it: that
+saves output tokens and removes the long quotes that broke the JSON in the
+v1 baseline.
+
+The prompt is in English; claims and references are passed through untouched,
+never translated.
+
+parse_label() returns None when the answer cannot be read. It never guesses;
+the caller decides what to write (src/cli.py writes the contract's fallback
+label and logs the failure).
 """
 
-import logging
+import json
 import re
 
-LABELS = {"entailment": 0, "neutral": 1, "contradiction": 2}
-FALLBACK_LABEL = "neutral"
+PROMPT_VERSION_B = "v2-label-only"
+LABEL_NAMES = {0: "entailment", 1: "neutral", 2: "contradiction"}
 
-SYSTEM_PROMPT = """You check claims against an official Swiss voting booklet.
-Use only the reference text, never outside knowledge.
-The claim and the reference may be in different languages (German, French, Italian).
+SYSTEM_PROMPT_B = """You are a careful fact checker for official Swiss federal voting booklets.
 
-Decide:
-- entailment: the reference text states or clearly implies the claim.
-- contradiction: the reference text states something that makes the claim false.
-- neutral: the reference text does not settle the claim, even if the claim is true.
+You get a REFERENCE TEXT from a voting booklet and a CLAIM. They may be in different languages (German, French or Italian). The reference text is the only source of truth: do not use outside knowledge, even if you know the claim is true or false in the real world.
 
-Answer in exactly two lines:
-LABEL: <entailment, neutral or contradiction>
-EVIDENCE: <one sentence copied exactly from the reference text, or NONE if neutral>"""
+Choose exactly one label:
+0 = entailment: the reference text supports the claim (states it or clearly implies it).
+1 = neutral: the reference text gives insufficient information to decide. A claim that is true in the real world but not covered by the reference text is neutral.
+2 = contradiction: the reference text refutes the claim (states something that makes it false).
+
+Answer with one JSON object and nothing else:
+{"label": <0, 1 or 2>}"""
 
 
-def build_messages(reference_text, claim_text):
+def build_messages_b(reference_text, claim_text):
     user = f"REFERENCE TEXT:\n{reference_text}\n\nCLAIM:\n{claim_text}"
     return [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": SYSTEM_PROMPT_B},
         {"role": "user", "content": user},
     ]
 
 
-def parse_label(answer):
-    """Return the label name; fall back to neutral if the answer is unreadable."""
-    match = re.search(r"LABEL:\s*(\w+)", answer, re.IGNORECASE)
-    if match and match.group(1).lower() in LABELS:
-        return match.group(1).lower()
-    # The model ignored the format: take the first label word it mentions.
-    words = re.findall(r"entailment|neutral|contradiction", answer, re.IGNORECASE)
-    if words:
-        return words[0].lower()
-    logging.warning("Could not read a label from the model answer; using %s", FALLBACK_LABEL)
-    return FALLBACK_LABEL
+def _first_json_object(text):
+    """Return the first JSON object found in text, or None.
+
+    Tolerates code fences and prose around the object.
+    """
+    decoder = json.JSONDecoder()
+    for start in [m.start() for m in re.finditer(r"\{", text)]:
+        try:
+            obj, _ = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            return obj
+    return None
 
 
-def parse_evidence(answer, reference_text):
-    """Return the quoted sentence only if it appears exactly in the reference."""
-    match = re.search(r"EVIDENCE:\s*(.+)", answer, re.IGNORECASE)
-    if not match:
+def _read_label(value):
+    """Accept 0/1/2 as int or digit string, or an exact label name. Else None."""
+    if isinstance(value, bool):
         return None
-    quote = match.group(1).strip().strip("\"'«»“”„")
-    if not quote or quote.upper() == "NONE":
+    if isinstance(value, int) and value in LABEL_NAMES:
+        return value
+    if isinstance(value, str):
+        v = value.strip().lower()
+        if v in ("0", "1", "2"):
+            return int(v)
+        for number, name in LABEL_NAMES.items():
+            if v == name:
+                return number
+    return None
+
+
+def parse_label(answer):
+    """Return (label or None, reason). reason is "" on success."""
+    obj = _first_json_object(answer)
+    if obj is None:
+        return None, "no JSON object"
+    label = _read_label(obj.get("label"))
+    if label is None:
+        return None, f"invalid label {obj.get('label')!r}"
+    return label, ""
+
+
+def find_verbatim(quote, reference_text):
+    """Return the passage of reference_text that the quote points to, or None.
+
+    Not used by task B any more; kept for task A evidence. An exact substring
+    is returned as is. Otherwise differences in whitespace and letter case are
+    allowed, and the reference's own characters are returned, so the result
+    is always verbatim. Any other change means no match.
+    """
+    quote = quote.strip()
+    if not quote:
         return None
     if quote in reference_text:
         return quote
-    logging.info("Model quote is not verbatim in the reference; dropping it")
-    return None
+    pattern = r"\s+".join(re.escape(w) for w in quote.split())
+    match = re.search(pattern, reference_text) or re.search(pattern, reference_text, re.IGNORECASE)
+    return match.group(0) if match else None

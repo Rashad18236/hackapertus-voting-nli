@@ -28,3 +28,4 @@ build/
 
 # Predictions written by make run
 output/
+.pytest_cache/
