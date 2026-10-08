@@ -52,7 +52,7 @@ def starter_scores(starter, predictions, split):
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "score.json"
         subprocess.run(["uv", "run", "--no-sync", "python", "evaluate.py",
-                        "--predictions", str(predictions), "--expected", str(DATA / split / "expected-labels.jsonl"),
+                        "--predictions", str(Path(predictions).resolve()), "--expected", str(DATA / split / "expected-labels.jsonl"),
                         "--cases", str(DATA / split / "cases.jsonl"), "--json", str(out)],
                        cwd=starter, check=True, capture_output=True)
         report = json.loads(out.read_text(encoding="utf-8"))

@@ -28,6 +28,27 @@ organisers' starter repository is `https://gitlab.com/ifsoftware/hackapertus-sta
 into this public repository; we clone it outside and run its `prepare_cases.py`
 and `evaluate.py` unchanged.
 
+## Notes from the official challenge page (added 2026-10-08)
+
+- **The central experiment is "full document -> Apertus" versus "selected
+  context -> Apertus".** Both must be measured and reported, with the same
+  scorer and the same dev split.
+- **Use the label definitions from the dataset's README in the NLI prompt.**
+  Caveat: on 2026-10-08 the README (dataset commit `9ff08597`) contains only
+  `license: mit`, no definitions. Until it has them, the prompt uses the
+  official guide's wording (supports = entailment, insufficient information =
+  neutral, refutes = contradiction). Check the README again before each prompt
+  change and quote its definitions word for word once they appear.
+- **The technical report must document how document context is prepared and
+  supplied to the model** (parsing, page numbers, what is selected, what the
+  prompt contains).
+- **Outputs must not be presented as political advice and must be traceable
+  to the source booklet.** State this in `track_2a/README.md` and in
+  `track_2a/technical_report.md` (not done yet).
+- **Booklet parsing is assumed to be allowed locally** (not with Apertus), per
+  the contract's "local parsing, OCR, or embeddings may run locally", until
+  the organisers say otherwise.
+
 ## Constraints set by the organisers
 
 - `track_2a/` is the project root. Do not rename it or move the files the
@@ -204,3 +225,7 @@ prompt tuning beyond removing the evidence request.
   official run (the starter says pages are "not checked yet").
 - Formula combining Macro-F1, tokens and time in the final score (the starter
   refers to "evaluation notes" we have not seen).
+- Whether booklet parsing must use Apertus or may be local. Working
+  assumption: local parsing is allowed (contract wording), until told otherwise.
+- Where the dataset README's label definitions are (the README is still
+  licence-only as of 2026-10-08).

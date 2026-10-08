@@ -114,3 +114,11 @@ One line per decision, with the reason. Newest stage at the bottom.
 ### Rerun (item 8)
 
 - **The task B rerun goes through `make run` in Docker, on `data/dev/cases.jsonl` (all 600 cases).** It tests the real entrypoint and mixed input; the 300 task A placeholders cost no model calls.
+- **The run artefacts (predictions, raw answers, official and breakdown scores, start/finish times) are committed in `docs/runs/contract-v2-dev/`.** That lets the results row be checked and rescored without new calls.
+- **The failed call (HTTP 502) was not rerun; it kept its fallback label 1.** That is exactly what a judge run would get.
+- **The old results row is kept and marked "pre-contract".** As instructed; its failure handling and scorer differ, so the two rows are not directly comparable.
+
+### Notes from the official challenge page
+
+- **The page asks for the README's label definitions, but the README has none (still licence-only on 2026-10-08), so the prompt keeps the guide's wording.** Quoting text that does not exist is impossible; the CLAUDE.md note says to check again before each prompt change.
+- **Local booklet parsing is assumed to be allowed until the organisers say otherwise.** The contract says "local parsing, OCR, or embeddings may run locally".
