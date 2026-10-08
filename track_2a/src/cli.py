@@ -9,7 +9,7 @@ import logging
 import time
 from pathlib import Path
 
-from src import llm, nli
+from src import env, llm, nli
 
 DEFAULT_INPUT = "data/sample_beginner.jsonl"
 DEFAULT_OUTPUT = "output/predictions.jsonl"
@@ -58,6 +58,7 @@ def main():
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
+    env.load_env_file()
     cases = read_cases(args.input)
     predictions = []
     for case in cases:
