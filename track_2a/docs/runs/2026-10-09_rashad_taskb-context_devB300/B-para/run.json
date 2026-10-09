@@ -1,0 +1,41 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "17:53",
+ "kind": "model run",
+ "code": "dbb30fa",
+ "variant": null,
+ "cases": "dev, all 300 task B cases",
+ "format": "official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-09_rashad_taskb-context_devB300/B-current",
+  "2026-10-09_rashad_taskb-context_devB300/B-cut"
+ ],
+ "setup": "--context-b para: B-cut's text as numbered paragraphs with task A's prompt A-v4-section-route and paragraph answer schema (max_tokens 128)",
+ "task_b": {
+  "prompt_version": "A-v4-section-route",
+  "change": "B-para: B-cut's text as numbered paragraphs, task A's prompt and schema",
+  "n_cases": 300,
+  "strict_json": "yes (json_schema {paragraphs, label})",
+  "max_tokens": 128,
+  "compared_with": "2026-10-09_rashad_taskb-context_devB300/B-cut"
+ },
+ "results": {
+  "macro_f1": 0.963,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.961,
+   "contradiction": 0.942
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1375,
+  "mean_time_ms": 2118,
+  "p95_time_ms": 5444
+ }
+}

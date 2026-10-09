@@ -1,0 +1,463 @@
+{
+ "run": "docs/runs/2026-10-09_rashad_taskb-context_devB300",
+ "arms": {
+  "B-current": {
+   "macro_f1": 0.966566,
+   "f1": {
+    "entailment": 0.985366,
+    "neutral": 0.963351,
+    "contradiction": 0.95098
+   },
+   "recall": {
+    "entailment": 0.990196,
+    "neutral": 0.929293,
+    "contradiction": 0.979798
+   },
+   "calls": 300,
+   "confusion_rows_gold_cols_pred": [
+    [
+     101,
+     0,
+     1
+    ],
+    [
+     0,
+     92,
+     7
+    ],
+    [
+     2,
+     0,
+     97
+    ]
+   ],
+   "mean_input_tokens": 1994.2,
+   "p95_input_tokens": 4463,
+   "mean_output_tokens": 8.52,
+   "tokens_per_case": 2002.7,
+   "mean_time_ms": 1252,
+   "p95_time_ms": 2217,
+   "failed_calls": 0,
+   "unreadable_answers": 3,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "exactly {\"label\": n}": 280,
+    "JSON plus text": 17,
+    "other text": 2,
+    "JSON with other spacing": 1
+   },
+   "mean_time_ms_by_position": {
+    "1": 1433,
+    "2": 1294,
+    "3": 1031
+   },
+   "gateway_cache_hits": 66,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 300,
+     "macro_f1": 0.9666,
+     "unreadable_answers": 3,
+     "mean_time_ms": 1252
+    }
+   }
+  },
+  "B-cut": {
+   "macro_f1": 0.966566,
+   "f1": {
+    "entailment": 0.985366,
+    "neutral": 0.963351,
+    "contradiction": 0.95098
+   },
+   "recall": {
+    "entailment": 0.990196,
+    "neutral": 0.929293,
+    "contradiction": 0.979798
+   },
+   "calls": 300,
+   "confusion_rows_gold_cols_pred": [
+    [
+     101,
+     0,
+     1
+    ],
+    [
+     0,
+     92,
+     7
+    ],
+    [
+     2,
+     0,
+     97
+    ]
+   ],
+   "mean_input_tokens": 1231.2,
+   "p95_input_tokens": 2182,
+   "mean_output_tokens": 8.37,
+   "tokens_per_case": 1239.5,
+   "mean_time_ms": 1864,
+   "p95_time_ms": 6325,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "exactly {\"label\": n}": 283,
+    "JSON plus text": 17
+   },
+   "mean_time_ms_by_position": {
+    "1": 2382,
+    "2": 2138,
+    "3": 1071
+   },
+   "gateway_cache_hits": 129,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 300,
+     "macro_f1": 0.9666,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1864
+    }
+   }
+  },
+  "B-para": {
+   "macro_f1": 0.962777,
+   "f1": {
+    "entailment": 0.985366,
+    "neutral": 0.961165,
+    "contradiction": 0.941799
+   },
+   "recall": {
+    "entailment": 0.990196,
+    "neutral": 1.0,
+    "contradiction": 0.89899
+   },
+   "calls": 300,
+   "confusion_rows_gold_cols_pred": [
+    [
+     101,
+     0,
+     1
+    ],
+    [
+     0,
+     99,
+     0
+    ],
+    [
+     2,
+     8,
+     89
+    ]
+   ],
+   "mean_input_tokens": 1375.2,
+   "p95_input_tokens": 2336,
+   "mean_output_tokens": 14.02,
+   "tokens_per_case": 1389.3,
+   "mean_time_ms": 2118,
+   "p95_time_ms": 5444,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "JSON with other spacing": 300
+   },
+   "mean_time_ms_by_position": {
+    "1": 2812,
+    "2": 1716,
+    "3": 1826
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 300,
+     "macro_f1": 0.9628,
+     "unreadable_answers": 0,
+     "mean_time_ms": 2118
+    }
+   }
+  }
+ },
+ "comparisons": {
+  "B-cut:B-current": {
+   "macro_f1_change": 0.0,
+   "f1_change": {
+    "entailment": 0.0,
+    "neutral": 0.0,
+    "contradiction": 0.0
+   },
+   "tokens_per_case_change": -763.2,
+   "input_tokens_change": -763.0,
+   "output_tokens_change": -0.15,
+   "unreadable_new": 0,
+   "right_to_wrong": 3,
+   "wrong_to_right": 3,
+   "labels_differ": 6,
+   "right_to_wrong_ids": [
+    "v1.1-row-577-B",
+    "v1.1-row-580-B",
+    "v1.1-row-875-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-528-B",
+    "v1.1-row-666-B",
+    "v1.1-row-946-B"
+   ],
+   "same_backend": {
+    "cases": 300,
+    "macro_f1_old": 0.9666,
+    "macro_f1_new": 0.9666,
+    "labels_differ": 6,
+    "right_to_wrong": 3,
+    "wrong_to_right": 3
+   },
+   "different_backend": {
+    "cases": 0,
+    "macro_f1_old": null,
+    "macro_f1_new": null,
+    "labels_differ": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0
+   }
+  },
+  "B-para:B-current": {
+   "macro_f1_change": -0.0038,
+   "f1_change": {
+    "entailment": 0.0,
+    "neutral": -0.0022,
+    "contradiction": -0.0092
+   },
+   "tokens_per_case_change": -613.4,
+   "input_tokens_change": -619.0,
+   "output_tokens_change": 5.5,
+   "unreadable_new": 0,
+   "right_to_wrong": 8,
+   "wrong_to_right": 7,
+   "labels_differ": 15,
+   "right_to_wrong_ids": [
+    "v1.1-row-1014-B",
+    "v1.1-row-1016-B",
+    "v1.1-row-1052-B",
+    "v1.1-row-1100-B",
+    "v1.1-row-1117-B",
+    "v1.1-row-1138-B",
+    "v1.1-row-1161-B",
+    "v1.1-row-1383-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-500-B",
+    "v1.1-row-528-B",
+    "v1.1-row-608-B",
+    "v1.1-row-666-B",
+    "v1.1-row-797-B",
+    "v1.1-row-854-B",
+    "v1.1-row-946-B"
+   ],
+   "same_backend": {
+    "cases": 300,
+    "macro_f1_old": 0.9666,
+    "macro_f1_new": 0.9628,
+    "labels_differ": 15,
+    "right_to_wrong": 8,
+    "wrong_to_right": 7
+   },
+   "different_backend": {
+    "cases": 0,
+    "macro_f1_old": null,
+    "macro_f1_new": null,
+    "labels_differ": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0
+   }
+  },
+  "B-para:B-cut": {
+   "macro_f1_change": -0.0038,
+   "f1_change": {
+    "entailment": 0.0,
+    "neutral": -0.0022,
+    "contradiction": -0.0092
+   },
+   "tokens_per_case_change": 149.8,
+   "input_tokens_change": 144.0,
+   "output_tokens_change": 5.65,
+   "unreadable_new": 0,
+   "right_to_wrong": 8,
+   "wrong_to_right": 7,
+   "labels_differ": 15,
+   "right_to_wrong_ids": [
+    "v1.1-row-1014-B",
+    "v1.1-row-1016-B",
+    "v1.1-row-1052-B",
+    "v1.1-row-1100-B",
+    "v1.1-row-1117-B",
+    "v1.1-row-1138-B",
+    "v1.1-row-1161-B",
+    "v1.1-row-1383-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-500-B",
+    "v1.1-row-577-B",
+    "v1.1-row-580-B",
+    "v1.1-row-608-B",
+    "v1.1-row-797-B",
+    "v1.1-row-854-B",
+    "v1.1-row-875-B"
+   ],
+   "same_backend": {
+    "cases": 300,
+    "macro_f1_old": 0.9666,
+    "macro_f1_new": 0.9628,
+    "labels_differ": 15,
+    "right_to_wrong": 8,
+    "wrong_to_right": 7
+   },
+   "different_backend": {
+    "cases": 0,
+    "macro_f1_old": null,
+    "macro_f1_new": null,
+    "labels_differ": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0
+   }
+  }
+ },
+ "canary": {},
+ "endpoint_identity": {
+  "calls": 900,
+  "distinct_identities": 6,
+  "identities": [
+   {
+    "calls": 606,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "header cf-placement": "local-EWR",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 171,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "gateway_cache_hit": true,
+     "header cf-placement": "local-EWR",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 85,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 17,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "gateway_cache_hit": true,
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 14,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "local-IAD",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 7,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "gateway_cache_hit": true,
+     "header cf-placement": "local-IAD",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   }
+  ],
+  "fields_that_vary": {
+   "cf_ray_datacentre": {
+    "EWR": 879,
+    "IAD": 21
+   },
+   "gateway_cache_hit": {
+    "<absent>": 705,
+    "True": 195
+   },
+   "header cf-placement": {
+    "local-EWR": 777,
+    "<absent>": 102,
+    "local-IAD": 21
+   },
+   "header llm_provider-server": {
+    "openresty/1.27.1.2": 705,
+    "<absent>": 195
+   }
+  }
+ },
+ "backend_hosts": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+   "https://api.blablador.fz-juelich.de/v1": 705
+  }
+ }
+}

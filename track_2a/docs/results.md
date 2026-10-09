@@ -60,6 +60,9 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm D: v5-ballot (v5-min + one sentence on the passage's first line) + strict JSON, max_tokens 10 (**endpoint changed during run**) | 0.840 (E 0.892, N 0.784, C 0.844) | not scored for task B | 22 | 0 | 1891 | 1463 | 2329 |
 | 2026-10-09 | 17:28 | rashad | [`2026-10-09_rashad_stability-1_dev600`](runs/2026-10-09_rashad_stability-1_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 1 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default settings at 7edbae4: section-route, A-v4-section-route + json_schema, cited-pieces evidence without the A2 halves (the image predates A2); LLM_MIN_INTERVAL=1 | 0.966 (E 0.985, N 0.966, C 0.947) | 0.930 (187/201) | 0 | 0 | 1210 | 2606 | 5375 |
 | 2026-10-09 | 17:28 | rashad | [`2026-10-09_rashad_stability-1_dev600/task-B`](runs/2026-10-09_rashad_stability-1_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 1 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default settings at 7edbae4: v3-topic-first, plain output, max_tokens 32, whole reference; LLM_MIN_INTERVAL=1 | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 3 | 0 | 1994 | 1494 | 2611 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-current`](runs/2026-10-09_rashad_taskb-context_devB300/B-current/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default: v3-topic-first, plain output, max_tokens 32, the whole reference | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 3 | 0 | 1994 | 1252 | 2217 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-cut`](runs/2026-10-09_rashad_taskb-context_devB300/B-cut/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-para` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --context-b cut: a reference over 8,000 characters becomes its first line plus the 8 paragraphs most similar to the claim (e5), in their order; prompt unchanged | **0.967** (E 0.985, N 0.963, C 0.951) | not scored for task B | 0 | 0 | 1231 | 1864 | 6325 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-para`](runs/2026-10-09_rashad_taskb-context_devB300/B-para/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --context-b para: B-cut's text as numbered paragraphs with task A's prompt A-v4-section-route and paragraph answer schema (max_tokens 128) | 0.963 (E 0.985, N 0.961, C 0.942) | not scored for task B | 0 | 0 | 1375 | 2118 | 5444 |
 
 ## Task B runs
 
@@ -82,6 +85,9 @@ Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour
 | 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`](runs/2026-10-09_rashad_taskb-4arm_devB300/C-v5-min/) | current; **endpoint changed during run** | v5-min | against arm B: v5-min (86 fixed tokens) instead of v3-topic-first (203); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.786 (E 0.911, N 0.696, C 0.752) | 0 | 1877 | 1480 | 2485 | `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema` |
 | 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | current; **endpoint changed during run** | v5-ballot | against arm C: one sentence added, "The first line of the reference text names the ballot it is about." (+14 tokens); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.840 (E 0.892, N 0.784, C 0.844) | 0 | 1891 | 1463 | 2329 | `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` |
 | 2026-10-09 | 17:28 | [`2026-10-09_rashad_stability-1_dev600/task-B`](runs/2026-10-09_rashad_stability-1_dev600/task-B/) | current | v3-topic-first | none: the default (stability point) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1494 | 2611 | – |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-current`](runs/2026-10-09_rashad_taskb-context_devB300/B-current/) | current | v3-topic-first | none: the default (phase C control) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1252 | 2217 | – |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-cut`](runs/2026-10-09_rashad_taskb-context_devB300/B-cut/) | current | v3-topic-first | B-cut: long references cut to the title and 8 most similar paragraphs | 300 | no | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 1864 | 6325 | `2026-10-09_rashad_taskb-context_devB300/B-current` |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-para`](runs/2026-10-09_rashad_taskb-context_devB300/B-para/) | current | A-v4-section-route | B-para: B-cut's text as numbered paragraphs, task A's prompt and schema | 300 | yes (json_schema {paragraphs, label}) | 128 | 0.963 (E 0.985, N 0.961, C 0.942) | 0 | 1375 | 2118 | 5444 | `2026-10-09_rashad_taskb-context_devB300/B-cut` |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -126,7 +132,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (59): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`
+- **rashad** (62): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`
 
 ## Notes per run
 
@@ -637,6 +643,52 @@ seen; stability points 2 and 3 show whether it changes at night and in the morni
 
 Task B's `run.json` is in `task-B/` (one task per `run.json`); its `predictions.jsonl` and
 `raw_answers.jsonl` there are the task B lines of this folder's files.
+
+### Phase C on dev: B-current, B-cut and B-para on all 300 dev task B cases (one interleaved run)
+
+**Command** (from `track_2a/`, code `dbb30fa`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3
+scripts/paired_run.py --cases output/devB/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_taskb-context_devB300 --min-interval 1.0 --arm '{"name": "B-current"}' --arm
+'{"name": "B-cut", "context_b": "cut"}' --arm '{"name": "B-para", "context_b": "para"}'`; 17:53:20 to 18:20:24
+UTC; the three arms answer each case back to back, the order rotating (three arms: plain rotation). Model
+`swiss-ai/apertus-v1.5-8b` on Public AI. Progress log: `paired_run.log`; numbers: `analysis.json`
+(`scripts/interleaved_analysis.py`), each arm's `official_score.json` (the starter's scorer).
+
+| | B-current | B-cut | B-para |
+|---|---|---|---|
+| Macro-F1 (all 300) | 0.967 | 0.967 | 0.963 |
+| F1 E / N / C | 0.985 / 0.963 / 0.951 | 0.985 / 0.963 / 0.951 | 0.985 / 0.961 / 0.942 |
+| Mean input tokens (p95) | 1,994 (4,463) | 1,231 (2,182) | 1,375 (2,336) |
+| Change against B-current | – | **−38.3 %** | −31.0 % |
+| Mean output tokens | 8.5 | 8.4 | 14.0 |
+| Mean / p95 time (ms) | 1,252 / 2,217 | 1,864 / 6,325 | 2,118 / 5,444 |
+| Unreadable answers | 3 | 0 | 0 |
+| Gateway cache hits | 66 | 129 | 0 |
+
+**Backends.** All 900 answers came from one backend (system_fingerprint `...dd237840`, blablador), so
+"same-backend cases" are all 300 cases and both views of the rule give the same numbers.
+
+**Long and short references.** The 195 references of at most 8,000 characters are sent unchanged by B-cut:
+the same request as B-current, and the same label in all 195 (many from the gateway's cache, which explains
+B-cut's 129 cache hits). On the 105 long references (99 of them gold neutral; `docs/analysis_offline.md`, B4):
+B-current 97 right, B-cut 97 right (3 right → wrong, 3 wrong → right; B-current's 3 unreadable answers were
+on long references), B-para 104 right. B-para loses on short references instead (185 of 195 right against
+193: 8 contradictions answered neutral), so B-para's total is lower.
+
+**Time.** B-cut's long cases took 3.6 s on average against 1.5 s for B-current: the reference's paragraphs
+are embedded with e5 on the CPU for each new reference (and the first long case loads the model). Two gate runs
+of the fake model (`scripts/prompt_snapshot.py`, both CPU-heavy) ran on the same machine between about 17:54
+and 18:13, so these times are inflated by an unknown amount; the val run measures them without that load.
+Time is not part of phase C's rule.
+
+**Rule (Rashad's, fixed):** B-cut passes if its Macro-F1 is at most 0.01 below current (all cases and
+same-backend cases) and its input tokens are at least 25 % lower. B-para replaces it only if it beats B-cut by
+at least 0.02.
+
+- B-cut: 0.9666 against 0.9666 (difference 0.000, all and same-backend), input tokens −38.3 %: **passes**.
+- B-para: 0.9628, 0.004 below B-cut: does not replace B-cut.
+- Next: confirm B-cut against B-current on the task B cases of all 580 val rows
+  (`2026-10-09_rashad_taskb-cut-confirm_valB580`); only if the same rule holds there does the default change.
 
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 
