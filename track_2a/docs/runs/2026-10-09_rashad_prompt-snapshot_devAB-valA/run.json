@@ -1,0 +1,27 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "13:58",
+ "kind": "offline check",
+ "code": "25ed5fa",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 600 cases (300 task A, 300 task B); val, all 580 task A cases",
+ "setup": "session 8 reference: the real CLI (default settings) against the fake model; SHA-256 of every request body and the path of every task A case; E5's and E6's saved section-route answers replayed by request hash",
+ "format": "official (starter's evaluate.py on the replayed task A predictions); no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model scripts/stub_llm.py, replay of saved answers)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Replay on the unchanged code reproduces E5 and E6 exactly: dev 0.953 / evidence 0.905, val sample 0.956 / 0.946; 0 label and 0 evidence differences against the saved predictions.",
+ "results": {
+  "requests_hashed": 1180,
+  "task_a_paths": {"route": 876, "fallback:embed-e5-small": 4},
+  "replayed_answers": 600,
+  "dev_A_macro_f1": 0.953,
+  "dev_A_evidence": 0.905,
+  "val_sample300_macro_f1": 0.956,
+  "val_sample300_evidence": 0.946
+ }
+}

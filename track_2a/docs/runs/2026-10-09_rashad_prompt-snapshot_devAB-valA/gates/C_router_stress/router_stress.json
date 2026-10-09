@@ -1,0 +1,2525 @@
+{
+ "summary": {
+  "claims": 300,
+  "by_language": {
+   "de": {
+    "claims": 100,
+    "outcomes": {
+     "right": 89,
+     "fallback": 7,
+     "correct fallback": 4
+    },
+    "routed_to": {
+     "summary": 18,
+     "None": 11,
+     "council": 20,
+     "committee": 19,
+     "law": 13,
+     "detail": 19
+    },
+    "by_intended_part": {
+     "summary": {
+      "right": 18,
+      "fallback": 2
+     },
+     "council": {
+      "right": 20,
+      "fallback": 2
+     },
+     "committee": {
+      "right": 19
+     },
+     "law": {
+      "right": 13,
+      "fallback": 3
+     },
+     "detail": {
+      "right": 19
+     },
+     "None": {
+      "correct fallback": 4
+     }
+    }
+   },
+   "fr": {
+    "claims": 100,
+    "outcomes": {
+     "right": 91,
+     "fallback": 5,
+     "correct fallback": 4
+    },
+    "routed_to": {
+     "summary": 16,
+     "None": 9,
+     "council": 19,
+     "committee": 18,
+     "law": 16,
+     "detail": 22
+    },
+    "by_intended_part": {
+     "summary": {
+      "right": 16,
+      "fallback": 2
+     },
+     "council": {
+      "right": 19,
+      "fallback": 2
+     },
+     "committee": {
+      "right": 18
+     },
+     "law": {
+      "right": 16,
+      "fallback": 1
+     },
+     "detail": {
+      "right": 22
+     },
+     "None": {
+      "correct fallback": 4
+     }
+    }
+   },
+   "it": {
+    "claims": 100,
+    "outcomes": {
+     "right": 93,
+     "fallback": 3,
+     "correct fallback": 4
+    },
+    "routed_to": {
+     "summary": 18,
+     "council": 18,
+     "None": 7,
+     "committee": 21,
+     "law": 16,
+     "detail": 20
+    },
+    "by_intended_part": {
+     "summary": {
+      "right": 18
+     },
+     "council": {
+      "right": 18,
+      "fallback": 2
+     },
+     "committee": {
+      "right": 21
+     },
+     "law": {
+      "right": 16,
+      "fallback": 1
+     },
+     "detail": {
+      "right": 20
+     },
+     "None": {
+      "correct fallback": 4
+     }
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut der Zusammenfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäss Zusammenfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäß der Zusammenfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Zusammenfassung zufolge senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Die Zusammenfassung hält fest, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In der Zusammenfassung steht, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nach der Zusammenfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wie die Zusammenfassung erklärt, senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Kurzfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In Kürze: Die Vorlage senkt die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Zusammengefasst senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Laut dem Überblick senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Bundesrat ist laut Zusammenfassung der Ansicht, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Komitee kritisiert gemäss der Zusammenfassung die hohen Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Bundesrat vertritt die Auffassung, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Bundesrat lehnt die Initiative ab, weil sie die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Bundesrat senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäss dem Bundesrat senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäß dem Bundesrat senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Dem Bundesrat zufolge senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Bundesrat und Parlament empfehlen, die Vorlage anzunehmen."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Bundesrat und das Parlament sind der Meinung, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Bundesrat und Parlament senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nach Ansicht des Bundesrates senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Aus Sicht des Bundesrats senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Für den Bundesrat ist klar, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nach Meinung von Bundesrat und Parlament senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Bundesrat empfiehlt ein Ja, weil die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Die Landesregierung ist der Ansicht, dass die Vorlage die Kosten senkt."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Dass die Vorlage die Kosten senkt, betont der Bundesrat."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Komitee ist der Ansicht, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Initiativkomitee argumentiert, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Referendumskomitee warnt, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Initiativkomitee erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut dem Referendumskomitee erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäss Komitee erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Dem Komitee zufolge erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Die Initiativkomitees sind überzeugt, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Die Referendumskomitees warnen, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das überparteiliche Komitee warnt, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Initiativ-Komitee argumentiert, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Die Initiantinnen und Initianten argumentieren, dass die Vorlage die Kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nach Ansicht des Komitees erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Aus Sicht des Initiativkomitees erhöht die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Das Komitee kritisiert, der Bundesrat unterschätze die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut dem Abstimmungstext muss der Bund die Kosten tragen."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäss Abstimmungstext muss der Bund die Kosten tragen."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Der Abstimmungstext sieht vor, dass der Bund die Kosten trägt."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Im Abstimmungstext steht, dass der Bund die Kosten trägt."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Dem Abstimmungstext zufolge trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nach dem Abstimmungstext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Initiativtext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Gesetzestext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Gemäss dem Verfassungstext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Der Text der Vorlage sieht vor, dass der Bund die Kosten trägt."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Der neue Verfassungsartikel sieht vor, dass der Bund die Kosten trägt."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Laut Abstimmungstext muss der Bundesrat die Kosten tragen."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Der Wortlaut der Vorlage verpflichtet den Bund, die Kosten zu tragen."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird die Abstimmung angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird die Vorlage angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Bei Annahme der Vorlage trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wenn die Vorlage angenommen wird, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird die Initiative angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Bei Annahme der Initiative trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wenn die Initiative angenommen wird, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Falls die Vorlage angenommen wird, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Sollte die Vorlage angenommen werden, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Bei einem Ja trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Mit der Annahme der Vorlage trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nimmt das Volk die Vorlage an, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird das Gesetz angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird der Bundesbeschluss angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Wird die Gesetzesänderung angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Die Vorlage senkt die Kosten für die Kantone."
+  },
+  {
+   "language": "de",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Der Bund trägt künftig die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Die Kosten steigen laut Bundesrat."
+  },
+  {
+   "language": "de",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Viele Kantone unterstützen die Vorlage."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Laut der Zusammenfassung senkt die Vorlage die Kosten»."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Wie die Zusammenfassung erklärt, senkt die Vorlage die Kosten“."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Laut Bundesrat senkt die Vorlage die Kosten\"."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Nach Ansicht des Bundesrates senkt die Vorlage die Kosten'."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "das referendumskomitee warnt, dass die vorlage die kosten erhöht."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "DAS ÜBERPARTEILICHE KOMITEE WARNT, DASS DIE VORLAGE DIE KOSTEN ERHÖHT."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Gemäss Abstimmungstext muss der Bund die Kosten tragen."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Gemäss dem Verfassungstext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Bei Annahme der Initiative trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Wird\ndas Gesetz angenommen, trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Die Zusammenfassung hält fest, dass die Vorlage die Kosten senkt»."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Das Komitee kritisiert gemäss der Zusammenfassung die hohen Kosten“."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Bundesrat und Parlament empfehlen, die Vorlage anzunehmen\"."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Der Bundesrat empfiehlt ein Ja, weil die Vorlage die Kosten senkt'."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "dem komitee zufolge erhöht die vorlage die kosten."
+  },
+  {
+   "language": "de",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "AUS SICHT DES INITIATIVKOMITEES ERHÖHT DIE VORLAGE DIE KOSTEN."
+  },
+  {
+   "language": "de",
+   "intended": "law",
+   "routed": "law",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Nach dem Abstimmungstext trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Bei Annahme der Vorlage trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Bei einem Ja trägt der Bund die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Gemäss\nZusammenfassung senkt die Vorlage die Kosten."
+  },
+  {
+   "language": "de",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Laut Kurzfassung senkt die Vorlage die Kosten»."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Gemäss dem Bundesrat senkt die Vorlage die Kosten“."
+  },
+  {
+   "language": "de",
+   "intended": "council",
+   "routed": "council",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Aus Sicht des Bundesrats senkt die Vorlage die Kosten\"."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le résumé précise que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le résumé, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "D'après le résumé, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "D’après le résumé, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Dans le résumé, on lit que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le résumé indique que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon la synthèse, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "En bref, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Comme l'indique le résumé, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Le bref aperçu indique que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Résumé : le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral, selon le résumé, estime que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral estime que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "D'après le Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral et le Parlement recommandent d'accepter le projet."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Conseil fédéral et Parlement recommandent d'accepter le projet."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le Conseil fédéral et le Parlement, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Pour le Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "De l'avis du Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Aux yeux du Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Le gouvernement fédéral estime que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral rejette l'initiative, car elle augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon l’avis du Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral souligne que le comité exagère les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Que le projet réduise les coûts, le Conseil fédéral l'affirme."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le comité affirme que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le comité d'initiative affirme que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le comité référendaire affirme que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le comité, le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "D'après le comité d'initiative, le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Pour le comité, le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Les initiants affirment que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Les auteurs de l'initiative affirment que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Les comités référendaires affirment que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le comité interpartis affirme que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "De l'avis du comité, le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le comité référendaire, le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le comité d’initiative estime que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte soumis au vote, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "D'après le texte soumis au vote, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le texte soumis au vote prévoit que la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte de la votation, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte de l'initiative, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le texte de loi prévoit que la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte de loi, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte mis aux voix, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Aux termes du texte soumis au vote, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Le nouvel article constitutionnel prévoit que la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Selon le texte soumis à la votation, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Le texte soumis au vote oblige le Conseil fédéral à prendre les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si le vote est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si le projet est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si l'objet est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si le projet est adopté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "L'acceptation du projet signifie que la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si l'initiative est acceptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si la loi est acceptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "En cas d'acceptation, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "En cas de oui, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si le peuple accepte le projet, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si la modification est adoptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si la révision est acceptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si le projet de loi est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "En cas d'acceptation de l'initiative, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Si l'arrêté fédéral est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Le projet réduit les coûts pour les cantons."
+  },
+  {
+   "language": "fr",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "La Confédération prendra les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Les coûts augmentent selon le Conseil fédéral."
+  },
+  {
+   "language": "fr",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "De nombreux cantons soutiennent le projet."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Le résumé précise que le projet réduit les coûts»."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„En bref, le projet réduit les coûts“."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Conseil fédéral et Parlement recommandent d'accepter le projet\"."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Le Conseil fédéral souligne que le comité exagère les coûts'."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "les initiants affirment que le projet augmente les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "SELON LE TEXTE SOUMIS AU VOTE, LA CONFÉDÉRATION PREND LES COÛTS EN CHARGE."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Selon le texte mis aux voix, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Si le projet est adopté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Si la modification est adoptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "D'après\nle résumé, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Le Conseil fédéral, selon le résumé, estime que le projet réduit les coûts»."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Pour le Conseil fédéral, le projet réduit les coûts“."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Le comité d'initiative affirme que le projet augmente les coûts\"."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Les comités référendaires affirment que le projet augmente les coûts'."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "le texte soumis au vote prévoit que la confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "SELON LE TEXTE SOUMIS À LA VOTATION, LA CONFÉDÉRATION PREND LES COÛTS EN CHARGE."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Si l'initiative est acceptée, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Si le projet de loi est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Dans le résumé, on lit que le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Selon\nle Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Aux yeux du Conseil fédéral, le projet réduit les coûts»."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Selon le comité, le projet augmente les coûts“."
+  },
+  {
+   "language": "fr",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"De l'avis du comité, le projet augmente les coûts\"."
+  },
+  {
+   "language": "fr",
+   "intended": "law",
+   "routed": "law",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Selon le texte de l'initiative, la Confédération prend les coûts en charge'."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "si le vote est accepté, la confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "EN CAS D'ACCEPTATION, LA CONFÉDÉRATION PREND LES COÛTS EN CHARGE."
+  },
+  {
+   "language": "fr",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Si l'arrêté fédéral est accepté, la Confédération prend les coûts en charge."
+  },
+  {
+   "language": "fr",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Selon la synthèse, le projet réduit les coûts."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Le Conseil fédéral et le Parlement recommandent d'accepter le projet."
+  },
+  {
+   "language": "fr",
+   "intended": "council",
+   "routed": "council",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Selon\nl’avis du Conseil fédéral, le projet réduit les coûts."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il riassunto afferma che il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il riassunto, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nel riassunto si legge che il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Stando al riassunto, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il riepilogo afferma che il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In breve, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo la sintesi, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Dal riassunto emerge che il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Come indica il riassunto, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In sintesi, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il Consiglio federale, secondo il riassunto, ritiene che il progetto riduca i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il Consiglio federale ritiene che il progetto riduca i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Per il Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il Consiglio federale e il Parlamento raccomandano di accettare il progetto."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Consiglio federale e Parlamento raccomandano di accettare il progetto."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo Consiglio federale e Parlamento, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "A parere del Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Ad avviso del Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Stando al Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Il governo federale ritiene che il progetto riduca i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il Consiglio federale respinge l'iniziativa perché aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il parere del Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il Consiglio federale sottolinea che il comitato esagera i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Che il progetto riduca i costi, lo afferma il Consiglio federale."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il comitato afferma che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il comitato d'iniziativa afferma che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il comitato referendario afferma che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il comitato, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Per il comitato, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "I promotori dell'iniziativa affermano che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo i promotori, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "I comitati referendari affermano che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Stando al comitato, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "A detta del comitato, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il comitato d’iniziativa ritiene che il progetto aumenti i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il comitato referendario, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "",
+   "outcome": "right",
+   "claim": "A parere del comitato, il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Stando al testo di voto, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il testo in votazione, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il testo sottoposto al voto prevede che la Confederazione si assuma i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Nel testo di voto si afferma che la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In base al testo in votazione, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il testo dell'iniziativa, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il testo di legge prevede che la Confederazione si assuma i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il testo della legge, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": null,
+   "variant": "",
+   "outcome": "fallback",
+   "claim": "Il nuovo articolo costituzionale prevede che la Confederazione si assuma i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Secondo il testo sottoposto a votazione, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Il testo in votazione obbliga il Consiglio federale ad assumersi i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se il voto viene approvato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se la proposta viene accettata, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se il progetto è accettato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se il progetto verrà approvato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se l'iniziativa viene accettata, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se la legge viene approvata, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In caso di approvazione, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In caso di sì, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se il popolo approva il progetto, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Qualora il progetto venisse accolto, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Con l'accettazione del progetto, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se la modifica viene approvata, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "In caso di accettazione dell'iniziativa, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "",
+   "outcome": "right",
+   "claim": "Se il decreto federale viene accettato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Il progetto riduce i costi per i Cantoni."
+  },
+  {
+   "language": "it",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "La Confederazione si assumerà i costi."
+  },
+  {
+   "language": "it",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "I costi aumentano secondo il Consiglio federale."
+  },
+  {
+   "language": "it",
+   "intended": null,
+   "routed": null,
+   "variant": "",
+   "outcome": "correct fallback",
+   "claim": "Molti Cantoni sostengono il progetto."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Il riassunto afferma che il progetto riduce i costi»."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Dal riassunto emerge che il progetto riduce i costi“."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Il Consiglio federale e il Parlamento raccomandano di accettare il progetto\"."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Secondo il parere del Consiglio federale, il progetto riduce i costi'."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "i promotori dell'iniziativa affermano che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "A PARERE DEL COMITATO, IL PROGETTO AUMENTA I COSTI."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Il testo di legge prevede che la Confederazione si assuma i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Se il progetto verrà approvato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Con l'accettazione del progetto, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Stando\nal riassunto, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Il Consiglio federale, secondo il riassunto, ritiene che il progetto riduca i costi»."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„A parere del Consiglio federale, il progetto riduce i costi“."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Il comitato d'iniziativa afferma che il progetto aumenta i costi\"."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Stando al comitato, il progetto aumenta i costi'."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "il testo sottoposto al voto prevede che la confederazione si assuma i costi."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "IL TESTO IN VOTAZIONE OBBLIGA IL CONSIGLIO FEDERALE AD ASSUMERSI I COSTI."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– In caso di approvazione, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   Se il decreto federale viene accettato, la Confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Secondo la sintesi, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Per\nil Consiglio federale, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«Il Consiglio federale respinge l'iniziativa perché aumenta i costi»."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Per il comitato, il progetto aumenta i costi“."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Secondo il comitato referendario, il progetto aumenta i costi\"."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "'",
+   "outcome": "right",
+   "claim": "'Secondo il testo dell'iniziativa, la Confederazione si assume i costi'."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "lower case",
+   "outcome": "right",
+   "claim": "se il progetto è accettato, la confederazione si assume i costi."
+  },
+  {
+   "language": "it",
+   "intended": "detail",
+   "routed": "detail",
+   "variant": "upper case",
+   "outcome": "right",
+   "claim": "QUALORA IL PROGETTO VENISSE ACCOLTO, LA CONFEDERAZIONE SI ASSUME I COSTI."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "leading dash",
+   "outcome": "right",
+   "claim": "– Nel riassunto si legge che il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "summary",
+   "routed": "summary",
+   "variant": "leading spaces",
+   "outcome": "right",
+   "claim": "   In sintesi, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "council",
+   "routed": "council",
+   "variant": "non-breaking space",
+   "outcome": "right",
+   "claim": "Secondo Consiglio federale e Parlamento, il progetto riduce i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "line break",
+   "outcome": "right",
+   "claim": "Il\ncomitato afferma che il progetto aumenta i costi."
+  },
+  {
+   "language": "it",
+   "intended": "committee",
+   "routed": "committee",
+   "variant": "«",
+   "outcome": "right",
+   "claim": "«I comitati referendari affermano che il progetto aumenta i costi»."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "„",
+   "outcome": "right",
+   "claim": "„Secondo il testo in votazione, la Confederazione si assume i costi“."
+  },
+  {
+   "language": "it",
+   "intended": "law",
+   "routed": "law",
+   "variant": "\"",
+   "outcome": "right",
+   "claim": "\"Secondo il testo sottoposto a votazione, la Confederazione si assume i costi\"."
+  }
+ ]
+}

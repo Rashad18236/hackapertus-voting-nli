@@ -19,17 +19,22 @@ the answer cannot be parsed, we still write a valid response with the
 fallback label (1, neutral) and count the failure. A summary of all failures
 goes to stderr at the end. Exit code is 0 whenever the input could be read.
 
-Reading and writing (2026-10-09, input hardening): the input is read as bytes
-and split on "\n" only, so characters that str.splitlines() treats as line
-breaks (U+2028, U+0085, ...) can sit inside a claim; a trailing "\r", a UTF-8
-byte order mark on the first line and bytes that are not UTF-8 (replaced by
-U+FFFD) never cost a case. Each response is written and flushed as soon as it
-is ready, so a run that is stopped keeps every answer it already gave. A
-repeated id is answered once, from its first line; later lines are logged and
-skipped (the scorer counts an id with two responses as wrong).
+Input and output (session 8):
+- The input is read as bytes and decoded line by line, so one byte that is not
+  UTF-8 spoils only its own line (it becomes U+FFFD; the line is answered if it
+  is still readable JSON with an id). A UTF-8 byte order mark at the start is
+  ignored. Lines end at \\n, \\r\\n or \\r.
+- An id that appears on several lines is answered once, from its first line;
+  later lines with that id are logged and skipped (the scorer counts an id with
+  two responses as invalid).
+- Each response is written to the output file and flushed as soon as it is
+  ready (the raw answers with --raw likewise), so a run that is stopped (time
+  limit, out of memory) keeps every finished case as a complete line. A blank
+  input gives an empty output file.
 """
 
 import argparse
+import codecs
 import contextlib
 import json
 import logging
@@ -42,7 +47,6 @@ from pathlib import Path
 from src import context, env, evidence, llm, nli, parse
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
-UTF8_BOM = b"\xef\xbb\xbf"
 
 
 @dataclass
@@ -216,20 +220,18 @@ def predict(case, data_dir=".", settings=None):
 
 
 def read_lines(path):
-    """The input file's lines as text: split on b"\\n" only (never str.splitlines(), which also splits on
-    U+2028, U+0085 and other characters that may occur inside a JSON string); a trailing "\\r" is removed,
-    a byte order mark on the first line too, and bytes that are not UTF-8 become U+FFFD."""
-    parts = Path(path).read_bytes().split(b"\n")
-    if parts and parts[-1] == b"":
-        parts.pop()  # the final line break ends the last line; it does not start a new one
-    lines = []
-    for number, raw in enumerate(parts, start=1):
-        if raw.endswith(b"\r"):
-            raw = raw[:-1]
-        if number == 1 and raw.startswith(UTF8_BOM):
-            raw = raw[len(UTF8_BOM):]
-        lines.append(raw.decode("utf-8", errors="replace"))
-    return lines
+    """The input file's lines as text: read as bytes, a UTF-8 byte order mark at the start dropped, split at
+    \\n, \\r\\n or \\r, and each line decoded on its own with errors="replace"."""
+    data = Path(path).read_bytes()
+    if data.startswith(codecs.BOM_UTF8):
+        data = data[len(codecs.BOM_UTF8):]
+    return [line.decode("utf-8", errors="replace") for line in data.splitlines()]
+
+
+def write_line(f, obj):
+    """Write one JSON line to a file opened in binary mode and flush it, so it reaches the file at once."""
+    f.write((json.dumps(obj, ensure_ascii=False) + "\n").encode("utf-8"))
+    f.flush()
 
 
 def main():
@@ -263,14 +265,12 @@ def main():
     lines = read_lines(args.input)
     failures = Counter()
     routing_failed = 0  # cases whose routing raised and that ran as the fallback variant (answered normally)
-    answered = set()    # ids already answered (as JSON text, so any JSON value can be an id)
+    answered = set()  # ids already answered (as JSON text, so any id value can be compared)
     written = 0
-    # Both files are opened before the first case and every response is flushed as soon as it is ready.
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.raw:
         args.raw.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w", encoding="utf-8") as out, \
-            (args.raw.open("w", encoding="utf-8") if args.raw else contextlib.nullcontext()) as raw_out:
+    with args.output.open("wb") as out, (args.raw.open("wb") if args.raw else contextlib.nullcontext()) as raw_out:
         for number, line in enumerate(lines, start=1):
             if not line.strip():
                 continue
@@ -284,26 +284,23 @@ def main():
                 continue
             key = json.dumps(case_id, sort_keys=True)
             if key in answered:
-                failures["repeated id (later line skipped)"] += 1
-                log.warning("line %d: id %s was already answered on an earlier line; skipped", number, key)
+                failures["duplicate id (answered once, from its first line)"] += 1
+                log.warning("line %d: id %s was already answered; skipped", number, key)
                 continue
             answered.add(key)
             try:
                 resp, status, raw = predict(case, args.input.resolve().parent, settings)
             except Exception as e:  # never let one case stop the run
-                resp, status, raw = (response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})",
-                                     {"id": case_id})
+                resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
             if status != "ok":
                 failures[status] += 1
             routing_failed += "route_error" in raw
             log.info("[%d/%d] %s -> %s%s", number, len(lines), case_id, resp["label_name"],
                      "" if status == "ok" else f" (fallback: {status})")
-            out.write(json.dumps(resp, ensure_ascii=False) + "\n")
-            out.flush()
-            written += 1
+            write_line(out, resp)
             if raw_out is not None:
-                raw_out.write(json.dumps(raw, ensure_ascii=False) + "\n")
-                raw_out.flush()
+                write_line(raw_out, raw)
+            written += 1
 
     log.info("Wrote %d responses to %s", written, args.output)
     if routing_failed:

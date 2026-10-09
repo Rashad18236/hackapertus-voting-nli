@@ -43,8 +43,16 @@ request's messages (independent of the order of the cases):
                     by the other markers (lets a test look at the output while a case is still running)
 
 GET /_stub/calls returns the log of all calls so far (number, path, model,
-whether an Authorization header and a User-Agent were sent, the answer kind);
+whether an Authorization header and a User-Agent were sent, the answer kind,
+and request_sha256, the SHA-256 of the request body: see request_hash);
 POST /_stub/reset clears it. The API key's value is never stored or printed.
+
+Replay (session 8): --replay TABLE.json, a JSON object {request_sha256: answer
+text}. A request whose hash is in the table gets that text as its answer
+(kind "replay"): a saved real answer for exactly this request. Any other
+request gets the fixed answer above (kind "ok"). scripts/prompt_snapshot.py
+builds the table from saved runs. With keep_payloads=True (module use only)
+every call's request body is kept in the log, for matching calls to cases.
 
 As a module (tests): `server, url = start(port=0, label=0)`, then `server.shutdown()`.
 """
@@ -66,11 +74,21 @@ _PAGE = re.compile(r"=== PAGE (\d+) ===")
 _MARKER = re.compile(r"STUB_[A-Z0-9_]+")
 
 
+def request_hash(payload):
+    """SHA-256 of a request body (model, messages, max_tokens, temperature, response_format, ...) in a canonical
+    form: keys sorted, no spaces, non-ASCII characters as they are. Equal hashes = byte-identical requests."""
+    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 class Config:
     slow_seconds = 3.0  # how long a STUB_SLOW call waits before its answer
     def __init__(self, label=0, prompt_tokens=100, completion_tokens=10, fail_calls=(), garbage_calls=(),
-                 html_calls=(), error_calls=()):
+                 html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0):
         self.label = label
+        self.delay = delay              # seconds to wait before each chat answer (tests of a stopped run)
+        self.replay = replay            # {request_sha256: answer text}, or None
+        self.keep_payloads = keep_payloads
         self.prompt_tokens, self.completion_tokens = prompt_tokens, completion_tokens
         self.by_call = {}
         for kind, calls in (("fail", fail_calls), ("garbage", garbage_calls), ("html", html_calls),
@@ -166,9 +184,16 @@ def make_handler(config):
                 entry = {"number": number, "path": self.path, "model": payload.get("model"),
                          "authorization": self.headers.get("Authorization", "").startswith("Bearer "),
                          "user_agent": self.headers.get("User-Agent", ""),
-                         "schema_keys": sorted(_schema_keys(payload)), "max_tokens": payload.get("max_tokens")}
+                         "schema_keys": sorted(_schema_keys(payload)), "max_tokens": payload.get("max_tokens"),
+                         "request_sha256": request_hash(payload)}
+                if config.keep_payloads:
+                    entry["payload"] = payload
                 config.calls.append(entry)
+            if config.delay:
+                time.sleep(config.delay)
             kind, label = decide(payload, config, number)
+            if kind == "ok" and config.replay is not None and entry["request_sha256"] in config.replay:
+                kind = "replay"
             entry["kind"] = kind
             usage = {"prompt_tokens": config.prompt_tokens, "completion_tokens": config.completion_tokens,
                      "total_tokens": config.prompt_tokens + config.completion_tokens}
@@ -184,6 +209,8 @@ def make_handler(config):
                 content = GARBAGE
             elif kind == "empty":
                 content = None
+            elif kind == "replay":
+                content = config.replay[entry["request_sha256"]]
             else:
                 answer = answer_for(payload, label)
                 if kind == "bad_pages":
@@ -223,10 +250,16 @@ def main():
     ap.add_argument("--garbage-calls", type=_numbers, default=[])
     ap.add_argument("--html-calls", type=_numbers, default=[])
     ap.add_argument("--error-calls", type=_numbers, default=[])
+    ap.add_argument("--replay", help="JSON file {request_sha256: answer text} (scripts/prompt_snapshot.py)")
+    ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait before each chat answer")
     args = ap.parse_args()
+    replay = None
+    if args.replay:
+        with open(args.replay, encoding="utf-8") as f:
+            replay = json.load(f)
     config = Config(label=args.label, prompt_tokens=args.prompt_tokens, completion_tokens=args.completion_tokens,
                     fail_calls=args.fail_calls, garbage_calls=args.garbage_calls, html_calls=args.html_calls,
-                    error_calls=args.error_calls)
+                    error_calls=args.error_calls, replay=replay, delay=args.delay)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(config))
     print(f"stub LLM listening on http://{args.host}:{server.server_address[1]}/v1", file=sys.stderr, flush=True)
     try:
