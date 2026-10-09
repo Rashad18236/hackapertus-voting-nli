@@ -260,7 +260,32 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: hardening without a model (session 8)
+## Current stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+
+Branch `rashad/until-1600` from `main` at `418ebfa` (draft PR #16, never merged, no tag); report
+`track_2a/docs/session_9_report.md`, status log `track_2a/docs/session_9_status.md`, decisions
+`docs/decisions/2026-10-09-1707_rashad_session-9.md`. Model runs on Public AI's `apertus-v1.5-8b`, at most
+one request per second (`LLM_MIN_INTERVAL=1` for `make run`), one run at a time; every comparison is one
+interleaved run, reported on all cases and on cases where all versions met the same backend (all of
+session 9's answers came from one backend, blablador).
+
+- **Defaults changed in session 9, each by a fixed rule:** task A evidence adds halves of the cited
+  paragraphs up to five items (A2; replayed answers: evidence dev 0.906 → 0.925, val 0.946 → 0.956, labels
+  unchanged); task B cuts references over 8,000 characters to the first line plus the 8 paragraphs most
+  similar to the claim (`--context-b cut`; dev 0.967 = 0.967, val 0.961 vs 0.957, −37 to −38 % input
+  tokens); task A's routed prompt adds one sentence on contradictions (`A-v4-section-route-L1`,
+  `label_rule_a`; dev 0.980 vs 0.966, val 0.961 vs 0.950, neutral recall 1.000).
+- **Kept off:** B-para (task B as numbered paragraphs, 0.963), L2 (a second look at neutral answers:
+  +0.010 dev, +0.003 val, below its +0.015 bar), `closed-book` and `--section-top-k-a` (phase E,
+  information only).
+- `src/llm.py` falls back when the endpoint refuses `response_format` (resend without it) or the model name
+  (reads `BASE_URL/models`, picks the Apertus v1.5 8B id), at most three extra requests per run.
+- Offline analyses (`docs/analysis_offline.md`): all of E6's routed val errors are reading errors; task B
+  references over 8,000 characters are 99 of 105 times neutral on dev (a dataset artefact, never used).
+- The session 8 replay reference stays the anchor for G1/G2 until FINISH writes a new one for the new
+  defaults.
+
+## Previous stage: hardening without a model (session 8)
 
 Session 8 (2026-10-09, branch `rashad/hardening` from `main` at `25ed5fa`,
 report `track_2a/docs/session_8_report.md`, decisions

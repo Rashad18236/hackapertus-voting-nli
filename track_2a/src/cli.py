@@ -68,7 +68,9 @@ class Settings:
                                      # dev evidence 0.9055 -> 0.9254, val 0.9461 -> 0.9559, labels and requests unchanged)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
-    label_rule_a: bool = False   # L1 (session 9, phase D): the routed prompt plus one sentence on contradictions
+    label_rule_a: bool = True    # L1 (session 9, phase D): the routed prompt plus one sentence on contradictions
+                                 # (A-v4-section-route-L1); passed its rule: dev 0.980 vs 0.966, val 0.961 vs 0.950,
+                                 # neutral recall 1.000 on both. --no-label-rule-a sends A-v4-section-route
     section_top_k_a: int = 0     # E1 (session 9, information only): if > 0, a routed case keeps only its k paragraphs
                                  # most similar to the claim (e5), in their order; 0 keeps section-route as it is
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()

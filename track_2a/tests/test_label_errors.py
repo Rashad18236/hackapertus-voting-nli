@@ -32,14 +32,17 @@ def run(settings, answers):
 
 
 class L1(unittest.TestCase):
-    def test_default_prompt_is_unchanged(self):
-        _, raw, seen = run(cli.Settings(), ['{"paragraphs": [1], "label": 0}'])
+    def test_without_l1_the_prompt_is_the_session_6_one(self):
+        _, raw, seen = run(cli.Settings(label_rule_a=False), ['{"paragraphs": [1], "label": 0}'])
         self.assertEqual(raw["prompt_version"], "A-v4-section-route")
         self.assertEqual(seen[0][0]["content"], nli.PROMPTS_A["A-v4-section-route"])
         self.assertNotIn(nli.L1_SENTENCE, seen[0][0]["content"])
 
+    def test_l1_is_the_default_since_session_9(self):
+        self.assertTrue(cli.Settings().label_rule_a)
+
     def test_l1_adds_the_sentence_after_the_rule(self):
-        _, raw, seen = run(cli.Settings(label_rule_a=True), ['{"paragraphs": [1], "label": 2}'])
+        _, raw, seen = run(cli.Settings(), ['{"paragraphs": [1], "label": 2}'])
         self.assertEqual(raw["prompt_version"], "A-v4-section-route-L1")
         system = seen[0][0]["content"]
         self.assertIn(nli._RULE_B + "\n" + nli.L1_SENTENCE + "\n\nFirst give", system)

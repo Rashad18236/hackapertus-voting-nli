@@ -76,4 +76,84 @@ Full write-up: `docs/analysis_offline.md`; run folder `2026-10-09_rashad_analysi
   ones (0.768–0.862). No clean separation; threshold **0.845** flags 10 of 11 wrong and 11 of 99 right
   neutral answers (largest difference of the two shares), estimated +3.5 % input tokens: L2 is run with it.
 
-⟨Phase C, D, E, FINISH, model calls and tokens, not verified⟩
+## Phase C: task B long passages
+
+**Versions** (`src/taskb_context.py`, `--context-b`; the code went in off by default):
+
+- **B-cut:** a reference over 8,000 characters becomes its first line (the ballot's title) plus the 8
+  paragraphs most similar to the claim (e5, the paragraph splitting of section-route), in their order; prompt
+  unchanged. Shorter references are sent unchanged.
+- **B-para:** the same text as numbered paragraphs with task A's prompt (`A-v4-section-route`) and paragraph
+  answer schema; evidence stays `[]`.
+
+**Offline first** (`scripts/taskb_context_tokens.py`, 300 dev task B cases, Apertus v1 tokenizer plus the
+endpoint's 19 tokens): full 1,994 input tokens per case (equal to the measured mean), B-cut 1,231 (−38 %),
+B-para 1,375 (−31 %).
+
+**Dev, one interleaved run** (`2026-10-09_rashad_taskb-context_devB300`, 17:53–18:20 UTC, three arms
+rotating, all 900 answers from one backend, so "all cases" and "same backend" are the same 300):
+
+| | current | B-cut | B-para |
+|---|---|---|---|
+| Macro-F1 | 0.967 | 0.967 | 0.963 |
+| Mean input tokens | 1,994 | 1,231 (−38.3 %) | 1,375 (−31.0 %) |
+| Mean / p95 time | 1.25 / 2.22 s | 1.86 / 6.33 s | 2.12 / 5.44 s |
+
+B-cut's labels equal current's on all 195 short references (same requests) and on the long ones it is 97 of
+105 right, like current; B-para gets the long ones right more often (104) but calls 8 short-reference
+contradictions neutral. Times include two CPU-heavy gate runs that overlapped the first 20 minutes.
+
+**Val, one interleaved run** (`2026-10-09_rashad_taskb-cut-confirm_valB580`, the task B cases of all 580 val
+rows, 18:26–18:59 UTC, one backend): current 0.957, **B-cut 0.961**; input tokens 1,957 → **1,230
+(−37.1 %)**; time 1.48 → 1.80 s per case (the e5 embedding of long references). The run was stopped by a
+background-job time limit after 516 cases and finished with `--resume`.
+
+**Rule:** B-cut at most 0.01 below current (all and same-backend cases) and at least 25 % fewer input tokens,
+on dev and on val; B-para only if 0.02 above B-cut. **B-cut passes on both; B-para does not replace it. The
+task B default is now `cut`** (`13da75a`). Gate: G1 differs in exactly the 105 dev task B requests over 8,000
+characters; labels and evidence unchanged; 188 tests.
+
+## Phase D: task A label errors
+
+**Versions** (off by default): **L1** (`--label-rule-a`): the routed prompt plus "A claim that gives a
+different number, share, date, actor or direction than the reference text gives for the same thing is a
+contradiction." (`A-v4-section-route-L1`). **L2** (`--second-look-a`): after a neutral answer whose highest
+claim-paragraph similarity is at least 0.845 (B6), one more call with the three most similar paragraphs and a
+prompt that asks for 0, then 2, then 1 (`A-v4-second-look`); a 0 or 2 replaces the neutral; tokens of both
+calls summed.
+
+**Dev, one interleaved run** (`2026-10-09_rashad_label-errors_devA300`, 18:56–19:27 UTC, three arms
+rotating, one backend):
+
+| | current | L1 | L2 |
+|---|---|---|---|
+| Macro-F1 | 0.966 | **0.980** (+0.0137) | 0.976 (+0.0102) |
+| Neutral recall | 1.000 | 1.000 | 1.000 |
+| Gold contradictions answered neutral | 7 | 2 | 4 |
+| Evidence (starter) | 0.955 | 0.980 | 0.970 |
+| Mean input tokens | 1,210 | 1,238 (+2.3 %) | 1,244 (+2.8 %) |
+| Model calls | 300 | 300 | 317 |
+
+L1: 5 wrong → right, 1 right → wrong. L2: 17 second calls (11 on gold neutrals, all stayed neutral; 3 of 6
+wrong neutrals fixed), 3 wrong → right, none right → wrong.
+
+**Val, one interleaved run** (`2026-10-09_rashad_label-errors-confirm_valA580`, all 580 val task A cases,
+19:28–20:16 UTC, three arms rotating, one backend; L2 for information only):
+
+| | current | L1 | L2 |
+|---|---|---|---|
+| Macro-F1 | 0.950 | **0.961** (+0.0104) | 0.954 (+0.0034) |
+| Neutral recall | 1.000 | 1.000 | 1.000 |
+| Gold contradictions answered neutral | 21 | 14 | 19 |
+| Evidence (starter) | 0.943 | 0.958 | 0.948 |
+| Mean input tokens | 1,178 | 1,206 (+2.4 %) | 1,217 (+3.3 %) |
+| Model calls | 580 | 580 | 619 |
+
+L1: 7 wrong → right, 1 right → wrong. L2: 39 second calls, 2 labels changed (both right).
+
+**Rules:** L1 needs +0.01 on dev, +0.005 on val and neutral recall ≥ 0.98 on both: **passes (dev +0.0137,
+val +0.0104, recall 1.000 and 1.000); the task A default is now `label_rule_a=True`**. L2 needs +0.015 on both
+and at most +5 % input tokens: **fails on dev** (+0.0102); on val +0.0034 for +3.3 % tokens. It stays off; as
+an option it buys a few corrected neutral answers for about 3 % more input tokens and 6–7 % more calls.
+
+⟨Phase E, FINISH, model calls and tokens, not verified⟩

@@ -84,6 +84,10 @@ Everything runs in one container (`linux/amd64`, CPU only); the only network tra
 > label is 1 (neutral). 2. If it does: 0 (entailment) if the reference text supports the claim;
 > 2 (contradiction) only if the reference text states something that cannot be true together with the
 > claim; otherwise 1 (neutral: insufficient information). Missing information is never a contradiction. […]
+> A claim that gives a different number, share, date, actor or direction than the reference text gives for
+> the same thing is a contradiction.
+
+(The last sentence since session 9, phase D: `A-v4-section-route-L1`.)
 
 User: `PART:` (which part, whose voice), `REFERENCE TEXT:` with paragraphs `[1] … [n]`, `VOTE:`, `CLAIM:`.
 Nothing is translated. The answer is forced by `response_format: json_schema` to
@@ -151,8 +155,8 @@ Session 9's adoption rules were fixed before the runs; a version that failed sta
 |---|---|---|---|---|
 | Task B long passages, dev [C-dev] | current / B-cut / B-para | 0.967 / 0.967 / 0.963 (all one backend) | 1,994 / 1,231 / 1,375 | B-cut ≤ 0.01 below, ≥ 25 % fewer tokens: passes |
 | B-cut confirmed on val, 580 cases [C-val] | current / B-cut | 0.957 / 0.961 (all one backend) | 1,957 / 1,230 | same rule holds: **default since session 9** |
-| Task A label errors, dev [D-dev] | current / L1 / L2 | ⟨⟩ | ⟨⟩ | ⟨⟩ |
-| ⟨D-val⟩ | | | | |
+| Task A label errors, dev [D-dev] | current / L1 / L2 | 0.966 / 0.980 / 0.976 (all one backend) | 1,210 / 1,238 / 1,244 | L1 +0.01 and neutral recall ≥ 0.98: passes; L2 +0.015: fails |
+| L1 confirmed on val, 580 cases [D-val] | current / L1 / (L2) | 0.950 / 0.961 / 0.954 (all one backend) | 1,178 / 1,206 / 1,217 | same rule holds for L1: **default since session 9** |
 | Closed book, dev [E2-cb] | section-route / claim and vote only | ⟨⟩ | ⟨⟩ | information only |
 
 **Error margin and languages.** A 95 % bootstrap interval of task A's Macro-F1 on dev and val pooled (600
@@ -162,7 +166,9 @@ each; task B errors are all cross-language, 10 of 200).
 
 **Where the errors are.** All 12 routed errors of E6 (val) had the gold passage among the paragraphs sent, and
 10 of them cited a paragraph inside it: reading errors, not search errors. 9 of the 13 call a supported or
-refuted claim neutral. ⟨L1/L2 outcome sentence⟩
+refuted claim neutral. Phase D targeted them: one more sentence in the prompt (L1) cut the contradictions
+answered neutral from 7 to 2 on dev and 21 to 14 on val, without a single neutral case lost; a second look
+at neutral answers similar to the text (L2) fixed fewer (3 on dev, 2 on val) for 3 % more tokens.
 
 **Evidence pages.** Every evidence item's page is the page that holds its quote; 179 of 182 dev items that
 match the gold passage lie on one of its pages, 107 on its first page (a passage often spans pages).

@@ -1,0 +1,17 @@
+{
+ "name": "embed-e5-small",
+ "prompt_b": "v3-topic-first",
+ "schema_b": false,
+ "max_tokens_b": 32,
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "embed-e5-small",
+ "context_b": "cut",
+ "evidence_halves_a": true,
+ "evidence_a": "cited-pieces",
+ "label_rule_a": false,
+ "section_top_k_a": 0,
+ "second_look_a": false,
+ "second_look_threshold": 0.845
+}
