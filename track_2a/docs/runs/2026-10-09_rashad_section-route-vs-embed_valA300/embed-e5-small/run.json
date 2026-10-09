@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "00:38",
+ "kind": "model run",
+ "code": "2d4a435",
+ "task": "A",
+ "variant": "embed-e5-small",
+ "cases": "val sample of 300 task A cases (data/val/sample300, balanced, seed 42)",
+ "setup": "A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces",
+ "format": "official, paired (E6, val), order alternating",
+ "paired_with": "2026-10-09_rashad_section-route-vs-embed_valA300/section-route",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.865,
+  "f1": {
+   "entailment": 0.901,
+   "neutral": 0.883,
+   "contradiction": 0.811
+  },
+  "evidence": {
+   "score": 0.588,
+   "found": 120,
+   "cases": 204
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1827,
+  "mean_time_ms": 3185,
+  "p95_time_ms": 12303
+ }
+}

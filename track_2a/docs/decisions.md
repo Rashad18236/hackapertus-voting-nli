@@ -465,3 +465,23 @@ Branch `claude/eager-cannon-08bx1h`, started from `main` after PR #9.
 - **Both arms use the new default evidence setting `cited-pieces` where they cite pages** (the control, and section-route's one fallback case); routed cases cite paragraphs. The control is today's default as it stands after Part 0.
 - **Two dev cases were sent once through the CLI before E5 as a smoke test of the new answer schema; they are not part of any result.** A broken schema would have wasted 300 paired calls.
 - **Recommendation: section-route as the task A default; the default is not changed in this session.** Rashad asked for a recommendation only. It wins E5 on Macro-F1 (0.953 against 0.834), evidence (0.905 against 0.662), tokens (1,210 against 1,868) and p95 time (3.9 s against 11.7 s), with 45 against 9 cases where only one arm was right.
+
+## Session 7: hardening, a validation set, and the task A default (2026-10-09, from 00:25 UTC)
+
+Run autonomously on Rashad's instructions; report: `docs/session_7_report.md`.
+Branch `claude/eager-cannon-08bx1h-val`, from the branch of PR #10 (merged into
+`main` at the start of this session as `de27e4c`).
+
+- **Fixed decision (Rashad): task A evidence contains only what Apertus cited.** Unchanged from sessions 5 and 6.
+- **An exception while routing (parser, router, vote match, building the paragraph prompt) makes the case run as the variant's fallback, embed-e5-small, exactly like "no route"; the case records `route_error` and the run log counts such cases.** A bug in the new parser must not turn a case into a neutral answer without a model call. An error in the fallback's own selection (for example missing model files) still gives the documented neutral fallback, as before.
+- **The parser itself was not made more tolerant for this.** The tests use booklets that make it raise (a missing page number inside a vote, None as a page text), so the CLI's handling is what is tested.
+- **The validation set "val" is the 586 deduplicated rows in neither dev nor test, minus the six rows used for router patterns in session 6: 580 task A cases (`data/val/`).** Rashad's definition; the cases are the starter's `prepare_cases.py` lines, copied unchanged, labels in a separate file.
+- **The six left-out rows are 323, 592, 756, 1068, 1078 and 1301: the only pool rows whose opening only the four added patterns match ("In der Zusammenfassung", "Im Abstimmungstext", "Si cette proposition / la motion est adoptée", "L'adoption du vote").** The session 6 commit of the router already held the four patterns, so the rows were found from the six claims printed in session 6 and confirmed by matching the patterns; listed in `data/val/rows.json` and `scripts/make_val.py`.
+- **Only task A cases go into val.** Task B is not part of this session's question.
+- **The paired-run sample is 300 val cases balanced over label, claim language and booklet language by `make_splits.py`'s round-robin, seed 42.** The same rule as dev, so the two runs compare in composition (8 to 12 cases per cell).
+- **Val's booklets are the dev booklets plus one language version no dev case used (2025-02-09, French), downloaded with `fetch_dev_booklets.py --cases data/val/cases.jsonl`, which now refuses test booklets.** All val rows come from the 15 dev voting dates; val therefore tests the router on new claims, not the parser on new booklets.
+- **No router pattern and no parser rule is changed because of the val results.** Val is for measuring (Rashad); its failures are listed, not fixed.
+- **E6 ran entirely on `swiss-ai/apertus-v1.5-8b`** (it answered at 00:38 UTC); the 30-minute rule for the thinking model never applied.
+- **E6 compares the same two arms as E5 (session 6), unchanged.** Only the cases differ, so dev and val numbers can be read side by side; absolute numbers across the two runs are not compared, only the arms within each.
+- **Rule met: section-route 0.956 on val, 0.091 above embed-e5-small (needed at least 0.90 and 0.05). `section-route` is the task A default (commit `d69d820`, on its own).** Rashad's rule; the dev result (0.953 against 0.834) held on cases nobody looked at.
+- **After the change: 92 tests and 17 self-checks pass, and `make run` in the rebuilt image answers the example requests in the official format.** As the instructions ask.

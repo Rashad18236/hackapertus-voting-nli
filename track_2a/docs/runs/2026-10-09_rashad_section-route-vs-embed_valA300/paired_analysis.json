@@ -1,0 +1,228 @@
+{
+ "section-route": {
+  "macro_f1": 0.956,
+  "f1": {
+   "entailment": 0.976,
+   "neutral": 0.955,
+   "contradiction": 0.936
+  },
+  "evidence": 0.946,
+  "evidence_found": 193,
+  "evidence_reimplemented": "193/204",
+  "confusion_rows_gold_E_N_C_cols_pred_E_N_C": [
+   [
+    103,
+    1,
+    1
+   ],
+   [
+    0,
+    96,
+    0
+   ],
+   [
+    3,
+    8,
+    88
+   ]
+  ],
+  "mean_input_tokens": 1222,
+  "median_ms": 1540,
+  "p95_ms": 3011,
+  "max_ms": 19743,
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 0,
+  "routed": 299,
+  "fell_back": 1,
+  "by_part": {
+   "summary": {
+    "cases": 60,
+    "macro_f1": 0.924,
+    "evidence": "50/52"
+   },
+   "council": {
+    "cases": 88,
+    "macro_f1": 0.974,
+    "evidence": "54/57"
+   },
+   "committee": {
+    "cases": 53,
+    "macro_f1": 0.942,
+    "evidence": "28/30"
+   },
+   "law": {
+    "cases": 51,
+    "macro_f1": 0.983,
+    "evidence": "34/35"
+   },
+   "detail": {
+    "cases": 48,
+    "macro_f1": 0.912,
+    "evidence": "27/30"
+   }
+  },
+  "by_language": {
+   "same-language": {
+    "cases": 101,
+    "macro_f1": 0.97,
+    "evidence": "66/68"
+   },
+   "cross-language": {
+    "cases": 199,
+    "macro_f1": 0.949,
+    "evidence": "127/136"
+   }
+  },
+  "by_booklet_language": {
+   "de": {
+    "cases": 101,
+    "macro_f1": 0.95,
+    "evidence": "64/68"
+   },
+   "fr": {
+    "cases": 101,
+    "macro_f1": 0.938,
+    "evidence": "62/68"
+   },
+   "it": {
+    "cases": 98,
+    "macro_f1": 0.98,
+    "evidence": "67/68"
+   }
+  }
+ },
+ "embed-e5-small": {
+  "macro_f1": 0.865,
+  "f1": {
+   "entailment": 0.901,
+   "neutral": 0.883,
+   "contradiction": 0.811
+  },
+  "evidence": 0.588,
+  "evidence_found": 120,
+  "evidence_reimplemented": "120/204",
+  "confusion_rows_gold_E_N_C_cols_pred_E_N_C": [
+   [
+    96,
+    4,
+    5
+   ],
+   [
+    0,
+    87,
+    9
+   ],
+   [
+    12,
+    10,
+    77
+   ]
+  ],
+  "mean_input_tokens": 1827,
+  "median_ms": 1829,
+  "p95_ms": 12303,
+  "max_ms": 24965,
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 1,
+  "routed": 0,
+  "fell_back": 0,
+  "by_part": {
+   "summary": {
+    "cases": 60,
+    "macro_f1": 0.794,
+    "evidence": "20/52"
+   },
+   "council": {
+    "cases": 88,
+    "macro_f1": 0.938,
+    "evidence": "37/57"
+   },
+   "committee": {
+    "cases": 53,
+    "macro_f1": 0.853,
+    "evidence": "21/30"
+   },
+   "law": {
+    "cases": 51,
+    "macro_f1": 0.806,
+    "evidence": "23/35"
+   },
+   "detail": {
+    "cases": 48,
+    "macro_f1": 0.814,
+    "evidence": "19/30"
+   }
+  },
+  "by_language": {
+   "same-language": {
+    "cases": 101,
+    "macro_f1": 0.858,
+    "evidence": "47/68"
+   },
+   "cross-language": {
+    "cases": 199,
+    "macro_f1": 0.867,
+    "evidence": "73/136"
+   }
+  },
+  "by_booklet_language": {
+   "de": {
+    "cases": 101,
+    "macro_f1": 0.869,
+    "evidence": "33/68"
+   },
+   "fr": {
+    "cases": 101,
+    "macro_f1": 0.87,
+    "evidence": "44/68"
+   },
+   "it": {
+    "cases": 98,
+    "macro_f1": 0.856,
+    "evidence": "43/68"
+   }
+  }
+ },
+ "paired": {
+  "both_answered": 300,
+  "counts": {
+   "both right": 255,
+   "section-route right, embed-e5-small wrong": 32,
+   "both wrong": 8,
+   "embed-e5-small right, section-route wrong": 5
+  },
+  "by_part": {
+   "summary": {
+    "both right": 48,
+    "section-route right, embed-e5-small wrong": 8,
+    "both wrong": 3,
+    "embed-e5-small right, section-route wrong": 1
+   },
+   "council": {
+    "both right": 82,
+    "section-route right, embed-e5-small wrong": 4,
+    "embed-e5-small right, section-route wrong": 1,
+    "both wrong": 1
+   },
+   "committee": {
+    "both right": 45,
+    "section-route right, embed-e5-small wrong": 5,
+    "both wrong": 2,
+    "embed-e5-small right, section-route wrong": 1
+   },
+   "law": {
+    "both right": 40,
+    "section-route right, embed-e5-small wrong": 10,
+    "embed-e5-small right, section-route wrong": 1
+   },
+   "detail": {
+    "both right": 40,
+    "section-route right, embed-e5-small wrong": 5,
+    "both wrong": 2,
+    "embed-e5-small right, section-route wrong": 1
+   }
+  }
+ }
+}

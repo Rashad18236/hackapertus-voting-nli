@@ -41,8 +41,9 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "embed-e5-small"  # which booklet text task A sends: see context.MODES (session 4: won E3,
-                                       # 0.721 vs vote-section 0.561, and held in E4 against vote-section-embed-e5-small-k12)
+    context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
+                                      # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
+                                      # cases it cannot route run as embed-e5-small)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
 
@@ -87,17 +88,28 @@ def predict_a(case, data_dir, start, raw, settings):
         return response(case_id, FALLBACK_LABEL, start=start), "booklet could not be parsed"
 
     raw["context"] = settings.context_a
+    # Routing variants (section-route): parse the booklet, route the claim, build the paragraph prompt.
+    # Any error in these steps makes the case run as the variant's fallback, exactly like "no route";
+    # it never costs the case its model call.
+    routed = messages = None
+    try:
+        routed = context.route(pages, vote, claim_text, settings.context_a)
+        if routed is not None:
+            messages = paragraph_messages(routed, vote, claim_text, settings)
+    except Exception as e:
+        routed = None
+        raw["route_error"] = f"{type(e).__name__}: {e}"
+        log.warning("%s: routing failed (%s); running as %s", case_id, raw["route_error"],
+                    context.fallback(settings.context_a))
+    if routed is not None:
+        return predict_a_paragraphs(case_id, routed, messages, start, raw, settings, len(pages))
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
-        routed = context.route(pages, vote, claim_text, settings.context_a)
-        if routed is None:
-            mode = context.fallback(settings.context_a)
-            booklet_text, shown = context.select(pages, vote, claim_text, mode, cross_language)
+        mode = context.fallback(settings.context_a)
+        booklet_text, shown = context.select(pages, vote, claim_text, mode, cross_language)
     except Exception as e:  # e.g. embedding model files missing; must not stop the run
         raw["error"] = f"context selection failed ({type(e).__name__}: {e})"
         return response(case_id, FALLBACK_LABEL, start=start), "context selection failed"
-    if routed is not None:
-        return predict_a_paragraphs(case_id, routed, vote, claim_text, start, raw, settings, len(pages))
     if mode != settings.context_a:
         raw["fallback"] = mode  # the variant could not route this case
     prompt_version = context.prompt_version(mode)  # each variant names its prompt
@@ -123,7 +135,15 @@ def predict_a(case, data_dir, start, raw, settings):
     return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
 
 
-def predict_a_paragraphs(case_id, routed, vote, claim_text, start, raw, settings, pages_total):
+def paragraph_messages(routed, vote, claim_text, settings):
+    """The prompt for a routed case: the PART line, the numbered paragraphs as shown, VOTE and CLAIM."""
+    variant = context.VARIANTS[settings.context_a]
+    part, paragraphs = routed
+    return nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in paragraphs],
+                                           vote, claim_text, variant.PROMPT_VERSION)
+
+
+def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_total):
     """Task A for a routed case: one part of the vote as numbered paragraphs; the answer cites paragraphs,
     whose verbatim text and page become the evidence. Returns (response, status)."""
     variant = context.VARIANTS[settings.context_a]
@@ -132,8 +152,6 @@ def predict_a_paragraphs(case_id, routed, vote, claim_text, start, raw, settings
     raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
     raw["pages_total"], raw["context_pages"] = pages_total, sorted({page for page, _ in paragraphs})
     try:
-        messages = nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in paragraphs],
-                                                   vote, claim_text, variant.PROMPT_VERSION)
         result = llm.chat(messages, max_tokens=settings.max_tokens_a,
                           json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
     except llm.LLMError as e:
@@ -216,6 +234,7 @@ def main():
     env.load_env_file()
     lines = args.input.read_text(encoding="utf-8").splitlines()
     failures = Counter()
+    routing_failed = 0  # cases whose routing raised and that ran as the fallback variant (answered normally)
     responses, raws = [], []
     for number, line in enumerate(lines, start=1):
         if not line.strip():
@@ -234,6 +253,7 @@ def main():
             resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
         if status != "ok":
             failures[status] += 1
+        routing_failed += "route_error" in raw
         log.info("[%d/%d] %s -> %s%s", number, len(lines), case_id, resp["label_name"],
                  "" if status == "ok" else f" (fallback: {status})")
         responses.append(resp)
@@ -250,6 +270,8 @@ def main():
                 f.write(json.dumps(raw, ensure_ascii=False) + "\n")
 
     log.info("Wrote %d responses to %s", len(responses), args.output)
+    if routing_failed:
+        log.warning("Routing failed and the case ran as the fallback variant: %d", routing_failed)
     if failures:
         log.warning("Fallback or skipped cases: %s", ", ".join(f"{k}: {v}" for k, v in failures.most_common()))
     else:
