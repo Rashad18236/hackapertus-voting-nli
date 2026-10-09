@@ -156,4 +156,31 @@ val +0.0104, recall 1.000 and 1.000); the task A default is now `label_rule_a=Tr
 and at most +5 % input tokens: **fails on dev** (+0.0102); on val +0.0034 for +3.3 % tokens. It stays off; as
 an option it buys a few corrected neutral answers for about 3 % more input tokens and 6–7 % more calls.
 
-⟨Phase E, FINISH, model calls and tokens, not verified⟩
+## Phase E: information only (no default changed)
+
+**E1, context curve** (`2026-10-09_rashad_context-curve_devA100`, 100 balanced dev task A cases, seed 42, one
+interleaved run of six arms in a balanced Latin square, 20:17–20:50 UTC, one backend; routed arms with L1):
+
+| What Apertus reads | Macro-F1 | Evidence | Input tokens | Mean / p95 time |
+|---|---|---|---|---|
+| whole booklet | 0.858 | 0.422 | 37,586 | 7.3 / 17.6 s |
+| embed-e5-small (8 chunks) | 0.898 | 0.656 | 1,885 | 4.9 / 15.3 s |
+| section-route | **0.989** | **1.000** | 1,248 | 1.9 / 3.0 s |
+| section-route, 4 most similar paragraphs | 0.979 | 0.984 | 804 | 2.0 / 3.2 s |
+| section-route, 2 | 0.940 | 0.922 | 614 | 1.8 / 2.6 s |
+| section-route, 1 | 0.769 | 0.641 | 510 | 1.9 / 2.9 s |
+
+More text is not better; the right part matters more than similarity; 4 paragraphs keep most of the result at
+64 % of the tokens (a possible later trade, not tested on val).
+
+**E2, closed book** (`2026-10-09_rashad_closed-book_devA300`, 300 dev task A, two arms, 20:50–21:09 UTC):
+claim and vote name only 0.435 (neutral in 236 of 300 answers), section-route 0.980 in the same run. The
+booklet supplies almost all of the result.
+
+**E3, Apertus as router** (`2026-10-09_rashad_llm-router_dev300-stress300`, 600 calls, 21:09–21:22 UTC):
+agreement with the rules on 278 of 300 dev claims (16 of the 22 disagreements: law claims naming the Federal
+Assembly's recommendation, which Apertus calls council). On the 300 stress openings: right 283 (rules 285),
+wrong part 17 (rules 0), fallback 0 (rules 15). About 220 input and 8 output tokens and 1.3 s per call. The
+rules stay the router.
+
+⟨FINISH, model calls and tokens, not verified⟩
