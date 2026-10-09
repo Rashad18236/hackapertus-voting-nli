@@ -24,8 +24,23 @@ pages Apertus cites into evidence quoted verbatim from the booklet with their
 
 Headline dev results (official starter scorer):
 
-- **Task B:** Macro-F1 **0.947** with the prompt `v3-topic-first`, 1,968 input
-  tokens per case [`s2-A-v3-topic-first`].
+- **Task B:** the prompt `v3-topic-first` (the default, unchanged since
+  session 2) on all 300 dev task B cases, one row per recorded run. The prompt
+  and the requested model name were the same in every run; what Public AI
+  served under that name was not (section 6):
+
+  | Date, start (UTC) | Run folder | Macro-F1 | Input tokens / case | Mean / p95 time |
+  |---|---|---|---|---|
+  | 2026-10-08 06:10, before the endpoint changed (about 13:25) | `s2-A-v3-topic-first` | 0.947 | 1,968 | 2.7 s / 2.9 s |
+  | 2026-10-09 01:25, confirmation run 1 | `2026-10-09_rashad_v3-topic-first_devB300-run1` | 0.919 | 1,994 | 1.6 s / 2.8 s |
+  | 2026-10-09 01:33, confirmation run 2 | `2026-10-09_rashad_v3-topic-first_devB300-run2` | 0.916 | 1,992 | 0.6 s / 0.8 s |
+  | 2026-10-09 02:11, four-arm run, arm A | `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain` | 0.867 | 1,994 | 1.4 s / 2.3 s |
+
+  Run 2 sent run 1's requests again 3 to 8 minutes later; its answers equal
+  run 1's in all 299 cases both answered, and its speed very likely comes from
+  the gateway's cache of identical requests, not the model (run notes). Arm A
+  was answered by two backends (section 6) and includes 12 answers from that
+  cache.
 - **Task A, central experiment (full document against selected context):** with
   the same prompt and answer schema, sending only the vote's pages instead of
   the whole booklet raised Macro-F1 from 0.669 to 0.732 and cut input tokens
@@ -67,8 +82,11 @@ cases.jsonl ──► src/cli.py ──┬─ task B: reference text + claim ─
 - `src/llm.py`: the only module that calls a model. One OpenAI-style
   `chat/completions` request per case to `BASE_URL` with `API_KEY`
   (environment first; `LLM_BASE_URL`/`LLM_API_KEY` as local fallback), model
-  from `MODEL`. Temperature 0. Exactly one retry, for HTTP 5xx and timeouts
-  only; tokens of every attempt are summed into the case's metrics.
+  from `MODEL`. Temperature 0. One retry for HTTP 5xx and timeouts; for
+  HTTP 429 (rate limit) up to two retries, each after the server's
+  `Retry-After` time (else 2 s, then 4 s; at most 10 s). Tokens of every
+  attempt are summed into the case's metrics, and the waits count in its
+  time.
 - `src/nli.py`: prompts (versioned by name) and answer parsing.
 - `src/context.py` and `src/contexts/`: the task A context variants (one file
   each; a variant's name never changes meaning).
@@ -211,9 +229,12 @@ to back.
 | Setup (run folder) | Model | Macro-F1 | Evidence | Input tokens / case | Mean / p95 time |
 |---|---|---|---|---|---|
 | **Task B** | | | | | |
-| `v2-label-only` [`contract-v2-dev`] | 8b | 0.541 | – | 1,963 | 1.9 s / 2.8 s |
-| `v3-topic-first` (default) [`s2-A-v3-topic-first`] | 8b | **0.947** | – | 1,968 | 2.7 s / 2.9 s |
-| `v4-topic-first-examples` [`s2-C-v4-topic-first-examples`] | 8b | 0.933 | – | 2,162 | 1.8 s / 3.0 s |
+| `v2-label-only`, 2026-10-08 05:29 [`contract-v2-dev`] | 8b | 0.541 | – | 1,963 | 1.9 s / 2.8 s |
+| `v3-topic-first` (default), 2026-10-08 06:10 [`s2-A-v3-topic-first`] | 8b | 0.947 | – | 1,968 | 2.7 s / 2.9 s |
+| `v4-topic-first-examples`, 2026-10-08 06:24 [`s2-C-v4-topic-first-examples`] | 8b | 0.933 | – | 2,162 | 1.8 s / 3.0 s |
+| `v3-topic-first`, 2026-10-09 01:25 [`2026-10-09_rashad_v3-topic-first_devB300-run1`] | 8b | 0.919 | – | 1,994 | 1.6 s / 2.8 s |
+| `v3-topic-first`, 2026-10-09 01:33 [`2026-10-09_rashad_v3-topic-first_devB300-run2`] | 8b | 0.916 | – | 1,992 | 0.6 s / 0.8 s |
+| `v3-topic-first`, 2026-10-09 02:11, arm A [`2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`] | 8b, two backends | 0.867 | – | 1,994 | 1.4 s / 2.3 s |
 | **Task A: full-document baseline** | | | | | |
 | `full`, answer format by prompt [`s2-A300-A-v3-fulldoc`] | 8b | 0.589 | 0.209 | 39,706 | 11.5 s / 30.3 s |
 | **Task A, E2 (paired): full document against selected context** | | | | | |
@@ -234,6 +255,9 @@ to back.
 
 "8b" = `swiss-ai/apertus-v1.5-8b`, "thinking" = `swiss-ai/apertus-v1.5-8b-thinking`,
 both on Public AI. Times are wall-clock per case as the pipeline records them.
+The three task B runs of 2026-10-08 ran before Public AI changed what it
+serves as `apertus-v1.5-8b` (about 13:25 UTC); the three of 2026-10-09 after
+it. Only the four-arm run recorded which backend answered (section 6).
 
 Further measured steps:
 
@@ -306,9 +330,35 @@ Further measured steps:
   to votes without parts, and such cases fall back. Some pages hold no
   extractable text.
 - **Endpoint drift and the evaluation model.** Public AI's
-  `apertus-v1.5-8b` changed its answers during 2026-10-08; results from
-  different runs do not compare, and the evaluation's model and server are
-  unknown.
+  `apertus-v1.5-8b` changed its answers during 2026-10-08 (about 13:25 UTC)
+  and again on 2026-10-09 between confirmation run 1 (from 01:25 UTC) and
+  01:50 UTC (3 of the 30 task B canary answers differ, `docs/canary_log.md`;
+  run 2 cannot narrow it, as its answers very likely came from the gateway's
+  cache). Results from different runs do not compare, and the evaluation's
+  model and server are unknown. Task B shows the size of it: the same prompt
+  scored 0.947, 0.919, 0.916 and 0.867 in four runs (section 1).
+- **Public AI served two backends under one model name.** In the four-arm
+  task B run of 2026-10-09 [`2026-10-09_rashad_taskb-4arm_devB300`], every
+  request named `swiss-ai/apertus-v1.5-8b` and every response body gave the
+  same name back as `model`. Public AI's gateway (LiteLLM) sent each request
+  to one of two deployments, and the response headers name the deployment
+  and the model name it was set up with (`x-litellm-model-name`):
+
+  | Backend (`x-litellm-model-api-base`) | Its model name | `system_fingerprint` | Answers of 1,200 |
+  |---|---|---|---|
+  | `https://api.blablador.fz-juelich.de/v1` | `openai/alias-apertus` | `vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840` | 737 |
+  | `https://api.featherless.ai/v1` | `openai/swiss-ai/Apertus-8B-Instruct-2509` | `fp1-nst-nes` | 463 |
+
+  The first name is an alias with no version. The second is the September
+  2025 Apertus release (v1), not v1.5. Which weights either backend serves is
+  not visible from outside. The backend changes the answers: arms A and B
+  send the same prompt, and their labels differ in 3 of the 250 cases where
+  both met the same backend but in 19 of the 50 where they met different
+  ones. Arm A's 0.867 therefore mixes two backends (189 and 111 of its 300
+  answers). The earlier runs recorded no backend, so which one answered
+  them is unknown.
+  `src/llm.py` records these fields for every call (`endpoint` in the raw
+  answers) since the four-arm run's code (`75171d7`).
 - **Evidence pages:** the starter's scorer does not check pages; whether the
   official one does is unknown. Our pages are the 1-based PDF pages the cited
   text comes from.
