@@ -150,7 +150,7 @@ Session 9's adoption rules were fixed before the runs; a version that failed sta
 | Experiment [run] | Versions | Macro-F1 (all / same backend) | Input tokens | Rule, outcome |
 |---|---|---|---|---|
 | Task B long passages, dev [C-dev] | current / B-cut / B-para | 0.967 / 0.967 / 0.963 (all one backend) | 1,994 / 1,231 / 1,375 | B-cut ≤ 0.01 below, ≥ 25 % fewer tokens: passes |
-| B-cut confirmed on val [C-val] | current / B-cut | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| B-cut confirmed on val, 580 cases [C-val] | current / B-cut | 0.957 / 0.961 (all one backend) | 1,957 / 1,230 | same rule holds: **default since session 9** |
 | Task A label errors, dev [D-dev] | current / L1 / L2 | ⟨⟩ | ⟨⟩ | ⟨⟩ |
 | ⟨D-val⟩ | | | | |
 | Closed book, dev [E2-cb] | section-route / claim and vote only | ⟨⟩ | ⟨⟩ | information only |
@@ -174,7 +174,9 @@ match the gold passage lie on one of its pages, 107 on its first page (a passage
 | A | 1,210 | 14.5 | 1 | 2.6 / 5.4 s |
 | B | 1,994 | 8.7 | 1 | 1.5 / 2.6 s |
 
-⟨B-cut token line⟩ Time includes local work: without the model, a task A case takes milliseconds once its
+Since session 9, task B sends a reference over 8,000 characters as its first line plus the 8 paragraphs most
+similar to the claim (B-cut): 37–38 % fewer input tokens at the same Macro-F1, for about 0.3 s more per case
+(the e5 embedding of the long reference on the CPU). Time includes local work: without the model, a task A case takes milliseconds once its
 booklet is parsed; the first case on a booklet pays up to 3.5 s for parsing, and long parts are embedded
 (slowest case 17.6 s on 2 CPUs, peak memory 2.2 GiB).
 
