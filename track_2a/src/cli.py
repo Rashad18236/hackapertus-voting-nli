@@ -44,7 +44,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from src import context, env, evidence, llm, nli, parse
+from src import context, env, evidence, llm, nli, parse, taskb_context
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 
@@ -61,6 +61,7 @@ class Settings:
     context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
                                       # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
                                       # cases it cannot route run as embed-e5-small)
+    context_b: str = "full"      # task B context: full, cut (B-cut) or para (B-para); session 9, phase C, see taskb_context
     evidence_halves_a: bool = True   # section-route evidence: add halves of cited paragraphs up to 5 items (session 9, A2:
                                      # dev evidence 0.9055 -> 0.9254, val 0.9461 -> 0.9559, labels and requests unchanged)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
@@ -220,10 +221,28 @@ def predict(case, data_dir=".", settings=None):
         return response(case_id, FALLBACK_LABEL, start=start), "invalid request (missing reference.text or claim.text)", raw
 
     raw["prompt_version"] = settings.prompt_b
+    messages, max_tokens, schema = None, settings.max_tokens_b, nli.ANSWER_SCHEMA_B if settings.schema_b else None
+    if settings.context_b != "full":  # session 9, phase C: cut or numbered long passages (off by default)
+        raw["context_b"] = settings.context_b
+        try:
+            if settings.context_b == "para":
+                texts = taskb_context.para_texts(reference_text, claim_text)
+                raw["prompt_version"], raw["paragraphs_sent"] = "A-v4-section-route", len(texts)
+                messages = nli.build_messages_a_paragraphs(taskb_context.PART_LINE, texts, case.get("vote", ""),
+                                                           claim_text)
+                max_tokens, schema = settings.max_tokens_a, nli.ANSWER_SCHEMA_A_PARAGRAPHS
+            else:
+                text = taskb_context.cut_text(reference_text, claim_text)
+                raw["chars_sent"] = len(text)
+                messages = nli.build_messages_b(text, claim_text, settings.prompt_b)
+        except Exception as e:  # e.g. no e5 files: the whole reference, as by default
+            raw["context_b_error"] = f"{type(e).__name__}: {e}"
+            messages, max_tokens = None, settings.max_tokens_b
+            schema = nli.ANSWER_SCHEMA_B if settings.schema_b else None
+            raw["prompt_version"] = settings.prompt_b
     try:
-        result = llm.chat(nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
-                          max_tokens=settings.max_tokens_b,
-                          json_schema=nli.ANSWER_SCHEMA_B if settings.schema_b else None)
+        result = llm.chat(messages or nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
+                          max_tokens=max_tokens, json_schema=schema)
     except llm.LLMError as e:
         raw["error"] = str(e)
         note_call(raw, e)
@@ -274,6 +293,8 @@ def main():
                         help="development only: force the task A answer schema (response_format json_schema)")
     parser.add_argument("--context-a", default=defaults.context_a, choices=context.MODES,
                         help="development only: which booklet text task A sends")
+    parser.add_argument("--context-b", default=defaults.context_b, choices=taskb_context.MODES,
+                        help="development only: task B context (session 9, phase C)")
     parser.add_argument("--evidence-halves-a", action=argparse.BooleanOptionalAction, default=defaults.evidence_halves_a,
                         help="development only: section-route evidence adds halves of cited paragraphs (session 9, A2)")
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
@@ -282,7 +303,8 @@ def main():
     settings = Settings(prompt_b=args.prompt_b, schema_b=args.schema_b, max_tokens_b=args.max_tokens_b,
                         max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a,
-                        evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a)
+                        evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
+                        context_b=args.context_b)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)
