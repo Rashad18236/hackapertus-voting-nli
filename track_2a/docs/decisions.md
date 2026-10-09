@@ -611,3 +611,12 @@ Rashad's instructions. No model calls; the test split was not used.
 - **CI runs the examples a second time with `--context-a embed-e5-small`.** Since session 7 the default context answers the task A example without loading e5, so the first run no longer shows that the model loads as a non-root user on a read-only filesystem; with the plain `ADD --chmod=644` Dockerfile form (P11) the first run passes and the second fails (both checked locally as uid 1001).
 - **In that CI step, `make` failures and the fallback check are tested explicitly (`PIPESTATUS`, `if grep`).** GitHub runs steps with `bash -e` without `pipefail`, and `! grep` in the middle of a script does not stop it.
 - **The local image for the CI check was this branch's `src/` copied onto the existing image.** Docker Hub answered the base image pull with HTTP 429 in this sandbox; the Dockerfile and requirements have not changed since that image was built, and CI builds the real image.
+
+## Session 9: open items, analyses, task B long passages, task A label errors (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+
+Rashad's instructions, run unattended by Claude Code; status in `docs/session_9_status.md`, report in
+`docs/session_9_report.md`. Branch `rashad/until-1600` from `main` at `418ebfa`; a draft pull request, never
+merged, no tag. The test split, the splits and the scorer are not touched. Model: the 8B named in `.env`, on
+Public AI, at most one request per second, one model run at a time.
+
+- **Branch from `main` at `418ebfa` (PR #15 merged); PR #14 (the task B branch) is not in `main`, so phase A0 merges it into this branch.** Rashad's instruction.
