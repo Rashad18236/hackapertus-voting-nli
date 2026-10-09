@@ -68,6 +68,7 @@ Folders from before 2026-10-08 16:29 UTC keep their old names (`s2-...`,
 | `model`, `endpoint` | the Apertus model name and the endpoint. One run uses one model name; the only exception is E3 (`2026-10-08_rashad_embed-vs-section_devA300`, recorded before this rule), whose `model` says which cases used which |
 | `summary` | optional one-line result for an offline analysis that has no retrieval numbers |
 | `notes` | path of the notes file, relative to this folder |
+| `task_b` | task B runs only: `prompt_version`, `change` (what the prompt changed against the previous version), `n_cases`, `strict_json` (whether `response_format` was used), `max_tokens`; optional `failed_calls` for runs without a results block. `scripts/build_docs.py` shows them in the task B table and checks `n_cases` against `predictions.jsonl` |
 | `results` | the numbers; `null` for stopped runs. Retrieval checks use their own keys (`hit_at_k`, `evidence_ceiling_selected`, ...); other offline analyses may hold any keys |
 
 `python3 scripts/build_docs.py --check` compares `results` with the run's own

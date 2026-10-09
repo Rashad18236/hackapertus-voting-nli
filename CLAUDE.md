@@ -249,7 +249,22 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task A context, `section-route` as the default
+## Current stage: task B confirmation
+
+Task B has used `v3-topic-first` since session 2 (dev Macro-F1 0.947, one run).
+This stage confirms it before anything changes: every task B row in
+`docs/results.md` states prompt version, change against the previous
+version, cases, strict JSON, max_tokens, tokens, times and failed calls
+(from `run.json`'s `task_b` block); v3 runs twice on all 300 dev task B
+cases to measure the noise floor (the Macro-F1 gap between two identical
+runs); the errors are listed in `docs/taskb_errors.md`; and the input tokens
+are broken down into their parts. **No prompt changes in this step.** Report:
+`track_2a/docs/taskb_confirmation.md`.
+
+Task A is settled for now: `section-route` is the default since session 7
+(history below).
+
+## Task A history (sessions 3 to 7)
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
