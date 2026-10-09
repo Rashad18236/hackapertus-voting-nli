@@ -79,12 +79,21 @@ _HEADINGS = {
 _COMMITTEE = (r"argumente (?:des )?(?:initiativ|referendums)komitees?|arguments? (?:du |des )?comités? "
               r"(?:d'initiative|référendaires?)|gli argomenti (?:del comitato|dei comitati) "
               r"(?:d'iniziativa|referendari[oa]?)")
-_COUNCIL = (r"argumente (?:von )?bundesrat und parlament|arguments? (?:du )?conseil fédéral et (?:du )?parlement"
-            r"|gli argomenti del consiglio federale e del parlamento")
+# "and Parliament" is optional: 2018-2019 booklets say "Argumente Bundesrat", "Les arguments du Conseil
+# fédéral", "Gli argomenti del Consiglio federale" (session 8, P9).
+_COUNCIL = (r"argumente (?:von |des )?bundesrat(?:es)?(?: und parlament)?"
+            r"|arguments? (?:du )?conseil fédéral(?: et (?:du )?parlement)?"
+            r"|gli argomenti del consiglio federale(?: e del parlamento)?")
 # The parliamentary debate, a section of the arguments in a few booklets (matched with all spaces removed).
-_DEBATE = r"debatte(?:im)?parlament|débats?(?:au)?parlement|dibattit[oi](?:parlamentar[ei]|(?:in|al)?parlamento)"
+# 2018-09-23 calls it "Le deliberazioni in Parlamento" (session 8, P9).
+_DEBATE = (r"debatte(?:im)?parlament|débats?(?:au)?parlement|dibattit[oi](?:parlamentar[ei]|(?:in|al)?parlamento)"
+           r"|deliberazion[ei](?:in|al)?parlamento")
 _DEBATE_LISTED = (r"debatte (?:im )?parlament|débats? (?:au )?parlement"
-                  r"|dibattit[oi] (?:parlamentar[ei]|(?:in |al )?parlamento)")
+                  r"|dibattit[oi] (?:parlamentar[ei]|(?:in |al )?parlamento)"
+                  r"|deliberazion[ei] (?:in |al )?parlamento")
+# When a vote's arguments open with the parliamentary debate, that page carries no "Argumente" heading:
+# the debate's heading counts as the arguments' start heading too (session 8, P9).
+_HEADINGS["arguments"] += "|" + _DEBATE
 
 # Recommendation boxes: who speaks. Matched with all spaces removed; the voice named first wins
 # (a committee's box may say what it thinks of "Bundesrat und Parlament").

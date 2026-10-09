@@ -1,5 +1,6 @@
 """Tests for src/booklet.py (votes and parts of a voting booklet) on a miniature German booklet."""
 
+import re
 import unittest
 
 from src import booklet
@@ -88,6 +89,28 @@ class Paragraphs(unittest.TestCase):
         self.assertIn("Kantone", got[0][1])
         self.assertEqual([p for p, _ in got[1:]], [14, 15])
         self.assertTrue(all(text in pages[p] for p, text in got[1:]))  # verbatim page text
+
+
+class Session8Patterns(unittest.TestCase):
+    """P9 (docs/checks_no_model.md): patterns for the 2018-2019 booklets, added in session 8."""
+
+    def test_council_arguments_without_parliament(self):
+        for line in ("argumente bundesrat", "argumente des bundesrates", "argumente bundesrat und parlament",
+                     "les arguments du conseil fédéral", "arguments du conseil fédéral et du parlement",
+                     "gli argomenti del consiglio federale", "gli argomenti del consiglio federale e del parlamento"):
+            with self.subTest(line=line):
+                self.assertTrue(re.search(booklet._COUNCIL, line))  # as _sub_starts applies it
+
+    def test_deliberazioni_in_parlamento_is_a_debate(self):
+        self.assertTrue(re.fullmatch(booklet._DEBATE, "deliberazioniinparlamento"))  # a heading line, spaces removed
+        self.assertTrue(re.search(booklet._DEBATE_LISTED, "le deliberazioni in parlamento 12"))
+        self.assertTrue(re.fullmatch(booklet._DEBATE, "dibattitoparlamentare"))  # the older name still works
+
+    def test_debate_heading_counts_as_the_arguments_heading(self):
+        for text in ("Argumente", "Dibattito parlamentare", "Le deliberazioni in Parlamento", "Débat au Parlement"):
+            with self.subTest(text=text):
+                self.assertTrue(booklet._has(text, booklet._HEADINGS["arguments"]))
+        self.assertFalse(booklet._has("Im Detail", booklet._HEADINGS["arguments"]))
 
 
 if __name__ == "__main__":
