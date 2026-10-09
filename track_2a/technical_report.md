@@ -160,7 +160,9 @@ numbered paragraphs `[1] … [n]`, `VOTE: <vote name>`, `CLAIM: <claim>`. Claims
 and booklet text are never translated. The answer is forced by
 `response_format: json_schema` to `{"paragraphs": [at most 3 numbers],
 "label": 0|1|2}` (page variants: `{"pages": [at most 5], "label": …}`).
-Task B sends `REFERENCE TEXT:` and `CLAIM:` and gets `{"label": …}`.
+Task B sends `REFERENCE TEXT:` and `CLAIM:`; its answer format,
+`{"label": …}`, is requested in the prompt only: task B sends no
+`response_format`.
 
 **Evidence.** Only what Apertus cited, quoted from the booklet with its page
 (team decision, session 5): for `section-route` the cited paragraphs
@@ -176,8 +178,13 @@ answers carry no evidence.
   E4, cases 181–300 of E3). **TODO:** which Apertus model and server the
   evaluation uses is not known to us.
 - **How it is used:** inference only, zero-shot, one call per case,
-  temperature 0, schema-constrained JSON answer, answer budget 128 tokens
-  (task A) and 32 tokens (task B). No fine-tuning.
+  temperature 0, answer budget 128 tokens (task A) and 32 tokens (task B).
+  Task A's answer is schema-constrained (`response_format: json_schema`);
+  task B's answer format is requested in the prompt only (no
+  `response_format`). The option `--schema-b` forces `{"label": 0|1|2}` by
+  json_schema; it is off, because in the four-arm run it scored 0.853
+  against 0.867 without it, all of the gap in cases where the two arms met
+  different backends (section 6). No fine-tuning.
 - **Where it runs:** a hosted OpenAI-compatible endpoint reached only through
   `BASE_URL` (at evaluation, the organisers' token-counting proxy). No key or
   `.env` is in the image.
@@ -261,9 +268,9 @@ it. Only the four-arm run recorded which backend answered (section 6).
 
 Further measured steps:
 
-- **Unreadable answers:** asking for JSON in the prompt left 110 of 300
-  full-document answers unparseable [`s2-A300-A-v3-fulldoc`]; with
-  `response_format: json_schema` no answer has been unparseable since
+- **Unreadable answers (task A):** asking for JSON in the prompt left 110 of
+  300 full-document answers unparseable [`s2-A300-A-v3-fulldoc`]; with
+  `response_format: json_schema` no task A answer has been unparseable since
   (E2 to E5).
 - **Evidence form** (E4's answers re-scored, labels unchanged): pieces of the
   cited pages 0.542 against whole cited pages 0.373
@@ -291,8 +298,10 @@ Further measured steps:
   fields, missing or broken booklets, empty claims, unknown languages, failed
   and garbage model answers; the same cases in three orders give identical
   labels and evidence; only `/output` and `/tmp` are written. Three gaps in
-  `src/cli.py` are documented as expected failures (duplicate ids, a UTF-8
-  byte order mark, a byte that is not UTF-8).
+  `src/cli.py` (a repeated id, a UTF-8 byte order mark, a byte that is not
+  UTF-8) were expected failures until branch `rashad/input-hardening`, which
+  reads the input as bytes split on line feeds only, answers each id once and
+  writes each response as soon as it is ready.
 - Evidence of both E5 arms [`2026-10-09_rashad_evidence-check_devA300`]: no
   item over 5,000 characters, no response with more than five items, no
   evidence on a neutral answer, every page exists. Every `embed-e5-small`
@@ -362,10 +371,9 @@ Further measured steps:
 - **Evidence pages:** the starter's scorer does not check pages; whether the
   official one does is unknown. Our pages are the 1-based PDF pages the cited
   text comes from.
-- **Input robustness:** an input file with duplicate ids, a UTF-8 byte order
-  mark or a byte that is not UTF-8 is not handled as well as it could be
-  (proposals in `docs/checks_no_model.md`); the official input is expected to
-  be clean.
+- **Input robustness:** a repeated id is answered once (its first line); a
+  line that is not valid JSON or has no id gets no response, since there is no
+  id to answer (the official input is expected to be valid JSON lines).
 - **Not political advice.** The system checks a claim against the booklet's
   text only. Its answers are not voting recommendations and must not be read
   as such. Every task A label 0 or 2 comes with the booklet page and the
@@ -407,11 +415,9 @@ Further measured steps:
   and law parts instead of the 8 most similar paragraphs; the remaining
   "called neutral" errors (all 14 are reading errors).
 - Router and parser: the patterns proposed in `docs/checks_no_model.md`
-  (measured offline: 272 of 300 reworded openings routed right, no change on
+  (measured offline: 273 of 300 reworded openings routed right, no change on
   the dataset's own claims; 14 of 15 older booklets parsed fully, no change on
   dev).
-- Input hardening in `src/cli.py` (duplicate ids, byte order mark, invalid
-  UTF-8) and incremental writing of the output.
 
 ## License
 
