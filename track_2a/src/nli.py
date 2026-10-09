@@ -70,6 +70,15 @@ PROMPTS_B["v4-topic-first-examples"] = (
     PROMPTS_B["v3-topic-first"][: -len(_ANSWER_B)] + _EXAMPLES_B.lstrip("\n") + "\n" + _ANSWER_B
 )
 
+# The task B answer as a JSON Schema, for schema-constrained output (--schema-b; task B cheap fixes):
+# the endpoint can then only produce {"label": 0|1|2}. Same mechanism as ANSWER_SCHEMA_A.
+ANSWER_SCHEMA_B = {
+    "type": "object",
+    "properties": {"label": {"type": "integer", "enum": [0, 1, 2]}},
+    "required": ["label"],
+    "additionalProperties": False,
+}
+
 # Task A: the whole booklet, page by page. Same decision rule as task B's
 # v3-topic-first; the answer also names the pages that justify the label.
 _RULE_A = """You check a CLAIM against an official Swiss federal voting booklet. The booklet is given page by page; each page starts with a line "=== PAGE n ===". A booklet can cover several ballots: use only the part about the ballot named in VOTE. The booklet and the claim may be in different languages (German, French or Italian). Use only the booklet, never outside knowledge.

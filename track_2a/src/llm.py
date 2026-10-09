@@ -13,25 +13,36 @@ API_KEY. Values are never printed or logged, not even in error messages.
 Every call returns the token counts reported by the server and the elapsed
 wall-clock time, because the organisers score input tokens and speed.
 
-Retries: exactly one, and only for HTTP 5xx answers and timeouts, where the
-request most likely never produced an answer (e.g. Public AI's gateway 504
-after about 61 s). The organisers count every token, retries included, so any
-usage reported by a failed attempt is added to the result, and the elapsed
-time covers both attempts. All other failures raise LLMError at once.
+Retries:
+- HTTP 5xx answers and timeouts: exactly one retry, after RETRY_PAUSE_SECONDS;
+  the request most likely never produced an answer (e.g. Public AI's gateway
+  504 after about 61 s).
+- HTTP 429 (rate limit; one task B case was lost to it on 2026-10-09): up to
+  RATE_LIMIT_RETRIES retries. The wait is the server's Retry-After header if
+  it sends one, otherwise 2 s, then 4 s; never more than RATE_LIMIT_MAX_WAIT.
+The organisers count every token, retries included, so any usage reported by a
+failed attempt is added to the result, and the elapsed time covers all
+attempts and waits (it also counts in the case's inference_time_ms, which
+src/cli.py measures around the whole case). All other failures raise LLMError
+at once.
 """
 
 import logging
 import os
 import time
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 
 import requests
 
 # Public AI rejects requests without a User-Agent header.
 USER_AGENT = "hackapertus-voting-nli/0.1"
 TIMEOUT_SECONDS = 120
-MAX_ATTEMPTS = 2          # the first call plus one retry
+MAX_ATTEMPTS = 2          # 5xx and timeouts: the first call plus one retry
 RETRY_PAUSE_SECONDS = 2
+RATE_LIMIT_RETRIES = 2    # HTTP 429: up to two retries
+RATE_LIMIT_PAUSES = (2, 4)  # seconds before the first and second 429 retry, without Retry-After
+RATE_LIMIT_MAX_WAIT = 10  # never wait longer than this for one retry
 
 
 class LLMError(RuntimeError):
@@ -94,13 +105,16 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
 
     start = time.perf_counter()
     input_tokens = output_tokens = 0  # summed over attempts that report usage
-    for attempt in range(1, MAX_ATTEMPTS + 1):
+    attempt = server_retries = rate_retries = 0
+    while True:
+        attempt += 1
         try:
             response = requests.post(
                 f"{base}/chat/completions", json=payload, headers=headers, timeout=TIMEOUT_SECONDS
             )
         except requests.Timeout:
-            if attempt < MAX_ATTEMPTS:
+            if server_retries < MAX_ATTEMPTS - 1:
+                server_retries += 1
                 logging.warning("LLM call timed out; retrying once")
                 time.sleep(RETRY_PAUSE_SECONDS)
                 continue
@@ -112,9 +126,17 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
         usage = _usage(response)
         input_tokens += usage.get("prompt_tokens", 0)
         output_tokens += usage.get("completion_tokens", 0)
-        if response.status_code >= 500 and attempt < MAX_ATTEMPTS:
+        if response.status_code >= 500 and server_retries < MAX_ATTEMPTS - 1:
+            server_retries += 1
             logging.warning("LLM call failed with HTTP %d; retrying once", response.status_code)
             time.sleep(RETRY_PAUSE_SECONDS)
+            continue
+        if response.status_code == 429 and rate_retries < RATE_LIMIT_RETRIES:
+            wait = rate_limit_wait(response, rate_retries)
+            rate_retries += 1
+            logging.warning("LLM call rate-limited (HTTP 429); retry %d of %d in %.1f s",
+                            rate_retries, RATE_LIMIT_RETRIES, wait)
+            time.sleep(wait)
             continue
         break
     elapsed_ms = round((time.perf_counter() - start) * 1000)
@@ -133,6 +155,22 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
         elapsed_ms=elapsed_ms,
         attempts=attempt,
     )
+
+
+def rate_limit_wait(response, retries_so_far):
+    """Seconds to wait before retrying an HTTP 429: Retry-After (seconds or an HTTP date) if the server sends it,
+    otherwise RATE_LIMIT_PAUSES; always between 0 and RATE_LIMIT_MAX_WAIT."""
+    header = (getattr(response, "headers", None) or {}).get("Retry-After")
+    wait = RATE_LIMIT_PAUSES[min(retries_so_far, len(RATE_LIMIT_PAUSES) - 1)]
+    if header:
+        try:
+            wait = float(header)
+        except ValueError:
+            try:
+                wait = parsedate_to_datetime(header).timestamp() - time.time()
+            except (TypeError, ValueError):
+                pass  # an unreadable header: keep the default pause
+    return max(0.0, min(float(wait), RATE_LIMIT_MAX_WAIT))
 
 
 def _usage(response):

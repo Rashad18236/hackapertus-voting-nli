@@ -152,6 +152,27 @@ class NeverDropACase(unittest.TestCase):
                 cli.main()
 
 
+class TaskBSettings(unittest.TestCase):
+    def test_task_b_schema_and_max_tokens(self):
+        for settings, expected in ((cli.Settings(), (None, 32)),
+                                   (cli.Settings(schema_b=True, max_tokens_b=10), (cli.nli.ANSWER_SCHEMA_B, 10))):
+            seen = {}
+
+            def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
+                seen["schema"], seen["max_tokens"] = json_schema, max_tokens
+                return llm.LLMResult(text='{"label": 2}', input_tokens=9, output_tokens=3, elapsed_ms=1)
+            with mock.patch.object(llm, "chat", chat):
+                resp, status, _ = cli.predict(b_case("b"), ".", settings)
+            self.assertEqual((seen["schema"], seen["max_tokens"]), expected)
+            self.assertEqual((resp["label"], status, resp["evidence"]), (2, "ok", []))
+
+    def test_task_b_schema_allows_only_the_label(self):
+        schema = cli.nli.ANSWER_SCHEMA_B
+        self.assertEqual(schema["required"], ["label"])
+        self.assertEqual(schema["properties"], {"label": {"type": "integer", "enum": [0, 1, 2]}})
+        self.assertFalse(schema["additionalProperties"])
+
+
 class Defaults(unittest.TestCase):
     def test_task_a_default_is_section_route_with_cited_pieces_evidence(self):
         settings = cli.Settings()

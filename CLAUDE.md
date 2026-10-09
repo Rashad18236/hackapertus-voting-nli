@@ -197,7 +197,7 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
                 search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
                 rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py,
-                taskb_tokens.py, taskb_analysis.py (task B confirmation)
+                taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -250,26 +250,33 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task B confirmation
+## Current stage: task B cheap fixes
 
-Task B has used `v3-topic-first` since session 2 (dev Macro-F1 0.947, one run).
-This stage confirms it before anything changes: every task B row in
-`docs/results.md` states prompt version, change against the previous
-version, cases, strict JSON, max_tokens, tokens, times and failed calls
-(from `run.json`'s `task_b` block); v3 runs twice on all 300 dev task B
-cases to measure the noise floor (the Macro-F1 gap between two identical
-runs); the errors are listed in `docs/taskb_errors.md`; and the input tokens
-are broken down into their parts. **No prompt changes in this step.** Report:
-`track_2a/docs/taskb_confirmation.md`.
+Cheap changes to task B, one per run, each on all 300 dev task B cases and
+judged by the acceptance rule in `docs/decisions.md` (stage file
+`docs/decisions/2026-10-09-0140_rashad_taskb-cheap-fixes.md`):
 
-Results (2026-10-09, `apertus-v1.5-8b`): v3-topic-first 0.919 and 0.916 in
-two runs (session 2's 0.947 was the server before 13:25 UTC on 2026-10-08).
-**Noise floor 0.0033 Macro-F1**, all from one failed call (HTTP 429); the
-299 cases both runs answered have identical answers. Errors: 17 of 24 are
-claims about another ballot called a contradiction. Input tokens: passage
-87 %, fixed instructions 203 tokens (10 %), claim 2 %, endpoint 19 tokens
-(1 %). Task B uses no strict JSON; max_tokens 32; 292 of 300 answers are
-exactly `{"label": n}`.
+- a change that removes tokens is kept if Macro-F1 falls by no more than
+  0.01 and no label's F1 falls by more than 0.03;
+- a change that adds tokens is kept only if Macro-F1 rises by at least 0.01;
+- each run is compared with the best version kept so far.
+
+Baseline: `docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1`
+(v3-topic-first, 0.919). Before each run, `scripts/canary_taskb.py` re-sends
+30 fixed dev cases with v3; if any answer text differs from the baseline,
+stop: the endpoint changed. Task B rows from before 2026-10-08 13:25 UTC are
+"old endpoint behaviour, not comparable". The runs: v3 with strict JSON
+(`--schema-b`, max_tokens 10), the vote name (only if it carries a signal),
+and v5-min (fixed instructions of at most 90 tokens). Never shorten the
+passage. Report: `track_2a/docs/taskb_cheap_fixes.md`.
+
+Previous stage, task B confirmation (`track_2a/docs/taskb_confirmation.md`):
+v3-topic-first 0.919 and 0.916 in two runs (session 2's 0.947 was the server
+before 13:25 UTC on 2026-10-08). **Noise floor 0.0033 Macro-F1**, all from one
+failed call (HTTP 429, now retried); the 299 cases both runs answered have
+identical answers. Errors: 17 of 24 are claims about another ballot called a
+contradiction. Input tokens: passage 87 %, fixed instructions 203 tokens
+(10 %), claim 2 %, endpoint 19 tokens (1 %).
 
 Task A is settled for now: `section-route` is the default since session 7
 (history below).
