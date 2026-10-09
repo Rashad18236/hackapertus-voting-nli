@@ -465,3 +465,13 @@ Branch `claude/eager-cannon-08bx1h`, started from `main` after PR #9.
 - **Both arms use the new default evidence setting `cited-pieces` where they cite pages** (the control, and section-route's one fallback case); routed cases cite paragraphs. The control is today's default as it stands after Part 0.
 - **Two dev cases were sent once through the CLI before E5 as a smoke test of the new answer schema; they are not part of any result.** A broken schema would have wasted 300 paired calls.
 - **Recommendation: section-route as the task A default; the default is not changed in this session.** Rashad asked for a recommendation only. It wins E5 on Macro-F1 (0.953 against 0.834), evidence (0.905 against 0.662), tokens (1,210 against 1,868) and p95 time (3.9 s against 11.7 s), with 45 against 9 cases where only one arm was right.
+
+## Session 7: hardening, a validation set, and the task A default (2026-10-09, from 00:25 UTC)
+
+Run autonomously on Rashad's instructions; report: `docs/session_7_report.md`.
+Branch `claude/eager-cannon-08bx1h-val`, from the branch of PR #10 (merged into
+`main` at the start of this session as `de27e4c`).
+
+- **Fixed decision (Rashad): task A evidence contains only what Apertus cited.** Unchanged from sessions 5 and 6.
+- **An exception while routing (parser, router, vote match, building the paragraph prompt) makes the case run as the variant's fallback, embed-e5-small, exactly like "no route"; the case records `route_error` and the run log counts such cases.** A bug in the new parser must not turn a case into a neutral answer without a model call. An error in the fallback's own selection (for example missing model files) still gives the documented neutral fallback, as before.
+- **The parser itself was not made more tolerant for this.** The tests use booklets that make it raise (a missing page number inside a vote, None as a page text), so the CLI's handling is what is tested.
