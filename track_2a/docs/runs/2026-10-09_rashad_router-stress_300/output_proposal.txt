@@ -1,0 +1,4 @@
+de: 100 claims; outcomes {'right': 89, 'fallback': 7, 'correct fallback': 4}; routed to {'summary': 17, 'None': 11, 'council': 20, 'committee': 19, 'law': 14, 'detail': 19}
+fr: 100 claims; outcomes {'right': 91, 'fallback': 5, 'correct fallback': 4}; routed to {'summary': 16, 'None': 9, 'council': 19, 'committee': 20, 'law': 16, 'detail': 20}
+it: 100 claims; outcomes {'right': 93, 'fallback': 3, 'correct fallback': 4}; routed to {'summary': 17, 'council': 19, 'None': 7, 'committee': 21, 'law': 18, 'detail': 18}
+dataset claims (dev and outside dev/test) checked: 877, route changed by the proposal: 0
