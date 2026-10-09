@@ -1,0 +1,175 @@
+{
+  "issues": {
+    "missing": 0,
+    "duplicated ids": 0,
+    "unknown ids": 0
+  },
+  "tasks": {
+    "A": {
+      "labels": {
+        "n": 300,
+        "macro_f1": 0.9533036571528323,
+        "accuracy": 0.9533333333333334,
+        "per_class": {
+          "entailment": {
+            "precision": 0.9797979797979798,
+            "recall": 0.9509803921568627,
+            "f1": 0.9651741293532337,
+            "support": 102
+          },
+          "neutral": {
+            "precision": 0.9,
+            "recall": 1.0,
+            "f1": 0.9473684210526316,
+            "support": 99
+          },
+          "contradiction": {
+            "precision": 0.989010989010989,
+            "recall": 0.9090909090909091,
+            "f1": 0.9473684210526315,
+            "support": 99
+          }
+        },
+        "confusion": {
+          "entailment": {
+            "entailment": 97,
+            "neutral": 4,
+            "contradiction": 1,
+            "invalid": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "neutral": 99,
+            "contradiction": 0,
+            "invalid": 0
+          },
+          "contradiction": {
+            "entailment": 2,
+            "neutral": 7,
+            "contradiction": 90,
+            "invalid": 0
+          }
+        },
+        "invalid": 0
+      },
+      "cost": {
+        "input_tokens_sum": 362960,
+        "input_tokens_mean": 1209.8666666666666,
+        "output_tokens_sum": 4319,
+        "output_tokens_mean": 14.396666666666667,
+        "time_ms_mean": 2025.64,
+        "time_ms_p95": 3861
+      },
+      "same_vs_cross": {
+        "same-language": {
+          "n": 100,
+          "macro_f1": 0.9303825803825804,
+          "accuracy": 0.93,
+          "invalid": 0
+        },
+        "cross-lingual": {
+          "n": 200,
+          "macro_f1": 0.9649072687296655,
+          "accuracy": 0.965,
+          "invalid": 0
+        }
+      },
+      "by_claim_language": {
+        "de": {
+          "n": 102,
+          "macro_f1": 0.9126333156183902,
+          "accuracy": 0.9117647058823529,
+          "invalid": 0
+        },
+        "fr": {
+          "n": 99,
+          "macro_f1": 0.9693479381802472,
+          "accuracy": 0.9696969696969697,
+          "invalid": 0
+        },
+        "it": {
+          "n": 99,
+          "macro_f1": 0.9796330845771144,
+          "accuracy": 0.9797979797979798,
+          "invalid": 0
+        }
+      },
+      "by_source_language": {
+        "de": {
+          "n": 100,
+          "macro_f1": 0.9090952342114563,
+          "accuracy": 0.91,
+          "invalid": 0
+        },
+        "fr": {
+          "n": 100,
+          "macro_f1": 0.9800927489250579,
+          "accuracy": 0.98,
+          "invalid": 0
+        },
+        "it": {
+          "n": 100,
+          "macro_f1": 0.9701154553320355,
+          "accuracy": 0.97,
+          "invalid": 0
+        }
+      },
+      "by_language_pair": {
+        "de->de": {
+          "n": 34,
+          "macro_f1": 0.8239858906525573,
+          "accuracy": 0.8235294117647058,
+          "invalid": 0
+        },
+        "de->fr": {
+          "n": 33,
+          "macro_f1": 0.9376811594202898,
+          "accuracy": 0.9393939393939394,
+          "invalid": 0
+        },
+        "de->it": {
+          "n": 33,
+          "macro_f1": 0.9696342305037957,
+          "accuracy": 0.9696969696969697,
+          "invalid": 0
+        },
+        "fr->de": {
+          "n": 34,
+          "macro_f1": 0.9418564527260179,
+          "accuracy": 0.9411764705882353,
+          "invalid": 0
+        },
+        "fr->fr": {
+          "n": 33,
+          "macro_f1": 1.0,
+          "accuracy": 1.0,
+          "invalid": 0
+        },
+        "fr->it": {
+          "n": 33,
+          "macro_f1": 1.0,
+          "accuracy": 1.0,
+          "invalid": 0
+        },
+        "it->de": {
+          "n": 34,
+          "macro_f1": 0.9710144927536232,
+          "accuracy": 0.9705882352941176,
+          "invalid": 0
+        },
+        "it->fr": {
+          "n": 33,
+          "macro_f1": 0.9696342305037957,
+          "accuracy": 0.9696969696969697,
+          "invalid": 0
+        },
+        "it->it": {
+          "n": 33,
+          "macro_f1": 0.9696342305037957,
+          "accuracy": 0.9696969696969697,
+          "invalid": 0
+        }
+      }
+    }
+  }
+}

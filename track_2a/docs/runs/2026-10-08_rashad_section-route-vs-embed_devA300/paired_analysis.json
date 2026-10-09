@@ -1,0 +1,226 @@
+{
+ "section-route": {
+  "macro_f1": 0.953,
+  "f1": {
+   "entailment": 0.965,
+   "neutral": 0.947,
+   "contradiction": 0.947
+  },
+  "evidence": 0.905,
+  "evidence_found": 182,
+  "evidence_reimplemented": "182/201",
+  "confusion_rows_gold_E_N_C_cols_pred_E_N_C": [
+   [
+    97,
+    4,
+    1
+   ],
+   [
+    0,
+    99,
+    0
+   ],
+   [
+    2,
+    7,
+    90
+   ]
+  ],
+  "mean_input_tokens": 1210,
+  "median_ms": 1563,
+  "p95_ms": 3861,
+  "max_ms": 19707,
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 0,
+  "routed": 299,
+  "fell_back": 1,
+  "by_part": {
+   "summary": {
+    "cases": 67,
+    "macro_f1": 0.929,
+    "evidence": "49/55"
+   },
+   "council": {
+    "cases": 102,
+    "macro_f1": 1.0,
+    "evidence": "65/68"
+   },
+   "committee": {
+    "cases": 49,
+    "macro_f1": 0.96,
+    "evidence": "24/27"
+   },
+   "law": {
+    "cases": 39,
+    "macro_f1": 0.944,
+    "evidence": "24/25"
+   },
+   "detail": {
+    "cases": 43,
+    "macro_f1": 0.817,
+    "evidence": "20/26"
+   }
+  },
+  "by_language": {
+   "same-language": {
+    "cases": 100,
+    "macro_f1": 0.93,
+    "evidence": "58/67"
+   },
+   "cross-language": {
+    "cases": 200,
+    "macro_f1": 0.965,
+    "evidence": "124/134"
+   }
+  },
+  "by_booklet_language": {
+   "de": {
+    "cases": 100,
+    "macro_f1": 0.909,
+    "evidence": "57/67"
+   },
+   "fr": {
+    "cases": 100,
+    "macro_f1": 0.98,
+    "evidence": "64/67"
+   },
+   "it": {
+    "cases": 100,
+    "macro_f1": 0.97,
+    "evidence": "61/67"
+   }
+  }
+ },
+ "embed-e5-small": {
+  "macro_f1": 0.834,
+  "f1": {
+   "entailment": 0.832,
+   "neutral": 0.85,
+   "contradiction": 0.819
+  },
+  "evidence": 0.662,
+  "evidence_found": 133,
+  "evidence_reimplemented": "133/201",
+  "confusion_rows_gold_E_N_C_cols_pred_E_N_C": [
+   [
+    77,
+    8,
+    17
+   ],
+   [
+    3,
+    85,
+    11
+   ],
+   [
+    3,
+    8,
+    88
+   ]
+  ],
+  "mean_input_tokens": 1868,
+  "median_ms": 1856,
+  "p95_ms": 11665,
+  "max_ms": 26543,
+  "failed_calls": 0,
+  "unparseable": 0,
+  "label_0_2_without_evidence": 0,
+  "routed": 0,
+  "fell_back": 0,
+  "by_part": {
+   "summary": {
+    "cases": 67,
+    "macro_f1": 0.789,
+    "evidence": "25/55"
+   },
+   "council": {
+    "cases": 102,
+    "macro_f1": 0.852,
+    "evidence": "50/68"
+   },
+   "committee": {
+    "cases": 49,
+    "macro_f1": 0.863,
+    "evidence": "20/27"
+   },
+   "law": {
+    "cases": 39,
+    "macro_f1": 0.668,
+    "evidence": "17/25"
+   },
+   "detail": {
+    "cases": 43,
+    "macro_f1": 0.818,
+    "evidence": "21/26"
+   }
+  },
+  "by_language": {
+   "same-language": {
+    "cases": 100,
+    "macro_f1": 0.91,
+    "evidence": "52/67"
+   },
+   "cross-language": {
+    "cases": 200,
+    "macro_f1": 0.796,
+    "evidence": "81/134"
+   }
+  },
+  "by_booklet_language": {
+   "de": {
+    "cases": 100,
+    "macro_f1": 0.83,
+    "evidence": "47/67"
+   },
+   "fr": {
+    "cases": 100,
+    "macro_f1": 0.841,
+    "evidence": "41/67"
+   },
+   "it": {
+    "cases": 100,
+    "macro_f1": 0.832,
+    "evidence": "45/67"
+   }
+  }
+ },
+ "paired": {
+  "both_answered": 300,
+  "counts": {
+   "both right": 241,
+   "section-route right, embed-e5-small wrong": 45,
+   "both wrong": 5,
+   "embed-e5-small right, section-route wrong": 9
+  },
+  "by_part": {
+   "summary": {
+    "both right": 51,
+    "embed-e5-small right, section-route wrong": 4,
+    "section-route right, embed-e5-small wrong": 12
+   },
+   "council": {
+    "both right": 87,
+    "section-route right, embed-e5-small wrong": 15
+   },
+   "committee": {
+    "section-route right, embed-e5-small wrong": 5,
+    "both wrong": 1,
+    "both right": 42,
+    "embed-e5-small right, section-route wrong": 1
+   },
+   "law": {
+    "section-route right, embed-e5-small wrong": 10,
+    "both right": 27,
+    "embed-e5-small right, section-route wrong": 1,
+    "both wrong": 1
+   },
+   "detail": {
+    "both right": 34,
+    "both wrong": 3,
+    "embed-e5-small right, section-route wrong": 3,
+    "section-route right, embed-e5-small wrong": 3
+   }
+  }
+ }
+}
