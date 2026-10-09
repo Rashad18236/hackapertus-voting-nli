@@ -144,3 +144,5 @@
 {"id": "v1.1-row-691-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 1043, "output_tokens": 12, "inference_time_ms": 675}}
 {"id": "v1.1-row-692-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 1286, "output_tokens": 12, "inference_time_ms": 1564}}
 {"id": "v1.1-row-700-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 920, "output_tokens": 12, "inference_time_ms": 822}}
+{"id": "v1.1-row-711-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 1697, "output_tokens": 12, "inference_time_ms": 915}}
+{"id": "v1.1-row-713-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 1415, "output_tokens": 12, "inference_time_ms": 1462}}
