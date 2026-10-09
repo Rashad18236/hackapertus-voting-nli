@@ -84,6 +84,8 @@ def note_call(raw, call):
     """Record a model call's requests (1 plus retries), HTTP 429 answers and endpoint identity (src/llm.py) in raw.
     call is an llm.LLMResult or an llm.LLMError; both carry these three fields."""
     raw["attempts"], raw["http_429"], raw["endpoint"] = call.attempts, call.http_429, call.endpoint
+    if getattr(call, "fallbacks", None):
+        raw["llm_fallbacks"] = call.fallbacks  # session 9: response_format dropped or model name replaced
 
 
 def task_of(case):

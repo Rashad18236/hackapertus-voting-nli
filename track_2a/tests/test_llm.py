@@ -29,6 +29,7 @@ def ok(tokens_in=100, tokens_out=5):
 
 
 def run(responses, sleeps=None):
+    llm.reset_run_state()  # session 9: the fallbacks keep state for a run; every test starts a new run
     calls = list(responses)
 
     def post(*args, **kwargs):

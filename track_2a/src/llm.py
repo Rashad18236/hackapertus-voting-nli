@@ -98,6 +98,7 @@ class LLMResult:
     attempts: int = 1        # requests sent for this call: 1 plus retries
     http_429: int = 0        # how many of them were answered with HTTP 429
     endpoint: dict = field(default_factory=dict)  # endpoint_identity() of the last answer
+    fallbacks: list = field(default_factory=list)  # session 9: fallbacks this call used (see chat())
 
 
 DEFAULT_MODEL = "swiss-ai/Apertus-v1.5-8B"
@@ -123,6 +124,26 @@ def _settings():
     return _first_set("MODEL", "LLM_NAME") or DEFAULT_MODEL, base, key
 
 
+# Fallbacks when the endpoint refuses our request (session 9, A1). They hold for the rest of the run (this
+# process): once response_format was refused it is not sent again, and once the model name was replaced, the
+# new name is used. At most MAX_EXTRA_REQUESTS extra requests per run go to them.
+MAX_EXTRA_REQUESTS = 3
+_run = {"no_response_format": False, "model": None, "models_read": False, "extra_requests": 0, "last_start": 0.0}
+
+
+def reset_run_state():
+    """Forget the run's fallbacks (tests; a new process starts clean anyway)."""
+    _run.update(no_response_format=False, model=None, models_read=False, extra_requests=0, last_start=0.0)
+
+
+def min_interval():
+    """Seconds between the starts of two requests: LLM_MIN_INTERVAL (development runs; default 0, no pause)."""
+    try:
+        return max(0.0, float(os.environ.get("LLM_MIN_INTERVAL") or 0))
+    except ValueError:
+        return 0.0
+
+
 def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
     """Send one chat request and return the answer with usage and timing.
 
@@ -130,26 +151,87 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
     json_object). json_schema (a JSON Schema dict) asks for an answer that
     matches that schema exactly (`response_format` json_schema, strict), which
     also fixes the keys; it takes precedence over json_mode.
+
+    Fallbacks (session 9), each at most once per run and within MAX_EXTRA_REQUESTS extra requests per run:
+    (a) HTTP 400 or 422 to a request with response_format: the same request again without it, and no
+        response_format for the rest of the run (the parsers also read answers that are not forced JSON);
+    (b) HTTP 404, or HTTP 400 once (a) has happened (the model name is the likely cause): read BASE_URL/models
+        once, pick the id that names Apertus v1.5 8B (ignoring case; the shortest if several), and send the
+        request again with it; that id is used for the rest of the run.
+    Tokens and time of every request of the call are counted in its result.
     """
-    model, base, key = _settings()
+    configured_model, base, key = _settings()
     payload = {
-        "model": model,
+        "model": _run["model"] or configured_model,
         "messages": messages,
         "temperature": 0,
         "max_tokens": max_tokens,
     }
-    if json_schema is not None:
-        payload["response_format"] = {"type": "json_schema",
-                                      "json_schema": {"name": "answer", "schema": json_schema, "strict": True}}
-    elif json_mode:
-        payload["response_format"] = {"type": "json_object"}
+    if not _run["no_response_format"]:
+        if json_schema is not None:
+            payload["response_format"] = {"type": "json_schema",
+                                          "json_schema": {"name": "answer", "schema": json_schema, "strict": True}}
+        elif json_mode:
+            payload["response_format"] = {"type": "json_object"}
     headers = {"Authorization": f"Bearer {key}", "User-Agent": USER_AGENT}
 
     start = time.perf_counter()
-    input_tokens = output_tokens = 0  # summed over attempts that report usage
-    attempt = server_retries = rate_retries = http_429 = 0
+    counts = {"input_tokens": 0, "output_tokens": 0, "attempts": 0, "http_429": 0}  # over all requests
+    fallbacks = []
+    response = _post(base, payload, headers, counts)
+    if (response.status_code in (400, 422) and "response_format" in payload
+            and _run["extra_requests"] + 1 <= MAX_EXTRA_REQUESTS):
+        logging.warning("The endpoint refused response_format (HTTP %d); sending the request again without it, "
+                        "and no response_format for the rest of the run", response.status_code)
+        _run["no_response_format"] = True
+        _run["extra_requests"] += 1
+        fallbacks.append("no response_format")
+        payload = {k: v for k, v in payload.items() if k != "response_format"}
+        response = _post(base, payload, headers, counts)
+    if ((response.status_code == 404 or (response.status_code == 400 and _run["no_response_format"]))
+            and not _run["models_read"] and _run["extra_requests"] + 2 <= MAX_EXTRA_REQUESTS):
+        _run["models_read"] = True
+        _run["extra_requests"] += 1
+        picked = pick_model(list_models(base, headers))
+        if picked and picked != payload["model"]:
+            logging.warning("The endpoint refused the model name (HTTP %d); using %s, listed by the endpoint, for "
+                            "the rest of the run", response.status_code, picked)
+            _run["model"] = picked
+            _run["extra_requests"] += 1
+            fallbacks.append(f"model {picked}")
+            payload = {**payload, "model": picked}
+            response = _post(base, payload, headers, counts)
+    elapsed_ms = round((time.perf_counter() - start) * 1000)
+
+    if response.status_code != 200:
+        raise LLMError(f"LLM call failed with HTTP {response.status_code} ({counts['attempts']} attempts): "
+                       f"{response.text[:300]}", counts["attempts"], counts["http_429"], endpoint_identity(response))
+
+    data = response.json()
+    if "prompt_tokens" not in (data.get("usage") or {}):
+        logging.warning("Endpoint returned no token usage; recording 0 tokens")
+    return LLMResult(
+        text=data["choices"][0]["message"]["content"] or "",
+        input_tokens=counts["input_tokens"],
+        output_tokens=counts["output_tokens"],
+        elapsed_ms=elapsed_ms,
+        attempts=counts["attempts"],
+        http_429=counts["http_429"],
+        endpoint=endpoint_identity(response),
+        fallbacks=fallbacks,
+    )
+
+
+def _post(base, payload, headers, counts):
+    """POST one chat request, with the retries for timeouts, HTTP 5xx and HTTP 429 (module docstring); add every
+    attempt's tokens and the attempt and 429 counts to counts. Returns the last response."""
+    server_retries = rate_retries = 0
     while True:
-        attempt += 1
+        counts["attempts"] += 1
+        wait = _run["last_start"] + min_interval() - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _run["last_start"] = time.monotonic()
         try:
             response = requests.post(
                 f"{base}/chat/completions", json=payload, headers=headers, timeout=TIMEOUT_SECONDS
@@ -160,17 +242,18 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
                 logging.warning("LLM call timed out; retrying once")
                 time.sleep(RETRY_PAUSE_SECONDS)
                 continue
-            raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({attempt} attempts)",
-                           attempt, http_429) from None
+            raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({counts['attempts']} attempts)",
+                           counts["attempts"], counts["http_429"]) from None
         except requests.ConnectionError as e:
             # `from None` drops the original exception, whose text includes the URL.
-            raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})", attempt, http_429) from None
+            raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})", counts["attempts"],
+                           counts["http_429"]) from None
 
         usage = _usage(response)
-        input_tokens += usage.get("prompt_tokens", 0)
-        output_tokens += usage.get("completion_tokens", 0)
+        counts["input_tokens"] += usage.get("prompt_tokens", 0)
+        counts["output_tokens"] += usage.get("completion_tokens", 0)
         if response.status_code == 429:
-            http_429 += 1
+            counts["http_429"] += 1
         if response.status_code >= 500 and server_retries < MAX_ATTEMPTS - 1:
             server_retries += 1
             logging.warning("LLM call failed with HTTP %d; retrying once", response.status_code)
@@ -183,25 +266,24 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
                             rate_retries, RATE_LIMIT_RETRIES, wait)
             time.sleep(wait)
             continue
-        break
-    elapsed_ms = round((time.perf_counter() - start) * 1000)
+        return response
 
-    if response.status_code != 200:
-        raise LLMError(f"LLM call failed with HTTP {response.status_code} ({attempt} attempts): "
-                       f"{response.text[:300]}", attempt, http_429, endpoint_identity(response))
 
-    data = response.json()
-    if "prompt_tokens" not in (data.get("usage") or {}):
-        logging.warning("Endpoint returned no token usage; recording 0 tokens")
-    return LLMResult(
-        text=data["choices"][0]["message"]["content"] or "",
-        input_tokens=input_tokens,
-        output_tokens=output_tokens,
-        elapsed_ms=elapsed_ms,
-        attempts=attempt,
-        http_429=http_429,
-        endpoint=endpoint_identity(response),
-    )
+def list_models(base, headers):
+    """The model ids BASE_URL/models lists, or [] if it cannot be read."""
+    try:
+        response = requests.get(f"{base}/models", headers=headers, timeout=TIMEOUT_SECONDS)
+        return [str(m.get("id")) for m in response.json().get("data", []) if isinstance(m, dict) and m.get("id")]
+    except (requests.RequestException, ValueError, AttributeError):
+        return []
+
+
+def pick_model(ids):
+    """The id that names Apertus v1.5 8B, ignoring case ("apertus", "v1.5" and "8b" as a size); the shortest if
+    several (the plain model before variants such as "-thinking"), or None."""
+    found = [i for i in ids if "apertus" in i.lower() and "v1.5" in i.lower()
+             and re.search(r"(?<![\d.])8b\b", i.lower())]
+    return min(found, key=lambda i: (len(i), i)) if found else None
 
 
 def endpoint_identity(response):

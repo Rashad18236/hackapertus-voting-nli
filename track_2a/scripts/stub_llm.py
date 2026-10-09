@@ -50,6 +50,11 @@ whether an Authorization header and a User-Agent were sent, the answer kind,
 and request_sha256, the SHA-256 of the request body: see request_hash);
 POST /_stub/reset clears it. The API key's value is never stored or printed.
 
+Endpoint quirks (session 9, for src/llm.py's fallbacks; module use): Config(reject_response_format=400 or
+422) answers every request that carries response_format with that status (and 7 prompt tokens in usage);
+Config(models=[ids], model_error_status=404) answers a request for any other model with that status, and
+GET /v1/models lists those ids (Config.models_requests counts the reads).
+
 Replay (session 8): --replay TABLE.json, a JSON object {request_sha256: answer
 text}. A request whose hash is in the table gets that text as its answer
 (kind "replay"): a saved real answer for exactly this request. Any other
@@ -87,8 +92,16 @@ def request_hash(payload):
 class Config:
     slow_seconds = 3.0  # how long a STUB_SLOW call waits before its answer
     def __init__(self, label=0, prompt_tokens=100, completion_tokens=10, fail_calls=(), garbage_calls=(),
-                 html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0):
+                 html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0,
+                 reject_response_format=None, models=None, model_error_status=404):
         self.label = label
+        # Endpoint quirks for src/llm.py's fallbacks (session 9, A1): an HTTP status (400 or 422) for every
+        # request that carries response_format; and, with a list of model ids, model_error_status for any other
+        # model name, while GET /v1/models lists exactly these ids.
+        self.reject_response_format = reject_response_format
+        self.models = models
+        self.model_error_status = model_error_status
+        self.models_requests = 0
         self.delay = delay              # seconds to wait before each chat answer (tests of a stopped run)
         self.replay = replay            # {request_sha256: answer text}, or None
         self.keep_payloads = keep_payloads
@@ -179,7 +192,11 @@ def make_handler(config):
             if self.path.rstrip("/") == "/_stub/calls":
                 with config.lock:
                     return self._send(200, {"calls": list(config.calls)})
-            if self.path.rstrip("/") in ("/health", "/v1/models"):
+            if self.path.rstrip("/") in ("/v1/models", "/models"):
+                with config.lock:
+                    config.models_requests += 1
+                return self._send(200, {"data": [{"id": m} for m in (config.models or ["stub"])]})
+            if self.path.rstrip("/") == "/health":
                 return self._send(200, {"data": [{"id": "stub"}]})
             self._send(404, {"error": {"message": "not found"}})
 
@@ -209,6 +226,15 @@ def make_handler(config):
                 config.calls.append(entry)
             if config.delay:
                 time.sleep(config.delay)
+            if config.models is not None and payload.get("model") not in config.models:
+                entry["kind"] = "unknown_model"
+                return self._send(config.model_error_status,
+                                  {"error": {"message": f"stub: model {payload.get('model')!r} not found"}})
+            if config.reject_response_format and "response_format" in payload:
+                entry["kind"] = "rejected_response_format"
+                return self._send(config.reject_response_format,
+                                  {"error": {"message": "stub: response_format is not supported"},
+                                   "usage": {"prompt_tokens": 7, "completion_tokens": 0}})
             kind, label = decide(payload, config, number)
             if kind == "ok" and config.replay is not None and entry["request_sha256"] in config.replay:
                 kind = "replay"
