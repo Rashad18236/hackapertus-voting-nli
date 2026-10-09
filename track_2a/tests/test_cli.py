@@ -105,6 +105,8 @@ class NeverDropACase(unittest.TestCase):
 
     def test_every_context_mode_sends_the_answer_schema(self):
         for mode in cli.context.MODES:
+            if mode == "closed-book":  # shows no page; tested in ClosedBook
+                continue
             with self.subTest(mode=mode):
                 seen = {}
 
@@ -150,6 +152,25 @@ class NeverDropACase(unittest.TestCase):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):
             with self.assertRaises(SystemExit):
                 cli.main()
+
+
+class ClosedBook(unittest.TestCase):
+    """Session 9, E2 (information only): no booklet text, the label kept, no evidence."""
+
+    def test_closed_book_sends_only_vote_and_claim(self):
+        seen = {}
+
+        def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
+            seen["messages"], seen["schema"] = messages, json_schema
+            return llm.LLMResult(text='{"pages": [], "label": 2}', input_tokens=9, output_tokens=3, elapsed_ms=1)
+        with mock.patch.object(llm, "chat", chat), \
+             mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
+             mock.patch.object(cli.Path, "is_file", return_value=True):
+            resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a="closed-book"))
+        self.assertEqual(seen["messages"][1]["content"], "VOTE: v\n\nCLAIM:\nc")
+        self.assertEqual(seen["messages"][0]["content"], cli.nli.PROMPTS_A["A-v0-closed-book"])
+        self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)
+        self.assertEqual((resp["label"], resp["evidence"], raw["pages_sent"]), (2, [], 0))
 
 
 class TaskBSettings(unittest.TestCase):

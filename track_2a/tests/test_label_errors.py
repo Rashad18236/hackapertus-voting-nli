@@ -88,5 +88,17 @@ class L2(unittest.TestCase):
                 self.assertNotIn("second_look", raw)
 
 
+class SectionTopK(unittest.TestCase):
+    """Session 9, E1 (information only): a routed case cut to its k most similar paragraphs."""
+
+    def test_top_k_cuts_the_routed_paragraphs(self):
+        _, full_raw, _ = run(cli.Settings(), ['{"paragraphs": [1], "label": 0}'])
+        self.assertGreater(len(full_raw["paragraphs_sent"]), 1)
+        resp, raw, seen = run(cli.Settings(section_top_k_a=1), ['{"paragraphs": [1], "label": 0}'])
+        self.assertEqual(len(raw["paragraphs_sent"]), 1)
+        self.assertNotIn("\n[2] ", seen[0][1]["content"])
+        self.assertEqual(resp["label"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

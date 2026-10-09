@@ -67,6 +67,8 @@ class Settings:
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
     label_rule_a: bool = False   # L1 (session 9, phase D): the routed prompt plus one sentence on contradictions
+    section_top_k_a: int = 0     # E1 (session 9, information only): if > 0, a routed case keeps only its k paragraphs
+                                 # most similar to the claim (e5), in their order; 0 keeps section-route as it is
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
@@ -127,6 +129,10 @@ def predict_a(case, data_dir, start, raw, settings):
     routed = messages = None
     try:
         routed = context.route(pages, vote, claim_text, settings.context_a)
+        if routed is not None and settings.section_top_k_a > 0:  # E1: cut to the k most similar paragraphs
+            part, paragraphs = routed
+            routed = part, context.VARIANTS[settings.context_a].most_similar(paragraphs, claim_text,
+                                                                             settings.section_top_k_a)
         if routed is not None:
             messages = paragraph_messages(routed, vote, claim_text, settings)
     except Exception as e:
@@ -355,6 +361,8 @@ def main():
                         help="development only: section-route evidence adds halves of cited paragraphs (session 9, A2)")
     parser.add_argument("--label-rule-a", action=argparse.BooleanOptionalAction, default=defaults.label_rule_a,
                         help="development only: L1, the routed prompt plus a sentence on contradictions (session 9, D)")
+    parser.add_argument("--section-top-k-a", type=int, default=defaults.section_top_k_a,
+                        help="development only: E1, keep the k paragraphs most similar to the claim (0: all)")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
                         help="development only: L2, a second call after a neutral answer (session 9, D)")
     parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
@@ -367,7 +375,7 @@ def main():
                         schema_a=args.schema_a, context_a=args.context_a,
                         evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
                         context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
-                        second_look_threshold=args.second_look_threshold)
+                        second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

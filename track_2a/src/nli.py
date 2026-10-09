@@ -188,6 +188,16 @@ First give the numbers of the paragraphs that justify your label, at most three,
 Answer with one JSON object and nothing else, paragraphs first, for example:
 {"paragraphs": [2], "label": 0}"""
 
+# Session 9, E2 (information only): no booklet text. The answer keeps task A's schema; "pages" stays empty.
+PROMPTS_A["A-v0-closed-book"] = """You get a CLAIM about the official Swiss federal voting booklet's section on the ballot named in VOTE, but not the booklet itself. Decide from what you know about this ballot and its booklet:
+0 (entailment) if the booklet supports the claim;
+2 (contradiction) if the booklet states something that cannot be true together with the claim;
+1 (neutral) if the booklet does not deal with the claim, or you cannot tell.
+The claim may be in German, French or Italian.
+
+Answer with one JSON object and nothing else, with an empty list of pages, for example:
+{"pages": [], "label": 0}"""
+
 ANSWER_SCHEMA_A_PARAGRAPHS = {
     "type": "object",
     "properties": {
@@ -212,6 +222,8 @@ def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, ve
 def build_messages_a(booklet_text, vote, claim_text, version=PROMPT_VERSION_A):
     heading = "BOOKLET EXCERPTS" if version == "A-v3-excerpts" else "BOOKLET"
     user = f"{heading}:\n{booklet_text}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
+    if version == "A-v0-closed-book":  # session 9, E2: no booklet text
+        user = f"VOTE: {vote}\n\nCLAIM:\n{claim_text}"
     return [
         {"role": "system", "content": PROMPTS_A[version]},
         {"role": "user", "content": user},
