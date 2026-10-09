@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "00:38",
+ "kind": "model run",
+ "code": "2d4a435",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "val sample of 300 task A cases (data/val/sample300, balanced, seed 42)",
+ "setup": "A-v4-section-route + json_schema {\"paragraphs\",\"label\"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small",
+ "format": "official, paired (E6, val), order alternating",
+ "paired_with": "2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.956,
+  "f1": {
+   "entailment": 0.976,
+   "neutral": 0.955,
+   "contradiction": 0.936
+  },
+  "evidence": {
+   "score": 0.946,
+   "found": 193,
+   "cases": 204
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1222,
+  "mean_time_ms": 1818,
+  "p95_time_ms": 3011
+ }
+}

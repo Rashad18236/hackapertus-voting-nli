@@ -50,6 +50,8 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`](runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12/) | 663c330 | official, paired (E4); paired with `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-excerpts + json_schema, max_tokens 128, top 12 e5 chunks of the vote section | **0.674** (E 0.686, N 0.699, C 0.636) | 0.403 (81/201) | 0 | 0 | 2777 | 2863 | 5754 |
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/section-route` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces (the default since session 6) | **0.834** (E 0.832, N 0.850, C 0.819) | 0.662 (133/201) | 0 | 0 | 1868 | 3229 | 11665 |
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
+| 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/section-route` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces | **0.865** (E 0.901, N 0.883, C 0.811) | 0.588 (120/204) | 0 | 0 | 1827 | 3185 | 12303 |
+| 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/section-route`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/section-route/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.956** (E 0.976, N 0.955, C 0.936) | 0.946 (193/204) | 0 | 0 | 1222 | 1818 | 3011 |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -85,7 +87,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (40): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`
+- **rashad** (42): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`
 
 ## Notes per run
 
@@ -376,6 +378,77 @@ Paired outcomes (300 cases, both arms answered): both right 241, **section-route
 - Evidence misses (19 of 201): 11 predicted neutral (no evidence), 8 cited a paragraph outside the gold passage (3 council, 2 summary, 2 detail, 1 committee; one of these is the committee's disclaimer line "Der Text auf dieser Doppelseite stammt vom Initiativkomitee").
 - The one fallback case (row 1383, committee claim on a vote without a committee) ran as embed-e5-small and was right.
 - **The control arm scores much higher here (0.834) than in E4 (0.711 on `apertus-v1.5-8b-thinking`, with whole-page evidence 0.373).** Different model, different server time and, for evidence, the new default `cited-pieces`; rows from different runs do not compare, only the two arms of this run.
+
+### 2026-10-09, session 7, Part 3 (E6): section-route against embed-e5-small, paired, 300 val task A cases
+
+- Command (from `track_2a/`, on the host, nothing else running): `LLM_NAME=swiss-ai/apertus-v1.5-8b EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/paired_run.py --cases data/val/sample300/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/2026-10-09_rashad_section-route-vs-embed_valA300 --arm '{"name": "section-route", "context_a": "section-route"}' --arm '{"name": "embed-e5-small", "context_a": "embed-e5-small"}'`, 00:38 to 01:04 UTC, code `2d4a435`. Order alternates per case; both arms start with empty embedding caches. Progress log: `paired_run.log`.
+- Cases: `data/val/sample300` (300 of the 580 val cases, balanced over label, claim language and booklet language, seed 42; 105 / 96 / 99 entailment / neutral / contradiction; 204 with a gold passage). No val case was seen while the router or the parser was written.
+- **Model `swiss-ai/apertus-v1.5-8b` on Public AI for all 600 calls** (it answered at 00:38); **0 failed calls, 0 unparseable answers.** One embed-e5-small answer (label 2) cited no page it had been sent, so it has no evidence (format warning, label kept).
+- Scored with the starter's `evaluate.py`; splits from `scripts/paired_analysis.py` (`paired_analysis.json`), whose re-implemented evidence rule gives the official totals (193 and 120).
+
+| | section-route (val) | embed-e5-small (val) | section-route (dev, E5) | embed-e5-small (dev, E5) |
+|---|---|---|---|---|
+| **Macro-F1** | **0.956** | 0.865 | 0.953 | 0.834 |
+| F1 entailment | 0.976 | 0.901 | 0.965 | 0.832 |
+| F1 neutral | 0.955 | 0.883 | 0.947 | 0.850 |
+| F1 contradiction | 0.936 | 0.811 | 0.947 | 0.819 |
+| **Evidence** | **0.946 (193/204)** | 0.588 (120/204) | 0.905 (182/201) | 0.662 (133/201) |
+| Mean input tokens | **1,222** | 1,827 | 1,210 | 1,868 |
+| Median / p95 time | 1.5 s / **3.0 s** | 1.8 s / 12.3 s | 1.6 s / 3.9 s | 1.9 s / 11.7 s |
+| Routed / fell back | 299 / 1 | – | 299 / 1 | – |
+
+Confusion matrices on val (rows: gold; columns: predicted entailment, neutral, contradiction):
+
+| gold | section-route | | | embed-e5-small | | |
+|---|---|---|---|---|---|---|
+| entailment | 103 | 1 | 1 | 96 | 4 | 5 |
+| neutral | 0 | 96 | 0 | 0 | 87 | 9 |
+| contradiction | 3 | 8 | 88 | 12 | 10 | 77 |
+
+By claim type and language (Macro-F1; evidence found / gold cases), val next to dev:
+
+| | Val cases | Val section-route | Val embed-e5-small | Val evidence s-r / e5 | Dev section-route | Dev embed-e5-small |
+|---|---|---|---|---|---|---|
+| summary | 60 | 0.924 | 0.794 | 50/52 / 20/52 | 0.929 | 0.789 |
+| council | 88 | 0.974 | 0.938 | 54/57 / 37/57 | 1.000 | 0.852 |
+| committee | 53 | 0.942 | 0.853 | 28/30 / 21/30 | 0.960 | 0.863 |
+| law | 51 | 0.983 | 0.806 | 34/35 / 23/35 | 0.944 | 0.668 |
+| detail | 48 | 0.912 | 0.814 | 27/30 / 19/30 | 0.817 | 0.818 |
+| same-language | 101 | 0.970 | 0.858 | 66/68 / 47/68 | 0.930 | 0.910 |
+| cross-language | 199 | 0.949 | 0.867 | 127/136 / 73/136 | 0.965 | 0.796 |
+| booklet de | 101 | 0.950 | 0.869 | 64/68 / 33/68 | 0.909 | 0.830 |
+| booklet fr | 101 | 0.938 | 0.870 | 62/68 / 44/68 | 0.980 | 0.841 |
+| booklet it | 98 | 0.980 | 0.856 | 67/68 / 43/68 | 0.970 | 0.832 |
+
+Macro-F1 by booklet -> claim language (starter's scorer, 31 to 34 cases each):
+
+| booklet -> claim | Val section-route | Val embed-e5-small | Dev section-route | Dev embed-e5-small |
+|---|---|---|---|---|
+| de->de | 0.970 | 0.878 | 0.824 | 0.852 |
+| de->fr | 0.939 | 0.850 | 0.938 | 0.760 |
+| de->it | 0.941 | 0.875 | 0.970 | 0.877 |
+| fr->de | 0.939 | 0.942 | 0.942 | 0.740 |
+| fr->fr | 0.939 | 0.817 | 1.000 | 0.909 |
+| fr->it | 0.938 | 0.845 | 1.000 | 0.877 |
+| it->de | 0.965 | 0.798 | 0.971 | 0.672 |
+| it->fr | 0.971 | 0.884 | 0.970 | 0.851 |
+| it->it | 1.000 | 0.877 | 0.970 | 0.970 |
+
+Paired outcomes on val (300 cases, both arms answered): both right 255, **only section-route right 32**, only embed-e5-small right 5, both wrong 8 (sign test on the 37 discordant cases: p = 7e-6; dev: 45 against 9). By claim type:
+
+| | both right | only section-route right | only embed-e5-small right | both wrong |
+|---|---|---|---|---|
+| summary | 48 | 8 | 1 | 3 |
+| council | 82 | 4 | 1 | 1 |
+| committee | 45 | 5 | 1 | 2 |
+| law | 40 | 10 | 1 | 0 |
+| detail | 40 | 5 | 1 | 2 |
+
+- **The dev result holds on val: section-route 0.956 against 0.865 (+0.091; dev 0.953 against 0.834, +0.119).** Evidence 0.946 against 0.588 (dev 0.905 against 0.662), 33 % fewer input tokens, p95 time 3.0 s against 12.3 s.
+- section-route is better or equal in every claim type and in 8 of the 9 language pairs (French booklet with German claim: 0.939 against 0.942). On val its weakest part is detail (0.912), as on dev (0.817), but less so; German booklet with German claim, the one pair it lost on dev, is now its win (0.970 against 0.878).
+- Its remaining errors are again mostly gold entailment or contradiction called neutral (9 of 13 wrong answers); it never calls a neutral claim entailed or contradicted (0 of 96).
+- The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
+- **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
 
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.
