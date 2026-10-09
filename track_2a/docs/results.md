@@ -50,6 +50,8 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`](runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12/) | 663c330 | official, paired (E4); paired with `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-excerpts + json_schema, max_tokens 128, top 12 e5 chunks of the vote section | **0.674** (E 0.686, N 0.699, C 0.636) | 0.403 (81/201) | 0 | 0 | 2777 | 2863 | 5754 |
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/section-route` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces (the default since session 6) | **0.834** (E 0.832, N 0.850, C 0.819) | 0.662 (133/201) | 0 | 0 | 1868 | 3229 | 11665 |
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
+| 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/section-route` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces | **0.865** (E 0.901, N 0.883, C 0.811) | 0.588 (120/204) | 0 | 0 | 1827 | 3185 | 12303 |
+| 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/section-route`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/section-route/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.956** (E 0.976, N 0.955, C 0.936) | 0.946 (193/204) | 0 | 0 | 1222 | 1818 | 3011 |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -80,6 +82,7 @@ check, the best evidence score a model could reach by citing it.
 - [`2026-10-08_rashad_e3-embed-errors_devA300`](runs/2026-10-08_rashad_e3-embed-errors_devA300/): 2026-10-08 19:16 UTC, rashad; Part 1: was the gold passage in the chunks sent? (scripts/search_or_reading.py). Of 84 wrong answers (5 failed calls apart): 18 search misses, 39 reading errors with the gold passage sent, 27 on gold-neutral cases; 16 of the 18 misses are cross-language.
 - [`2026-10-08_rashad_evidence-loss-e4_devA201`](runs/2026-10-08_rashad_evidence-loss-e4_devA201/): 2026-10-08 22:27 UTC, rashad; Steps 2 and 4 (session 5): where evidence is lost, and the realistic maximum with cited pages only (scripts/evidence_loss.py). Of 201 cases: hit 75, gold page not sent 23, predicted neutral 20, gold page sent but not cited 43, cited but text did not match 40; maximum with cited pages only and whole-page items: 0.657.
 - [`2026-10-08_rashad_route-check_devA300`](runs/2026-10-08_rashad_route-check_devA300/): 2026-10-08 23:36 UTC, rashad; Part 2 (session 6): booklets parsed, claims routed, and what the routed part's paragraphs hold of the gold passage. 44/44 booklets parse (131 votes); 300/300 claims routed, 299 cases routed; in 200/200 routed evidence cases a sent paragraph matches the gold passage (embed-e5-small: 0.741); 3,233 characters sent (embed-e5-small: 5,386).
+- [`2026-10-09_rashad_route-check_valA580`](runs/2026-10-09_rashad_route-check_valA580/): 2026-10-09 00:33 UTC, rashad; Part 2 (session 7): router and routed part on claims the router was not written for. 45/45 booklets parse; 580/580 claims routed, 577 cases routed (3 committee claims on a vote without a committee fall back); a sent paragraph lies inside the gold passage in 399/400 routed evidence cases; 3,108 characters sent.
 - [`2026-10-09_rashad_unseen-booklets_15`](runs/2026-10-09_rashad_unseen-booklets_15/): 2026-10-09 00:52 UTC, rashad; each booklet parsed with src/booklet.py: votes, parts, boxes, paragraphs per part, vote found again by its detail-page title; then with the proposed patterns applied in memory. 2026-09-27: 3 of 3 booklets parse completely (6 of 6 votes). 2018-2019: 0 of 12 booklets parse (0 of 27 votes; every vote found, no parts: the arguments are titled without 'und Parlament'). With the proposed patterns: 14 of 15 booklets, 32 of 33 votes; dev unchanged (44 of 44, identical parts).
 - [`2026-10-09_rashad_evidence-check_devA300`](runs/2026-10-09_rashad_evidence-check_devA300/): 2026-10-09 01:01 UTC, rashad; every evidence item of E5's two arms checked against the page it names: verbatim after the scorer's normalisation, at most 5,000 characters, at most five items, none on a neutral answer. embed-e5-small: all 769 items verbatim on their page. section-route: 271 of 284 verbatim, 1 verbatim only without hyphen joining, 12 not one contiguous piece of their page (the parser drops lone '-' lines or a page number inside the paragraph; partial ratio against the page 99.0 to 99.9). No item over 5,000 characters, no response over five items, no evidence on a neutral answer, every page exists.
 - [`2026-10-09_rashad_router-stress_300`](runs/2026-10-09_rashad_router-stress_300/): 2026-10-09 01:06 UTC, rashad; each claim through claim_router.route(); outcome against the part a careful reader would route it to; then with the proposed patterns applied in memory. Router as it is: 131 of 300 routed to the intended part, 4 to a wrong part (source named after the subject: 'Der Bundesrat ist laut Zusammenfassung ...'), 153 fall back although a part was intended, 12 correct fallbacks; every opening with a leading quote or dash falls back. With the proposed patterns: 273 right, 0 wrong, 15 fallbacks; 0 of 877 dataset claims change route.
@@ -89,7 +92,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (44): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`
+- **rashad** (47): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`
 
 ## Notes per run
 
@@ -381,6 +384,77 @@ Paired outcomes (300 cases, both arms answered): both right 241, **section-route
 - The one fallback case (row 1383, committee claim on a vote without a committee) ran as embed-e5-small and was right.
 - **The control arm scores much higher here (0.834) than in E4 (0.711 on `apertus-v1.5-8b-thinking`, with whole-page evidence 0.373).** Different model, different server time and, for evidence, the new default `cited-pieces`; rows from different runs do not compare, only the two arms of this run.
 
+### 2026-10-09, session 7, Part 3 (E6): section-route against embed-e5-small, paired, 300 val task A cases
+
+- Command (from `track_2a/`, on the host, nothing else running): `LLM_NAME=swiss-ai/apertus-v1.5-8b EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/paired_run.py --cases data/val/sample300/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/2026-10-09_rashad_section-route-vs-embed_valA300 --arm '{"name": "section-route", "context_a": "section-route"}' --arm '{"name": "embed-e5-small", "context_a": "embed-e5-small"}'`, 00:38 to 01:04 UTC, code `2d4a435`. Order alternates per case; both arms start with empty embedding caches. Progress log: `paired_run.log`.
+- Cases: `data/val/sample300` (300 of the 580 val cases, balanced over label, claim language and booklet language, seed 42; 105 / 96 / 99 entailment / neutral / contradiction; 204 with a gold passage). No val case was seen while the router or the parser was written.
+- **Model `swiss-ai/apertus-v1.5-8b` on Public AI for all 600 calls** (it answered at 00:38); **0 failed calls, 0 unparseable answers.** One embed-e5-small answer (label 2) cited no page it had been sent, so it has no evidence (format warning, label kept).
+- Scored with the starter's `evaluate.py`; splits from `scripts/paired_analysis.py` (`paired_analysis.json`), whose re-implemented evidence rule gives the official totals (193 and 120).
+
+| | section-route (val) | embed-e5-small (val) | section-route (dev, E5) | embed-e5-small (dev, E5) |
+|---|---|---|---|---|
+| **Macro-F1** | **0.956** | 0.865 | 0.953 | 0.834 |
+| F1 entailment | 0.976 | 0.901 | 0.965 | 0.832 |
+| F1 neutral | 0.955 | 0.883 | 0.947 | 0.850 |
+| F1 contradiction | 0.936 | 0.811 | 0.947 | 0.819 |
+| **Evidence** | **0.946 (193/204)** | 0.588 (120/204) | 0.905 (182/201) | 0.662 (133/201) |
+| Mean input tokens | **1,222** | 1,827 | 1,210 | 1,868 |
+| Median / p95 time | 1.5 s / **3.0 s** | 1.8 s / 12.3 s | 1.6 s / 3.9 s | 1.9 s / 11.7 s |
+| Routed / fell back | 299 / 1 | – | 299 / 1 | – |
+
+Confusion matrices on val (rows: gold; columns: predicted entailment, neutral, contradiction):
+
+| gold | section-route | | | embed-e5-small | | |
+|---|---|---|---|---|---|---|
+| entailment | 103 | 1 | 1 | 96 | 4 | 5 |
+| neutral | 0 | 96 | 0 | 0 | 87 | 9 |
+| contradiction | 3 | 8 | 88 | 12 | 10 | 77 |
+
+By claim type and language (Macro-F1; evidence found / gold cases), val next to dev:
+
+| | Val cases | Val section-route | Val embed-e5-small | Val evidence s-r / e5 | Dev section-route | Dev embed-e5-small |
+|---|---|---|---|---|---|---|
+| summary | 60 | 0.924 | 0.794 | 50/52 / 20/52 | 0.929 | 0.789 |
+| council | 88 | 0.974 | 0.938 | 54/57 / 37/57 | 1.000 | 0.852 |
+| committee | 53 | 0.942 | 0.853 | 28/30 / 21/30 | 0.960 | 0.863 |
+| law | 51 | 0.983 | 0.806 | 34/35 / 23/35 | 0.944 | 0.668 |
+| detail | 48 | 0.912 | 0.814 | 27/30 / 19/30 | 0.817 | 0.818 |
+| same-language | 101 | 0.970 | 0.858 | 66/68 / 47/68 | 0.930 | 0.910 |
+| cross-language | 199 | 0.949 | 0.867 | 127/136 / 73/136 | 0.965 | 0.796 |
+| booklet de | 101 | 0.950 | 0.869 | 64/68 / 33/68 | 0.909 | 0.830 |
+| booklet fr | 101 | 0.938 | 0.870 | 62/68 / 44/68 | 0.980 | 0.841 |
+| booklet it | 98 | 0.980 | 0.856 | 67/68 / 43/68 | 0.970 | 0.832 |
+
+Macro-F1 by booklet -> claim language (starter's scorer, 31 to 34 cases each):
+
+| booklet -> claim | Val section-route | Val embed-e5-small | Dev section-route | Dev embed-e5-small |
+|---|---|---|---|---|
+| de->de | 0.970 | 0.878 | 0.824 | 0.852 |
+| de->fr | 0.939 | 0.850 | 0.938 | 0.760 |
+| de->it | 0.941 | 0.875 | 0.970 | 0.877 |
+| fr->de | 0.939 | 0.942 | 0.942 | 0.740 |
+| fr->fr | 0.939 | 0.817 | 1.000 | 0.909 |
+| fr->it | 0.938 | 0.845 | 1.000 | 0.877 |
+| it->de | 0.965 | 0.798 | 0.971 | 0.672 |
+| it->fr | 0.971 | 0.884 | 0.970 | 0.851 |
+| it->it | 1.000 | 0.877 | 0.970 | 0.970 |
+
+Paired outcomes on val (300 cases, both arms answered): both right 255, **only section-route right 32**, only embed-e5-small right 5, both wrong 8 (sign test on the 37 discordant cases: p = 7e-6; dev: 45 against 9). By claim type:
+
+| | both right | only section-route right | only embed-e5-small right | both wrong |
+|---|---|---|---|---|
+| summary | 48 | 8 | 1 | 3 |
+| council | 82 | 4 | 1 | 1 |
+| committee | 45 | 5 | 1 | 2 |
+| law | 40 | 10 | 1 | 0 |
+| detail | 40 | 5 | 1 | 2 |
+
+- **The dev result holds on val: section-route 0.956 against 0.865 (+0.091; dev 0.953 against 0.834, +0.119).** Evidence 0.946 against 0.588 (dev 0.905 against 0.662), 33 % fewer input tokens, p95 time 3.0 s against 12.3 s.
+- section-route is better or equal in every claim type and in 8 of the 9 language pairs (French booklet with German claim about even: 0.939 against 0.942). On val its weakest part is detail (0.912), as on dev (0.817), but less so; German booklet with German claim, the one pair it lost on dev, is now its win (0.970 against 0.878).
+- Its remaining errors are again mostly gold entailment or contradiction called neutral (9 of 13 wrong answers); it never calls a neutral claim entailed or contradicted (0 of 96).
+- The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
+- **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
+
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.
 
@@ -492,6 +566,48 @@ Paired outcomes (300 cases, both arms answered): both right 241, **section-route
 - Law claims have the lowest coverage (0.610): the four longest law texts (Covid-19 law, 19,000 to 21,000 characters) are cut to the 8 most similar paragraphs, which are short legal clauses (1,300 to 1,900 characters sent), and lines under 40 characters ("Art. 2", "3 Aufgehoben") are dropped by the paragraph splitter. Summary claims get the whole summary spread, of which the gold passage is usually the left page (paragraphs inside 0.458).
 - Characters sent: 3,233 on average for routed evidence cases, 3,274 over all 299 routed cases (embed-e5-small: 5,386).
 
+### 2026-10-09, session 7, Part 2: section-route offline on the validation set (no model calls)
+
+- Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/route_check.py --cases data/val --out <folder>`, 00:33 to about 00:38 UTC, code `f73b650`. Output: `summary.json`, `per_case.jsonl`.
+- Val: 580 task A cases from the rows in neither dev nor test, without the six rows used for router patterns in session 6 (`data/val/rows.json`). Nothing in the router or the parser was changed after this run.
+
+**Booklets.** All 45 booklets the val cases use parse completely (132 of 132 votes); 44 are the dev booklets, one (2025-02-09, French) had not been opened before. No problem reported.
+
+**Claims.** The router assigns a part to all 580 val claims (no unrouted claim). Routes: council 175, detail 74, summary 139, committee 105, law 87. 577 cases are routed; 3 fall back to embed-e5-small.
+
+**What the routed part holds**, val next to dev (session 6, `2026-10-08_rashad_route-check_devA300`). Hit: a sent paragraph lies inside the gold passage (starter's evidence rule); coverage: share of the gold passage's 200-character windows in the sent text.
+
+| | Val cases | Val hit | Val coverage | Val characters sent | Dev cases | Dev hit | Dev coverage | Dev characters sent |
+|---|---|---|---|---|---|---|---|---|
+| summary | 111 | 1.000 | 0.921 | 2,129 | 55 | 1.000 | 0.921 | 2,246 |
+| council | 117 | 1.000 | 0.951 | 3,125 | 68 | 1.000 | 0.945 | 3,141 |
+| committee | 63 | 0.984 | 0.941 | 3,071 | 26 | 1.000 | 0.962 | 3,102 |
+| law | 63 | 1.000 | 0.602 | 3,325 | 25 | 1.000 | 0.610 | 3,482 |
+| detail | 46 | 1.000 | 0.755 | 5,178 | 26 | 1.000 | 0.791 | 5,452 |
+| same-language | 129 | 1.000 | 0.868 | 3,076 | 67 | 1.000 | 0.889 | 3,350 |
+| cross-language | 271 | 0.996 | 0.861 | 3,123 | 133 | 1.000 | 0.874 | 3,173 |
+| booklet de | 144 | 0.993 | 0.868 | 2,966 | 66 | 1.000 | 0.881 | 3,067 |
+| booklet fr | 155 | 1.000 | 0.859 | 3,144 | 67 | 1.000 | 0.877 | 3,130 |
+| booklet it | 101 | 1.000 | 0.864 | 3,255 | 67 | 1.000 | 0.878 | 3,499 |
+| **all routed** | 400 | 0.998 | 0.863 | 3,108 | 200 | 1.000 | 0.879 | 3,233 |
+
+**Every failure, in full.**
+
+Unrouted claims: none.
+
+Cases that fall back to embed-e5-small (3), all committee claims on the OECD minimum-tax vote of 2023-06-18, which has no committee (its "no" side is a parliamentary minority), as the one dev fallback:
+
+- `v1.1-row-646-A` (booklets/2023_06_18_de.pdf): "Das Komitee vertritt die Auffassung, dass die Altersvorsorgereform eine Anhebung des Umwandlungssatzes auf 6,8 % vorsieht."
+- `v1.1-row-912-A` (booklets/2023_06_18_fr.pdf): "Il comitato afferma che introdurre un salario minimo legale di 20 franchi l’ora migliorerebbe le condizioni lavorative dei dipendenti a basso reddito in tutti i settori dell’economia."
+- `v1.1-row-1036-A` (booklets/2023_06_18_it.pdf): "Das Komitee vertritt die Ansicht, die Minderheit habe einen niedrigeren Anteil für die Bundesregierung verlangt und die Einnahmen stärker ungleich zwischen den Kantonen verteilen wollen, wodurch die steuerlich attraktiven Kantone zusätzlich begünstigt würden."
+
+Routed evidence cases where no sent paragraph lies inside the gold passage (1):
+
+- `v1.1-row-235-A` (booklets/2026_03_08_de.pdf, vote "Volksinitiative « Ja zu einer unabhängigen, freien Schweizer Währung mit Münzen oder Banknoten (Bargeld ist Freiheit) » und direkter Gegenentwurf (Bundesbeschluss über die schweizerische Währung und die Bargeldversorgung)"), routed to `committee` (pages [20, 21]): "Le comité estime que le contre-projet direct répond aux préoccupations de l’initiative sans compliquer inutilement l’ordre juridique, puisqu’il reprend des formulations déjà existantes." The gold passage lies on page [22], the parliamentary debate ("Debatte Parlament") of the cash initiative and its counter-proposal, which the parser assigns to the part `parliament`, not `committee`.
+
+- **On claims it was not written for, the router routes every claim and the routed part holds the gold passage in 399 of 400 cases (dev: 200 of 200).** Coverage and characters sent are close to dev's; law and detail are again cut most often to 8 paragraphs (15 of 63 and 16 of 46 cases).
+- As agreed, nothing was changed because of these results; the one miss and the three fallbacks are listed for the report.
+
 ### 2026-10-09, checks without a model, Part 5: booklets the parser has never seen
 
 - Booklets: the Federal Chancellery's PDFs for the five most recent vote dates in neither dev nor test that have a booklet: 2026-09-27 (published after the dataset; admin.ch) and 2019-05-19, 2019-02-10, 2018-11-25, 2018-09-23 (bk.admin.ch archive "Sammlung der Abstimmungsbüchlein seit 1978"), each in German, French and Italian; downloaded to `output/booklets_unseen/` (git-ignored) by `scripts/fetch_unseen_booklets.py`. Every 2020-2026 date in the archive is already in the dataset, so older dates were the only other unseen ones.
@@ -543,7 +659,7 @@ Paired outcomes (300 cases, both arms answered): both right 241, **section-route
 
 ### 2026-10-09, checks without a model, Part 8: hygiene (secrets in the git history, licences, sizes)
 
-- **Secrets.** `python3 scripts/scan_secrets.py` (from the repository root, after `git fetch origin '+refs/heads/*:refs/remotes/origin/*'`): every line added in every commit reachable from any ref, and every file name ever added. Known token formats (`sk-`, `hf_`, `ghp_`/`github_pat_`, `xox?-`, `AKIA`, `AIza`, private key blocks, JWTs), values of 16+ characters assigned to names containing KEY, TOKEN, SECRET, PASSWORD or AUTH, `Bearer` values, and `.env`/`*.pem`/`*.key`/`id_rsa` files. A find would be printed as its first four characters and its length only. **0 findings** (last run: SCAN_TEXT). Only `.env.example` was ever committed, with placeholders. The scanner finds made-up keys of each kind and ignores placeholders (checked by hand in this session).
+- **Secrets.** `python3 scripts/scan_secrets.py` (from the repository root, after `git fetch origin '+refs/heads/*:refs/remotes/origin/*'`): every line added in every commit reachable from any ref, and every file name ever added. Known token formats (`sk-`, `hf_`, `ghp_`/`github_pat_`, `xox?-`, `AKIA`, `AIza`, private key blocks, JWTs), values of 16+ characters assigned to names containing KEY, TOKEN, SECRET, PASSWORD or AUTH, `Bearer` values, and `.env`/`*.pem`/`*.key`/`id_rsa` files. A find would be printed as its first four characters and its length only. **0 findings** (last run, 02:24 UTC: 100 commits on 13 refs, 73,449 added lines, 589 file names). Only `.env.example` was ever committed, with placeholders. The scanner finds made-up keys of each kind and ignores placeholders (checked by hand in this session).
 - **Licences.** `licences_image.json`: every Python distribution in the image, read from its metadata inside the image (26, all MIT, BSD, Apache-2.0, PSF-2.0, or MPL-2.0 for certifi and part of tqdm). `licences_dev.json`: `requirements-dev.txt` and its dependencies on the host (16; BSD, MIT, Apache-2.0). `debian_packages.txt`: the 87 Debian packages of `python:3.12-slim` with the `License:` lines of their copyright files (GPL-2+, GPL-3+, LGPL, BSD, Expat/MIT, public domain and others, as in any Debian image; 5 packages have no machine-readable licence line). Embedding model `intfloat/multilingual-e5-small` at commit `614241f6`: MIT (model card metadata). Dataset: MIT. The starter repository has no licence and is not copied.
 - **Sizes.** `data/`: 9,934,439 bytes (9.6 MB; limit 100 MB). Image: 1,293,593,836 bytes uncompressed on the GitHub runner (`docker image inspect`), 681 MB compressed content here; 487 MB of it is a second copy of the e5 model (proposal P11 in `docs/checks_no_model.md`).
 

@@ -17,8 +17,8 @@
  "summary": "No secret found in any commit on any branch (values never printed). Runtime packages: MIT, BSD, Apache-2.0, PSF-2.0 and MPL-2.0 (certifi, part of tqdm); development packages BSD, MIT, Apache-2.0; e5 model MIT; base image: 87 Debian packages (GPL, LGPL, BSD, MIT and others, as in any Debian image). data/ 9.6 MB; image 1.29 GB uncompressed, 681 MB compressed.",
  "results": {
   "secret_findings": 0,
-  "commits_scanned": "SCAN_COMMITS",
-  "refs_scanned": "SCAN_REFS",
+  "commits_scanned": 100,
+  "refs_scanned": 13,
   "runtime_python_packages": 26,
   "debian_packages": 87,
   "dev_packages_closure": 16,

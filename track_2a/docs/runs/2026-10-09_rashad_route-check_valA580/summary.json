@@ -1,0 +1,203 @@
+{
+ "booklets": 45,
+ "booklets_complete": 45,
+ "votes": 132,
+ "votes_ok": 132,
+ "booklets_by_language_year": {
+  "de 2020": "2/2",
+  "de 2021": "3/3",
+  "de 2022": "1/1",
+  "de 2023": "1/1",
+  "de 2024": "4/4",
+  "de 2025": "2/2",
+  "de 2026": "2/2",
+  "fr 2020": "2/2",
+  "fr 2021": "3/3",
+  "fr 2022": "1/1",
+  "fr 2023": "1/1",
+  "fr 2024": "4/4",
+  "fr 2025": "2/2",
+  "fr 2026": "2/2",
+  "it 2020": "2/2",
+  "it 2021": "3/3",
+  "it 2022": "1/1",
+  "it 2023": "1/1",
+  "it 2024": "4/4",
+  "it 2025": "2/2",
+  "it 2026": "2/2"
+ },
+ "booklet_problems": [],
+ "claims": 580,
+ "claims_routed": 580,
+ "routes": {
+  "council": 175,
+  "detail": 74,
+  "summary": 139,
+  "committee": 105,
+  "law": 87
+ },
+ "cases_routed": 577,
+ "fallback_reasons": {
+  "part 'committee' empty for this vote": 3
+ },
+ "unrouted_claims": [],
+ "fallback_cases": [
+  {
+   "id": "v1.1-row-646-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2023_06_18_de.pdf",
+   "vote": "Umsetzung des OECD/G20- Projekts zur Besteuerung grosser Unternehmensgruppen",
+   "claim": "Das Komitee vertritt die Auffassung, dass die Altersvorsorgereform eine Anhebung des Umwandlungssatzes auf 6,8 % vorsieht."
+  },
+  {
+   "id": "v1.1-row-912-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2023_06_18_fr.pdf",
+   "vote": "Mise en œuvre du projet de l’OCDE et du G20 sur l’imposition des grands groupes d’entreprises",
+   "claim": "Il comitato afferma che introdurre un salario minimo legale di 20 franchi l’ora migliorerebbe le condizioni lavorative dei dipendenti a basso reddito in tutti i settori dell’economia."
+  },
+  {
+   "id": "v1.1-row-1036-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2023_06_18_it.pdf",
+   "vote": "Attuazione del progetto dell’OCSE e del G20 sull’imposizione dei grandi gruppi di imprese",
+   "claim": "Das Komitee vertritt die Ansicht, die Minderheit habe einen niedrigeren Anteil für die Bundesregierung verlangt und die Einnahmen stärker ungleich zwischen den Kantonen verteilen wollen, wodurch die steuerlich attraktiven Kantone zusätzlich begünstigt würden."
+  }
+ ],
+ "routed_evidence_misses": [
+  {
+   "id": "v1.1-row-235-A",
+   "part": "committee",
+   "booklet": "booklets/2026_03_08_de.pdf",
+   "vote": "Volksinitiative « Ja zu einer unabhängigen, freien Schweizer Währung mit Münzen oder Banknoten (Bargeld ist Freiheit) » und direkter Gegenentwurf (Bundesbeschluss über die schweizerische Währung und die Bargeldversorgung)",
+   "claim": "Le comité estime que le contre-projet direct répond aux préoccupations de l’initiative sans compliquer inutilement l’ordre juridique, puisqu’il reprend des formulations déjà existantes.",
+   "part_pages": [
+    20,
+    21
+   ],
+   "gold_pages": [
+    22
+   ],
+   "gold_start": "Volksinitiative « Ja zu einer unabhängigen, freien Schweizer Währung mit Münzen oder Banknoten (Bargeld ist Freiheit) » und direkter Gegenentwurf (Bundesbeschluss über die schweizerische Währung und die Bargeldversorgung)\n\n\nNEIN. Einzelne Nationalrätinnen und Nationalräte lehnen den Gegenentwurf ab,"
+  }
+ ],
+ "evidence_cases": 401,
+ "evidence_cases_routed": 400,
+ "routed_evidence": {
+  "cases": 400,
+  "hit": 0.998,
+  "coverage_mean": 0.863,
+  "coverage_at_least_0.9": 0.588,
+  "pages_hold_gold": 0.853,
+  "inside_share": 0.783,
+  "mean_chars_sent": 3108,
+  "trimmed": 31
+ },
+ "by_part": {
+  "summary": {
+   "cases": 111,
+   "hit": 1.0,
+   "coverage_mean": 0.921,
+   "coverage_at_least_0.9": 0.405,
+   "pages_hold_gold": 0.874,
+   "inside_share": 0.456,
+   "mean_chars_sent": 2129,
+   "trimmed": 0
+  },
+  "council": {
+   "cases": 117,
+   "hit": 1.0,
+   "coverage_mean": 0.951,
+   "coverage_at_least_0.9": 0.863,
+   "pages_hold_gold": 0.726,
+   "inside_share": 0.964,
+   "mean_chars_sent": 3125,
+   "trimmed": 0
+  },
+  "committee": {
+   "cases": 63,
+   "hit": 0.984,
+   "coverage_mean": 0.941,
+   "coverage_at_least_0.9": 0.825,
+   "pages_hold_gold": 0.825,
+   "inside_share": 0.833,
+   "mean_chars_sent": 3071,
+   "trimmed": 0
+  },
+  "law": {
+   "cases": 63,
+   "hit": 1.0,
+   "coverage_mean": 0.602,
+   "coverage_at_least_0.9": 0.19,
+   "pages_hold_gold": 0.984,
+   "inside_share": 0.989,
+   "mean_chars_sent": 3325,
+   "trimmed": 15
+  },
+  "detail": {
+   "cases": 46,
+   "hit": 1.0,
+   "coverage_mean": 0.755,
+   "coverage_at_least_0.9": 0.543,
+   "pages_hold_gold": 0.978,
+   "inside_share": 0.759,
+   "mean_chars_sent": 5178,
+   "trimmed": 16
+  }
+ },
+ "by_language": {
+  "same-language": {
+   "cases": 129,
+   "hit": 1.0,
+   "coverage_mean": 0.868,
+   "coverage_at_least_0.9": 0.558,
+   "pages_hold_gold": 0.86,
+   "inside_share": 0.797,
+   "mean_chars_sent": 3076,
+   "trimmed": 8
+  },
+  "cross-language": {
+   "cases": 271,
+   "hit": 0.996,
+   "coverage_mean": 0.861,
+   "coverage_at_least_0.9": 0.601,
+   "pages_hold_gold": 0.849,
+   "inside_share": 0.776,
+   "mean_chars_sent": 3123,
+   "trimmed": 23
+  }
+ },
+ "by_booklet_language": {
+  "de": {
+   "cases": 144,
+   "hit": 0.993,
+   "coverage_mean": 0.868,
+   "coverage_at_least_0.9": 0.639,
+   "pages_hold_gold": 0.882,
+   "inside_share": 0.792,
+   "mean_chars_sent": 2966,
+   "trimmed": 9
+  },
+  "fr": {
+   "cases": 155,
+   "hit": 1.0,
+   "coverage_mean": 0.859,
+   "coverage_at_least_0.9": 0.581,
+   "pages_hold_gold": 0.819,
+   "inside_share": 0.791,
+   "mean_chars_sent": 3144,
+   "trimmed": 16
+  },
+  "it": {
+   "cases": 101,
+   "hit": 1.0,
+   "coverage_mean": 0.864,
+   "coverage_at_least_0.9": 0.525,
+   "pages_hold_gold": 0.861,
+   "inside_share": 0.758,
+   "mean_chars_sent": 3255,
+   "trimmed": 6
+  }
+ },
+ "mean_chars_sent_all_routed": 3144
+}

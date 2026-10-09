@@ -1,0 +1,31 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "00:33",
+ "kind": "offline check",
+ "code": "f73b650 (scripts/route_check.py with failures listed; src/ as in PR #10 plus the routing-error fallback)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "val, all 580 task A cases (401 with gold label 0 or 2); the 45 booklets they use",
+ "setup": "Part 2 (session 7): router and routed part on claims the router was not written for",
+ "format": "offline, no model calls; paragraph matches by the starter's evidence rule as re-implemented in scripts/evidence_loss.py",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "45/45 booklets parse; 580/580 claims routed, 577 cases routed (3 committee claims on a vote without a committee fall back); a sent paragraph lies inside the gold passage in 399/400 routed evidence cases; 3,108 characters sent.",
+ "results": {
+  "booklets_complete": "45/45",
+  "votes_ok": "132/132",
+  "claims_routed": "580/580",
+  "cases_routed": 577,
+  "evidence_cases_routed": 400,
+  "hit": 0.998,
+  "coverage_mean": 0.863,
+  "coverage_at_least_0.9": 0.588,
+  "pages_hold_gold": 0.853,
+  "inside_share": 0.783,
+  "mean_chars_sent": 3108
+ }
+}

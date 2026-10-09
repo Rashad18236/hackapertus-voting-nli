@@ -1,7 +1,8 @@
 # Checks without a model (2026-10-09)
 
 Nine checks of the submission that need no model call, asked by Rashad and run
-autonomously on branch `checks-no-model` (from `main` at `de27e4c`), PR
+autonomously on branch `checks-no-model` (from `main` at `de27e4c`; `main`
+with session 7 merged in at the end), PR
 [#12](https://github.com/Rashad18236/hackapertus-voting-nli/pull/12).
 
 Ground rules kept: **no model calls**, `.env` never loaded, no API key used;
@@ -20,7 +21,7 @@ is in [Proposals](#proposals)). Nothing was merged.
 | 4 | Clean-machine workflow `.github/workflows/clean-machine.yml` | **Pass on GitHub** (no internet, read-only root and `/data`): image 1.29 GB uncompressed, build 19–22 s, cold run on the examples 19 s. Reproduced locally |
 | 5 | 15 unseen booklets (5 dates outside dev and test) | **2026-09-27: 3 of 3 complete. 2018–2019: 0 of 12** (votes found, no parts). Proposal: 14 of 15, dev unchanged |
 | 6 | Router stress test, 300 reworded openings | **131 right, 4 wrong part, 153 fall back**, 12 correct fallbacks. Proposal: 273 right, 0 wrong, dataset routes unchanged |
-| 7 | Speed and memory per dev booklet, host and container (2 CPUs, 4 GB) | **Measured.** Container, 300 dev cases without the model: default context p95 19.3 s, worst 44.4 s, peak 1.8 GiB; section-route p95 3.7 s, worst 31.9 s (long law parts), peak 2.7 GiB (under 4 GB). Cold start, one task A case: 26–27 s (default), 3 s (section-route) |
+| 7 | Speed and memory per dev booklet, host and container (2 CPUs, 4 GB) | **Measured.** Container, 300 dev cases without the model: `embed-e5-small` p95 19.3 s, worst 44.4 s, peak 1.8 GiB; section-route p95 3.7 s, worst 31.9 s (long law parts), peak 2.7 GiB (under 4 GB). Cold start, one task A case: 26–27 s (`embed-e5-small`), 3 s (`section-route`, the default since session 7) |
 | 8 | Hygiene: secrets in git history, licences, sizes | **No secret found** (every commit on all refs); the image's Python packages and the e5 model are permissive (MPL-2.0 for two), its Debian base has the usual GPL/LGPL packages; `data/` 9.6 MB; image 1.29 GB uncompressed (681 MB compressed) |
 | 9 | `technical_report.md`, `docs/remaining_errors.md` | **Written**; gaps marked TODO; the 14 errors are all reading errors |
 
@@ -154,11 +155,13 @@ in-memory id), and it shows the read-only root works.
 |---|---|---|---|
 | 1 (PR opened) | `20edd79` | **pass**: build 22 s, run 19 s, image 1,293,593,836 bytes (1.29 GB), 2 calls for 2 cases, format "errors: none", internet unreachable from the network | **fail**: `results.md` not regenerated at that commit, and one order test assumed the e5 files (the hunting law's long part needs e5; without it the case gets the fallback). Fixed in `8eec72c` and `db6770f` (reproduced in a worktree without `models/` first, then 110 passed) |
 | 2 (dispatched) | `5574e20` | **pass**: build 19 s, run 19 s | **pass** (24 s) |
-| FINAL_RUN_ROW |
+| 3 (dispatched) | `c0bc479` | **pass**: build 25 s, run 18 s (`actions/checkout@v5`) | **pass** (28 s, `actions/setup-python@v6`) |
 
 The pushes from this session did not start new `pull_request` runs (only
 opening the PR did), so runs after the first were started by hand
-(`workflow_dispatch`). Pushes by the team start them as usual.
+(`workflow_dispatch`). Pushes by the team start them as usual. Runs 1 and 2 (and the local reproduction) came before session 7 was merged
+into this branch, when the default task A context was still `embed-e5-small`:
+their task A case embedded the whole booklet. Later runs use `section-route`.
 
 ## Part 5: unseen booklets
 
@@ -230,7 +233,7 @@ CPUs, 15 GB. Container: the image with `--cpus 2 --memory 4g --memory-swap
 
 | Context | Host total | Host median / p95 / max | Container total | Container median / p95 / max | Peak memory host / container |
 |---|---|---|---|---|---|
-| `embed-e5-small` (default) | 412 s | 0.02 / 10.4 / 21.6 s | 786 s | 0.06 / 19.3 / 44.4 s | 1,853 / 1,800 MB |
+| `embed-e5-small` (default until session 7; `section-route`'s fallback) | 412 s | 0.02 / 10.4 / 21.6 s | 786 s | 0.06 / 19.3 / 44.4 s | 1,853 / 1,800 MB |
 | `section-route` | 170 s | 0.03 / 2.3 / 14.9 s | 287 s | 0.04 / 3.7 / 31.9 s | 2,809 / 2,763 MB |
 
 **Slowest cases** (container):
@@ -258,7 +261,7 @@ parallel session's), and every file name ever added: known token formats
 (`sk-`, `hf_`, `ghp_`/`github_pat_`, `xox?-`, `AKIA`, `AIza`, private key
 blocks, JWTs), values of 16+ characters assigned to any `*KEY*`, `*TOKEN*`,
 `*SECRET*`, `*PASSWORD*`, `*AUTH*` name, `Bearer` values, and `.env`,
-`*.pem`, `*.key`, `id_rsa` files. **Result: 0 findings** (SCAN_COUNTS). Only
+`*.pem`, `*.key`, `id_rsa` files. **Result: 0 findings** (last run before the final commits: 100 commits on 13 refs, 73,449 added lines, 589 file names). Only
 `.env.example` was ever committed, with placeholders. The scanner was checked
 on made-up keys of each kind (all found) and placeholders (none flagged).
 GitHub's own secret scanning was not run: its tool needs the content pasted

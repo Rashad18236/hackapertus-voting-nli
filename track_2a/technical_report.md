@@ -30,13 +30,14 @@ Headline dev results (official starter scorer):
   the same prompt and answer schema, sending only the vote's pages instead of
   the whole booklet raised Macro-F1 from 0.669 to 0.732 and cut input tokens
   from 39,206 to 15,868 per case [`s3-E2-A300`, paired].
-- **Task A, best setting so far:** `section-route` (send the part of the vote
-  the claim names, as numbered paragraphs) reached Macro-F1 **0.953** and
-  evidence **0.905** with 1,210 input tokens per case and a p95 time of 3.9 s,
-  against 0.834 / 0.662 / 1,868 / 11.7 s for the current default
-  `embed-e5-small` [`2026-10-08_rashad_section-route-vs-embed_devA300`, paired].
-  **TODO:** the team has not yet decided whether `section-route` becomes the
-  default (the code's default is still `embed-e5-small`).
+- **Task A, the default since session 7:** `section-route` (send the part of
+  the vote the claim names, as numbered paragraphs) reached Macro-F1 **0.953**
+  and evidence **0.905** with 1,210 input tokens per case and a p95 time of
+  3.9 s, against 0.834 / 0.662 / 1,868 / 11.7 s for `embed-e5-small`
+  [`2026-10-08_rashad_section-route-vs-embed_devA300`, paired], and held on
+  300 validation cases nobody looked at while building it: **0.956** /
+  **0.946** / 1,222 / 3.0 s against 0.865 / 0.588 / 1,827 / 12.3 s
+  [`2026-10-09_rashad_section-route-vs-embed_valA300`, paired].
 
 Both tasks are above the starter's minimum for a valid submission (task B
 0.75, task A 0.60) on dev. The private test set may differ (section 6).
@@ -96,8 +97,8 @@ variant (`--context-a`):
 |---|---|---|
 | `full` | every page, each after a line `=== PAGE n ===` (the full-document baseline) | `A-v3-fulldoc` |
 | `vote-section` | only the pages about the vote named in `vote`, found from page headers | `A-v3-fulldoc` |
-| `embed-e5-small` (**current default**) | the 8 chunks (at most 1,000 characters, cut at whitespace) most similar to the claim by cosine similarity of multilingual-e5-small embeddings (`query:`/`passage:` prefixes), in page order, each after `=== PAGE n ===` | `A-v3-excerpts` |
-| `section-route` (**recommended**, TODO decide) | the part of the vote that the claim's opening names, as numbered paragraphs (below); falls back to `embed-e5-small` when it cannot route | `A-v4-section-route` |
+| `embed-e5-small` (the default until session 7; `section-route`'s fallback) | the 8 chunks (at most 1,000 characters, cut at whitespace) most similar to the claim by cosine similarity of multilingual-e5-small embeddings (`query:`/`passage:` prefixes), in page order, each after `=== PAGE n ===` | `A-v3-excerpts` |
+| `section-route` (**default** since session 7) | the part of the vote that the claim's opening names, as numbered paragraphs (below); runs as `embed-e5-small` when it cannot route or routing fails | `A-v4-section-route` |
 
 **`section-route` in detail.**
 
@@ -183,7 +184,11 @@ answers carry no evidence.
 - **Splits** (`data/README.md`): by voting date, seed 42, duplicates removed.
   Test: 5 booklet dates, 267 rows (534 cases), **never run**. Dev: 300 rows
   (600 cases) from the other 15 dates, balanced over labels and the nine
-  language pairs (labels 102 / 99 / 99).
+  language pairs (labels 102 / 99 / 99). Validation (session 7,
+  `data/val/`): the 580 deduplicated rows in neither dev nor test (minus six
+  whose openings were used to write router patterns), task A only, with a
+  balanced sample of 300 for paired runs; same voting dates as dev, new
+  claims.
 - **Booklets:** the Federal Chancellery's PDFs, downloaded from the dataset's
   `booklet_url` by `scripts/fetch_dev_booklets.py` and not committed (one
   example booklet in `examples/booklets/` for `make run`). **TODO:** the
@@ -222,7 +227,10 @@ to back.
 | `vote-section-embed-e5-small-k12` | | 0.674 | 0.403 | 2,777 | 2.9 s / 5.8 s |
 | **Task A, E5 (paired)** [`2026-10-08_rashad_section-route-vs-embed_devA300`] | 8b | | | | |
 | `section-route` | | **0.953** | **0.905** | 1,210 | 2.0 s / 3.9 s |
-| `embed-e5-small` (current default) | | 0.834 | 0.662 | 1,868 | 3.2 s / 11.7 s |
+| `embed-e5-small` | | 0.834 | 0.662 | 1,868 | 3.2 s / 11.7 s |
+| **Task A, validation set (paired)** [`2026-10-09_rashad_section-route-vs-embed_valA300`] | 8b | | | | |
+| `section-route` | | **0.956** | **0.946** | 1,222 | 1.8 s / 3.0 s |
+| `embed-e5-small` | | 0.865 | 0.588 | 1,827 | 3.2 s / 12.3 s |
 
 "8b" = `swiss-ai/apertus-v1.5-8b`, "thinking" = `swiss-ai/apertus-v1.5-8b-thinking`,
 both on Public AI. Times are wall-clock per case as the pipeline records them.
@@ -242,7 +250,9 @@ Further measured steps:
   language 0.851, cross-language 0.687)
   [`2026-10-08_kaan_retrieval-check_embed-e5-small`]; the routed part holds it
   in 200 of 200 routed evidence cases, and all 44 dev booklets parse (131 of
-  131 votes) [`2026-10-08_rashad_route-check_devA300`].
+  131 votes) [`2026-10-08_rashad_route-check_devA300`]; on the validation
+  set, 577 of 580 cases are routed and the routed part holds the gold passage
+  in 399 of 400 [`2026-10-09_rashad_route-check_valA580`].
 - **E5 in detail:** `section-route` was right where the embedding was wrong
   in 45 cases and the reverse in 9 (sign test on the 54 discordant cases: p = 7e-7); 11 of its 14
   wrong answers call a supported or refuted claim neutral. In all 14, a
@@ -282,9 +292,11 @@ Further measured steps:
 
 ## 6. Limitations
 
-- **Tuned and measured on the same 300 dev cases.** Prompts, the router's
-  patterns, the parser's checks and the vote-match threshold were written with
-  the dev data in view. The test split and the private set have not been run.
+- **Tuned on the 300 dev cases.** Prompts, the router's patterns, the
+  parser's checks and the vote-match threshold were written with the dev data
+  in view. The validation set (new claims, same booklets) confirms the result
+  (0.956); new booklets were checked only offline (section 5); the test split
+  and the private set have not been run.
 - **`section-route` depends on the claims' openings.** Claims that name their
   source in another way fall back to `embed-e5-small` (still answered, not
   better); the stress test above shows which wordings do. A source named
@@ -338,8 +350,7 @@ Further measured steps:
 
 ## 8. Next steps
 
-- Decide the task A default (`section-route` recommended) and tag the
-  submission.
+- Tag the submission (`section-route` is the default since session 7).
 - One change per paired comparison: a larger character budget for long detail
   and law parts instead of the 8 most similar paragraphs; the remaining
   "called neutral" errors (all 14 are reading errors).
