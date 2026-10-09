@@ -9,8 +9,8 @@ Reports, for the dev split only:
 1. Booklets: how many parse completely (every vote passes the checks of
    src/booklet.py), by language and year, and every problem found.
 2. Claims: how many the router assigns a part (src/claim_router.py), every
-   unrouted claim in full, and how many cases fall back to embed-e5-small
-   (no route, vote not found, or the part is empty for that vote).
+   unrouted claim in full, and every case that falls back to embed-e5-small
+   (no route, vote not found, or the part is empty for that vote), in full.
 3. For the 201 cases with a gold passage (labels 0 and 2), on the paragraphs
    section-route would send:
    - hit: at least one sent paragraph matches the gold passage under the
@@ -29,6 +29,7 @@ Reports, for the dev split only:
    - inside: the share of sent paragraphs that match the gold passage;
    - characters sent (paragraph text as shown to the model).
    Split by part and by language (claim language vs booklet language).
+   Every routed case without a hit is listed in full.
 
 Writes summary.json and per_case.jsonl to --out.
 """
@@ -92,22 +93,27 @@ def main():
     cases = load(args.cases / "cases.jsonl")
     gold = {g["id"]: g for g in load(args.cases / "expected-labels.jsonl")}
 
-    per_case, unrouted, fallback_reasons = [], [], Counter()
+    per_case, unrouted, fallbacks, misses, fallback_reasons = [], [], [], [], Counter()
     for case in cases:
         claim, vote = case["claim"]["text"], case["vote"]
         pages = parse.load_pages(args.booklets / Path(case["booklet"]["path"]).name)
         part = claim_router.route(claim)
         found = booklet.find_vote(booklet.parse(pages), vote)
         routed = section_route.route(pages, vote, claim)
+        reason = None
         if part is None:
             unrouted.append({"id": case["id"], "language": case["claim"]["language"], "claim": claim})
-            fallback_reasons["no route"] += 1
+            reason = "no route"
         elif found is None:
-            fallback_reasons["vote not found in the booklet"] += 1
+            reason = "vote not found in the booklet"
         elif not found.ok:
-            fallback_reasons["vote's structure not found"] += 1
+            reason = "vote's structure not found"
         elif routed is None:
-            fallback_reasons[f"part '{part}' empty for this vote"] += 1
+            reason = f"part '{part}' empty for this vote"
+        if reason:
+            fallback_reasons[reason] += 1
+            fallbacks.append({"id": case["id"], "reason": reason, "booklet": case["booklet"]["path"], "vote": vote,
+                              "claim": claim})
         row = {"id": case["id"], "part": part, "routed": routed is not None,
                "claim_language": case["claim"]["language"], "booklet_language": case["booklet"]["language"],
                "cross": case["claim"]["language"] != case["booklet"]["language"], "gold_label": gold[case["id"]]["label"]}
@@ -130,6 +136,10 @@ def main():
                 row["inside_share"] = sum(inside) / len(inside)
                 row["pages_hold_gold"] = bool(gold_pages) and set(gold_pages) <= set(found.parts[part])
                 row["coverage"] = coverage(gold_norm, [t for _, t in paragraphs], pages)
+                if not row["hit"]:
+                    misses.append({"id": case["id"], "part": part, "booklet": case["booklet"]["path"], "vote": vote,
+                                   "claim": claim, "part_pages": found.parts[part], "gold_pages": gold_pages,
+                                   "gold_start": g["reference"][:300]})
         per_case.append(row)
 
     ev = [r for r in per_case if "gold_pages" in r]
@@ -163,7 +173,7 @@ def main():
         "claims": len(cases), "claims_routed": len(cases) - len(unrouted),
         "routes": dict(Counter(r["part"] for r in per_case)),
         "cases_routed": sum(r["routed"] for r in per_case), "fallback_reasons": dict(fallback_reasons),
-        "unrouted_claims": unrouted,
+        "unrouted_claims": unrouted, "fallback_cases": fallbacks, "routed_evidence_misses": misses,
         "evidence_cases": len(ev), "evidence_cases_routed": len(routed_ev),
         "routed_evidence": stats(routed_ev), "by_part": by_part, "by_language": by_lang,
         "by_booklet_language": by_booklet_lang,

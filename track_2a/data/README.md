@@ -7,6 +7,9 @@
 | `dev/expected-labels.jsonl` | Gold labels for dev (and the gold passage for non-neutral rows), as written by the starter. **Never mount this into the prediction container.** |
 | `test/cases.jsonl`, `test/expected-labels.jsonl` | 534 held-out requests (267 rows × 2) and their labels. **Do not run on these until the final evaluation.** |
 | `splits.json` | Which dataset rows are in dev and test, the test booklets, and the seed. |
+| `val/cases.jsonl`, `val/expected-labels.jsonl` | Session 7: 580 task A requests from the rows in neither dev nor test, and their labels. **Never mount the labels into the prediction container.** |
+| `val/sample300/` | The balanced 300-case sample of val used for paired runs (same two files). |
+| `val/rows.json` | Which rows are in val and in the sample, and the six rows left out (below). |
 
 `examples/cases.jsonl` (outside `data/`) holds two dev requests, one task A
 and one task B, for `make run`.
@@ -56,5 +59,24 @@ identical files.
 
 These are the same rows as in the pre-contract baseline (`baseline-v0`);
 only the file format changed.
+
+### Validation set "val" (session 7)
+
+`python3 scripts/make_val.py --starter-cases /some/dir` (the same starter
+output as above) writes `val/`:
+
+1. The deduplicated rows that are in neither dev nor test: 586, all from the
+   15 dev booklets (voting dates), none from a test booklet.
+2. Minus six rows (323, 592, 756, 1068, 1078, 1301): their claim openings were
+   used in session 6 to add four patterns to `src/claim_router.py`, so they are
+   not unseen. 580 rows remain; each gives one task A case (task B is not
+   included).
+3. `val/sample300/`: 300 of them, balanced over label, claim language and
+   booklet language by the same round-robin as dev, seed 42 (8 to 12 cases per
+   cell; labels 105 / 96 / 99).
+
+Val measures the claim router and the routed variant on claims they were not
+written for. Its booklets are the dev booklets, so it does not test the
+booklet parser on new booklets.
 
 Size: the whole `data/` directory is about 10 MB (limit 100 MB).
