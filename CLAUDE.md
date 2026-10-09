@@ -281,6 +281,10 @@ calls**, every change behind two gates that compare it with a reference:
   is left out (19 responses; evidence score unchanged).
 - All five applied; G1 and G2 held for each (E changed only the evidence of
   the 19 responses that repeated a text). Not done: P5, P8, P11, P12.
+- `main` with PR #13 (the same input fix as A) was merged in; our reader was
+  kept because it also ends a line at a carriage return alone (`main`'s
+  answered 0 cases of such a file). After the merge: G1 and G2 unchanged,
+  136 tests, clean-machine workflow green (run 13).
 
 Previous stage: task A context, `section-route` as the default.
 
