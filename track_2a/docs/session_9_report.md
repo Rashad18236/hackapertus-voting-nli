@@ -4,7 +4,48 @@
 merged, no tag), run unattended by Claude Code for Rashad. Decisions:
 `docs/decisions/2026-10-09-1707_rashad_session-9.md`; status log: `docs/session_9_status.md`.
 
-⟨FIRST PAGE: finished, experiments, defaults changed, stability, dropped⟩
+## In short
+
+**Finished:** every phase, A to E, and FINISH. Nothing was dropped for time. Phases C and D each changed a
+default under their fixed rules, and phase A changed one; phases B and E changed nothing. The test split, the
+splits and the scorer were not touched; no key was printed, logged or committed.
+
+**Defaults changed, each by its rule:**
+
+| Default | Rule | Dev | Val | Commit |
+|---|---|---|---|---|
+| Task A evidence: halves of the cited paragraphs up to five items (A2) | G1 and every label unchanged, evidence not lower on dev and val | evidence 0.906 → 0.925 (replay of E5) | 0.946 → 0.956 (replay of E6) | `453e5b4` |
+| Task B: references over 8,000 characters cut to the first line plus the 8 most similar paragraphs (B-cut) | ≤ 0.01 below current (all and same-backend cases), ≥ 25 % fewer input tokens, on dev and val | 0.967 = 0.967, −38 % tokens | 0.961 vs 0.957, −37 % | `13da75a` |
+| Task A prompt: one sentence on what makes a contradiction (L1) | +0.01 on dev, +0.005 on val, neutral recall ≥ 0.98 on both | 0.980 vs 0.966, recall 1.000 | 0.961 vs 0.950, recall 1.000 | `50cb320` |
+
+**Final defaults, all 600 dev cases through the Docker image:** task A **0.980** (evidence **0.980**, 1,238
+input tokens), task B **0.967** (1,231 input tokens, was 1,994). On all 580 val rows: task A 0.961 (evidence
+0.958), task B 0.961.
+
+**What each experiment showed:**
+
+- **A1** `llm.py` now survives an endpoint that refuses `response_format` or the model name (tests against the
+  fake model; at most three extra requests).
+- **B (offline):** task A's 95 % interval on dev and val is 0.938–0.970; all of E6's routed val errors had the
+  gold passage in front of the model (reading errors); task B references over 8,000 characters are 99 of 105
+  times neutral (a dataset artefact, never used); a similarity threshold (0.845) flags 10 of 11 wrong neutral
+  answers.
+- **C:** cutting long task B references keeps Macro-F1 and saves 37–38 % of input tokens; numbering them with
+  task A's prompt (B-para) was 0.004 worse.
+- **D:** one sentence (L1) fixed most "called neutral" contradictions (7 → 2 on dev, 21 → 14 on val) without
+  losing a neutral case; a second look (L2) fixed fewer (+0.010 dev, +0.003 val) and stays off.
+- **E1:** whole booklet 0.858 (37.6k tokens) < 8 similar chunks 0.898 < the routed part **0.989** (1.2k);
+  4 paragraphs keep 0.979, 1 paragraph drops to 0.769. **E2:** without the booklet Apertus scores 0.435.
+  **E3:** Apertus as router agrees with the rules on 278 of 300 dev claims but routes 17 stress openings to a
+  wrong part (rules 0).
+
+**Stability points** (the image built at `7edbae4`, 17:26 UTC, before session 9's default changes; the same settings each time; all 600 dev cases):
+
+⟨stability table⟩
+
+**Dropped for time:** nothing. **Not done:** the 4-paragraph cut on val, an Apertus fallback router, L2 as a
+default (all reported as options).
+
 
 ## Phase A: open items
 
@@ -183,4 +224,61 @@ Assembly's recommendation, which Apertus calls council). On the 300 stress openi
 wrong part 17 (rules 0), fallback 0 (rules 15). About 220 input and 8 output tokens and 1.3 s per call. The
 rules stay the router.
 
-⟨FINISH, model calls and tokens, not verified⟩
+## FINISH
+
+- **Final defaults on all 600 dev cases through the Docker image** (`2026-10-09_rashad_final-defaults_dev600`,
+  image `hackapertus-voting-nli:final` built at `50cb320`, 21:22–21:44 UTC, one backend):
+
+  | Task | Macro-F1 | Evidence | Mean input / output tokens | Mean / p95 time |
+  |---|---|---|---|---|
+  | A (300) | **0.980** | **0.980** | 1,238 / 14.5 | 2.2 / 4.5 s |
+  | B (300) | **0.967** | – | 1,231 / 8.4 | 2.0 / 3.8 s |
+
+- **New replay reference** `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`: the final code's 1,180
+  requests (600 dev, 580 val), each answered from a saved real answer (the final dev run; the val L1 arm). The
+  replay reproduces them exactly (0 label, 0 evidence differences): dev A 0.980 / 0.980, B 0.967, val A
+  0.961 / 0.958. It replaces the session 8 reference for G1/G2.
+- Tests: 189 pass, 1 skipped (`pytest`, after every code change). Clean-machine workflow: ⟨CI⟩.
+- `technical_report.md` rewritten to six A4 pages at 10 pt (`technical_report.pdf`, built by
+  `scripts/build_report_pdf.sh`: pandoc and headless Chromium); template sections kept; token usage and
+  inference time in section 5. Remaining TODOs: team name and members only.
+- `CLAUDE.md` has a session 9 section; `docs/session_9_status.md` logs every phase.
+
+## Model calls and tokens
+
+Every call went to Public AI's `swiss-ai/apertus-v1.5-8b` (the model named in `.env`), at most one request
+per second, one run at a time. No call failed and none was retried (0 HTTP 429, 0 5xx). Tokens are the
+endpoint's `usage` as recorded per case (gateway cache hits included: the endpoint reports their tokens too).
+
+| Run | Model calls | HTTP requests | Input tokens | Output tokens |
+|---|---|---|---|---|
+| A4 stability point 1 | 600 | 600 | 961,224 | 6,959 |
+| C dev (3 arms) | 900 | 900 | 1,380,182 | 9,272 |
+| C val (2 arms) | 1,160 | 1,160 | 1,848,717 | 10,358 |
+| D dev (3 arms) | 917 | 917 | 1,107,589 | 13,282 |
+| D val (3 arms) | 1,779 | 1,779 | 2,088,309 | 25,776 |
+| E1 context curve (6 arms) | 600 | 600 | 4,264,620 | 9,387 |
+| E2 closed book (2 arms) | 600 | 600 | 438,123 | 7,690 |
+| FINISH final defaults | 600 | 600 | 740,677 | 6,871 |
+| E3 Apertus as router | 600 | 600 | 126,204 | 4,580 |
+| **Total** | **7,756** | **7,756** | **12,955,645** | **94,175** |
+
+The gates, the replay reference and every test used the fake model (`scripts/stub_llm.py`), not the endpoint.
+
+## What was not verified
+
+- **Other backends and servers.** Every one of session 9's answers came from one Public AI backend
+  (blablador, fingerprint `...dd237840`); the featherless backend that served 39 % of the answers of a run at 02:11 UTC
+  answered none. All adoption rules were therefore checked on one backend only ("same backend" equals "all
+  cases" everywhere); how B-cut and L1 behave on another backend or on the evaluation's server is unknown.
+- **Time.** Times include gateway cache hits (identical requests within about 10 minutes; up to two thirds of
+  an arm in phase D) and, in the phase C dev run, two CPU-heavy gate runs on the same machine. Time was not
+  part of any rule; B-cut's extra CPU time (about 0.3 s per case for embedding long references) was measured
+  only on this machine.
+- **The L2 threshold** was chosen on E5's dev answers (B6) and tested on the same dev cases; only its val run
+  is independent (+0.003).
+- **E1 used 100 cases**; its differences of 0.01 are one case. Cutting to 4 paragraphs was not run on val.
+- **Unseen booklets** were checked offline only (session 8); the test split and the private set were not run.
+- **The booklets' reuse terms** were read, not resolved: one booklet is committed as an example.
+- **Pages** in evidence are the PDF pages of the quoted text; whether the official scorer checks pages, and
+  with which rule, is unknown (B2 shows what three rules would give).

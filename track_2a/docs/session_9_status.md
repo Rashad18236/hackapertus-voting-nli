@@ -33,17 +33,24 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (21:22) E3 Apertus as router: 278/300 agree with the rules (dev); stress 283 vs 285 right, 17 vs 0 wrong part.
 - (21:20) Final image `hackapertus-voting-nli:final` built at `50cb320` (defaults: B-cut, L1, halves).
 
+- (21:44) FINISH final run: all 600 dev cases with the final defaults through the image: task A 0.980
+  (evidence 0.980), task B 0.967.
+- (21:56) New replay reference `2026-10-09_rashad_prompt-snapshot-final_devAB-valA` (1,180 saved real
+  answers, replay exact); CLAUDE.md session 9; 189 tests pass.
+- (22:05) Technical report (6 pages PDF) and session report drafted; only the stability points 2 and 3 are
+  missing from them.
+
 ## Running
 
-- FINISH: all 600 dev cases with the final defaults through the final image (started about 21:23 UTC).
+- nothing (the model is idle until stability point 2).
 
 ## Next
 
-- Score the final run; new replay reference (snapshot of the final code + the final run's dev answers + the
-  D-val L1 arm's val answers); gates; tests; CI.
-- Stability points 2 (about 02:00 UTC) and 3 (about 10:00 UTC): `stability.sh 2|3`, image
-  `hackapertus-voting-nli:stability` (built at `7edbae4`, before A2), exactly point 1's settings.
-- FINISH texts: technical report (≤ 6 pages PDF), session report, CLAUDE.md.
+- About 02:00 UTC: stability point 2 (`$SP/s9/stability.sh 2`, image `hackapertus-voting-nli:stability`);
+  score with the starter and `scripts/stability_report.py --split-task-b`; run.json, NOTES; commit, push.
+- About 10:00 UTC: stability point 3, the same; then the three-point comparison
+  (`scripts/stability_report.py --points` with all three) into the technical report's stability paragraph
+  and the session report's first page; rebuild `technical_report.pdf` (≤ 6 pages); CI green; push by 13:00.
 
 ## Numbers so far
 
@@ -59,3 +66,4 @@ Updated after every phase. If the session is restarted with "continue", work goe
 | Phase D val (580 A, interleaved) | current 0.950 / L1 0.961 / L2 0.954; tokens 1,178 / 1,206 / 1,217 | – |
 | E1 (100 dev A) | full 0.858 (37.6k tokens), section-route 0.989 (1.2k) | – |
 | E2 (300 dev A) | closed book 0.435, section-route 0.980 | – |
+| Final defaults (600 dev, Docker, 21:22–21:44 UTC) | 0.980, evidence 0.980, 1,238 tokens | 0.967, 1,231 tokens |
