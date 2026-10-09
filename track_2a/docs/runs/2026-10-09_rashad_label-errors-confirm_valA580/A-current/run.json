@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "19:28",
+ "kind": "model run",
+ "code": "5e1d864 (task A code as in 86791db)",
+ "variant": "section-route",
+ "cases": "val, all 580 task A cases (data/val/cases.jsonl)",
+ "format": "official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D confirmation)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-09_rashad_label-errors-confirm_valA580/L1",
+  "2026-10-09_rashad_label-errors-confirm_valA580/L2"
+ ],
+ "setup": "default before this run: section-route, A-v4-section-route + json_schema, evidence with halves (A2)",
+ "results": {
+  "macro_f1": 0.95,
+  "f1": {
+   "entailment": 0.979,
+   "neutral": 0.94,
+   "contradiction": 0.932
+  },
+  "evidence": {
+   "score": 0.943,
+   "found": 378,
+   "cases": 401
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1178,
+  "mean_time_ms": 1199,
+  "p95_time_ms": 2218
+ }
+}
