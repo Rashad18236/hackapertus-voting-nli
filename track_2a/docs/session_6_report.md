@@ -10,9 +10,31 @@ actual run on the dev split, scored with the starter's `evaluate.py` (commit
 
 Fixed decision (Rashad): task A evidence contains only what Apertus cited.
 
-**In progress:** the paired run of Part 3 is running; its results, the summary and the recommendation follow when it ends.
+## 1. In short
 
-<!-- PART3-SUMMARY -->
+- **Evidence pieces (Part 0).** Splitting each page Apertus cited into
+  1,000-character pieces, one evidence item each, raises E4's evidence score
+  from 0.373 to 0.542 with the same answers. It is the default now.
+- **Routing (Parts 1 and 2).** A claim's opening names the part of the vote
+  its gold passage comes from ("according to the summary", "the Federal
+  Council holds", "the committee holds", "according to the text put to the
+  vote", "if the vote is accepted"). A new parser finds these parts in all
+  44 dev booklets, and the router reads the opening of all 300 dev claims.
+  The part sent to Apertus holds the gold passage in all 200 routed cases
+  that have one (the embedding search: 0.741), with fewer characters.
+- **Paired run (Part 3).** On all 300 dev task A cases, `section-route`
+  against today's default `embed-e5-small`, same model
+  (`swiss-ai/apertus-v1.5-8b`), case by case:
+
+| | `section-route` | `embed-e5-small` |
+|---|---|---|
+| **Macro-F1** | **0.953** | 0.834 |
+| **Evidence** | **0.905** | 0.662 |
+| Input tokens per case | **1,210** | 1,868 |
+| Median / p95 time | 1.6 s / **3.9 s** | 1.9 s / 11.7 s |
+
+- **Recommendation: make `section-route` the task A default** (not changed
+  here, as asked). See section 6 for the reasons and the risks.
 
 ## 2. Part 0: evidence as pieces of the cited pages
 
@@ -139,4 +161,148 @@ be read; the parser was written without it.
   part holds the gold passage in 200 of 200 routed evidence cases (needed
   0.90).
 
-<!-- PART3 -->
+## 5. Part 3: the paired run (E5)
+
+`docs/runs/2026-10-08_rashad_section-route-vs-embed_devA300/` (both arms,
+`NOTES.md`, `paired_analysis.json`).
+
+**Setup.** All 300 dev task A cases. For each case both settings ran one
+after the other, the order alternating from case to case, so the endpoint's
+drift affects both equally. Model `swiss-ai/apertus-v1.5-8b` on Public AI for
+all 600 calls (it was up, so the thinking model was not needed); 0 failed
+calls, 0 unparseable answers. 23:41 to 00:07 UTC.
+
+- `section-route`: prompt `A-v4-section-route`, the routed part as numbered
+  paragraphs, the answer `{"paragraphs": [...], "label": ...}` by
+  json_schema, evidence = the cited paragraphs. 299 cases routed; 1 fell back
+  to `embed-e5-small` (a committee claim on a vote without a committee).
+- `embed-e5-small` (control, today's default): prompt `A-v3-excerpts`, the 8
+  chunks most similar to the claim, evidence `cited-pieces`.
+
+**Labels.**
+
+| | `section-route` | `embed-e5-small` |
+|---|---|---|
+| Macro-F1 | **0.953** | 0.834 |
+| F1 entailment | 0.965 | 0.832 |
+| F1 neutral | 0.947 | 0.850 |
+| F1 contradiction | 0.947 | 0.819 |
+
+Confusion matrices (rows: gold; columns: predicted entailment, neutral,
+contradiction):
+
+| gold | `section-route` | `embed-e5-small` |
+|---|---|---|
+| entailment (102) | 97 / 4 / 1 | 77 / 8 / 17 |
+| neutral (99) | 0 / 99 / 0 | 3 / 85 / 11 |
+| contradiction (99) | 2 / 7 / 90 | 3 / 8 / 88 |
+
+The embedding's most frequent error, a true statement called a
+contradiction (17 times), almost disappears (1). `section-route` never calls
+an unrelated claim entailed or contradicted. Its remaining errors are mostly
+the other way: 11 of its 14 wrong answers call a supported or refuted claim
+neutral.
+
+**Evidence, tokens, time.**
+
+| | `section-route` | `embed-e5-small` |
+|---|---|---|
+| Evidence score | **0.905** (182/201) | 0.662 (133/201) |
+| Mean input tokens | **1,210** | 1,868 |
+| Median time | 1.6 s | 1.9 s |
+| p95 time | **3.9 s** | 11.7 s |
+
+The embedding's long times come from embedding each whole booklet on its
+first case. `section-route` embeds only the paragraphs of long parts.
+
+**By claim type** (Macro-F1; evidence found / gold cases):
+
+| Claim type | Cases | `section-route` | `embed-e5-small` | Evidence `section-route` | Evidence `embed-e5-small` |
+|---|---|---|---|---|---|
+| summary | 67 | 0.929 | 0.789 | 49/55 | 25/55 |
+| council | 102 | **1.000** | 0.852 | 65/68 | 50/68 |
+| committee | 49 | 0.960 | 0.863 | 24/27 | 20/27 |
+| law | 39 | 0.944 | 0.668 | 24/25 | 17/25 |
+| detail | 43 | 0.817 | 0.818 | 20/26 | 21/26 |
+
+**By language:** same-language 0.930 against 0.910, cross-language 0.965
+against 0.796. By booklet and claim language, `section-route` is better in 7
+of the 9 pairs; German booklet with German claim is lower (0.824 against
+0.852), Italian with Italian the same (0.970).
+
+**Where one was right and the other wrong** (all 300 cases answered by both):
+both right 241, **only `section-route` right 45**, only `embed-e5-small`
+right 9, both wrong 5. The difference is far beyond chance (sign test on the
+54 cases where they differ: p < 0.000001). By claim type, `section-route` is
+alone right in 12 summary, 15 council, 5 committee, 10 law and 3 detail
+cases; `embed-e5-small` in 4 summary, 1 committee, 1 law and 3 detail cases.
+
+**What is left.** Detail is the one part where routing does not help (0.817,
+the same as the embedding): a detailed section has 4 to 8 pages, and 8 of
+the 26 detail evidence cases are cut to the 8 paragraphs most similar to the
+claim. Of the 19 evidence misses, 11 are neutral answers (no evidence) and 8
+cite a paragraph outside the gold passage, once the committee's disclaimer
+line ("Der Text auf dieser Doppelseite stammt vom Initiativkomitee").
+
+**A caution on comparing with earlier runs.** The control arm scores 0.834
+here and 0.711 in E4: E4 ran on `apertus-v1.5-8b-thinking` with whole-page
+evidence. Different model, time and evidence setting; as always, only the two
+arms of one paired run compare.
+
+## 6. Recommendation
+
+**Make `section-route` the task A default** (`Settings.context_a` in
+`src/cli.py`, a commit of its own after the team agrees). Reasons:
+
+- It wins the paired run on every measure the organisers score: Macro-F1
+  0.953 against 0.834, evidence 0.905 against 0.662, 35 % fewer input tokens,
+  a third of the p95 time.
+- It sends Apertus the passage the claim is about, and its evidence is the
+  paragraph Apertus cited, copied from the booklet with its page: traceable
+  to the source, as the challenge asks.
+- It needs no new dependency: the parser and router are plain Python, and
+  the e5 model is already in the Docker image.
+- When it cannot route, a case runs exactly as today's default.
+
+Risks to weigh before switching:
+
+- **It depends on the claims' openings.** The router's patterns come from
+  the dev claims. On the 586 deduplicated dataset rows outside dev and test,
+  580 were routed before four patterns were added; the private test set is
+  presumably built the same way, but if its claims are phrased differently,
+  more cases fall back to the embedding (still correct, not better).
+- **It depends on the booklet layout of 2020 to 2026.** All 44 dev booklets
+  parse; a booklet laid out differently makes the parser return no parts, and
+  the case falls back.
+- **Tuned and measured on the same 300 dev cases.** The router, the parser's
+  checks and the vote-match threshold were written with the dev data in
+  view; only the held-out set will show how well they carry over.
+
+Follow-ups, one change per comparison: a larger character budget for detail
+and law parts instead of the 8 most similar paragraphs; dropping the
+committee's disclaimer line from the paragraphs; routing committee claims on
+votes without a committee to the parliamentary minority (one dev case);
+work on the remaining "called neutral" errors.
+
+## 7. What stays unverified
+
+- **Docker on a clean machine.** The image was rebuilt here (through the
+  sandbox wrapper that adds this session's proxy certificate) and `make run`
+  answered the two example requests in the official format (format check
+  clean), once with the defaults (`embed-e5-small`, evidence
+  `cited-pieces`) and once with `EXTRA_ARGS="--context-a section-route"`.
+  The first task A case took 70 s with the default (the whole booklet is
+  embedded first, inside the container) and 4.2 s with `section-route`. A
+  plain `make build && make run` on a clean machine was not tried.
+- **The evaluation model and server.** E5 ran on Public AI's
+  `apertus-v1.5-8b` at night; which Apertus model and server the organisers
+  use is unknown.
+- **The official scorer.** Only the starter's `evaluate.py` was available.
+  It does not check pages; the official one might. `section-route`'s
+  evidence pages are the pages the paragraphs come from (a recommendation box
+  carries its summary page).
+- **The prototype parser's notes** (`booklet_sections_prototype.py`) could
+  not be read; gaps it knows about may not be covered.
+- **Booklets outside dev.** Only the 44 dev booklets were parsed; the test
+  booklets were not opened.
+- **The dataset README** was not checked again for label definitions.

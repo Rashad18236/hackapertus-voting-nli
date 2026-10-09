@@ -247,7 +247,7 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task A context, embeddings against the vote section
+## Current stage: task A context, routing claims to the part of the vote they name
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
@@ -302,8 +302,26 @@ neutral, 43 gold page sent but not cited, 40 cited but the text did not match
 items stay best (0.373 against 0.368 and 0.358 for sent chunks). Realistic
 maximum with cited pages only and today's search: 0.657.
 
-Next: a new citation instruction (new prompt version, paired run), and work
-on reading errors (true statements called contradictions).
+Session 6 (`track_2a/docs/session_6_report.md`, decisions in
+`docs/decisions/2026-10-08-2311_rashad_session-6.md`):
+
+- Task A evidence default is now `cited-pieces`: the cited pages' pieces of
+  at most 1,000 characters, one item each, in turn, at most five. On E4's
+  answers: 0.542 against 0.373 (starter's scorer), labels unchanged.
+- New context variant `section-route`: `src/claim_router.py` reads the part a
+  claim's opening names (summary, council, committee, law, detail);
+  `src/booklet.py` finds that part of the vote (all 44 dev booklets parse);
+  Apertus gets it as numbered paragraphs (prompt `A-v4-section-route`, task
+  B's rule) and cites paragraphs, which become the evidence. Falls back to
+  `embed-e5-small` when it cannot route (1 of 300 dev cases).
+- E5 (paired, all 300 dev task A cases, `apertus-v1.5-8b`): `section-route`
+  Macro-F1 0.953 against 0.834 for `embed-e5-small`, evidence 0.905 against
+  0.662, 1,210 against 1,868 input tokens, p95 3.9 s against 11.7 s.
+- Recommended, not yet done: `section-route` as the task A default (team
+  decision; its own commit).
+
+Next: decide the default; then, one change per comparison, a larger budget
+for long detail and law parts, and the remaining "called neutral" errors.
 
 Rules for this stage:
 
