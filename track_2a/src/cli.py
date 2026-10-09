@@ -41,8 +41,9 @@ class Settings:
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
-    context_a: str = "embed-e5-small"  # which booklet text task A sends: see context.MODES (session 4: won E3,
-                                       # 0.721 vs vote-section 0.561, and held in E4 against vote-section-embed-e5-small-k12)
+    context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
+                                      # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
+                                      # cases it cannot route run as embed-e5-small)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
 

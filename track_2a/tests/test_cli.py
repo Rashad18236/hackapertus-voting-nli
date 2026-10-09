@@ -153,9 +153,10 @@ class NeverDropACase(unittest.TestCase):
 
 
 class Defaults(unittest.TestCase):
-    def test_task_a_default_is_embed_e5_small_with_cited_pieces_evidence(self):
+    def test_task_a_default_is_section_route_with_cited_pieces_evidence(self):
         settings = cli.Settings()
-        self.assertEqual((settings.context_a, settings.evidence_a, settings.schema_a), ("embed-e5-small", "cited-pieces", True))
+        self.assertEqual((settings.context_a, settings.evidence_a, settings.schema_a), ("section-route", "cited-pieces", True))
+        self.assertEqual(cli.context.fallback(settings.context_a), "embed-e5-small")
 
 
 if __name__ == "__main__":
