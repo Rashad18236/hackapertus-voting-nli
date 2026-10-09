@@ -1,0 +1,29 @@
+mkdir -p docs/runs/2026-10-09_rashad_final-defaults_dev600
+docker run --rm --platform linux/amd64 --env-file .env -e BASE_URL -e API_KEY -e MODEL -e LLM_BASE_URL -e LLM_API_KEY -e LLM_NAME --network host -e HTTPS_PROXY -e HTTP_PROXY -e NO_PROXY -v /root/.ccr/ca-bundle.crt:/etc/sandbox-ca.crt:ro -e REQUESTS_CA_BUNDLE=/etc/sandbox-ca.crt -e LLM_MIN_INTERVAL=1 --read-only --tmpfs /tmp --user $(id -u):$(id -g) -v "/home/user/hackapertus-voting-nli/track_2a/data/dev/cases.jsonl:/data/cases.jsonl:ro" -v "/home/user/hackapertus-voting-nli/track_2a/output/booklets_dev:/data/booklets:ro" -v "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-09_rashad_final-defaults_dev600:/output" \
+	hackapertus-voting-nli:final --input /data/cases.jsonl --output /output/predictions.jsonl --raw /output/raw_answers.jsonl
+INFO [1/600] v1.1-row-2-A -> entailment
+INFO [2/600] v1.1-row-2-B -> entailment
+INFO [3/600] v1.1-row-4-A -> entailment
+INFO [4/600] v1.1-row-4-B -> entailment
+INFO [5/600] v1.1-row-5-A -> entailment
+INFO [6/600] v1.1-row-5-B -> entailment
+[0;93m2026-10-09 21:23:01.602614089 [W:onnxruntime:Default, telemetry.cc:800 operator()] Failed to persist telemetry device ID; using an in-memory identifier[m
+INFO [7/600] v1.1-row-9-A -> entailment
+INFO [8/600] v1.1-row-9-B -> entailment
+INFO [9/600] v1.1-row-18-A -> entailment
+INFO [10/600] v1.1-row-18-B -> entailment
+INFO [11/600] v1.1-row-21-A -> entailment
+INFO [12/600] v1.1-row-21-B -> entailment
+INFO [13/600] v1.1-row-22-A -> entailment
+INFO [14/600] v1.1-row-22-B -> entailment
+INFO [15/600] v1.1-row-26-A -> entailment
+INFO [16/600] v1.1-row-26-B -> entailment
+INFO [17/600] v1.1-row-27-A -> entailment
+INFO [18/600] v1.1-row-27-B -> entailment
+INFO [19/600] v1.1-row-31-A -> entailment
+INFO [20/600] v1.1-row-31-B -> contradiction
+INFO [21/600] v1.1-row-35-A -> entailment
+INFO [22/600] v1.1-row-35-B -> entailment
+INFO [23/600] v1.1-row-36-A -> entailment
+INFO [24/600] v1.1-row-36-B -> entailment
+INFO [25/600] v1.1-row-40-A -> entailment

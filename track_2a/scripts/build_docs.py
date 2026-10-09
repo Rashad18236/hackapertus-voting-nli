@@ -41,7 +41,7 @@ DECISIONS = DOCS / "decisions"
 
 REQUIRED = ("person", "date", "start_utc", "kind", "code", "task", "cases", "setup", "format",
             "model", "endpoint", "notes", "results")
-KINDS = ("model run", "re-parse", "re-score", "offline check", "stopped", "part of another run")
+KINDS = ("model run", "re-parse", "re-score", "offline check", "model check", "stopped", "part of another run")
 TABLE_KINDS = ("model run", "re-parse", "re-score")
 # Every task B run also states these (the "task_b" block of run.json); the task B table shows them.
 TASK_B_FIELDS = ("prompt_version", "change", "n_cases", "strict_json", "max_tokens")
@@ -241,7 +241,8 @@ def results_md(runs, canary=None):
     table = [(i, r) for i, r in ordered if r["kind"] in TABLE_KINDS]
     other = [(i, r) for i, r in ordered if r["kind"] in ("stopped", "part of another run")]
     offline = [(i, r) for i, r in ordered if r["kind"] == "offline check" and "hit_at_k" in (r["results"] or {})]
-    analyses = [(i, r) for i, r in ordered if r["kind"] == "offline check" and "hit_at_k" not in (r["results"] or {})]
+    analyses = [(i, r) for i, r in ordered if (r["kind"] == "offline check" and "hit_at_k" not in (r["results"] or {}))
+                or r["kind"] == "model check"]
 
     out = [GENERATED.format(src="docs/runs/*/run.json and NOTES.md"), "", RESULTS_INTRO,
            "## Model runs", "",
@@ -306,10 +307,11 @@ def results_md(runs, canary=None):
                    f"| {run['variant']}: {run['setup']} | {hit} | {r['evidence_ceiling_selected']:.3f} "
                    f"| {r['evidence_ceiling_all_pages']:.3f} | {r['mean_chars_selected']:,} / {r['mean_chars_full']:,} |")
 
-    out += ["", "## Other offline analyses (no model calls)", ""]
+    out += ["", "## Other analyses (no model calls, except where marked \"model check\")", ""]
     for run_id, run in analyses:
-        out.append(f"- {link(run_id)}: {run['date']} {run['start_utc'] or ''} UTC, {run['person']}; {run['setup']}. "
-                   f"{run.get('summary', '')}".rstrip())
+        mark = " **model check** (" + run["model"] + ")" if run["kind"] == "model check" else ""
+        out.append(f"- {link(run_id)}{mark}: {run['date']} {run['start_utc'] or ''} UTC, {run['person']}; "
+                   f"{run['setup']}. {run.get('summary', '')}".rstrip())
 
     out += ["", "## Runs by person", ""]
     for person in sorted({r["person"] for r in runs.values()}):

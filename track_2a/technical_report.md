@@ -21,12 +21,14 @@ cites into evidence quoted verbatim with their 1-based PDF page.
 The central experiment, full booklet against selected context, decided the design: with the same prompt,
 sending only the vote's pages instead of the whole booklet raised task A's Macro-F1 from 0.669 to 0.732 at
 40 % of the tokens [E2]; sending only the part of the vote that the claim names (`section-route`) reached
-0.953 at 3 % of the tokens [E5]. ⟨E1 sentence⟩
+0.953 at 3 % of the tokens [E5]. In one interleaved run on 100 dev cases [E1-curve], the whole booklet scored
+0.858 with 37,586 input tokens per case, the routed part 0.989 with 1,248; without any booklet text (claim and
+vote name only) Apertus scores 0.435 [E2-cb]: the context, chosen well, carries the result.
 
-| Default pipeline (starter's scorer) | Task A Macro-F1 | Task A evidence | Task B Macro-F1 | Input tokens / case (A, B) | Mean / p95 time per case (A, B) |
+| Final defaults (starter's scorer) | Task A Macro-F1 | Task A evidence | Task B Macro-F1 | Input tokens / case (A, B) | Mean / p95 time per case (A, B) |
 |---|---|---|---|---|---|
-| dev, stability point 1 [S1] | 0.966 | 0.930 | 0.967 | 1,210, 1,994 | 2.6 / 5.4 s, 1.5 / 2.6 s |
-| val (task A: 300-case sample [E6]; task B: 580 cases [C-val]) | 0.956 | 0.946 | ⟨C-val⟩ | 1,222, ⟨⟩ | 1.8 / 3.0 s, ⟨⟩ |
+| dev, all 600 cases through the Docker image [FIN] | ⟨FIN⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| val, all 580 rows (task A [D-val], task B [C-val]) | 0.961 | 0.958 | 0.961 | 1,206, 1,230 | 1.9 / 3.0 s, 1.8 / 3.8 s |
 
 ⟨Stability sentence and default changes of session 9⟩ Both tasks are far above the starter's minimum for a
 valid submission (task A 0.60, task B 0.75). The private test set may differ (section 6).
@@ -147,7 +149,15 @@ Session 9's adoption rules were fixed before the runs; a version that failed sta
 | **`section-route`** [E5] | **0.953** | **0.905** | **1,210** | **2.0 / 3.9 s** |
 | val sample: `embed-e5-small` / **`section-route`** [E6] | 0.865 / **0.956** | 0.588 / **0.946** | 1,827 / 1,222 | 3.2 / 1.8 s |
 
-⟨E1 table: context curve⟩
+**Context curve** (E1, one interleaved run, 100 balanced dev cases, defaults of session 9) [E1-curve]:
+
+| What Apertus reads | Macro-F1 | Evidence | Input tokens | Mean / p95 time |
+|---|---|---|---|---|
+| Whole booklet | 0.858 | 0.422 | 37,586 | 7.3 / 17.6 s |
+| 8 most similar chunks of the booklet (`embed-e5-small`) | 0.898 | 0.656 | 1,885 | 4.9 / 15.3 s |
+| **The routed part (`section-route`)** | **0.989** | **1.000** | 1,248 | 1.9 / 3.0 s |
+| Its 4 / 2 / 1 most similar paragraphs | 0.979 / 0.940 / 0.769 | 0.984 / 0.922 / 0.641 | 804 / 614 / 510 | 1.8–2.0 s |
+| Nothing: claim and vote name only [E2-cb, 300 cases] | 0.435 (section-route 0.980) | – | 223 | 1.5 s |
 
 **Session 9 experiments** (interleaved runs; "same backend": only cases where all arms met one backend):
 
@@ -157,7 +167,6 @@ Session 9's adoption rules were fixed before the runs; a version that failed sta
 | B-cut confirmed on val, 580 cases [C-val] | current / B-cut | 0.957 / 0.961 (all one backend) | 1,957 / 1,230 | same rule holds: **default since session 9** |
 | Task A label errors, dev [D-dev] | current / L1 / L2 | 0.966 / 0.980 / 0.976 (all one backend) | 1,210 / 1,238 / 1,244 | L1 +0.01 and neutral recall ≥ 0.98: passes; L2 +0.015: fails |
 | L1 confirmed on val, 580 cases [D-val] | current / L1 / (L2) | 0.950 / 0.961 / 0.954 (all one backend) | 1,178 / 1,206 / 1,217 | same rule holds for L1: **default since session 9** |
-| Closed book, dev [E2-cb] | section-route / claim and vote only | ⟨⟩ | ⟨⟩ | information only |
 
 **Error margin and languages.** A 95 % bootstrap interval of task A's Macro-F1 on dev and val pooled (600
 cases) is 0.938–0.970; with 300 cases, differences of 0.02–0.03 between separate runs are within sampling

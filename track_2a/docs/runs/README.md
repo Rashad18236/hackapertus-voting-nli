@@ -59,7 +59,7 @@ Folders from before 2026-10-08 16:29 UTC keep their old names (`s2-...`,
 |---|---|
 | `person` | who ran it (lower case first name); runs done in a Claude Code session count as the person who ran that session |
 | `date`, `start_utc` | when the model calls started (UTC). A re-parse carries the start of the run whose answers it re-reads. `null` if not recorded; never guess |
-| `kind` | `model run`, `re-parse` (answers re-read, no new calls), `re-score` (answers kept, evidence rebuilt, no new calls), `offline check` (no model calls), `stopped`, or `part of another run` (then also `part_of`) |
+| `kind` | `model run`, `re-parse` (answers re-read, no new calls), `re-score` (answers kept, evidence rebuilt, no new calls), `offline check` (no model calls), `model check` (model calls outside the pipeline, e.g. Apertus as a router; listed with the analyses), `stopped`, or `part of another run` (then also `part_of`) |
 | `code` | the commit that ran, or the working tree it ran from |
 | `task` | `A` or `B` |
 | `variant` | task A context variant (`src/context.py`), or `null` |
