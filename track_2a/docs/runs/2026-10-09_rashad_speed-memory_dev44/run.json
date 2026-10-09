@@ -1,0 +1,82 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "01:13",
+ "kind": "offline check",
+ "code": "branch checks-no-model (scripts/speed_memory.py, scripts/stub_llm.py; src/ as in de27e4c); image built from the same tree",
+ "task": "A",
+ "variant": "embed-e5-small, section-route",
+ "cases": "dev: the 44 booklets and all 300 task A cases; cold start on one task A and one task B dev case",
+ "setup": "local steps without any model call: per booklet in a fresh process (PDF, sections, model load, routing, embedding, peak memory), and the CLI end to end against the fake model; on the host (4 CPUs) and in the image limited to 2 CPUs and 4 GB",
+ "format": "offline, no model calls (the fake model answers in milliseconds)",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Container (2 CPUs, 4 GB), 300 dev task A cases end to end without the model: embed-e5-small 786 s, p95 19.3 s, max 44.4 s per case, peak 1.89 GB; section-route 287 s, p95 3.7 s, max 31.9 s (long law parts), peak 2.90 GB. Cold start in the container, one case: task B 1.0 s, task A 26-27 s (embed-e5-small) and 2.9-3.0 s (section-route).",
+ "results": {
+  "container_per_case": {
+   "embed-e5-small": {
+    "cases": 300,
+    "total_s": 786.5,
+    "median_ms": 63,
+    "p95_ms": 19287,
+    "max_ms": 44374,
+    "first_case_ms": 24377,
+    "peak_mb": 1800
+   },
+   "section-route": {
+    "cases": 300,
+    "total_s": 287.2,
+    "median_ms": 36,
+    "p95_ms": 3703,
+    "max_ms": 31928,
+    "first_case_ms": 2026,
+    "peak_mb": 2763
+   }
+  },
+  "host_per_case": {
+   "embed-e5-small": {
+    "cases": 300,
+    "total_s": 411.8,
+    "median_ms": 20,
+    "p95_ms": 10419,
+    "max_ms": 21607,
+    "first_case_ms": 13513,
+    "peak_mb": 1853
+   },
+   "section-route": {
+    "cases": 300,
+    "total_s": 169.6,
+    "median_ms": 33,
+    "p95_ms": 2344,
+    "max_ms": 14936,
+    "first_case_ms": 1559,
+    "peak_mb": 2809
+   }
+  },
+  "container_per_booklet_seconds_max": {
+   "pdf": 3.475,
+   "sections": 0.068,
+   "model_load": 2.067,
+   "route_max": 34.007,
+   "embed_first": 44.81
+  },
+  "container_per_booklet_peak_mb_max": 2870.9,
+  "cold_start_container_s": {
+   "task_B": [
+    0.96,
+    0.96
+   ],
+   "task_A_embed-e5-small": [
+    27.1,
+    26.3
+   ],
+   "task_A_section-route": [
+    3.0,
+    2.9
+   ]
+  }
+ }
+}

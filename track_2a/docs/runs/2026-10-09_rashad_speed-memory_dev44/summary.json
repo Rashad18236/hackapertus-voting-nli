@@ -1,0 +1,581 @@
+{
+ "per_booklet_host": {
+  "import": {
+   "min": 0.178,
+   "median": 0.191,
+   "max": 0.28
+  },
+  "pdf": {
+   "min": 0.442,
+   "median": 1.147,
+   "max": 2.87
+  },
+  "pdf_cached": {
+   "min": 0.002,
+   "median": 0.005,
+   "max": 0.011
+  },
+  "sections": {
+   "min": 0.005,
+   "median": 0.02,
+   "max": 0.062
+  },
+  "model_load": {
+   "min": 1.668,
+   "median": 1.866,
+   "max": 7.702
+  },
+  "route_total": {
+   "min": 0.008,
+   "median": 0.294,
+   "max": 25.779
+  },
+  "route_max": {
+   "min": 0.005,
+   "median": 0.041,
+   "max": 25.402
+  },
+  "embed_first": {
+   "min": 1.588,
+   "median": 7.279,
+   "max": 21.287
+  },
+  "embed_rest_mean": {
+   "min": 0.008,
+   "median": 0.013,
+   "max": 0.079
+  },
+  "peak_mb": {
+   "pdf": {
+    "min": 60.8,
+    "median": 66.3,
+    "max": 85.2
+   },
+   "model_load": {
+    "min": 1197.2,
+    "median": 1201.6,
+    "max": 1214.7
+   },
+   "route": {
+    "min": 1197.2,
+    "median": 1212.9,
+    "max": 2207.6
+   },
+   "embed": {
+    "min": 1197.2,
+    "median": 1639.5,
+    "max": 2867.9
+   }
+  },
+  "process_seconds": {
+   "min": 4.495,
+   "median": 14.991,
+   "max": 52.124
+  },
+  "booklets": 44,
+  "errors": [],
+  "slowest_embed_first": [
+   [
+    "2021_06_13_fr.pdf",
+    144,
+    21.287
+   ],
+   [
+    "2021_06_13_it.pdf",
+    144,
+    19.543
+   ],
+   [
+    "2022_09_25_fr.pdf",
+    80,
+    18.363
+   ],
+   [
+    "2021_06_13_de.pdf",
+    144,
+    17.513
+   ],
+   [
+    "2022_09_25_it.pdf",
+    80,
+    17.197
+   ]
+  ],
+  "slowest_route_case": [
+   [
+    25.402,
+    "v1.1-row-580-A",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    20.437,
+    "v1.1-row-782-A",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    20.347,
+    "v1.1-row-500-A",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    18.045,
+    "v1.1-row-904-A",
+    "2022_09_25_de.pdf"
+   ],
+   [
+    8.67,
+    "v1.1-row-1052-A",
+    "2023_06_18_it.pdf"
+   ]
+  ],
+  "highest_peak": [
+   [
+    "2021_06_13_fr.pdf",
+    2867.9
+   ],
+   [
+    "2024_11_24_fr.pdf",
+    2779.4
+   ],
+   [
+    "2022_09_25_it.pdf",
+    2751.8
+   ],
+   [
+    "2023_06_18_it.pdf",
+    2608.4
+   ],
+   [
+    "2026_03_08_fr.pdf",
+    2585.2
+   ]
+  ],
+  "slowest_pdf": [
+   [
+    "2024_06_09_it.pdf",
+    88,
+    2.87
+   ],
+   [
+    "2024_06_09_fr.pdf",
+    88,
+    2.79
+   ],
+   [
+    "2021_06_13_de.pdf",
+    144,
+    2.551
+   ]
+  ]
+ },
+ "per_booklet_container": {
+  "import": {
+   "min": 0.41,
+   "median": 0.436,
+   "max": 0.501
+  },
+  "pdf": {
+   "min": 0.533,
+   "median": 1.364,
+   "max": 3.475
+  },
+  "pdf_cached": {
+   "min": 0.002,
+   "median": 0.005,
+   "max": 0.033
+  },
+  "sections": {
+   "min": 0.005,
+   "median": 0.021,
+   "max": 0.068
+  },
+  "model_load": {
+   "min": 1.754,
+   "median": 1.852,
+   "max": 2.067
+  },
+  "route_total": {
+   "min": 0.005,
+   "median": 0.35,
+   "max": 34.333
+  },
+  "route_max": {
+   "min": 0.005,
+   "median": 0.047,
+   "max": 34.007
+  },
+  "embed_first": {
+   "min": 3.006,
+   "median": 13.797,
+   "max": 44.81
+  },
+  "embed_rest_mean": {
+   "min": 0.009,
+   "median": 0.025,
+   "max": 0.064
+  },
+  "peak_mb": {
+   "pdf": {
+    "min": 53.4,
+    "median": 58.5,
+    "max": 77.7
+   },
+   "model_load": {
+    "min": 1189.8,
+    "median": 1196.1,
+    "max": 1209.3
+   },
+   "route": {
+    "min": 1189.8,
+    "median": 1206.8,
+    "max": 2183.8
+   },
+   "embed": {
+    "min": 1189.8,
+    "median": 1616.4,
+    "max": 2870.9
+   }
+  },
+  "process_seconds": {
+   "min": 6.535,
+   "median": 22.286,
+   "max": 75.895
+  },
+  "booklets": 44,
+  "errors": [],
+  "slowest_embed_first": [
+   [
+    "2021_06_13_fr.pdf",
+    144,
+    44.81
+   ],
+   [
+    "2021_06_13_it.pdf",
+    144,
+    38.818
+   ],
+   [
+    "2022_09_25_fr.pdf",
+    80,
+    37.331
+   ],
+   [
+    "2021_06_13_de.pdf",
+    144,
+    35.623
+   ],
+   [
+    "2022_09_25_it.pdf",
+    80,
+    34.524
+   ]
+  ],
+  "slowest_route_case": [
+   [
+    34.007,
+    "v1.1-row-500-A",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    33.877,
+    "v1.1-row-782-A",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    30.268,
+    "v1.1-row-580-A",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    29.27,
+    "v1.1-row-904-A",
+    "2022_09_25_de.pdf"
+   ],
+   [
+    8.753,
+    "v1.1-row-1208-A",
+    "2026_06_14_de.pdf"
+   ]
+  ],
+  "highest_peak": [
+   [
+    "2021_06_13_fr.pdf",
+    2870.9
+   ],
+   [
+    "2024_11_24_fr.pdf",
+    2762.5
+   ],
+   [
+    "2022_09_25_it.pdf",
+    2724.7
+   ],
+   [
+    "2023_06_18_it.pdf",
+    2583.0
+   ],
+   [
+    "2026_03_08_fr.pdf",
+    2558.4
+   ]
+  ],
+  "slowest_pdf": [
+   [
+    "2024_06_09_it.pdf",
+    88,
+    3.475
+   ],
+   [
+    "2024_06_09_fr.pdf",
+    88,
+    3.415
+   ],
+   [
+    "2024_11_24_it.pdf",
+    72,
+    2.954
+   ]
+  ]
+ },
+ "per_case_host_embed-e5-small": {
+  "cases": 300,
+  "total_s": 411.8,
+  "mean_ms": 1373,
+  "median_ms": 20,
+  "p95_ms": 10419,
+  "max_ms": 21607,
+  "first_case_ms": 13513,
+  "fallbacks": 0,
+  "slowest": [
+   [
+    "v1.1-row-31-A",
+    21607,
+    "embed-e5-small",
+    "2021_06_13_fr.pdf"
+   ],
+   [
+    "v1.1-row-94-A",
+    20044,
+    "embed-e5-small",
+    "2022_09_25_fr.pdf"
+   ],
+   [
+    "v1.1-row-367-A",
+    19713,
+    "embed-e5-small",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    "v1.1-row-166-A",
+    19664,
+    "embed-e5-small",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    "v1.1-row-5-A",
+    19198,
+    "embed-e5-small",
+    "2021_06_13_de.pdf"
+   ],
+   [
+    "v1.1-row-260-A",
+    17553,
+    "embed-e5-small",
+    "2024_06_09_fr.pdf"
+   ],
+   [
+    "v1.1-row-154-A",
+    17396,
+    "embed-e5-small",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    "v1.1-row-18-A",
+    15206,
+    "embed-e5-small",
+    "2022_09_25_de.pdf"
+   ]
+  ]
+ },
+ "per_case_host_section-route": {
+  "cases": 300,
+  "total_s": 169.6,
+  "mean_ms": 565,
+  "median_ms": 33,
+  "p95_ms": 2344,
+  "max_ms": 14936,
+  "first_case_ms": 1559,
+  "fallbacks": 1,
+  "slowest": [
+   [
+    "v1.1-row-500-A",
+    14936,
+    "law",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    "v1.1-row-782-A",
+    14507,
+    "law",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    "v1.1-row-1383-A",
+    13411,
+    "section-route",
+    "2023_06_18_de.pdf"
+   ],
+   [
+    "v1.1-row-580-A",
+    13011,
+    "law",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    "v1.1-row-904-A",
+    12299,
+    "law",
+    "2022_09_25_de.pdf"
+   ],
+   [
+    "v1.1-row-9-A",
+    4230,
+    "detail",
+    "2024_09_22_it.pdf"
+   ],
+   [
+    "v1.1-row-260-A",
+    4000,
+    "detail",
+    "2024_06_09_fr.pdf"
+   ],
+   [
+    "v1.1-row-31-A",
+    3807,
+    "detail",
+    "2021_06_13_fr.pdf"
+   ]
+  ]
+ },
+ "per_case_container_embed-e5-small": {
+  "cases": 300,
+  "total_s": 786.5,
+  "mean_ms": 2622,
+  "median_ms": 63,
+  "p95_ms": 19287,
+  "max_ms": 44374,
+  "first_case_ms": 24377,
+  "fallbacks": 0,
+  "slowest": [
+   [
+    "v1.1-row-31-A",
+    44374,
+    "embed-e5-small",
+    "2021_06_13_fr.pdf"
+   ],
+   [
+    "v1.1-row-367-A",
+    40122,
+    "embed-e5-small",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    "v1.1-row-94-A",
+    38320,
+    "embed-e5-small",
+    "2022_09_25_fr.pdf"
+   ],
+   [
+    "v1.1-row-5-A",
+    37928,
+    "embed-e5-small",
+    "2021_06_13_de.pdf"
+   ],
+   [
+    "v1.1-row-154-A",
+    35012,
+    "embed-e5-small",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    "v1.1-row-260-A",
+    34683,
+    "embed-e5-small",
+    "2024_06_09_fr.pdf"
+   ],
+   [
+    "v1.1-row-166-A",
+    32112,
+    "embed-e5-small",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    "v1.1-row-18-A",
+    29936,
+    "embed-e5-small",
+    "2022_09_25_de.pdf"
+   ]
+  ]
+ },
+ "per_case_container_section-route": {
+  "cases": 300,
+  "total_s": 287.2,
+  "mean_ms": 957,
+  "median_ms": 36,
+  "p95_ms": 3703,
+  "max_ms": 31928,
+  "first_case_ms": 2026,
+  "fallbacks": 1,
+  "slowest": [
+   [
+    "v1.1-row-500-A",
+    31928,
+    "law",
+    "2022_09_25_it.pdf"
+   ],
+   [
+    "v1.1-row-782-A",
+    31620,
+    "law",
+    "2024_06_09_it.pdf"
+   ],
+   [
+    "v1.1-row-580-A",
+    27204,
+    "law",
+    "2021_06_13_it.pdf"
+   ],
+   [
+    "v1.1-row-904-A",
+    26891,
+    "law",
+    "2022_09_25_de.pdf"
+   ],
+   [
+    "v1.1-row-1383-A",
+    18435,
+    "section-route",
+    "2023_06_18_de.pdf"
+   ],
+   [
+    "v1.1-row-1208-A",
+    6938,
+    "law",
+    "2026_06_14_de.pdf"
+   ],
+   [
+    "v1.1-row-9-A",
+    6624,
+    "detail",
+    "2024_09_22_it.pdf"
+   ],
+   [
+    "v1.1-row-1052-A",
+    6085,
+    "detail",
+    "2023_06_18_it.pdf"
+   ]
+  ]
+ },
+ "log": "== host embed-e5-small\nWALL 412.5 PEAK_MB 1853 EXIT 0\n== host section-route\nWALL 170.7 PEAK_MB 2809 EXIT 0\n== container per-booklet\nexit 0 seconds 1196\n== container embed-e5-small\nexit 0 WALL 788.155287656\nPEAK_BYTES 1886945280\n== container section-route\nexit 0 WALL 288.873626939\nPEAK_BYTES 2897416192\n== cold start one_b embed-e5-small rep 1\nexit 0 WALL .959129341\nPEAK_BYTES 32165888\nCASE_MS 7\n== cold start one_b embed-e5-small rep 2\nexit 0 WALL .960765488\nPEAK_BYTES 32165888\nCASE_MS 5\n== cold start one_a embed-e5-small rep 1\nexit 0 WALL 27.137037123\nPEAK_BYTES 1530228736\nCASE_MS 25876\n== cold start one_a embed-e5-small rep 2\nexit 0 WALL 26.287661830\nPEAK_BYTES 1528332288\nCASE_MS 24980\n== cold start one_a section-route rep 1\nexit 0 WALL 2.988476722\nPEAK_BYTES 38387712\nCASE_MS 2069\n== cold start one_a section-route rep 2\nexit 0 WALL 2.873824895\nPEAK_BYTES 38203392\nCASE_MS 1979\nALL DONE\n"
+}
