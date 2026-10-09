@@ -1,0 +1,303 @@
+300 cases, 44 booklets parsed; arms: ['section-route', 'closed-book']
+[1/300] v1.1-row-2-A | section-route: entailment | closed-book: neutral
+[2/300] v1.1-row-4-A | closed-book: neutral | section-route: entailment
+[3/300] v1.1-row-5-A | section-route: entailment | closed-book: neutral
+[4/300] v1.1-row-9-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[5/300] v1.1-row-18-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[6/300] v1.1-row-21-A | closed-book: neutral | section-route: entailment
+[7/300] v1.1-row-22-A | section-route: entailment | closed-book: neutral
+[8/300] v1.1-row-26-A | closed-book: neutral | section-route: entailment
+[9/300] v1.1-row-27-A | section-route: entailment | closed-book: neutral
+[10/300] v1.1-row-31-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: entailment
+[11/300] v1.1-row-35-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[12/300] v1.1-row-36-A | closed-book: neutral | section-route: entailment
+[13/300] v1.1-row-40-A | section-route: entailment | closed-book: neutral
+[14/300] v1.1-row-48-A | closed-book: neutral | section-route: entailment
+[15/300] v1.1-row-49-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[16/300] v1.1-row-68-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[17/300] v1.1-row-75-A | section-route: entailment | closed-book: neutral
+[18/300] v1.1-row-76-A | closed-book: neutral | section-route: entailment
+[19/300] v1.1-row-80-A | section-route: entailment | closed-book: neutral
+[20/300] v1.1-row-84-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[21/300] v1.1-row-85-A | section-route: contradiction | closed-book: neutral
+[22/300] v1.1-row-86-A | closed-book: neutral | section-route: entailment
+[23/300] v1.1-row-93-A | section-route: entailment | closed-book: neutral
+[24/300] v1.1-row-94-A | closed-book: neutral | section-route: entailment
+[25/300] v1.1-row-95-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[26/300] v1.1-row-109-A | closed-book: neutral | section-route: entailment
+[27/300] v1.1-row-116-A | section-route: entailment | closed-book: neutral
+[28/300] v1.1-row-133-A | closed-book: neutral | section-route: entailment
+[29/300] v1.1-row-134-A | section-route: entailment | closed-book: neutral
+[30/300] v1.1-row-135-A | closed-book: neutral | section-route: entailment
+[31/300] v1.1-row-146-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[32/300] v1.1-row-150-A | closed-book: neutral | section-route: entailment
+[33/300] v1.1-row-154-A | section-route: entailment | closed-book: neutral
+[34/300] v1.1-row-160-A | closed-book: neutral | section-route: entailment
+[35/300] v1.1-row-161-A | section-route: entailment | closed-book: neutral
+[36/300] v1.1-row-162-A | closed-book: neutral | section-route: entailment
+[37/300] v1.1-row-166-A | section-route: entailment | closed-book: neutral
+[38/300] v1.1-row-167-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[39/300] v1.1-row-168-A | section-route: entailment | closed-book: neutral
+[40/300] v1.1-row-170-A | closed-book: neutral | section-route: entailment
+[41/300] v1.1-row-179-A | section-route: entailment | closed-book: neutral
+[42/300] v1.1-row-180-A | closed-book: neutral | section-route: entailment
+[43/300] v1.1-row-188-A | section-route: entailment | closed-book: neutral
+[44/300] v1.1-row-189-A | closed-book: neutral | section-route: entailment
+[45/300] v1.1-row-198-A | section-route: entailment | closed-book: neutral
+[46/300] v1.1-row-205-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[47/300] v1.1-row-212-A | section-route: entailment | closed-book: neutral
+[48/300] v1.1-row-216-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[49/300] v1.1-row-223-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[50/300] v1.1-row-228-A | closed-book: neutral | section-route: entailment
+[51/300] v1.1-row-232-A | section-route: contradiction | closed-book: neutral
+[52/300] v1.1-row-237-A | closed-book: neutral | section-route: entailment
+[53/300] v1.1-row-240-A | section-route: entailment | closed-book: neutral
+[54/300] v1.1-row-241-A | closed-book: neutral | section-route: entailment
+[55/300] v1.1-row-247-A | section-route: entailment | closed-book: neutral
+[56/300] v1.1-row-260-A | closed-book: neutral | section-route: entailment
+[57/300] v1.1-row-262-A | section-route: entailment | closed-book: neutral
+[58/300] v1.1-row-263-A | closed-book: neutral | section-route: entailment
+[59/300] v1.1-row-269-A | section-route: entailment | closed-book: neutral
+[60/300] v1.1-row-273-A | closed-book: neutral | section-route: entailment
+[61/300] v1.1-row-288-A | section-route: entailment | closed-book: neutral
+[62/300] v1.1-row-290-A | closed-book: neutral | section-route: entailment
+[63/300] v1.1-row-293-A | section-route: entailment | closed-book: neutral
+[64/300] v1.1-row-303-A | closed-book: neutral | section-route: entailment
+[65/300] v1.1-row-304-A | section-route: entailment | closed-book: neutral
+[66/300] v1.1-row-308-A | closed-book: neutral | section-route: entailment
+[67/300] v1.1-row-310-A | section-route: entailment | closed-book: neutral
+[68/300] v1.1-row-313-A | closed-book: neutral | section-route: entailment
+[69/300] v1.1-row-330-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[70/300] v1.1-row-331-A | closed-book: neutral | section-route: entailment
+[71/300] v1.1-row-333-A | section-route: entailment | closed-book: neutral
+[72/300] v1.1-row-339-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[73/300] v1.1-row-345-A | section-route: entailment | closed-book: neutral
+[74/300] v1.1-row-347-A | closed-book: neutral | section-route: entailment
+[75/300] v1.1-row-350-A | section-route: entailment | closed-book: neutral
+[76/300] v1.1-row-359-A | closed-book: neutral | section-route: entailment
+[77/300] v1.1-row-363-A | section-route: entailment | closed-book: neutral
+[78/300] v1.1-row-367-A | closed-book: neutral | section-route: entailment
+[79/300] v1.1-row-370-A | section-route: entailment | closed-book: neutral
+[80/300] v1.1-row-371-A | closed-book: neutral | section-route: entailment
+[81/300] v1.1-row-380-A | section-route: entailment | closed-book: neutral
+[82/300] v1.1-row-408-A | closed-book: neutral | section-route: entailment
+[83/300] v1.1-row-412-A | section-route: entailment | closed-book: neutral
+[84/300] v1.1-row-414-A | closed-book: neutral | section-route: entailment
+[85/300] v1.1-row-418-A | section-route: entailment | closed-book: neutral
+[86/300] v1.1-row-419-A | closed-book: neutral | section-route: entailment
+[87/300] v1.1-row-424-A | section-route: entailment | closed-book: neutral
+[88/300] v1.1-row-429-A | closed-book: neutral | section-route: entailment
+[89/300] v1.1-row-430-A | section-route: entailment | closed-book: neutral
+[90/300] v1.1-row-431-A | closed-book: neutral | section-route: entailment
+[91/300] v1.1-row-439-A | section-route: entailment | closed-book: neutral
+[92/300] v1.1-row-450-A | closed-book: neutral | section-route: entailment
+[93/300] v1.1-row-455-A | section-route: entailment | closed-book: entailment (no valid pages for label 0/2)
+[94/300] v1.1-row-458-A | closed-book: neutral | section-route: entailment
+[95/300] v1.1-row-469-A | section-route: entailment | closed-book: neutral
+[96/300] v1.1-row-471-A | closed-book: entailment (no valid pages for label 0/2) | section-route: entailment
+[97/300] v1.1-row-474-A | section-route: entailment | closed-book: neutral
+[98/300] v1.1-row-478-A | closed-book: neutral | section-route: entailment
+[99/300] v1.1-row-482-A | section-route: entailment | closed-book: neutral
+[100/300] v1.1-row-491-A | closed-book: neutral | section-route: entailment
+[101/300] v1.1-row-492-A | section-route: entailment | closed-book: neutral
+[102/300] v1.1-row-493-A | closed-book: neutral | section-route: entailment
+[103/300] v1.1-row-500-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[104/300] v1.1-row-501-A | closed-book: neutral | section-route: neutral
+[105/300] v1.1-row-507-A | section-route: neutral | closed-book: neutral
+[106/300] v1.1-row-510-A | closed-book: neutral | section-route: neutral
+[107/300] v1.1-row-511-A | section-route: neutral | closed-book: neutral
+[108/300] v1.1-row-515-A | closed-book: neutral | section-route: neutral
+[109/300] v1.1-row-517-A | section-route: neutral | closed-book: neutral
+[110/300] v1.1-row-521-A | closed-book: neutral | section-route: neutral
+[111/300] v1.1-row-528-A | section-route: neutral | closed-book: neutral
+[112/300] v1.1-row-531-A | closed-book: neutral | section-route: neutral
+[113/300] v1.1-row-538-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[114/300] v1.1-row-549-A | closed-book: neutral | section-route: neutral
+[115/300] v1.1-row-554-A | section-route: neutral | closed-book: neutral
+[116/300] v1.1-row-556-A | closed-book: neutral | section-route: neutral
+[117/300] v1.1-row-564-A | section-route: neutral | closed-book: neutral
+[118/300] v1.1-row-566-A | closed-book: neutral | section-route: neutral
+[119/300] v1.1-row-567-A | section-route: neutral | closed-book: neutral
+[120/300] v1.1-row-568-A | closed-book: neutral | section-route: neutral
+[121/300] v1.1-row-577-A | section-route: neutral | closed-book: neutral
+[122/300] v1.1-row-580-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: neutral
+[123/300] v1.1-row-608-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[124/300] v1.1-row-614-A | closed-book: neutral | section-route: neutral
+[125/300] v1.1-row-616-A | section-route: neutral | closed-book: neutral
+[126/300] v1.1-row-619-A | closed-book: neutral | section-route: neutral
+[127/300] v1.1-row-623-A | section-route: neutral | closed-book: neutral
+[128/300] v1.1-row-629-A | closed-book: neutral | section-route: neutral
+[129/300] v1.1-row-633-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[130/300] v1.1-row-637-A | closed-book: neutral | section-route: neutral
+[131/300] v1.1-row-638-A | section-route: neutral | closed-book: neutral
+[132/300] v1.1-row-640-A | closed-book: neutral | section-route: neutral
+[133/300] v1.1-row-645-A | section-route: neutral | closed-book: neutral
+[134/300] v1.1-row-648-A | closed-book: neutral | section-route: neutral
+[135/300] v1.1-row-656-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[136/300] v1.1-row-662-A | closed-book: neutral | section-route: neutral
+[137/300] v1.1-row-665-A | section-route: neutral | closed-book: neutral
+[138/300] v1.1-row-666-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: neutral
+[139/300] v1.1-row-668-A | section-route: neutral | closed-book: neutral
+[140/300] v1.1-row-670-A | closed-book: neutral | section-route: neutral
+[141/300] v1.1-row-679-A | section-route: neutral | closed-book: neutral
+[142/300] v1.1-row-682-A | closed-book: neutral | section-route: neutral
+[143/300] v1.1-row-688-A | section-route: neutral | closed-book: neutral
+[144/300] v1.1-row-691-A | closed-book: neutral | section-route: neutral
+[145/300] v1.1-row-692-A | section-route: neutral | closed-book: neutral
+[146/300] v1.1-row-700-A | closed-book: neutral | section-route: neutral
+[147/300] v1.1-row-711-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[148/300] v1.1-row-713-A | closed-book: neutral | section-route: neutral
+[149/300] v1.1-row-720-A | section-route: neutral | closed-book: neutral
+[150/300] v1.1-row-724-A | closed-book: neutral | section-route: neutral
+[151/300] v1.1-row-726-A | section-route: neutral | closed-book: neutral
+[152/300] v1.1-row-731-A | closed-book: neutral | section-route: neutral
+[153/300] v1.1-row-739-A | section-route: neutral | closed-book: neutral
+[154/300] v1.1-row-746-A | closed-book: neutral | section-route: neutral
+[155/300] v1.1-row-757-A | section-route: neutral | closed-book: neutral
+[156/300] v1.1-row-762-A | closed-book: neutral | section-route: neutral
+[157/300] v1.1-row-767-A | section-route: neutral | closed-book: neutral
+[158/300] v1.1-row-770-A | closed-book: neutral | section-route: neutral
+[159/300] v1.1-row-777-A | section-route: neutral | closed-book: neutral
+[160/300] v1.1-row-782-A | closed-book: neutral | section-route: neutral
+[161/300] v1.1-row-793-A | section-route: neutral | closed-book: neutral
+[162/300] v1.1-row-797-A | closed-book: neutral | section-route: neutral
+[163/300] v1.1-row-798-A | section-route: neutral | closed-book: neutral
+[164/300] v1.1-row-800-A | closed-book: neutral | section-route: neutral
+[165/300] v1.1-row-810-A | section-route: neutral | closed-book: neutral
+[166/300] v1.1-row-820-A | closed-book: neutral | section-route: neutral
+[167/300] v1.1-row-821-A | section-route: neutral | closed-book: neutral
+[168/300] v1.1-row-826-A | closed-book: neutral | section-route: neutral
+[169/300] v1.1-row-830-A | section-route: neutral | closed-book: neutral
+[170/300] v1.1-row-836-A | closed-book: neutral | section-route: neutral
+[171/300] v1.1-row-841-A | section-route: neutral | closed-book: neutral
+[172/300] v1.1-row-843-A | closed-book: neutral | section-route: neutral
+[173/300] v1.1-row-844-A | section-route: neutral | closed-book: neutral
+[174/300] v1.1-row-849-A | closed-book: neutral | section-route: neutral
+[175/300] v1.1-row-852-A | section-route: neutral | closed-book: neutral
+[176/300] v1.1-row-853-A | closed-book: neutral | section-route: neutral
+[177/300] v1.1-row-854-A | section-route: neutral | closed-book: contradiction (no valid pages for label 0/2)
+[178/300] v1.1-row-869-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: neutral
+[179/300] v1.1-row-875-A | section-route: neutral | closed-book: neutral
+[180/300] v1.1-row-876-A | closed-book: neutral | section-route: neutral
+[181/300] v1.1-row-896-A | section-route: neutral | closed-book: neutral
+[182/300] v1.1-row-899-A | closed-book: neutral | section-route: neutral
+[183/300] v1.1-row-901-A | section-route: neutral | closed-book: neutral
+[184/300] v1.1-row-904-A | closed-book: neutral | section-route: neutral
+[185/300] v1.1-row-909-A | section-route: neutral | closed-book: neutral
+[186/300] v1.1-row-920-A | closed-book: neutral | section-route: neutral
+[187/300] v1.1-row-930-A | section-route: neutral | closed-book: neutral
+[188/300] v1.1-row-932-A | closed-book: neutral | section-route: neutral
+[189/300] v1.1-row-935-A | section-route: neutral | closed-book: neutral
+[190/300] v1.1-row-939-A | closed-book: neutral | section-route: neutral
+[191/300] v1.1-row-944-A | section-route: neutral | closed-book: neutral
+[192/300] v1.1-row-946-A | closed-book: neutral | section-route: neutral
+[193/300] v1.1-row-947-A | section-route: neutral | closed-book: neutral
+[194/300] v1.1-row-948-A | closed-book: neutral | section-route: neutral
+[195/300] v1.1-row-951-A | section-route: neutral | closed-book: neutral
+[196/300] v1.1-row-953-A | closed-book: neutral | section-route: neutral
+[197/300] v1.1-row-965-A | section-route: neutral | closed-book: neutral
+[198/300] v1.1-row-977-A | closed-book: neutral | section-route: neutral
+[199/300] v1.1-row-980-A | section-route: neutral | closed-book: neutral
+[200/300] v1.1-row-981-A | closed-book: neutral | section-route: neutral
+[201/300] v1.1-row-988-A | section-route: neutral | closed-book: neutral
+[202/300] v1.1-row-994-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[203/300] v1.1-row-1000-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[204/300] v1.1-row-1003-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[205/300] v1.1-row-1011-A | section-route: contradiction | closed-book: neutral
+[206/300] v1.1-row-1014-A | closed-book: neutral | section-route: contradiction
+[207/300] v1.1-row-1015-A | section-route: contradiction | closed-book: neutral
+[208/300] v1.1-row-1016-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: neutral
+[209/300] v1.1-row-1020-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[210/300] v1.1-row-1022-A | closed-book: neutral | section-route: contradiction
+[211/300] v1.1-row-1023-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[212/300] v1.1-row-1026-A | closed-book: neutral | section-route: contradiction
+[213/300] v1.1-row-1039-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[214/300] v1.1-row-1052-A | closed-book: neutral | section-route: contradiction
+[215/300] v1.1-row-1056-A | section-route: contradiction | closed-book: neutral
+[216/300] v1.1-row-1063-A | closed-book: neutral | section-route: contradiction
+[217/300] v1.1-row-1064-A | section-route: contradiction | closed-book: neutral
+[218/300] v1.1-row-1067-A | closed-book: neutral | section-route: contradiction
+[219/300] v1.1-row-1074-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[220/300] v1.1-row-1080-A | closed-book: neutral | section-route: contradiction
+[221/300] v1.1-row-1083-A | section-route: contradiction | closed-book: neutral
+[222/300] v1.1-row-1085-A | closed-book: neutral | section-route: contradiction
+[223/300] v1.1-row-1092-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[224/300] v1.1-row-1098-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[225/300] v1.1-row-1100-A | section-route: contradiction | closed-book: neutral
+[226/300] v1.1-row-1102-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[227/300] v1.1-row-1110-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[228/300] v1.1-row-1115-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[229/300] v1.1-row-1117-A | section-route: contradiction | closed-book: neutral
+[230/300] v1.1-row-1118-A | closed-book: neutral | section-route: contradiction
+[231/300] v1.1-row-1128-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[232/300] v1.1-row-1138-A | closed-book: neutral | section-route: entailment
+[233/300] v1.1-row-1144-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[234/300] v1.1-row-1152-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[235/300] v1.1-row-1161-A | section-route: neutral | closed-book: neutral
+[236/300] v1.1-row-1166-A | closed-book: neutral | section-route: contradiction
+[237/300] v1.1-row-1167-A | section-route: entailment | closed-book: neutral
+[238/300] v1.1-row-1169-A | closed-book: neutral | section-route: contradiction
+[239/300] v1.1-row-1177-A | section-route: contradiction | closed-book: neutral
+[240/300] v1.1-row-1183-A | closed-book: neutral | section-route: contradiction
+[241/300] v1.1-row-1194-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[242/300] v1.1-row-1198-A | closed-book: neutral | section-route: contradiction
+[243/300] v1.1-row-1203-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[244/300] v1.1-row-1205-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[245/300] v1.1-row-1208-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[246/300] v1.1-row-1219-A | closed-book: neutral | section-route: contradiction
+[247/300] v1.1-row-1223-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[248/300] v1.1-row-1230-A | closed-book: neutral | section-route: contradiction
+[249/300] v1.1-row-1238-A | section-route: contradiction | closed-book: neutral
+[250/300] v1.1-row-1243-A | closed-book: neutral | section-route: contradiction
+[251/300] v1.1-row-1246-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[252/300] v1.1-row-1251-A | closed-book: neutral | section-route: contradiction
+[253/300] v1.1-row-1253-A | section-route: contradiction | closed-book: neutral
+[254/300] v1.1-row-1258-A | closed-book: neutral | section-route: contradiction
+[255/300] v1.1-row-1263-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[256/300] v1.1-row-1265-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[257/300] v1.1-row-1267-A | section-route: contradiction | closed-book: neutral
+[258/300] v1.1-row-1271-A | closed-book: neutral | section-route: contradiction
+[259/300] v1.1-row-1276-A | section-route: contradiction | closed-book: neutral
+[260/300] v1.1-row-1280-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[261/300] v1.1-row-1283-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[262/300] v1.1-row-1291-A | closed-book: neutral | section-route: contradiction
+[263/300] v1.1-row-1297-A | section-route: contradiction | closed-book: neutral
+[264/300] v1.1-row-1302-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[265/300] v1.1-row-1304-A | section-route: contradiction | closed-book: neutral
+[266/300] v1.1-row-1308-A | closed-book: neutral | section-route: contradiction
+[267/300] v1.1-row-1320-A | section-route: contradiction | closed-book: neutral
+[268/300] v1.1-row-1324-A | closed-book: neutral | section-route: contradiction
+[269/300] v1.1-row-1326-A | section-route: contradiction | closed-book: neutral
+[270/300] v1.1-row-1335-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[271/300] v1.1-row-1341-A | section-route: contradiction | closed-book: neutral
+[272/300] v1.1-row-1342-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[273/300] v1.1-row-1343-A | section-route: contradiction | closed-book: neutral
+[274/300] v1.1-row-1350-A | closed-book: neutral | section-route: contradiction
+[275/300] v1.1-row-1364-A | section-route: contradiction | closed-book: neutral
+[276/300] v1.1-row-1369-A | closed-book: neutral | section-route: contradiction
+[277/300] v1.1-row-1375-A | section-route: contradiction | closed-book: neutral
+[278/300] v1.1-row-1376-A | closed-book: neutral | section-route: contradiction
+[279/300] v1.1-row-1381-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[280/300] v1.1-row-1383-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[281/300] v1.1-row-1384-A | section-route: contradiction | closed-book: neutral
+[282/300] v1.1-row-1391-A | closed-book: neutral | section-route: contradiction
+[283/300] v1.1-row-1396-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[284/300] v1.1-row-1403-A | closed-book: neutral | section-route: contradiction
+[285/300] v1.1-row-1407-A | section-route: contradiction | closed-book: neutral
+[286/300] v1.1-row-1416-A | closed-book: neutral | section-route: contradiction
+[287/300] v1.1-row-1421-A | section-route: contradiction | closed-book: neutral
+[288/300] v1.1-row-1424-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[289/300] v1.1-row-1436-A | section-route: contradiction | closed-book: neutral
+[290/300] v1.1-row-1444-A | closed-book: neutral | section-route: contradiction
+[291/300] v1.1-row-1451-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[292/300] v1.1-row-1456-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[293/300] v1.1-row-1459-A | section-route: contradiction | closed-book: neutral
+[294/300] v1.1-row-1464-A | closed-book: neutral | section-route: contradiction
+[295/300] v1.1-row-1468-A | section-route: contradiction | closed-book: contradiction (no valid pages for label 0/2)
+[296/300] v1.1-row-1472-A | closed-book: contradiction (no valid pages for label 0/2) | section-route: contradiction
+[297/300] v1.1-row-1474-A | section-route: contradiction | closed-book: neutral
+[298/300] v1.1-row-1477-A | closed-book: neutral | section-route: contradiction
+[299/300] v1.1-row-1478-A | section-route: contradiction | closed-book: neutral
+[300/300] v1.1-row-1481-A | closed-book: neutral | section-route: contradiction
+section-route: ok: 300; HTTP 429 answers: 0, retries: 0
+closed-book: ok: 236, no valid pages for label 0/2: 64; HTTP 429 answers: 0, retries: 0

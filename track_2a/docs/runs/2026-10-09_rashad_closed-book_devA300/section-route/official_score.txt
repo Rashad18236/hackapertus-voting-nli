@@ -1,0 +1,12 @@
+Cases: 300  responses: 300
+
+Task A (document, 300 cases)
+  macro-F1:       0.9799   (minimum 0.60: pass)
+  accuracy:       0.9800
+    entailment    P=0.980 R=0.980 F1=0.980 n=102
+    neutral       P=0.980 R=1.000 F1=0.990 n=99
+    contradiction P=0.979 R=0.960 F1=0.969 n=99
+  evidence score: 0.9801   (197 of 201 entailment/contradiction cases cite the gold passage)
+
+Self-reported usage per case: input_tokens 1238, output_tokens 14, inference_time_ms 2302
+Token and time scores are relative to other teams and are computed only in the official run.

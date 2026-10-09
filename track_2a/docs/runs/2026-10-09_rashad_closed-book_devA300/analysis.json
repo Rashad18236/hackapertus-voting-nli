@@ -1,0 +1,418 @@
+{
+ "run": "docs/runs/2026-10-09_rashad_closed-book_devA300",
+ "arms": {
+  "section-route": {
+   "macro_f1": 0.979927,
+   "f1": {
+    "entailment": 0.980392,
+    "neutral": 0.99,
+    "contradiction": 0.969388
+   },
+   "recall": {
+    "entailment": 0.980392,
+    "neutral": 1.0,
+    "contradiction": 0.959596
+   },
+   "calls": 300,
+   "confusion_rows_gold_cols_pred": [
+    [
+     100,
+     0,
+     2
+    ],
+    [
+     0,
+     99,
+     0
+    ],
+    [
+     2,
+     2,
+     95
+    ]
+   ],
+   "mean_input_tokens": 1237.8,
+   "p95_input_tokens": 2132,
+   "mean_output_tokens": 14.49,
+   "tokens_per_case": 1252.3,
+   "mean_time_ms": 2302,
+   "p95_time_ms": 4184,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "JSON with other spacing": 300
+   },
+   "mean_time_ms_by_position": {
+    "1": 2319,
+    "2": 2285
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 300,
+     "macro_f1": 0.9799,
+     "unreadable_answers": 0,
+     "mean_time_ms": 2302
+    }
+   },
+   "evidence": {
+    "score": 0.9801,
+    "found": 197,
+    "cases": 201
+   }
+  },
+  "closed-book": {
+   "macro_f1": 0.43531,
+   "f1": {
+    "entailment": 0.271186,
+    "neutral": 0.531343,
+    "contradiction": 0.503401
+   },
+   "recall": {
+    "entailment": 0.156863,
+    "neutral": 0.89899,
+    "contradiction": 0.373737
+   },
+   "calls": 300,
+   "confusion_rows_gold_cols_pred": [
+    [
+     16,
+     85,
+     1
+    ],
+    [
+     0,
+     89,
+     10
+    ],
+    [
+     0,
+     62,
+     37
+    ]
+   ],
+   "mean_input_tokens": 222.6,
+   "p95_input_tokens": 257,
+   "mean_output_tokens": 11.15,
+   "tokens_per_case": 233.8,
+   "mean_time_ms": 1503,
+   "p95_time_ms": 2139,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "JSON with other spacing": 300
+   },
+   "mean_time_ms_by_position": {
+    "1": 1537,
+    "2": 1468
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 300,
+     "macro_f1": 0.4353,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1503
+    }
+   },
+   "evidence": {
+    "score": 0.0,
+    "found": 0,
+    "cases": 201
+   }
+  }
+ },
+ "comparisons": {
+  "closed-book:section-route": {
+   "macro_f1_change": -0.5446,
+   "f1_change": {
+    "entailment": -0.7092,
+    "neutral": -0.4587,
+    "contradiction": -0.466
+   },
+   "tokens_per_case_change": -1018.5,
+   "input_tokens_change": -1015.2,
+   "output_tokens_change": -3.34,
+   "unreadable_new": 0,
+   "right_to_wrong": 153,
+   "wrong_to_right": 1,
+   "labels_differ": 158,
+   "right_to_wrong_ids": [
+    "v1.1-row-1011-A",
+    "v1.1-row-1014-A",
+    "v1.1-row-1015-A",
+    "v1.1-row-1022-A",
+    "v1.1-row-1026-A",
+    "v1.1-row-1052-A",
+    "v1.1-row-1056-A",
+    "v1.1-row-1063-A",
+    "v1.1-row-1064-A",
+    "v1.1-row-1067-A",
+    "v1.1-row-1080-A",
+    "v1.1-row-1083-A",
+    "v1.1-row-1085-A",
+    "v1.1-row-109-A",
+    "v1.1-row-1100-A",
+    "v1.1-row-1117-A",
+    "v1.1-row-1118-A",
+    "v1.1-row-116-A",
+    "v1.1-row-1166-A",
+    "v1.1-row-1169-A",
+    "v1.1-row-1177-A",
+    "v1.1-row-1183-A",
+    "v1.1-row-1198-A",
+    "v1.1-row-1219-A",
+    "v1.1-row-1230-A",
+    "v1.1-row-1238-A",
+    "v1.1-row-1243-A",
+    "v1.1-row-1251-A",
+    "v1.1-row-1253-A",
+    "v1.1-row-1258-A",
+    "v1.1-row-1267-A",
+    "v1.1-row-1271-A",
+    "v1.1-row-1276-A",
+    "v1.1-row-1291-A",
+    "v1.1-row-1297-A",
+    "v1.1-row-1304-A",
+    "v1.1-row-1308-A",
+    "v1.1-row-1320-A",
+    "v1.1-row-1324-A",
+    "v1.1-row-1326-A",
+    "v1.1-row-133-A",
+    "v1.1-row-134-A",
+    "v1.1-row-1341-A",
+    "v1.1-row-1343-A",
+    "v1.1-row-135-A",
+    "v1.1-row-1350-A",
+    "v1.1-row-1364-A",
+    "v1.1-row-1369-A",
+    "v1.1-row-1375-A",
+    "v1.1-row-1376-A",
+    "v1.1-row-1384-A",
+    "v1.1-row-1391-A",
+    "v1.1-row-1403-A",
+    "v1.1-row-1407-A",
+    "v1.1-row-1416-A",
+    "v1.1-row-1421-A",
+    "v1.1-row-1436-A",
+    "v1.1-row-1444-A",
+    "v1.1-row-1459-A",
+    "v1.1-row-1464-A",
+    "v1.1-row-1474-A",
+    "v1.1-row-1477-A",
+    "v1.1-row-1478-A",
+    "v1.1-row-1481-A",
+    "v1.1-row-150-A",
+    "v1.1-row-154-A",
+    "v1.1-row-160-A",
+    "v1.1-row-161-A",
+    "v1.1-row-162-A",
+    "v1.1-row-166-A",
+    "v1.1-row-168-A",
+    "v1.1-row-170-A",
+    "v1.1-row-179-A",
+    "v1.1-row-180-A",
+    "v1.1-row-188-A",
+    "v1.1-row-189-A",
+    "v1.1-row-198-A",
+    "v1.1-row-2-A",
+    "v1.1-row-21-A",
+    "v1.1-row-212-A",
+    "v1.1-row-22-A",
+    "v1.1-row-228-A",
+    "v1.1-row-237-A",
+    "v1.1-row-240-A",
+    "v1.1-row-241-A",
+    "v1.1-row-247-A",
+    "v1.1-row-26-A",
+    "v1.1-row-260-A",
+    "v1.1-row-262-A",
+    "v1.1-row-263-A",
+    "v1.1-row-269-A",
+    "v1.1-row-27-A",
+    "v1.1-row-273-A",
+    "v1.1-row-288-A",
+    "v1.1-row-290-A",
+    "v1.1-row-293-A",
+    "v1.1-row-303-A",
+    "v1.1-row-304-A",
+    "v1.1-row-308-A",
+    "v1.1-row-31-A",
+    "v1.1-row-310-A",
+    "v1.1-row-313-A",
+    "v1.1-row-331-A",
+    "v1.1-row-333-A",
+    "v1.1-row-345-A",
+    "v1.1-row-347-A",
+    "v1.1-row-350-A",
+    "v1.1-row-359-A",
+    "v1.1-row-36-A",
+    "v1.1-row-363-A",
+    "v1.1-row-367-A",
+    "v1.1-row-370-A",
+    "v1.1-row-371-A",
+    "v1.1-row-380-A",
+    "v1.1-row-4-A",
+    "v1.1-row-40-A",
+    "v1.1-row-408-A",
+    "v1.1-row-412-A",
+    "v1.1-row-414-A",
+    "v1.1-row-418-A",
+    "v1.1-row-419-A",
+    "v1.1-row-424-A",
+    "v1.1-row-429-A",
+    "v1.1-row-430-A",
+    "v1.1-row-431-A",
+    "v1.1-row-439-A",
+    "v1.1-row-450-A",
+    "v1.1-row-458-A",
+    "v1.1-row-469-A",
+    "v1.1-row-474-A",
+    "v1.1-row-478-A",
+    "v1.1-row-48-A",
+    "v1.1-row-482-A",
+    "v1.1-row-491-A",
+    "v1.1-row-492-A",
+    "v1.1-row-493-A",
+    "v1.1-row-5-A",
+    "v1.1-row-500-A",
+    "v1.1-row-538-A",
+    "v1.1-row-580-A",
+    "v1.1-row-608-A",
+    "v1.1-row-633-A",
+    "v1.1-row-656-A",
+    "v1.1-row-666-A",
+    "v1.1-row-711-A",
+    "v1.1-row-75-A",
+    "v1.1-row-76-A",
+    "v1.1-row-80-A",
+    "v1.1-row-854-A",
+    "v1.1-row-86-A",
+    "v1.1-row-869-A",
+    "v1.1-row-93-A",
+    "v1.1-row-94-A"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-1016-A"
+   ],
+   "same_backend": {
+    "cases": 300,
+    "macro_f1_old": 0.9799,
+    "macro_f1_new": 0.4353,
+    "labels_differ": 158,
+    "right_to_wrong": 153,
+    "wrong_to_right": 1
+   },
+   "different_backend": {
+    "cases": 0,
+    "macro_f1_old": null,
+    "macro_f1_new": null,
+    "labels_differ": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0
+   }
+  }
+ },
+ "canary": {},
+ "endpoint_identity": {
+  "calls": 600,
+  "distinct_identities": 4,
+  "identities": [
+   {
+    "calls": 401,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "header cf-placement": "local-EWR",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 141,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "local-IAD",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 57,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 1,
+    "identity": {
+     "cf_ray_datacentre": "EWR",
+     "header cf-placement": "local-EWR",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "5",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   }
+  ],
+  "fields_that_vary": {
+   "cf_ray_datacentre": {
+    "EWR": 459,
+    "IAD": 141
+   },
+   "header cf-placement": {
+    "local-EWR": 402,
+    "local-IAD": 141,
+    "<absent>": 57
+   },
+   "header x-litellm-attempted-retries": {
+    "0": 599,
+    "5": 1
+   }
+  }
+ },
+ "backend_hosts": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+   "https://api.blablador.fz-juelich.de/v1": 600
+  }
+ }
+}
