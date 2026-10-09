@@ -174,12 +174,17 @@ src/
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
   parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
+  booklet.py    booklet -> votes and parts (summary, detail, committee, parliament, council, law)
+                from the contents lines, checked against page headings; boxes per voice; paragraphs
+  claim_router.py  claim opening -> part (summary, council, committee, law, detail), de/fr/it, or None
   context.py    registry of task A context variants: names, prompt per variant, select()
   contexts/     one file per variant: full.py, vote_section.py, embed_e5_small.py (default;
                 multilingual-e5-small, ONNX, local CPU), and since session 4
                 vote_section_embed_e5_small(_k12).py, embed_granite_97m_r2.py,
-                vote_section_embed_granite_97m_r2.py; shared code in retrieval.py
-  evidence.py   task A evidence settings: cited (default; only cited pages) or cited-then-retrieved (off, not used)
+                vote_section_embed_granite_97m_r2.py; shared code in retrieval.py; since
+                session 6 section_route.py (the part the claim names, as numbered paragraphs)
+  evidence.py   task A evidence settings: cited-pieces (default since session 6: 1,000-character pieces
+                of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json
 docs/           official contract, reports, reviews
@@ -188,7 +193,8 @@ docs/           official contract, reports, reviews
   results.md, decisions.md   generated from runs/ and decisions/ by scripts/build_docs.py
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
-                search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py
+                search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
+                rescore_evidence.py, route_check.py, paired_analysis.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -241,7 +247,7 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task A context, embeddings against the vote section
+## Current stage: task A context, routing claims to the part of the vote they name
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
@@ -296,8 +302,26 @@ neutral, 43 gold page sent but not cited, 40 cited but the text did not match
 items stay best (0.373 against 0.368 and 0.358 for sent chunks). Realistic
 maximum with cited pages only and today's search: 0.657.
 
-Next: a new citation instruction (new prompt version, paired run), and work
-on reading errors (true statements called contradictions).
+Session 6 (`track_2a/docs/session_6_report.md`, decisions in
+`docs/decisions/2026-10-08-2311_rashad_session-6.md`):
+
+- Task A evidence default is now `cited-pieces`: the cited pages' pieces of
+  at most 1,000 characters, one item each, in turn, at most five. On E4's
+  answers: 0.542 against 0.373 (starter's scorer), labels unchanged.
+- New context variant `section-route`: `src/claim_router.py` reads the part a
+  claim's opening names (summary, council, committee, law, detail);
+  `src/booklet.py` finds that part of the vote (all 44 dev booklets parse);
+  Apertus gets it as numbered paragraphs (prompt `A-v4-section-route`, task
+  B's rule) and cites paragraphs, which become the evidence. Falls back to
+  `embed-e5-small` when it cannot route (1 of 300 dev cases).
+- E5 (paired, all 300 dev task A cases, `apertus-v1.5-8b`): `section-route`
+  Macro-F1 0.953 against 0.834 for `embed-e5-small`, evidence 0.905 against
+  0.662, 1,210 against 1,868 input tokens, p95 3.9 s against 11.7 s.
+- Recommended, not yet done: `section-route` as the task A default (team
+  decision; its own commit).
+
+Next: decide the default; then, one change per comparison, a larger budget
+for long detail and law parts, and the remaining "called neutral" errors.
 
 Rules for this stage:
 

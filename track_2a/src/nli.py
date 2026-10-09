@@ -124,6 +124,41 @@ _INPUT_EXCERPTS = ('You get only excerpts of the booklet: the passages most simi
 assert _INPUT_FULLDOC in PROMPTS_A["A-v3-fulldoc"]
 PROMPTS_A["A-v3-excerpts"] = PROMPTS_A["A-v3-fulldoc"].replace(_INPUT_FULLDOC, _INPUT_EXCERPTS)
 
+# A-v4-section-route (session 6), for the context variant "section-route": one part of the
+# vote's section (the part the claim's opening names, src/claim_router.py) as numbered
+# paragraphs. The decision rule is task B's v3-topic-first, word for word; one line names the
+# part and whose voice it is; the answer names up to three paragraphs instead of pages.
+_RULE_B = PROMPTS_B["v3-topic-first"][PROMPTS_B["v3-topic-first"].index("Decide in this order:"):
+                                      PROMPTS_B["v3-topic-first"].index("Answer with one JSON object")].strip()
+PROMPTS_A["A-v4-section-route"] = f"""You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. The reference text is one part of the booklet's section on the ballot named in VOTE, given as numbered paragraphs ("[n] ..."); the line PART says which part it is and whose voice it is. The reference text and the claim may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
+
+{_RULE_B}
+
+First give the numbers of the paragraphs that justify your label, at most three, most relevant first (for label 1, an empty list). Then the label.
+
+Answer with one JSON object and nothing else, paragraphs first, for example:
+{{"paragraphs": [2, 5], "label": 0}}"""
+
+ANSWER_SCHEMA_A_PARAGRAPHS = {
+    "type": "object",
+    "properties": {
+        "paragraphs": {"type": "array", "items": {"type": "integer"}, "maxItems": 3},
+        "label": {"type": "integer", "enum": [0, 1, 2]},
+    },
+    "required": ["paragraphs", "label"],
+    "additionalProperties": False,
+}
+
+
+def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, version="A-v4-section-route"):
+    """Messages for a routed part: PART line, numbered paragraphs (as shown), VOTE and CLAIM."""
+    numbered = "\n".join(f"[{i}] {text}" for i, text in enumerate(paragraph_texts, start=1))
+    user = f"PART: {part_line}\n\nREFERENCE TEXT:\n{numbered}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
+    return [
+        {"role": "system", "content": PROMPTS_A[version]},
+        {"role": "user", "content": user},
+    ]
+
 
 def build_messages_a(booklet_text, vote, claim_text, version=PROMPT_VERSION_A):
     heading = "BOOKLET EXCERPTS" if version == "A-v3-excerpts" else "BOOKLET"
@@ -150,11 +185,12 @@ def label_from_prose(answer):
     return found.pop() if len(found) == 1 else None
 
 
-def parse_label_and_pages(answer):
-    """Return (label or None, pages, reason). pages: list of ints as given, possibly empty.
+def parse_label_and_pages(answer, key="pages"):
+    """Return (label or None, numbers, reason). numbers: the list under `key` ("pages", or
+    "paragraphs" for A-v4-section-route) as ints as given, possibly empty.
 
     A JSON object is preferred. Without one, an explicit label statement in
-    prose is accepted (no pages then); see label_from_prose.
+    prose is accepted (no numbers then); see label_from_prose.
     """
     obj = _first_json_object(answer)
     if obj is None:
@@ -166,7 +202,7 @@ def parse_label_and_pages(answer):
     if label is None:
         return None, [], f"invalid label {obj.get('label')!r}"
     pages = []
-    raw_pages = obj.get("pages")
+    raw_pages = obj.get(key)
     if isinstance(raw_pages, list):
         for p in raw_pages:
             if isinstance(p, bool):

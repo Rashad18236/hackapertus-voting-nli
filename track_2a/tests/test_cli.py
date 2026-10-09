@@ -89,7 +89,8 @@ class NeverDropACase(unittest.TestCase):
         answers = ['{"label": 0, "pages": [2, 99]}', '{"label": 1, "pages": [3]}', '{"label": 2, "pages": []}']
         with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
              mock.patch.object(cli.Path, "is_file", return_value=True):
-            code, out = run_cli(lines, answers, ["--context-a", "full"])  # every page shown, so cited pages count
+            code, out = run_cli(lines, answers, ["--context-a", "full", "--evidence-a", "cited"])  # every page shown
+            _, pieces = run_cli(lines, answers, ["--context-a", "full"])  # default evidence: cited-pieces
         by_id = {p["id"]: p for p in out}
         self.assertEqual(code, 0)
         ev = by_id["a-entail"]["evidence"]
@@ -98,6 +99,9 @@ class NeverDropACase(unittest.TestCase):
         self.assertEqual(by_id["a-neutral"]["evidence"], [])   # neutral: no evidence
         self.assertEqual(by_id["a-nopages"]["label"], 2)       # label kept, evidence empty
         self.assertEqual(by_id["a-nopages"]["evidence"], [])
+        ev = {p["id"]: p for p in pieces}["a-entail"]["evidence"]
+        self.assertEqual([e["page"] for e in ev], [2] * 5)   # 7,500 characters: 1,000-character pieces, at most five
+        self.assertTrue(all(len(e["text"]) <= 1000 for e in ev))
 
     def test_every_context_mode_sends_the_answer_schema(self):
         for mode in cli.context.MODES:
@@ -149,9 +153,9 @@ class NeverDropACase(unittest.TestCase):
 
 
 class Defaults(unittest.TestCase):
-    def test_task_a_default_is_embed_e5_small_with_cited_evidence(self):
+    def test_task_a_default_is_embed_e5_small_with_cited_pieces_evidence(self):
         settings = cli.Settings()
-        self.assertEqual((settings.context_a, settings.evidence_a, settings.schema_a), ("embed-e5-small", "cited", True))
+        self.assertEqual((settings.context_a, settings.evidence_a, settings.schema_a), ("embed-e5-small", "cited-pieces", True))
 
 
 if __name__ == "__main__":

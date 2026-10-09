@@ -122,6 +122,13 @@ its sent parts as two items of the same page reach 0.408, with no page
 added. It is not registered; the team should decide whether it fits
 "cited pages only".
 
+> **Later result (session 6, Part 0):** splitting each cited page into its
+> 1,000-character pieces, one item per piece, taken in turn across the cited
+> pages (setting `cited-pieces`), reaches **0.542 (109/201)** on the same
+> answers with the starter's scorer, no page added and no label changed. It
+> is the default since session 6. See
+> `docs/runs/2026-10-08_rashad_evidence-cited-pieces-e4_devA300/`.
+
 ## 5. Step 4: the realistic maximum
 
 - In 23 of the 201 cases, no whole page matches the gold passage at all:
@@ -164,6 +171,12 @@ not run; it needs model calls:
   model name for the whole run. Report the evidence score, Macro-F1 (it must
   not drop by more than 0.02), and the classes of Step 2 again. It would
   cost about 2 × 300 × 1,900 input tokens.
+
+> **Not run (session 6, Part 0):** the instruction to prefer the detailed
+> section over the summary is wrong for claims that open with "according to
+> the summary": 34 of the 43 "sent but not cited" cases are such claims, and
+> their gold passage is the summary page. Session 6 routes each claim to the
+> part of the vote its opening names instead; see `docs/session_6_report.md`.
 
 ## 7. What could not be verified
 

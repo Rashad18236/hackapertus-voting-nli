@@ -13,6 +13,9 @@ replaced by "_"):
   whole booklet, with e5 or Granite; shared code in contexts/retrieval.py.
 - "vote-section-embed-e5-small-k12" (session 4): as vote-section-embed-e5-small with the top 12
   chunks, the setting the offline search grid chose.
+- "section-route" (contexts/section_route.py, session 6): the part of the vote the claim's
+  opening names (summary, council, committee, law text, detail), as numbered paragraphs;
+  the answer cites paragraphs. Falls back to embed-e5-small when it cannot route.
 
 Every variant runs locally: no Apertus call, no tokens. Apertus alone makes
 the entailment decision; a variant only chooses what it reads.
@@ -23,16 +26,21 @@ select(pages, vote, claim_text, cross_language=False) -> (prompt_text, shown), w
 {page: full page text} for every page the prompt text comes from; evidence is
 taken only from those pages (src/cli.py).
 
+A variant may also define route(pages, vote, claim_text) -> (part, [(page, paragraph text)])
+or None, and FALLBACK (a mode name): a routed case is answered from numbered paragraphs
+(src/cli.py), a case route() cannot handle runs exactly as FALLBACK.
+
 Adding a variant: a new file in src/contexts/, one entry in VARIANTS below,
 and a test. Never change what an existing name does; changed behaviour gets a
 new name, so every recorded run names exactly what ran.
 """
 
-from src.contexts import (embed_e5_small, embed_granite_97m_r2, full, vote_section, vote_section_embed_e5_small,
-                          vote_section_embed_e5_small_k12, vote_section_embed_granite_97m_r2)
+from src.contexts import (embed_e5_small, embed_granite_97m_r2, full, section_route, vote_section,
+                          vote_section_embed_e5_small, vote_section_embed_e5_small_k12,
+                          vote_section_embed_granite_97m_r2)
 
 VARIANTS = {v.NAME: v for v in (full, vote_section, embed_e5_small, vote_section_embed_e5_small, embed_granite_97m_r2,
-                                vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12)}
+                                vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12, section_route)}
 MODES = tuple(VARIANTS)
 
 
@@ -50,3 +58,14 @@ def select(pages, vote, claim_text, mode, cross_language=False):
 def prompt_version(mode):
     """The task A prompt version the mode uses."""
     return _variant(mode).PROMPT_VERSION
+
+
+def route(pages, vote, claim_text, mode):
+    """(part, paragraphs) when the mode routes this claim to one part of the vote, else None."""
+    variant = _variant(mode)
+    return variant.route(pages, vote, claim_text) if hasattr(variant, "route") else None
+
+
+def fallback(mode):
+    """The mode a case runs as when route() gives None: the variant's FALLBACK, or the mode itself."""
+    return getattr(_variant(mode), "FALLBACK", mode)

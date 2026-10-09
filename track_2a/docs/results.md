@@ -42,11 +42,14 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 17:01 | rashad | [`2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`](runs/2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels/) | df3028f (src/evidence.py, scripts/pad_evidence.py), answers of docs/runs/2026-10-08_rashad_embed-vs-section_devA300/vote-section | re-scored offline (no new calls), official scorer | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b (cases 1-180), swiss-ai/apertus-v1.5-8b-thinking (cases 181-300) / Public AI | E3's answers, evidence cited-then-retrieved for all labels (information only: the pipeline gives no evidence for label 1) | 0.561 (E 0.459, N 0.627, C 0.597) | 0.358 (72/201) | 0 | 6 | 15863 | 5967 | 9268 |
 | 2026-10-08 | 18:18 | rashad | [`2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`](runs/2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small/) | 3e7fb75 | official, paired (check: is 8b-thinking the same as 8b?); paired with `2026-10-08_rashad_thinking-equivalence_devA20/vote-section` | A | dev sample, 20 task A cases already answered by apertus-v1.5-8b in E3 (cases 1-172, evenly spaced) | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-excerpts + json_schema, max_tokens 128, top 8 e5 chunks | 0.520 (E 0.727, N 0.833, C 0.000) | 0.385 (5/13) | 0 | 0 | 1832 | 8823 | 15506 |
 | 2026-10-08 | 18:18 | rashad | [`2026-10-08_rashad_thinking-equivalence_devA20/vote-section`](runs/2026-10-08_rashad_thinking-equivalence_devA20/vote-section/) | 3e7fb75 | official, paired (check: is 8b-thinking the same as 8b?); paired with `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small` | A | dev sample, 20 task A cases already answered by apertus-v1.5-8b in E3 (cases 1-172, evenly spaced) | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-fulldoc + json_schema, max_tokens 128, vote section | 0.379 (E 0.471, N 0.667, C 0.000) | 0.077 (1/13) | 0 | 0 | 14729 | 4103 | 5128 |
+| 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_evidence-cited-pieces-e4_devA300`](runs/2026-10-08_rashad_evidence-cited-pieces-e4_devA300/) | 3081d38 (scripts/rescore_evidence.py, src/evidence.py), answers of 2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small | re-scored offline (no new calls), official scorer | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | E4 control answers, evidence setting cited-pieces: the cited pages' 1,000-character pieces, in turn across the pages, at most five | **0.711** (E 0.720, N 0.722, C 0.691) | 0.542 (109/201) | 0 | 0 | 1868 | 3031 | 11447 |
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_evidence-forms-e4_devA300/form-a`](runs/2026-10-08_rashad_evidence-forms-e4_devA300/form-a/) | 6f592e0 (scripts/evidence_forms.py), answers of 2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small | re-scored offline (no new calls), official scorer | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | E4 control answers, evidence form (a): the whole cited page, split at 5,000 characters (the pipeline today) | **0.711** (E 0.720, N 0.722, C 0.691) | 0.373 (75/201) | 0 | 0 | 1868 | 3031 | 11447 |
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_evidence-forms-e4_devA300/form-b`](runs/2026-10-08_rashad_evidence-forms-e4_devA300/form-b/) | 6f592e0 (scripts/evidence_forms.py), answers of 2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small | re-scored offline (no new calls), official scorer | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | E4 control answers, evidence form (b): the chunks of each cited page that were sent to Apertus, joined, cut at 5,000 | 0.711 (E 0.720, N 0.722, C 0.691) | 0.368 (74/201) | 0 | 0 | 1868 | 3031 | 11447 |
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_evidence-forms-e4_devA300/form-c`](runs/2026-10-08_rashad_evidence-forms-e4_devA300/form-c/) | 6f592e0 (scripts/evidence_forms.py), answers of 2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small | re-scored offline (no new calls), official scorer | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | E4 control answers, evidence form (c): form (b) plus the neighbouring chunk on each side on the same page | 0.711 (E 0.720, N 0.722, C 0.691) | 0.358 (72/201) | 0 | 0 | 1868 | 3031 | 11447 |
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`](runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small/) | 663c330 | official, paired (E4); paired with `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-excerpts + json_schema, max_tokens 128, top 8 e5 chunks of the whole booklet (control) | **0.711** (E 0.720, N 0.722, C 0.691) | 0.373 (75/201) | 0 | 0 | 1868 | 3031 | 11447 |
 | 2026-10-08 | 19:47 | rashad | [`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`](runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12/) | 663c330 | official, paired (E4); paired with `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b-thinking / Public AI | A-v3-excerpts + json_schema, max_tokens 128, top 12 e5 chunks of the vote section | **0.674** (E 0.686, N 0.699, C 0.636) | 0.403 (81/201) | 0 | 0 | 2777 | 2863 | 5754 |
+| 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/section-route` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces (the default since session 6) | **0.834** (E 0.832, N 0.850, C 0.819) | 0.662 (133/201) | 0 | 0 | 1868 | 3229 | 11665 |
+| 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -76,11 +79,12 @@ check, the best evidence score a model could reach by citing it.
 
 - [`2026-10-08_rashad_e3-embed-errors_devA300`](runs/2026-10-08_rashad_e3-embed-errors_devA300/): 2026-10-08 19:16 UTC, rashad; Part 1: was the gold passage in the chunks sent? (scripts/search_or_reading.py). Of 84 wrong answers (5 failed calls apart): 18 search misses, 39 reading errors with the gold passage sent, 27 on gold-neutral cases; 16 of the 18 misses are cross-language.
 - [`2026-10-08_rashad_evidence-loss-e4_devA201`](runs/2026-10-08_rashad_evidence-loss-e4_devA201/): 2026-10-08 22:27 UTC, rashad; Steps 2 and 4 (session 5): where evidence is lost, and the realistic maximum with cited pages only (scripts/evidence_loss.py). Of 201 cases: hit 75, gold page not sent 23, predicted neutral 20, gold page sent but not cited 43, cited but text did not match 40; maximum with cited pages only and whole-page items: 0.657.
+- [`2026-10-08_rashad_route-check_devA300`](runs/2026-10-08_rashad_route-check_devA300/): 2026-10-08 23:36 UTC, rashad; Part 2 (session 6): booklets parsed, claims routed, and what the routed part's paragraphs hold of the gold passage. 44/44 booklets parse (131 votes); 300/300 claims routed, 299 cases routed; in 200/200 routed evidence cases a sent paragraph matches the gold passage (embed-e5-small: 0.741); 3,233 characters sent (embed-e5-small: 5,386).
 
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (35): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`
+- **rashad** (39): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`
 
 ## Notes per run
 
@@ -232,6 +236,27 @@ check, the best evidence score a model could reach by citing it.
 - For scale: `apertus-v1.5-8b` against its own E2 answers on the same 20 vote-section cases: same label 10/20, identical text 3/20 (E2 ran these cases on an earlier server, see E3's notes).
 - The Macro-F1 of 20 cases (0.379 and 0.520 in the table) means little on its own; the point of this run is the agreement.
 
+### 2026-10-08, session 6, Part 0: evidence setting cited-pieces, E4's control answers re-scored (no model calls)
+
+- Question: with only the pages Apertus cited in E4's `embed-e5-small` arm (`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`), does splitting each cited page into the pipeline's 1,000-character pieces, one item per piece, match the gold passage more often than whole pages?
+- Setting `cited-pieces` (`src/evidence.py`): the cited pages that were shown, in the model's order, repeated pages once; each page split at whitespace into pieces of at most 1,000 characters (`parse._split`, as the embedding chunks); pieces taken in turn across the pages (first piece of each page, then the second of each, ...), at most five items. No page the model did not cite.
+- Command (from `track_2a/`): `python3 scripts/rescore_evidence.py --run docs/runs/2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small --cases output/devA --evidence-a cited-pieces --out <folder>`, 23:17 UTC, commit `3081d38`; scored with the starter's `evaluate.py` (commit `559b598`); format check clean. With `--evidence-a cited` the same script reproduces E4's `predictions.jsonl` byte for byte.
+- Labels, tokens and times are E4's, unchanged (Macro-F1 0.711). 205 answers carry evidence, 4.4 items each on average, 857 characters per item (at most 1,000).
+
+| Claim type (`src/claim_router.py`) | Gold cases | `cited` (whole pages) | `cited-pieces` |
+|---|---|---|---|
+| summary ("according to the summary") | 55 | 5 (0.091) | 5 (0.091) |
+| council ("the Federal Council holds") | 68 | 30 (0.441) | 48 (0.706) |
+| committee ("the committee holds") | 27 | 12 (0.444) | 20 (0.741) |
+| law ("according to the text put to the vote") | 25 | 13 (0.520) | 16 (0.640) |
+| detail ("if the vote is accepted") | 26 | 15 (0.577) | 20 (0.769) |
+| **all** | **201** | **75 (0.373)** | **109 (0.542)** |
+| same-language / cross-language | 67 / 134 | 27 / 48 | 41 / 68 |
+
+- **The starter's scorer confirms Rashad's re-score: 109 of 201 (0.542) against 75 (0.373).** No case found with whole pages is lost with pieces. The gain is entirely in session 5's class "cited, but its text did not match": 34 of its 40 cases now match (re-implemented rule of `scripts/evidence_loss.py`, which gives the official 75 and 109).
+- Summary claims gain nothing (5 of 55 either way): their loss is that the gold page is not cited at all (34 of session 5's 43 "sent but not cited" cases are summary claims) or not sent (10).
+- Consequence: `cited-pieces` becomes the default (own commit). Session 5's A-v4 citation prompt is not run: its "prefer the detailed section over the summary" would steer summary claims away from their gold page.
+
 ### 2026-10-08, session 5, Step 3: evidence text for the same cited pages, E4's control answers re-scored (no model calls)
 
 - Question: with exactly the pages Apertus cited in E4's `embed-e5-small` arm (`2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`), no page changed and none added, does another text per evidence item match the gold passage more often?
@@ -271,6 +296,85 @@ check, the best evidence score a model could reach by citing it.
 - Time: the p95 difference is the one-off embedding. First case of each booklet (control, 44 cases): mean 8.6 s; first case of each booklet and vote (new arm, 122 cases): mean 3.9 s. All other cases: median 1.6 s against 1.7 s, p95 3.3 s against 3.4 s.
 - **Verdict (rule set for this run): embed-e5-small stays.** The new setting would need Macro-F1 no more than 0.02 lower (it is 0.037 lower), evidence at least as good (yes, 0.403 against 0.373), and clearly lower input tokens or p95 time (p95 yes, tokens no). The first condition fails.
 - The control's 0.711 on the thinking model is close to its 0.721 in E3 (8B for cases 1 to 180, thinking for 181 to 300).
+
+### 2026-10-08/09, session 6, Part 3 (E5): section-route against embed-e5-small, paired, all 300 dev task A cases
+
+- Command (from `track_2a/`, on the host, nothing else running): `LLM_NAME=swiss-ai/apertus-v1.5-8b EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/paired_run.py --cases output/devA/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/2026-10-08_rashad_section-route-vs-embed_devA300 --arm '{"name": "section-route", "context_a": "section-route"}' --arm '{"name": "embed-e5-small", "context_a": "embed-e5-small"}'`, 23:41 UTC on 2026-10-08 to 00:07 on 2026-10-09, code `02ecd5d`. Order alternates per case. Both arms start with empty embedding caches. The progress log is `paired_run.log`.
+- **Model: `swiss-ai/apertus-v1.5-8b` on Public AI for all 600 calls** (it answered at 23:35 and 23:41; no fallback to the thinking model was needed). **0 failed calls and 0 unparseable answers.**
+- Before the run, two dev cases (rows 4 and 75) were sent once through `src.cli --context-a section-route` as a smoke test of the new answer schema; those answers are not part of any result.
+- Scored with the starter's `evaluate.py` (commit `559b598`); per-part and per-language numbers from `scripts/paired_analysis.py` (`paired_analysis.json`), whose re-implemented evidence rule gives the official totals (182 and 133).
+
+| | section-route | embed-e5-small |
+|---|---|---|
+| **Macro-F1** | **0.953** | 0.834 |
+| F1 entailment | 0.965 | 0.832 |
+| F1 neutral | 0.947 | 0.850 |
+| F1 contradiction | 0.947 | 0.819 |
+| **Evidence** | **0.905 (182/201)** | 0.662 (133/201) |
+| Mean input tokens | **1,210** | 1,868 |
+| Median / p95 time | 1.6 s / **3.9 s** | 1.9 s / 11.7 s |
+| Routed / fell back | 299 / 1 | – |
+
+Confusion matrix, section-route:
+
+| gold \ predicted | entailment | neutral | contradiction |
+|---|---|---|---|
+| entailment | 97 | 4 | 1 |
+| neutral | 0 | 99 | 0 |
+| contradiction | 2 | 7 | 90 |
+
+Confusion matrix, embed-e5-small:
+
+| gold \ predicted | entailment | neutral | contradiction |
+|---|---|---|---|
+| entailment | 77 | 8 | 17 |
+| neutral | 3 | 85 | 11 |
+| contradiction | 3 | 8 | 88 |
+
+By claim type (part the router assigns) and by language: Macro-F1, evidence found / gold cases:
+
+| | Cases | section-route F1 | embed-e5-small F1 | section-route evidence | embed-e5-small evidence |
+|---|---|---|---|---|---|
+| summary | 67 | 0.929 | 0.789 | 49/55 | 25/55 |
+| council | 102 | 1.000 | 0.852 | 65/68 | 50/68 |
+| committee | 49 | 0.960 | 0.863 | 24/27 | 20/27 |
+| law | 39 | 0.944 | 0.668 | 24/25 | 17/25 |
+| detail | 43 | 0.817 | 0.818 | 20/26 | 21/26 |
+| same-language | 100 | 0.930 | 0.910 | 58/67 | 52/67 |
+| cross-language | 200 | 0.965 | 0.796 | 124/134 | 81/134 |
+| booklet de | 100 | 0.909 | 0.830 | 57/67 | 47/67 |
+| booklet fr | 100 | 0.980 | 0.841 | 64/67 | 41/67 |
+| booklet it | 100 | 0.970 | 0.832 | 61/67 | 45/67 |
+
+Macro-F1 by booklet -> claim language (starter's scorer, 33 or 34 cases each):
+
+| booklet -> claim | section-route | embed-e5-small |
+|---|---|---|
+| de->de | 0.824 | 0.852 |
+| de->fr | 0.938 | 0.760 |
+| de->it | 0.970 | 0.877 |
+| fr->de | 0.942 | 0.740 |
+| fr->fr | 1.000 | 0.909 |
+| fr->it | 1.000 | 0.877 |
+| it->de | 0.971 | 0.672 |
+| it->fr | 0.970 | 0.851 |
+| it->it | 0.970 | 0.970 |
+
+Paired outcomes (300 cases, both arms answered): both right 241, **section-route right and embed-e5-small wrong 45**, embed-e5-small right and section-route wrong 9, both wrong 5 (sign test on the 54 discordant cases: p = 7e-7). By claim type:
+
+| | both right | only section-route right | only embed-e5-small right | both wrong |
+|---|---|---|---|---|
+| summary | 51 | 12 | 4 | 0 |
+| council | 87 | 15 | 0 | 0 |
+| committee | 42 | 5 | 1 | 1 |
+| law | 27 | 10 | 1 | 1 |
+| detail | 34 | 3 | 3 | 3 |
+
+- **section-route wins on every measure: Macro-F1 0.953 against 0.834 (+0.119), evidence 0.905 against 0.662, 35 % fewer input tokens (1,210 against 1,868), p95 time 3.9 s against 11.7 s.** It wins in every claim type except detail (0.817 against 0.818, a tie) and in 7 of the 9 booklet/claim language pairs (German booklet with German claim: 0.824 against 0.852; Italian with Italian: 0.970 for both). The cross-language gap of embed-e5-small (0.796 against 0.910 same-language) disappears (0.965 against 0.930).
+- Where it still errs: 14 wrong labels, 11 of them gold entailment or contradiction called neutral (4 summary, 4 detail, 2 committee, 1 law). Detail is the weakest part (8 of its 26 evidence cases have a section over 8,000 characters, cut to 8 paragraphs).
+- Evidence misses (19 of 201): 11 predicted neutral (no evidence), 8 cited a paragraph outside the gold passage (3 council, 2 summary, 2 detail, 1 committee; one of these is the committee's disclaimer line "Der Text auf dieser Doppelseite stammt vom Initiativkomitee").
+- The one fallback case (row 1383, committee claim on a vote without a committee) ran as embed-e5-small and was right.
+- **The control arm scores much higher here (0.834) than in E4 (0.711 on `apertus-v1.5-8b-thinking`, with whole-page evidence 0.373).** Different model, different server time and, for evidence, the new default `cited-pieces`; rows from different runs do not compare, only the two arms of this run.
 
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.
@@ -342,3 +446,43 @@ check, the best evidence score a model could reach by citing it.
 - "Cited but text did not match" (40): in 27 the model cited only the first or last page of a passage that runs over several pages (that page also holds text outside the passage, so a whole-page item cannot match); in 7 another gold page that was sent would have matched as a whole page; in 16 no whole page of the booklet matches at all.
 - **Step 4, cases where no whole page matches the gold passage: 23 of 201.** Reasons: page break, the passage runs over several pages and every page also holds other text (21); passage over 5,000 characters and over several pages (2); none was put down to PDF text differences alone. A gold page was sent in 21 of them; if the model had cited the right sent page, form (b) (its sent chunks) could have matched in 11, form (c) (chunks plus neighbours) in 2.
 - **Realistic maximum with cited pages only** (Apertus cites a matching sent page whenever there is one, and answers 0 or 2): **0.657 (132/201) with whole-page items**, 0.642 with form (b), 0.642 with form (c); 0.756 if each cited page could give both a whole-page item and a sent-chunks item. With a perfect search (any page of the booklet, whole-page items): 0.886.
+
+### 2026-10-08, session 6, Part 2: section-route measured offline (parser, router, what the routed part holds; no model calls)
+
+- Command (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/route_check.py --out <folder>`, 23:36 to about 23:44 UTC, code as committed in `02ecd5d`. Output: `summary.json`, `per_case.jsonl`.
+- An earlier run of the same script (23:24, vote-match threshold 85, without the coverage column) gave the same booklet and router numbers but sent 2 cases to the fallback because the dataset's vote name "Modifica del diritto di locazione (Diritto di locazione: sublocazione)" scores 81 against the booklet title "Modifica del Codice delle obbligazioni (Diritto di locazione: sublocazione)"; the threshold is now 80 with a 5-point lead (decision file).
+
+**1. Booklets.** All 44 dev booklets parse completely: 131 of 131 votes pass every check (contents entry complete, page numbers in order, a heading on every start page, a council sub-section, sub-sections that start where the arguments start). No problem was reported.
+
+| Booklet language | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
+|---|---|---|---|---|---|---|---|
+| de | 2/2 | 3/3 | 1/1 | 1/1 | 4/4 | 2/2 | 2/2 |
+| fr | 2/2 | 3/3 | 1/1 | 1/1 | 4/4 | 1/1 | 2/2 |
+| it | 2/2 | 3/3 | 1/1 | 1/1 | 4/4 | 2/2 | 2/2 |
+
+(booklets parsed completely / dev booklets of that year; 2025 French: the 2025-02-09 French booklet is not used by any dev case and was not downloaded)
+
+**2. Claims.** The router assigns a part to all 300 dev claims; no claim is unrouted. Routes: detail 43, council 102, committee 49, law 39, summary 67.
+299 of 300 cases are routed; 1 falls back to embed-e5-small: a committee claim on the OECD minimum-tax vote (2023-06-18), which has no committee (its "no" side is a parliamentary minority).
+
+**3. The 201 cases with a gold passage** (200 routed). *Hit*: at least one sent paragraph matches the gold passage under the starter's evidence rule (the paragraph lies inside the passage); this is session 4's hit rate, and since the cited paragraphs are the evidence, also the evidence ceiling. *Coverage*: share of the gold passage's 200-character windows that are in the sent text, among those found anywhere in the booklet. *Pages*: the part's pages hold every page where the gold passage was located. *Inside*: share of sent paragraphs that lie inside the gold passage.
+
+| Routed evidence cases | Cases | Hit | Coverage (mean) | Coverage >= 0.9 | Pages hold gold | Paragraphs inside | Characters sent | Trimmed to 8 |
+|---|---|---|---|---|---|---|---|---|
+| summary | 55 | 1.000 | 0.921 | 0.418 | 0.873 | 0.458 | 2,246 | 0 |
+| council | 68 | 1.000 | 0.945 | 0.882 | 0.765 | 0.964 | 3,141 | 0 |
+| committee | 26 | 1.000 | 0.962 | 0.846 | 0.692 | 0.812 | 3,102 | 0 |
+| law | 25 | 1.000 | 0.610 | 0.080 | 1.000 | 1.000 | 3,482 | 4 |
+| detail | 26 | 1.000 | 0.791 | 0.615 | 0.962 | 0.753 | 5,452 | 8 |
+| same-language | 67 | 1.000 | 0.889 | 0.672 | 0.866 | 0.768 | 3,350 | 4 |
+| cross-language | 133 | 1.000 | 0.874 | 0.586 | 0.827 | 0.789 | 3,173 | 8 |
+| booklet de | 66 | 1.000 | 0.881 | 0.606 | 0.864 | 0.754 | 3,067 | 4 |
+| booklet fr | 67 | 1.000 | 0.877 | 0.642 | 0.836 | 0.800 | 3,130 | 4 |
+| booklet it | 67 | 1.000 | 0.878 | 0.597 | 0.821 | 0.792 | 3,499 | 4 |
+| **all routed** | 200 | 1.000 | 0.879 | 0.615 | 0.840 | 0.782 | 3,233 | 12 |
+| embed-e5-small (session 4, for reference) | 201 | 0.741 | – | – | – | – | 5,386 | – |
+
+- **Gate (Rashad): at least 90 % of dev booklets parse (44/44 = 100 %) and the routed part holds the gold passage in at least 0.90 of routed evidence cases (hit 1.000, 200/200). Passed; Part 3 runs.**
+- "Pages hold gold" is stricter and lower (0.840): the gold passage starts with the vote's title, whose 200-character window also matches the title page, the law page or the summary next to the part, so a neighbouring page counts as a gold page. Of the 32 cases where it fails, in 31 the part holds some of the gold pages and the others lie within five pages of it (contents, title, summary or law pages that carry the vote's title); in 1 (row 347) the locator placed a detail passage on another vote's page, and a sent paragraph still matches the gold passage.
+- Law claims have the lowest coverage (0.610): the four longest law texts (Covid-19 law, 19,000 to 21,000 characters) are cut to the 8 most similar paragraphs, which are short legal clauses (1,300 to 1,900 characters sent), and lines under 40 characters ("Art. 2", "3 Aufgehoben") are dropped by the paragraph splitter. Summary claims get the whole summary spread, of which the gold passage is usually the left page (paragraphs inside 0.458).
+- Characters sent: 3,233 on average for routed evidence cases, 3,274 over all 299 routed cases (embed-e5-small: 5,386).
