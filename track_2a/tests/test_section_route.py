@@ -7,7 +7,7 @@ from unittest import mock
 from src import cli
 from src.contexts import embed_e5_small, retrieval, section_route
 from tests.test_booklet import booklet_pages
-from tests.test_cli import OneVectorEmbedder, run_cli
+from tests.test_cli import OneVectorEmbedder, fake_chat, run_cli
 
 VOTE = "Volksinitiative «Für mehr Velowege»"
 COUNCIL_CLAIM = "Der Bundesrat ist der Ansicht, dass die Kantone für Velowege zuständig sind."
@@ -70,6 +70,51 @@ class Cli(unittest.TestCase):
         out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}')
         self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])  # embed-e5-small's prompt
         self.assertEqual(out["evidence"][0]["page"], 14)
+
+
+class RoutingErrors(unittest.TestCase):
+    """A booklet that makes the parser raise must still get an embed-e5-small answer (session 7)."""
+
+    @staticmethod
+    def broken_booklets():
+        missing = booklet_pages()
+        del missing[13]          # a page number missing inside the vote's pages: KeyError in the parser
+        none_text = booklet_pages()
+        none_text[9] = None      # a page without text: TypeError in the parser
+        return {"missing page": missing, "None as page text": none_text}
+
+    def test_the_parser_really_raises_on_these_booklets(self):
+        for name, pages in self.broken_booklets().items():
+            with self.subTest(name), self.assertRaises(Exception):
+                section_route.route(pages, VOTE, COUNCIL_CLAIM)
+
+    def test_routing_error_runs_the_case_as_embed_e5_small(self):
+        for name, pages in self.broken_booklets().items():
+            with self.subTest(name):
+                seen = []
+                with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+                     mock.patch.object(cli.Path, "is_file", return_value=True), \
+                     mock.patch.object(cli.llm, "chat", fake_chat(['{"pages": [14], "label": 2}'], seen)), \
+                     mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]), \
+                     self.assertLogs("cli", level="WARNING") as logs:
+                    resp, status, raw = cli.predict(case(COUNCIL_CLAIM), ".", cli.Settings(context_a="section-route"))
+                self.assertEqual(len(seen), 1)  # the model was called: no neutral answer without a call
+                self.assertIn("=== PAGE 14 ===\nchunk", seen[0][1]["content"])  # embed-e5-small's prompt
+                self.assertEqual((resp["label"], status, raw["fallback"]), (2, "ok", "embed-e5-small"))
+                self.assertEqual(resp["evidence"][0]["page"], 14)
+                self.assertIn("route_error", raw)
+                self.assertIn("routing failed", " ".join(logs.output))
+
+    def test_the_run_log_counts_routing_errors(self):
+        pages = self.broken_booklets()["missing page"]
+        with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+             mock.patch.object(cli.Path, "is_file", return_value=True), \
+             mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]), \
+             self.assertLogs("cli", level="INFO") as logs:
+            code, out = run_cli([json.dumps(case(COUNCIL_CLAIM))], ['{"pages": [14], "label": 0}'],
+                                ["--context-a", "section-route"])
+        self.assertEqual((code, out[0]["label"]), (0, 0))
+        self.assertIn("Routing failed and the case ran as the fallback variant: 1", " ".join(logs.output))
 
 
 if __name__ == "__main__":
