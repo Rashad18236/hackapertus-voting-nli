@@ -18,9 +18,24 @@ No case is ever dropped. If a request is malformed, the model call fails or
 the answer cannot be parsed, we still write a valid response with the
 fallback label (1, neutral) and count the failure. A summary of all failures
 goes to stderr at the end. Exit code is 0 whenever the input could be read.
+
+Input and output (session 8):
+- The input is read as bytes and decoded line by line, so one byte that is not
+  UTF-8 spoils only its own line (it becomes U+FFFD; the line is answered if it
+  is still readable JSON with an id). A UTF-8 byte order mark at the start is
+  ignored. Lines end at \\n, \\r\\n or \\r.
+- An id that appears on several lines is answered once, from its first line;
+  later lines with that id are logged and skipped (the scorer counts an id with
+  two responses as invalid).
+- Each response is written to the output file and flushed as soon as it is
+  ready (the raw answers with --raw likewise), so a run that is stopped (time
+  limit, out of memory) keeps every finished case as a complete line. A blank
+  input gives an empty output file.
 """
 
 import argparse
+import codecs
+import contextlib
 import json
 import logging
 import sys
@@ -204,6 +219,21 @@ def predict(case, data_dir=".", settings=None):
     return response(case_id, label, result.input_tokens, result.output_tokens, start), status, raw
 
 
+def read_lines(path):
+    """The input file's lines as text: read as bytes, a UTF-8 byte order mark at the start dropped, split at
+    \\n, \\r\\n or \\r, and each line decoded on its own with errors="replace"."""
+    data = Path(path).read_bytes()
+    if data.startswith(codecs.BOM_UTF8):
+        data = data[len(codecs.BOM_UTF8):]
+    return [line.decode("utf-8", errors="replace") for line in data.splitlines()]
+
+
+def write_line(f, obj):
+    """Write one JSON line to a file opened in binary mode and flush it, so it reaches the file at once."""
+    f.write((json.dumps(obj, ensure_ascii=False) + "\n").encode("utf-8"))
+    f.flush()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Swiss voting booklet NLI: one response per request.")
     parser.add_argument("--input", type=Path, required=True, help="JSONL file with one request per line")
@@ -232,44 +262,47 @@ def main():
     logging.getLogger("pypdf").setLevel(logging.ERROR)  # font warnings are noise here
 
     env.load_env_file()
-    lines = args.input.read_text(encoding="utf-8").splitlines()
+    lines = read_lines(args.input)
     failures = Counter()
     routing_failed = 0  # cases whose routing raised and that ran as the fallback variant (answered normally)
-    responses, raws = [], []
-    for number, line in enumerate(lines, start=1):
-        if not line.strip():
-            continue
-        try:
-            case = json.loads(line)
-            case_id = case["id"]
-        except (json.JSONDecodeError, KeyError, TypeError):
-            # Without an id there is nothing we can answer; count it so it is visible.
-            failures["unreadable line or missing id (no response possible)"] += 1
-            log.error("line %d: unreadable JSON or missing id; skipped", number)
-            continue
-        try:
-            resp, status, raw = predict(case, args.input.resolve().parent, settings)
-        except Exception as e:  # never let one case stop the run
-            resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
-        if status != "ok":
-            failures[status] += 1
-        routing_failed += "route_error" in raw
-        log.info("[%d/%d] %s -> %s%s", number, len(lines), case_id, resp["label_name"],
-                 "" if status == "ok" else f" (fallback: {status})")
-        responses.append(resp)
-        raws.append(raw)
-
+    answered = set()  # ids already answered (as JSON text, so any id value can be compared)
+    written = 0
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w", encoding="utf-8") as f:
-        for resp in responses:
-            f.write(json.dumps(resp, ensure_ascii=False) + "\n")
     if args.raw:
         args.raw.parent.mkdir(parents=True, exist_ok=True)
-        with args.raw.open("w", encoding="utf-8") as f:
-            for raw in raws:
-                f.write(json.dumps(raw, ensure_ascii=False) + "\n")
+    with args.output.open("wb") as out, (args.raw.open("wb") if args.raw else contextlib.nullcontext()) as raw_out:
+        for number, line in enumerate(lines, start=1):
+            if not line.strip():
+                continue
+            try:
+                case = json.loads(line)
+                case_id = case["id"]
+            except (json.JSONDecodeError, KeyError, TypeError):
+                # Without an id there is nothing we can answer; count it so it is visible.
+                failures["unreadable line or missing id (no response possible)"] += 1
+                log.error("line %d: unreadable JSON or missing id; skipped", number)
+                continue
+            key = json.dumps(case_id, sort_keys=True)
+            if key in answered:
+                failures["duplicate id (answered once, from its first line)"] += 1
+                log.warning("line %d: id %s was already answered; skipped", number, key)
+                continue
+            answered.add(key)
+            try:
+                resp, status, raw = predict(case, args.input.resolve().parent, settings)
+            except Exception as e:  # never let one case stop the run
+                resp, status, raw = response(case_id, FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case_id}
+            if status != "ok":
+                failures[status] += 1
+            routing_failed += "route_error" in raw
+            log.info("[%d/%d] %s -> %s%s", number, len(lines), case_id, resp["label_name"],
+                     "" if status == "ok" else f" (fallback: {status})")
+            write_line(out, resp)
+            if raw_out is not None:
+                write_line(raw_out, raw)
+            written += 1
 
-    log.info("Wrote %d responses to %s", len(responses), args.output)
+    log.info("Wrote %d responses to %s", written, args.output)
     if routing_failed:
         log.warning("Routing failed and the case ran as the fallback variant: %d", routing_failed)
     if failures:

@@ -21,9 +21,9 @@ is missing, task A cases on that path get the fallback answer (still a valid res
 test that needs the real embedding is skipped. CONTRACT_SLOW=1 adds the order test with the
 default context on the full example booklet (about 20 s per run, embedding the whole booklet).
 
-Tests marked expectedFailure document a contract gap in src/cli.py that this branch must not
-change (another session owns src/cli.py); see docs/checks_no_model.md, section "Proposals".
-When src/cli.py is fixed, they report an unexpected success: then remove the marker.
+The three tests that were marked expectedFailure (duplicate ids, a byte order mark, a byte that
+is not UTF-8; proposals P1 to P3 in docs/checks_no_model.md) pass since session 8 changed
+src/cli.py, and are normal tests now. StoppedRun kills the CLI in the middle of a run (P4).
 """
 
 import hashlib
@@ -348,12 +348,14 @@ class EveryIdGetsOneValidResponse(ContractBase):
         self.assertEqual(run.preds, [])
         self.assertTrue((run.root / "output" / "predictions.jsonl").exists())
 
-    @unittest.expectedFailure  # proposal P1 (docs/checks_no_model.md): src/cli.py answers every line, duplicates too
-    def test_duplicate_ids_get_exactly_one_response(self):
-        cases = [b_case("dup"), b_case("dup", claim="Another claim."), b_case("single")]
+    def test_duplicate_ids_get_exactly_one_response(self):  # P1 (docs/checks_no_model.md), fixed in session 8
+        cases = [b_case("dup"), b_case("dup", claim="STUB_LABEL_2 Another claim."), b_case("single")]
         run = self.run_cli(cases)
         # The starter's scorer marks an id with two responses as invalid (counted wrong).
         self.assertEqual(sorted(p["id"] for p in run.preds), ["dup", "single"])
+        # The first line is the one answered (the second would have given label 2).
+        self.assertEqual([p["label"] for p in run.preds if p["id"] == "dup"], [0])
+        self.assertIn("already answered", run.stderr)
 
     def test_duplicate_ids_never_stop_the_run(self):
         cases = [b_case("dup"), b_case("dup", claim="Another claim."), b_case("single")]
@@ -361,20 +363,57 @@ class EveryIdGetsOneValidResponse(ContractBase):
         self.assertEqual(run.code, 0)
         self.assertEqual(sum(p["id"] == "single" for p in run.preds), 1)
 
-    @unittest.expectedFailure  # proposal P2: a UTF-8 byte order mark makes the first line unreadable
-    def test_byte_order_mark_does_not_lose_the_first_case(self):
+    def test_byte_order_mark_does_not_lose_the_first_case(self):  # P2, fixed in session 8
         cases = [b_case("first"), b_case("second")]
         lines = [b"\xef\xbb\xbf" + json.dumps(cases[0]).encode("utf-8"), cases[1]]
         run = self.run_cli(lines)
         self.assertContract(run, cases)
 
-    @unittest.expectedFailure  # proposal P3: one byte that is not UTF-8 stops the whole run, no output at all
-    def test_invalid_utf8_line_does_not_stop_the_run(self):
+    def test_invalid_utf8_line_does_not_stop_the_run(self):  # P3, fixed in session 8
         good = [b_case("before"), b_case("after")]
         lines = [good[0], b'{"id": "bad-bytes", "claim": {"text": "\xff\xfe"}, "reference": {"text": "r"}}', good[1]]
         run = self.run_cli(lines, check=False)
         self.assertEqual(run.code, 0, run.stderr[-2000:])
-        self.assertEqual(contract_problems(run.preds, {c["id"]: c for c in good}), [])
+        # The bad bytes become U+FFFD; the line is still JSON with an id, so it is answered too.
+        bad = {"id": "bad-bytes", "claim": {"text": "\ufffd\ufffd"}, "reference": {"text": "r"}}
+        self.assertEqual(contract_problems(run.preds, {c["id"]: c for c in good + [bad]}), [])
+
+
+class StoppedRun(ContractBase):
+    """P4 (session 8): the CLI writes each response as soon as it is ready, so a run killed in the middle
+    keeps every finished case as a complete, valid line."""
+
+    def test_killed_run_keeps_the_finished_cases_as_valid_lines(self):
+        server, url = stub_llm.start(delay=0.25)  # a slow model, so the run is still going when it is killed
+        root = Path(tempfile.mkdtemp(dir=self.tmp, prefix="kill-"))
+        try:
+            cases = [b_case(f"k{i:02d}", claim=f"Claim number {i}.") for i in range(40)]
+            (root / "cases.jsonl").write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
+            out = root / "predictions.jsonl"
+            environment = {k: v for k, v in os.environ.items()
+                           if k not in ("BASE_URL", "API_KEY", "MODEL", "LLM_BASE_URL", "LLM_API_KEY", "LLM_NAME")}
+            environment.update({"BASE_URL": url, "API_KEY": "stub-key-must-not-appear",
+                                "CONTRACT_WRITE_LOG": str(root / "writes.json"), "TMPDIR": str(root),
+                                "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost"})
+            proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
+                                     "--output", str(out)], cwd=ROOT, env=environment,
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            deadline = time.time() + 60
+            while time.time() < deadline and (not out.exists() or out.read_bytes().count(b"\n") < 5):
+                time.sleep(0.05)
+            proc.kill()  # SIGKILL: no clean-up code runs
+            proc.wait(timeout=30)
+            data = out.read_bytes()
+            self.assertTrue(data.endswith(b"\n"), "the last line is cut off")
+            preds = [json.loads(line) for line in data.decode("utf-8").splitlines()]
+            self.assertGreaterEqual(len(preds), 5)
+            self.assertLess(len(preds), len(cases), "the run finished before it was killed")
+            # The finished cases, in input order, each a valid response.
+            self.assertEqual([p["id"] for p in preds], [c["id"] for c in cases[:len(preds)]])
+            done = {c["id"]: c for c in cases[:len(preds)]}
+            self.assertEqual(contract_problems(preds, done), [])
+        finally:
+            server.shutdown()
 
 
 class FailedAndGarbageModelAnswers(ContractBase):

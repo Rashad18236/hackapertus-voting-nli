@@ -61,6 +61,7 @@ import json
 import re
 import sys
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 MARKERS = ("STUB_FAIL_ONCE", "STUB_FAIL", "STUB_GARBAGE", "STUB_EMPTY", "STUB_HTML", "STUB_400", "STUB_NO_USAGE",
@@ -80,8 +81,9 @@ def request_hash(payload):
 
 class Config:
     def __init__(self, label=0, prompt_tokens=100, completion_tokens=10, fail_calls=(), garbage_calls=(),
-                 html_calls=(), error_calls=(), replay=None, keep_payloads=False):
+                 html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0):
         self.label = label
+        self.delay = delay              # seconds to wait before each chat answer (tests of a stopped run)
         self.replay = replay            # {request_sha256: answer text}, or None
         self.keep_payloads = keep_payloads
         self.prompt_tokens, self.completion_tokens = prompt_tokens, completion_tokens
@@ -184,6 +186,8 @@ def make_handler(config):
                 if config.keep_payloads:
                     entry["payload"] = payload
                 config.calls.append(entry)
+            if config.delay:
+                time.sleep(config.delay)
             kind, label = decide(payload, config, number)
             if kind == "ok" and config.replay is not None and entry["request_sha256"] in config.replay:
                 kind = "replay"
@@ -242,6 +246,7 @@ def main():
     ap.add_argument("--html-calls", type=_numbers, default=[])
     ap.add_argument("--error-calls", type=_numbers, default=[])
     ap.add_argument("--replay", help="JSON file {request_sha256: answer text} (scripts/prompt_snapshot.py)")
+    ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait before each chat answer")
     args = ap.parse_args()
     replay = None
     if args.replay:
@@ -249,7 +254,7 @@ def main():
             replay = json.load(f)
     config = Config(label=args.label, prompt_tokens=args.prompt_tokens, completion_tokens=args.completion_tokens,
                     fail_calls=args.fail_calls, garbage_calls=args.garbage_calls, html_calls=args.html_calls,
-                    error_calls=args.error_calls, replay=replay)
+                    error_calls=args.error_calls, replay=replay, delay=args.delay)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(config))
     print(f"stub LLM listening on http://{args.host}:{server.server_address[1]}/v1", file=sys.stderr, flush=True)
     try:
