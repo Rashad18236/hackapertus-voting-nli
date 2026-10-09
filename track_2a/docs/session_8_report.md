@@ -185,10 +185,42 @@ outputs.
     steps, wherever these changes close what the report listed as missing.
   - `docs/checks_no_model.md`: a note on which proposals were applied.
   - CLAUDE.md: "Current stage".
-- **Test suite:** 131 tests pass, 1 skipped, here with the e5 files. The
-  clean-machine workflow result is in the pull request.
+- **Test suite:** after the merge, 136 tests pass, 1 skipped, here with the
+  e5 files. The self-checks give 17 of 17. The clean-machine workflow passed
+  on the merge commit `47274bd` (run 13, both jobs:
+  https://github.com/Rashad18236/hackapertus-voting-nli/actions/runs/37954641513).
+  Before the merge, a clean worktree without the e5 files gave 130 passed,
+  2 skipped.
 
-## 5. What was not verified
+## 5. Merge of `main` (PR #13, input hardening)
+
+`main` moved during the session: PR #13 fixed P1 to P4 in `src/cli.py`, the
+same problems as change A. `main` was merged into this branch (`47274bd`) as
+Rashad asked:
+
+- **`src/cli.py`: ours kept.** Both fix the same four problems. Ours also
+  ends a line at a carriage return alone. On a file with carriage-return-only
+  line endings, `main`'s reader answered 0 cases, `main` before PR #13
+  answered all, and ours answers all (each checked with the new test). Ours
+  passes all of PR #13's contract tests.
+- **`tests/test_contract.py`:** every test from both sides was kept and only
+  exact duplicates were removed:
+  - the byte-order-mark and invalid-UTF-8 tests send the same input with the
+    same checks on both sides, so `main`'s copy was kept;
+  - our duplicate-id test also checks that the first line is answered, so it
+    stays as `test_duplicate_ids_answer_their_first_line`;
+  - new: `test_carriage_return_only_line_endings`.
+- **`scripts/stub_llm.py`:** both additions (replay, `delay`, `STUB_SLOW`).
+- **The workflow:** `main`'s, which adds a run with `--context-a
+  embed-e5-small`.
+- **The generated pages:** rebuilt by the scripts.
+- **`technical_report.md` and `docs/checks_no_model.md`:** `main`'s text,
+  then ours.
+- **After the merge:** G1 and G2 are identical to the run after change E
+  (`gates/merge.json`, `gates/merge_vs_E.json`), 136 tests pass, the
+  self-checks give 17 of 17, and the clean-machine workflow passed (run 13).
+
+## 6. What was not verified
 
 - **Model behaviour.** No model was called, so the gates show that the
   requests are byte-identical and that the same answers give the same

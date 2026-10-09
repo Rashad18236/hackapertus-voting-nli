@@ -593,6 +593,7 @@ Merge of `main` after PR #13 (input hardening, merged while this session ran; Ra
 - **`docs/results.md`, `docs/decisions.md`, `docs/self_checks.md`: rebuilt with `scripts/build_docs.py` and `scripts/self_checks.py`, not merged by hand.**
 - **`technical_report.md` and `docs/checks_no_model.md`: `main`'s text, then ours added.** Where `main`'s text describes the line-feed-only reader, a sentence now says that the merged code keeps session 8's reader and why. `main`'s "next steps" item on the router and parser patterns was replaced by the remaining proposals, since session 8 applied those patterns.
 - **After the merge: G1 and G2 against the reference, all tests and the clean-machine workflow rerun before anything else (results in the report).**
+- **After the merge, all checks passed before anything else: G1 and G2 identical to the run after change E, 136 tests, self-checks 17 of 17, and the clean-machine workflow on `47274bd` (run 13, dispatched by hand, both jobs).** The workflow runs by itself only on pull requests and pushes to `main`, so it was dispatched for this branch.
 
 ## Input hardening (2026-10-09, from 14:24 UTC)
 
