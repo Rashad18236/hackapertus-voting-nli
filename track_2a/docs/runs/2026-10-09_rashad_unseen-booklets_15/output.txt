@@ -1,0 +1,16 @@
+2018_09_23_de.pdf: 40 pages, 3 votes, 0 ok; problems: no arguments heading on page 14 | no start page for the council's arguments
+2018_09_23_fr.pdf: 40 pages, 3 votes, 0 ok; problems: no arguments heading on page 14 | no start page for the council's arguments
+2018_09_23_it.pdf: 40 pages, 3 votes, 0 ok; problems: no arguments heading on page 14 | no start page for the council's arguments
+2018_11_25_de.pdf: 40 pages, 3 votes, 0 ok; problems: no start page for the council's arguments
+2018_11_25_fr.pdf: 40 pages, 3 votes, 0 ok; problems: no start page for the council's arguments
+2018_11_25_it.pdf: 40 pages, 3 votes, 0 ok; problems: no start page for the council's arguments
+2019_02_10_de.pdf: 24 pages, 1 votes, 0 ok; problems: no start page for the council's arguments
+2019_02_10_fr.pdf: 24 pages, 1 votes, 0 ok; problems: no start page for the council's arguments
+2019_02_10_it.pdf: 24 pages, 1 votes, 0 ok; problems: no start page for the council's arguments
+2019_05_19_de.pdf: 56 pages, 2 votes, 0 ok; problems: no start page for the council's arguments
+2019_05_19_fr.pdf: 56 pages, 2 votes, 0 ok; problems: no start page for the council's arguments
+2019_05_19_it.pdf: 56 pages, 2 votes, 0 ok; problems: no start page for the council's arguments
+2026_09_27_de.pdf: 32 pages, 2 votes, 2 ok
+2026_09_27_fr.pdf: 32 pages, 2 votes, 2 ok
+2026_09_27_it.pdf: 32 pages, 2 votes, 2 ok
+15 booklets, 3 fully parsed; 6 of 33 votes ok

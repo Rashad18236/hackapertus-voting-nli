@@ -1,0 +1,37 @@
+== host embed-e5-small
+WALL 412.5 PEAK_MB 1853 EXIT 0
+== host section-route
+WALL 170.7 PEAK_MB 2809 EXIT 0
+== container per-booklet
+exit 0 seconds 1196
+== container embed-e5-small
+exit 0 WALL 788.155287656
+PEAK_BYTES 1886945280
+== container section-route
+exit 0 WALL 288.873626939
+PEAK_BYTES 2897416192
+== cold start one_b embed-e5-small rep 1
+exit 0 WALL .959129341
+PEAK_BYTES 32165888
+CASE_MS 7
+== cold start one_b embed-e5-small rep 2
+exit 0 WALL .960765488
+PEAK_BYTES 32165888
+CASE_MS 5
+== cold start one_a embed-e5-small rep 1
+exit 0 WALL 27.137037123
+PEAK_BYTES 1530228736
+CASE_MS 25876
+== cold start one_a embed-e5-small rep 2
+exit 0 WALL 26.287661830
+PEAK_BYTES 1528332288
+CASE_MS 24980
+== cold start one_a section-route rep 1
+exit 0 WALL 2.988476722
+PEAK_BYTES 38387712
+CASE_MS 2069
+== cold start one_a section-route rep 2
+exit 0 WALL 2.873824895
+PEAK_BYTES 38203392
+CASE_MS 1979
+ALL DONE

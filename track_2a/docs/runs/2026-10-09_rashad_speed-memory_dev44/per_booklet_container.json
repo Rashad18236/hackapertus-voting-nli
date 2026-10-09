@@ -1,0 +1,1322 @@
+[
+ {
+  "booklet": "2020_09_27_de.pdf",
+  "seconds": {
+   "import": 0.435,
+   "pdf": 1.854,
+   "pdf_cached": 0.004,
+   "sections": 0.037,
+   "model_load": 2.067,
+   "route_total": 5.298,
+   "route_max": 4.972,
+   "embed_first": 17.689,
+   "embed_rest_mean": 0.028
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 58.1,
+   "sections": 58.1,
+   "model_load": 1194.4,
+   "route": 1926.2,
+   "embed": 2096.2
+  },
+  "cases": 8,
+  "pages": 88,
+  "characters": 110683,
+  "routed": 8,
+  "route_slowest_case": "v1.1-row-830-A",
+  "chunks": 157,
+  "seconds_total": 27.603,
+  "process_seconds": 28.552
+ },
+ {
+  "booklet": "2020_09_27_fr.pdf",
+  "seconds": {
+   "import": 0.419,
+   "pdf": 1.941,
+   "pdf_cached": 0.005,
+   "sections": 0.045,
+   "model_load": 1.852,
+   "route_total": 0.631,
+   "route_max": 0.08,
+   "embed_first": 21.776,
+   "embed_rest_mean": 0.027
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 58.1,
+   "sections": 58.4,
+   "model_load": 1195.3,
+   "route": 1195.3,
+   "embed": 1507.3
+  },
+  "cases": 13,
+  "pages": 88,
+  "characters": 119690,
+  "routed": 13,
+  "route_slowest_case": "v1.1-row-826-A",
+  "chunks": 168,
+  "seconds_total": 27.014,
+  "process_seconds": 27.75
+ },
+ {
+  "booklet": "2020_09_27_it.pdf",
+  "seconds": {
+   "import": 0.501,
+   "pdf": 1.959,
+   "pdf_cached": 0.005,
+   "sections": 0.046,
+   "model_load": 1.89,
+   "route_total": 4.788,
+   "route_max": 4.742,
+   "embed_first": 19.764,
+   "embed_rest_mean": 0.016
+  },
+  "peak_mb": {
+   "import": 47.1,
+   "pdf": 58.4,
+   "sections": 58.6,
+   "model_load": 1196.1,
+   "route": 1927.7,
+   "embed": 2275.3
+  },
+  "cases": 2,
+  "pages": 88,
+  "characters": 122230,
+  "routed": 2,
+  "route_slowest_case": "v1.1-row-347-A",
+  "chunks": 170,
+  "seconds_total": 28.988,
+  "process_seconds": 30.029
+ },
+ {
+  "booklet": "2020_11_29_de.pdf",
+  "seconds": {
+   "import": 0.45,
+   "pdf": 0.635,
+   "pdf_cached": 0.002,
+   "sections": 0.01,
+   "model_load": 2.029,
+   "route_total": 0.027,
+   "route_max": 0.009,
+   "embed_first": 5.474,
+   "embed_rest_mean": 0.039
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 53.5,
+   "sections": 53.5,
+   "model_load": 1191.5,
+   "route": 1191.5,
+   "embed": 1191.5
+  },
+  "cases": 3,
+  "pages": 32,
+  "characters": 39911,
+  "routed": 3,
+  "route_slowest_case": "v1.1-row-800-A",
+  "chunks": 56,
+  "seconds_total": 8.727,
+  "process_seconds": 9.394
+ },
+ {
+  "booklet": "2020_11_29_fr.pdf",
+  "seconds": {
+   "import": 0.455,
+   "pdf": 0.63,
+   "pdf_cached": 0.002,
+   "sections": 0.011,
+   "model_load": 1.87,
+   "route_total": 0.085,
+   "route_max": 0.014,
+   "embed_first": 6.545,
+   "embed_rest_mean": 0.024
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 53.5,
+   "sections": 53.5,
+   "model_load": 1191.5,
+   "route": 1191.5,
+   "embed": 1191.5
+  },
+  "cases": 8,
+  "pages": 32,
+  "characters": 42982,
+  "routed": 8,
+  "route_slowest_case": "v1.1-row-770-A",
+  "chunks": 60,
+  "seconds_total": 9.783,
+  "process_seconds": 10.433
+ },
+ {
+  "booklet": "2020_11_29_it.pdf",
+  "seconds": {
+   "import": 0.426,
+   "pdf": 0.645,
+   "pdf_cached": 0.002,
+   "sections": 0.01,
+   "model_load": 1.841,
+   "route_total": 0.053,
+   "route_max": 0.014,
+   "embed_first": 5.95,
+   "embed_rest_mean": 0.019
+  },
+  "peak_mb": {
+   "import": 46.6,
+   "pdf": 53.4,
+   "sections": 53.4,
+   "model_load": 1191.8,
+   "route": 1191.8,
+   "embed": 1191.8
+  },
+  "cases": 5,
+  "pages": 32,
+  "characters": 41519,
+  "routed": 5,
+  "route_slowest_case": "v1.1-row-1092-A",
+  "chunks": 59,
+  "seconds_total": 9.026,
+  "process_seconds": 9.698
+ },
+ {
+  "booklet": "2021_06_13_de.pdf",
+  "seconds": {
+   "import": 0.428,
+   "pdf": 2.795,
+   "pdf_cached": 0.006,
+   "sections": 0.042,
+   "model_load": 1.901,
+   "route_total": 7.021,
+   "route_max": 6.743,
+   "embed_first": 35.623,
+   "embed_rest_mean": 0.023
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 58.3,
+   "sections": 59.0,
+   "model_load": 1198.5,
+   "route": 1930.1,
+   "embed": 2039.6
+  },
+  "cases": 7,
+  "pages": 144,
+  "characters": 257075,
+  "routed": 7,
+  "route_slowest_case": "v1.1-row-188-A",
+  "chunks": 335,
+  "seconds_total": 47.977,
+  "process_seconds": 48.962
+ },
+ {
+  "booklet": "2021_06_13_fr.pdf",
+  "seconds": {
+   "import": 0.461,
+   "pdf": 2.768,
+   "pdf_cached": 0.006,
+   "sections": 0.045,
+   "model_load": 1.832,
+   "route_total": 11.466,
+   "route_max": 5.6,
+   "embed_first": 44.81,
+   "embed_rest_mean": 0.033
+  },
+  "peak_mb": {
+   "import": 46.6,
+   "pdf": 57.8,
+   "sections": 58.4,
+   "model_load": 1197.8,
+   "route": 2183.8,
+   "embed": 2870.9
+  },
+  "cases": 9,
+  "pages": 144,
+  "characters": 270968,
+  "routed": 9,
+  "route_slowest_case": "v1.1-row-688-A",
+  "chunks": 346,
+  "seconds_total": 61.669,
+  "process_seconds": 62.646
+ },
+ {
+  "booklet": "2021_06_13_it.pdf",
+  "seconds": {
+   "import": 0.414,
+   "pdf": 2.878,
+   "pdf_cached": 0.007,
+   "sections": 0.068,
+   "model_load": 1.84,
+   "route_total": 30.623,
+   "route_max": 30.268,
+   "embed_first": 38.818,
+   "embed_rest_mean": 0.027
+  },
+  "peak_mb": {
+   "import": 47.1,
+   "pdf": 58.5,
+   "sections": 59.0,
+   "model_load": 1198.2,
+   "route": 1970.6,
+   "embed": 2283.9
+  },
+  "cases": 8,
+  "pages": 144,
+  "characters": 269520,
+  "routed": 8,
+  "route_slowest_case": "v1.1-row-580-A",
+  "chunks": 347,
+  "seconds_total": 74.863,
+  "process_seconds": 75.895
+ },
+ {
+  "booklet": "2021_09_26_de.pdf",
+  "seconds": {
+   "import": 0.429,
+   "pdf": 1.214,
+   "pdf_cached": 0.003,
+   "sections": 0.01,
+   "model_load": 1.9,
+   "route_total": 0.046,
+   "route_max": 0.012,
+   "embed_first": 7.712,
+   "embed_rest_mean": 0.025
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 67.4,
+   "sections": 67.4,
+   "model_load": 1193.1,
+   "route": 1193.1,
+   "embed": 1193.1
+  },
+  "cases": 5,
+  "pages": 40,
+  "characters": 47146,
+  "routed": 5,
+  "route_slowest_case": "v1.1-row-22-A",
+  "chunks": 70,
+  "seconds_total": 11.43,
+  "process_seconds": 12.058
+ },
+ {
+  "booklet": "2021_09_26_fr.pdf",
+  "seconds": {
+   "import": 0.427,
+   "pdf": 1.179,
+   "pdf_cached": 0.003,
+   "sections": 0.014,
+   "model_load": 1.813,
+   "route_total": 0.073,
+   "route_max": 0.014,
+   "embed_first": 8.469,
+   "embed_rest_mean": 0.021
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 67.2,
+   "sections": 67.2,
+   "model_load": 1190.3,
+   "route": 1190.3,
+   "embed": 1190.3
+  },
+  "cases": 6,
+  "pages": 40,
+  "characters": 49253,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-205-A",
+  "chunks": 72,
+  "seconds_total": 12.101,
+  "process_seconds": 12.773
+ },
+ {
+  "booklet": "2021_09_26_it.pdf",
+  "seconds": {
+   "import": 0.484,
+   "pdf": 1.347,
+   "pdf_cached": 0.003,
+   "sections": 0.012,
+   "model_load": 1.831,
+   "route_total": 0.034,
+   "route_max": 0.012,
+   "embed_first": 8.064,
+   "embed_rest_mean": 0.009
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 67.4,
+   "sections": 67.4,
+   "model_load": 1189.8,
+   "route": 1189.8,
+   "embed": 1189.8
+  },
+  "cases": 3,
+  "pages": 40,
+  "characters": 49792,
+  "routed": 3,
+  "route_slowest_case": "v1.1-row-40-A",
+  "chunks": 75,
+  "seconds_total": 11.814,
+  "process_seconds": 12.45
+ },
+ {
+  "booklet": "2021_11_28_de.pdf",
+  "seconds": {
+   "import": 0.41,
+   "pdf": 0.96,
+   "pdf_cached": 0.003,
+   "sections": 0.016,
+   "model_load": 1.754,
+   "route_total": 6.692,
+   "route_max": 6.617,
+   "embed_first": 9.958,
+   "embed_rest_mean": 0.031
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 54.7,
+   "sections": 55.4,
+   "model_load": 1192.6,
+   "route": 1924.3,
+   "embed": 1985.7
+  },
+  "cases": 6,
+  "pages": 48,
+  "characters": 71076,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-1468-A",
+  "chunks": 97,
+  "seconds_total": 19.964,
+  "process_seconds": 20.933
+ },
+ {
+  "booklet": "2021_11_28_fr.pdf",
+  "seconds": {
+   "import": 0.496,
+   "pdf": 1.267,
+   "pdf_cached": 0.008,
+   "sections": 0.018,
+   "model_load": 1.909,
+   "route_total": 0.085,
+   "route_max": 0.029,
+   "embed_first": 15.873,
+   "embed_rest_mean": 0.03
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 58.1,
+   "sections": 59.1,
+   "model_load": 1195.6,
+   "route": 1195.6,
+   "embed": 1200.6
+  },
+  "cases": 4,
+  "pages": 48,
+  "characters": 113323,
+  "routed": 4,
+  "route_slowest_case": "v1.1-row-1341-A",
+  "chunks": 140,
+  "seconds_total": 19.767,
+  "process_seconds": 20.507
+ },
+ {
+  "booklet": "2021_11_28_it.pdf",
+  "seconds": {
+   "import": 0.463,
+   "pdf": 1.03,
+   "pdf_cached": 0.002,
+   "sections": 0.019,
+   "model_load": 1.829,
+   "route_total": 0.189,
+   "route_max": 0.022,
+   "embed_first": 10.355,
+   "embed_rest_mean": 0.022
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 55.0,
+   "sections": 55.6,
+   "model_load": 1192.6,
+   "route": 1192.6,
+   "embed": 1192.6
+  },
+  "cases": 10,
+  "pages": 48,
+  "characters": 78452,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-623-A",
+  "chunks": 102,
+  "seconds_total": 14.108,
+  "process_seconds": 14.773
+ },
+ {
+  "booklet": "2022_09_25_de.pdf",
+  "seconds": {
+   "import": 0.458,
+   "pdf": 1.879,
+   "pdf_cached": 0.007,
+   "sections": 0.024,
+   "model_load": 1.833,
+   "route_total": 29.546,
+   "route_max": 29.27,
+   "embed_first": 30.676,
+   "embed_rest_mean": 0.029
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 59.6,
+   "sections": 60.9,
+   "model_load": 1198.4,
+   "route": 2035.9,
+   "embed": 2371.8
+  },
+  "cases": 11,
+  "pages": 80,
+  "characters": 228190,
+  "routed": 11,
+  "route_slowest_case": "v1.1-row-904-A",
+  "chunks": 270,
+  "seconds_total": 64.73,
+  "process_seconds": 65.765
+ },
+ {
+  "booklet": "2022_09_25_fr.pdf",
+  "seconds": {
+   "import": 0.444,
+   "pdf": 2.195,
+   "pdf_cached": 0.006,
+   "sections": 0.029,
+   "model_load": 1.885,
+   "route_total": 0.35,
+   "route_max": 0.047,
+   "embed_first": 37.331,
+   "embed_rest_mean": 0.024
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 60.1,
+   "sections": 61.0,
+   "model_load": 1199.4,
+   "route": 1199.4,
+   "embed": 1694.2
+  },
+  "cases": 10,
+  "pages": 80,
+  "characters": 243697,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-554-A",
+  "chunks": 290,
+  "seconds_total": 42.479,
+  "process_seconds": 43.175
+ },
+ {
+  "booklet": "2022_09_25_it.pdf",
+  "seconds": {
+   "import": 0.436,
+   "pdf": 1.933,
+   "pdf_cached": 0.006,
+   "sections": 0.029,
+   "model_load": 1.843,
+   "route_total": 34.333,
+   "route_max": 34.007,
+   "embed_first": 34.524,
+   "embed_rest_mean": 0.028
+  },
+  "peak_mb": {
+   "import": 47.0,
+   "pdf": 60.2,
+   "sections": 60.9,
+   "model_load": 1198.6,
+   "route": 1992.9,
+   "embed": 2724.7
+  },
+  "cases": 11,
+  "pages": 80,
+  "characters": 251699,
+  "routed": 11,
+  "route_slowest_case": "v1.1-row-500-A",
+  "chunks": 294,
+  "seconds_total": 73.402,
+  "process_seconds": 74.433
+ },
+ {
+  "booklet": "2023_06_18_de.pdf",
+  "seconds": {
+   "import": 0.422,
+   "pdf": 1.834,
+   "pdf_cached": 0.005,
+   "sections": 0.02,
+   "model_load": 1.947,
+   "route_total": 0.153,
+   "route_max": 0.033,
+   "embed_first": 13.363,
+   "embed_rest_mean": 0.03
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 63.8,
+   "sections": 64.9,
+   "model_load": 1202.5,
+   "route": 1202.5,
+   "embed": 1202.5
+  },
+  "cases": 7,
+  "pages": 56,
+  "characters": 94837,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-1167-A",
+  "chunks": 124,
+  "seconds_total": 17.946,
+  "process_seconds": 18.694
+ },
+ {
+  "booklet": "2023_06_18_fr.pdf",
+  "seconds": {
+   "import": 0.422,
+   "pdf": 2.067,
+   "pdf_cached": 0.008,
+   "sections": 0.022,
+   "model_load": 1.815,
+   "route_total": 0.125,
+   "route_max": 0.022,
+   "embed_first": 15.98,
+   "embed_rest_mean": 0.033
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 64.2,
+   "sections": 66.0,
+   "model_load": 1202.3,
+   "route": 1202.3,
+   "embed": 1202.3
+  },
+  "cases": 6,
+  "pages": 56,
+  "characters": 103227,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-1144-A",
+  "chunks": 137,
+  "seconds_total": 20.623,
+  "process_seconds": 21.305
+ },
+ {
+  "booklet": "2023_06_18_it.pdf",
+  "seconds": {
+   "import": 0.478,
+   "pdf": 1.863,
+   "pdf_cached": 0.006,
+   "sections": 0.022,
+   "model_load": 1.863,
+   "route_total": 8.626,
+   "route_max": 8.468,
+   "embed_first": 15.756,
+   "embed_rest_mean": 0.016
+  },
+  "peak_mb": {
+   "import": 47.1,
+   "pdf": 64.4,
+   "sections": 65.1,
+   "model_load": 1202.5,
+   "route": 2104.5,
+   "embed": 2583.0
+  },
+  "cases": 9,
+  "pages": 56,
+  "characters": 102474,
+  "routed": 9,
+  "route_slowest_case": "v1.1-row-1052-A",
+  "chunks": 137,
+  "seconds_total": 28.763,
+  "process_seconds": 29.744
+ },
+ {
+  "booklet": "2024_03_03_de.pdf",
+  "seconds": {
+   "import": 0.425,
+   "pdf": 0.917,
+   "pdf_cached": 0.003,
+   "sections": 0.01,
+   "model_load": 1.823,
+   "route_total": 0.058,
+   "route_max": 0.009,
+   "embed_first": 6.342,
+   "embed_rest_mean": 0.022
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 58.7,
+   "sections": 59.4,
+   "model_load": 1197.1,
+   "route": 1197.1,
+   "embed": 1197.1
+  },
+  "cases": 7,
+  "pages": 32,
+  "characters": 40058,
+  "routed": 7,
+  "route_slowest_case": "v1.1-row-711-A",
+  "chunks": 58,
+  "seconds_total": 9.729,
+  "process_seconds": 10.438
+ },
+ {
+  "booklet": "2024_03_03_fr.pdf",
+  "seconds": {
+   "import": 0.431,
+   "pdf": 0.917,
+   "pdf_cached": 0.003,
+   "sections": 0.011,
+   "model_load": 1.929,
+   "route_total": 0.046,
+   "route_max": 0.015,
+   "embed_first": 7.504,
+   "embed_rest_mean": 0.013
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 58.5,
+   "sections": 59.2,
+   "model_load": 1197.0,
+   "route": 1197.0,
+   "embed": 1197.0
+  },
+  "cases": 4,
+  "pages": 32,
+  "characters": 41564,
+  "routed": 4,
+  "route_slowest_case": "v1.1-row-948-A",
+  "chunks": 59,
+  "seconds_total": 10.906,
+  "process_seconds": 11.613
+ },
+ {
+  "booklet": "2024_03_03_it.pdf",
+  "seconds": {
+   "import": 0.473,
+   "pdf": 1.018,
+   "pdf_cached": 0.003,
+   "sections": 0.011,
+   "model_load": 1.973,
+   "route_total": 0.062,
+   "route_max": 0.011,
+   "embed_first": 7.182,
+   "embed_rest_mean": 0.019
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 58.8,
+   "sections": 59.6,
+   "model_load": 1197.6,
+   "route": 1197.6,
+   "embed": 1197.6
+  },
+  "cases": 6,
+  "pages": 32,
+  "characters": 43850,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-951-A",
+  "chunks": 64,
+  "seconds_total": 10.835,
+  "process_seconds": 11.481
+ },
+ {
+  "booklet": "2024_06_09_de.pdf",
+  "seconds": {
+   "import": 0.413,
+   "pdf": 2.909,
+   "pdf_cached": 0.01,
+   "sections": 0.024,
+   "model_load": 1.83,
+   "route_total": 0.231,
+   "route_max": 0.024,
+   "embed_first": 27.349,
+   "embed_rest_mean": 0.023
+  },
+  "peak_mb": {
+   "import": 47.0,
+   "pdf": 69.6,
+   "sections": 71.0,
+   "model_load": 1208.7,
+   "route": 1208.7,
+   "embed": 1397.0
+  },
+  "cases": 10,
+  "pages": 88,
+  "characters": 213457,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-666-A",
+  "chunks": 257,
+  "seconds_total": 32.995,
+  "process_seconds": 33.703
+ },
+ {
+  "booklet": "2024_06_09_fr.pdf",
+  "seconds": {
+   "import": 0.446,
+   "pdf": 3.415,
+   "pdf_cached": 0.008,
+   "sections": 0.028,
+   "model_load": 1.879,
+   "route_total": 4.631,
+   "route_max": 4.297,
+   "embed_first": 33.894,
+   "embed_rest_mean": 0.03
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 71.6,
+   "sections": 72.9,
+   "model_load": 1209.3,
+   "route": 1940.9,
+   "embed": 2411.9
+  },
+  "cases": 11,
+  "pages": 88,
+  "characters": 236817,
+  "routed": 11,
+  "route_slowest_case": "v1.1-row-260-A",
+  "chunks": 281,
+  "seconds_total": 44.62,
+  "process_seconds": 45.633
+ },
+ {
+  "booklet": "2024_06_09_it.pdf",
+  "seconds": {
+   "import": 0.438,
+   "pdf": 3.475,
+   "pdf_cached": 0.008,
+   "sections": 0.027,
+   "model_load": 1.861,
+   "route_total": 34.065,
+   "route_max": 33.877,
+   "embed_first": 30.246,
+   "embed_rest_mean": 0.023
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 70.3,
+   "sections": 71.6,
+   "model_load": 1208.9,
+   "route": 1941.0,
+   "embed": 2173.6
+  },
+  "cases": 6,
+  "pages": 88,
+  "characters": 234692,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-782-A",
+  "chunks": 282,
+  "seconds_total": 70.258,
+  "process_seconds": 71.292
+ },
+ {
+  "booklet": "2024_09_22_de.pdf",
+  "seconds": {
+   "import": 0.441,
+   "pdf": 0.962,
+   "pdf_cached": 0.033,
+   "sections": 0.011,
+   "model_load": 1.855,
+   "route_total": 0.029,
+   "route_max": 0.019,
+   "embed_first": 7.136,
+   "embed_rest_mean": 0.064
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 57.9,
+   "sections": 59.9,
+   "model_load": 1191.7,
+   "route": 1191.7,
+   "embed": 1191.7
+  },
+  "cases": 2,
+  "pages": 40,
+  "characters": 37287,
+  "routed": 2,
+  "route_slowest_case": "v1.1-row-471-A",
+  "chunks": 67,
+  "seconds_total": 10.552,
+  "process_seconds": 11.174
+ },
+ {
+  "booklet": "2024_09_22_fr.pdf",
+  "seconds": {
+   "import": 0.449,
+   "pdf": 1.283,
+   "pdf_cached": 0.004,
+   "sections": 0.012,
+   "model_load": 1.837,
+   "route_total": 4.822,
+   "route_max": 4.765,
+   "embed_first": 13.797,
+   "embed_rest_mean": 0.033
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 56.0,
+   "sections": 57.0,
+   "model_load": 1196.0,
+   "route": 1927.5,
+   "embed": 2431.8
+  },
+  "cases": 6,
+  "pages": 40,
+  "characters": 80326,
+  "routed": 6,
+  "route_slowest_case": "v1.1-row-935-A",
+  "chunks": 105,
+  "seconds_total": 22.39,
+  "process_seconds": 23.335
+ },
+ {
+  "booklet": "2024_09_22_it.pdf",
+  "seconds": {
+   "import": 0.428,
+   "pdf": 1.364,
+   "pdf_cached": 0.006,
+   "sections": 0.021,
+   "model_load": 1.78,
+   "route_total": 4.77,
+   "route_max": 4.606,
+   "embed_first": 12.939,
+   "embed_rest_mean": 0.029
+  },
+  "peak_mb": {
+   "import": 47.0,
+   "pdf": 56.1,
+   "sections": 57.1,
+   "model_load": 1195.6,
+   "route": 1927.1,
+   "embed": 2159.8
+  },
+  "cases": 11,
+  "pages": 40,
+  "characters": 86088,
+  "routed": 11,
+  "route_slowest_case": "v1.1-row-9-A",
+  "chunks": 109,
+  "seconds_total": 21.615,
+  "process_seconds": 22.589
+ },
+ {
+  "booklet": "2024_11_24_de.pdf",
+  "seconds": {
+   "import": 0.416,
+   "pdf": 2.783,
+   "pdf_cached": 0.005,
+   "sections": 0.023,
+   "model_load": 1.806,
+   "route_total": 0.183,
+   "route_max": 0.027,
+   "embed_first": 22.918,
+   "embed_rest_mean": 0.02
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 76.8,
+   "sections": 76.8,
+   "model_load": 1206.8,
+   "route": 1206.8,
+   "embed": 1603.9
+  },
+  "cases": 8,
+  "pages": 72,
+  "characters": 147690,
+  "routed": 8,
+  "route_slowest_case": "v1.1-row-288-A",
+  "chunks": 193,
+  "seconds_total": 28.293,
+  "process_seconds": 28.954
+ },
+ {
+  "booklet": "2024_11_24_fr.pdf",
+  "seconds": {
+   "import": 0.416,
+   "pdf": 2.854,
+   "pdf_cached": 0.008,
+   "sections": 0.04,
+   "model_load": 1.762,
+   "route_total": 6.751,
+   "route_max": 6.58,
+   "embed_first": 29.689,
+   "embed_rest_mean": 0.029
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 77.7,
+   "sections": 77.7,
+   "model_load": 1207.0,
+   "route": 1971.8,
+   "embed": 2762.5
+  },
+  "cases": 7,
+  "pages": 72,
+  "characters": 146406,
+  "routed": 7,
+  "route_slowest_case": "v1.1-row-564-A",
+  "chunks": 190,
+  "seconds_total": 41.714,
+  "process_seconds": 42.716
+ },
+ {
+  "booklet": "2024_11_24_it.pdf",
+  "seconds": {
+   "import": 0.429,
+   "pdf": 2.954,
+   "pdf_cached": 0.005,
+   "sections": 0.026,
+   "model_load": 1.884,
+   "route_total": 0.245,
+   "route_max": 0.026,
+   "embed_first": 23.561,
+   "embed_rest_mean": 0.03
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 76.7,
+   "sections": 76.7,
+   "model_load": 1206.7,
+   "route": 1206.7,
+   "embed": 1616.4
+  },
+  "cases": 10,
+  "pages": 72,
+  "characters": 153686,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-1085-A",
+  "chunks": 199,
+  "seconds_total": 29.391,
+  "process_seconds": 30.087
+ },
+ {
+  "booklet": "2025_02_09_de.pdf",
+  "seconds": {
+   "import": 0.474,
+   "pdf": 0.533,
+   "pdf_cached": 0.002,
+   "sections": 0.005,
+   "model_load": 1.864,
+   "route_total": 0.005,
+   "route_max": 0.005,
+   "embed_first": 3.006,
+   "embed_rest_mean": null
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 55.7,
+   "sections": 56.3,
+   "model_load": 1193.7,
+   "route": 1193.7,
+   "embed": 1193.7
+  },
+  "cases": 1,
+  "pages": 16,
+  "characters": 23861,
+  "routed": 1,
+  "route_slowest_case": "v1.1-row-821-A",
+  "chunks": 34,
+  "seconds_total": 5.909,
+  "process_seconds": 6.535
+ },
+ {
+  "booklet": "2025_02_09_it.pdf",
+  "seconds": {
+   "import": 0.432,
+   "pdf": 0.55,
+   "pdf_cached": 0.002,
+   "sections": 0.006,
+   "model_load": 1.843,
+   "route_total": 0.01,
+   "route_max": 0.005,
+   "embed_first": 3.822,
+   "embed_rest_mean": 0.011
+  },
+  "peak_mb": {
+   "import": 46.7,
+   "pdf": 55.6,
+   "sections": 56.1,
+   "model_load": 1194.0,
+   "route": 1194.0,
+   "embed": 1194.0
+  },
+  "cases": 2,
+  "pages": 16,
+  "characters": 24882,
+  "routed": 2,
+  "route_slowest_case": "v1.1-row-947-A",
+  "chunks": 36,
+  "seconds_total": 6.694,
+  "process_seconds": 7.344
+ },
+ {
+  "booklet": "2025_11_30_de.pdf",
+  "seconds": {
+   "import": 0.454,
+   "pdf": 0.86,
+   "pdf_cached": 0.003,
+   "sections": 0.011,
+   "model_load": 1.844,
+   "route_total": 0.1,
+   "route_max": 0.013,
+   "embed_first": 6.747,
+   "embed_rest_mean": 0.024
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 55.8,
+   "sections": 56.4,
+   "model_load": 1193.7,
+   "route": 1193.7,
+   "embed": 1193.7
+  },
+  "cases": 10,
+  "pages": 32,
+  "characters": 52400,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-133-A",
+  "chunks": 71,
+  "seconds_total": 10.251,
+  "process_seconds": 10.891
+ },
+ {
+  "booklet": "2025_11_30_fr.pdf",
+  "seconds": {
+   "import": 0.425,
+   "pdf": 1.034,
+   "pdf_cached": 0.003,
+   "sections": 0.013,
+   "model_load": 1.77,
+   "route_total": 4.045,
+   "route_max": 4.021,
+   "embed_first": 9.797,
+   "embed_rest_mean": 0.011
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 55.4,
+   "sections": 56.1,
+   "model_load": 1193.8,
+   "route": 1925.8,
+   "embed": 1976.5
+  },
+  "cases": 3,
+  "pages": 32,
+  "characters": 66489,
+  "routed": 3,
+  "route_slowest_case": "v1.1-row-1283-A",
+  "chunks": 86,
+  "seconds_total": 17.128,
+  "process_seconds": 18.105
+ },
+ {
+  "booklet": "2025_11_30_it.pdf",
+  "seconds": {
+   "import": 0.433,
+   "pdf": 1.058,
+   "pdf_cached": 0.005,
+   "sections": 0.013,
+   "model_load": 1.834,
+   "route_total": 4.278,
+   "route_max": 4.245,
+   "embed_first": 9.889,
+   "embed_rest_mean": 0.042
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 55.1,
+   "sections": 56.1,
+   "model_load": 1193.9,
+   "route": 1925.5,
+   "embed": 1940.6
+  },
+  "cases": 3,
+  "pages": 32,
+  "characters": 69726,
+  "routed": 3,
+  "route_slowest_case": "v1.1-row-793-A",
+  "chunks": 88,
+  "seconds_total": 17.615,
+  "process_seconds": 18.531
+ },
+ {
+  "booklet": "2026_03_08_de.pdf",
+  "seconds": {
+   "import": 0.438,
+   "pdf": 1.728,
+   "pdf_cached": 0.005,
+   "sections": 0.024,
+   "model_load": 1.874,
+   "route_total": 4.466,
+   "route_max": 4.195,
+   "embed_first": 17.557,
+   "embed_rest_mean": 0.025
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 59.1,
+   "sections": 60.3,
+   "model_load": 1198.0,
+   "route": 1929.6,
+   "embed": 2125.2
+  },
+  "cases": 11,
+  "pages": 72,
+  "characters": 119087,
+  "routed": 11,
+  "route_slowest_case": "v1.1-row-345-A",
+  "chunks": 160,
+  "seconds_total": 26.361,
+  "process_seconds": 27.326
+ },
+ {
+  "booklet": "2026_03_08_fr.pdf",
+  "seconds": {
+   "import": 0.427,
+   "pdf": 2.029,
+   "pdf_cached": 0.004,
+   "sections": 0.03,
+   "model_load": 1.885,
+   "route_total": 6.381,
+   "route_max": 6.154,
+   "embed_first": 20.906,
+   "embed_rest_mean": 0.024
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 59.6,
+   "sections": 60.4,
+   "model_load": 1198.6,
+   "route": 1936.6,
+   "embed": 2558.4
+  },
+  "cases": 9,
+  "pages": 72,
+  "characters": 127028,
+  "routed": 9,
+  "route_slowest_case": "v1.1-row-746-A",
+  "chunks": 164,
+  "seconds_total": 31.875,
+  "process_seconds": 32.853
+ },
+ {
+  "booklet": "2026_03_08_it.pdf",
+  "seconds": {
+   "import": 0.447,
+   "pdf": 1.858,
+   "pdf_cached": 0.004,
+   "sections": 0.028,
+   "model_load": 1.858,
+   "route_total": 0.276,
+   "route_max": 0.03,
+   "embed_first": 17.952,
+   "embed_rest_mean": 0.031
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 59.0,
+   "sections": 59.9,
+   "model_load": 1198.4,
+   "route": 1198.4,
+   "embed": 1198.4
+  },
+  "cases": 10,
+  "pages": 72,
+  "characters": 125051,
+  "routed": 10,
+  "route_slowest_case": "v1.1-row-223-A",
+  "chunks": 164,
+  "seconds_total": 22.722,
+  "process_seconds": 23.348
+ },
+ {
+  "booklet": "2026_06_14_de.pdf",
+  "seconds": {
+   "import": 0.449,
+   "pdf": 1.187,
+   "pdf_cached": 0.006,
+   "sections": 0.013,
+   "model_load": 1.918,
+   "route_total": 8.8,
+   "route_max": 8.753,
+   "embed_first": 7.9,
+   "embed_rest_mean": 0.027
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 55.8,
+   "sections": 56.7,
+   "model_load": 1194.1,
+   "route": 2183.5,
+   "embed": 2412.5
+  },
+  "cases": 4,
+  "pages": 40,
+  "characters": 59125,
+  "routed": 4,
+  "route_slowest_case": "v1.1-row-1208-A",
+  "chunks": 79,
+  "seconds_total": 20.375,
+  "process_seconds": 21.275
+ },
+ {
+  "booklet": "2026_06_14_fr.pdf",
+  "seconds": {
+   "import": 0.437,
+   "pdf": 0.954,
+   "pdf_cached": 0.004,
+   "sections": 0.021,
+   "model_load": 1.821,
+   "route_total": 0.046,
+   "route_max": 0.012,
+   "embed_first": 9.681,
+   "embed_rest_mean": 0.011
+  },
+  "peak_mb": {
+   "import": 46.8,
+   "pdf": 54.9,
+   "sections": 55.9,
+   "model_load": 1194.6,
+   "route": 1194.6,
+   "embed": 1194.6
+  },
+  "cases": 4,
+  "pages": 40,
+  "characters": 60636,
+  "routed": 4,
+  "route_slowest_case": "v1.1-row-290-A",
+  "chunks": 82,
+  "seconds_total": 13.012,
+  "process_seconds": 13.636
+ },
+ {
+  "booklet": "2026_06_14_it.pdf",
+  "seconds": {
+   "import": 0.426,
+   "pdf": 1.003,
+   "pdf_cached": 0.004,
+   "sections": 0.015,
+   "model_load": 1.842,
+   "route_total": 9.3,
+   "route_max": 5.395,
+   "embed_first": 8.557,
+   "embed_rest_mean": 0.03
+  },
+  "peak_mb": {
+   "import": 46.9,
+   "pdf": 55.1,
+   "sections": 56.1,
+   "model_load": 1194.7,
+   "route": 1926.1,
+   "embed": 2119.5
+  },
+  "cases": 4,
+  "pages": 40,
+  "characters": 62946,
+  "routed": 4,
+  "route_slowest_case": "v1.1-row-493-A",
+  "chunks": 85,
+  "seconds_total": 21.254,
+  "process_seconds": 22.286
+ }
+]
