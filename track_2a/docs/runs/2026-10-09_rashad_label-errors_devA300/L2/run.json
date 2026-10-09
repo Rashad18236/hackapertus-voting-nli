@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "18:56",
+ "kind": "model run",
+ "code": "5ae4357 (src/ as in 86791db)",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases",
+ "format": "official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-09_rashad_label-errors_devA300/A-current",
+  "2026-10-09_rashad_label-errors_devA300/L1"
+ ],
+ "setup": "--second-look-a: after a neutral answer whose highest claim-paragraph e5 similarity is at least 0.845, a second call with the 3 most similar paragraphs (A-v4-second-look, asks 0, then 2, then 1); a 0 or 2 replaces the neutral; tokens summed",
+ "results": {
+  "macro_f1": 0.976,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.98,
+   "contradiction": 0.964
+  },
+  "evidence": {
+   "score": 0.97,
+   "found": 195,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1244,
+  "mean_time_ms": 1923,
+  "p95_time_ms": 3654
+ }
+}

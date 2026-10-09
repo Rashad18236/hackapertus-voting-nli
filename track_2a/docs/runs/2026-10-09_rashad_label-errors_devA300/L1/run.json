@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "18:56",
+ "kind": "model run",
+ "code": "5ae4357 (src/ as in 86791db)",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases",
+ "format": "official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D)",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-09_rashad_label-errors_devA300/A-current",
+  "2026-10-09_rashad_label-errors_devA300/L2"
+ ],
+ "setup": "--label-rule-a: A-v4-section-route-L1 = the default prompt plus 'A claim that gives a different number, share, date, actor or direction than the reference text gives for the same thing is a contradiction.'",
+ "results": {
+  "macro_f1": 0.98,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.99,
+   "contradiction": 0.969
+  },
+  "evidence": {
+   "score": 0.98,
+   "found": 197,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1238,
+  "mean_time_ms": 1986,
+  "p95_time_ms": 3135
+ }
+}
