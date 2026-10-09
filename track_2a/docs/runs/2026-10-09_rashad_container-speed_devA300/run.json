@@ -1,0 +1,23 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "14:30",
+ "kind": "offline check",
+ "code": "72cf03a (before) and the change B working tree (B32, B16)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases",
+ "setup": "session 8 change B: the real CLI inside the image (2 CPUs, 4 GB, read-only root, no internet) against the fake model; before, with length-sorted batches of 32, and with batches of 16",
+ "format": "scripts/container_speed.sh; no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model scripts/stub_llm.py)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Length-sorted batches: total 364.9 s -> 248.4 s (32) -> 228.5 s (16), p95 4.15 -> 3.63 -> 3.21 s, slowest case 51.2 -> 20.9 -> 17.6 s, peak memory 3,287 -> 2,764 -> 2,254 MiB; vectors identical, same selections.",
+ "results": {
+  "before": {"wall_s": 364.9, "p95_s": 4.15, "max_s": 51.2, "peak_mib": 3287},
+  "sorted_batch32": {"wall_s": 248.4, "p95_s": 3.634, "max_s": 20.9, "peak_mib": 2764},
+  "sorted_batch16": {"wall_s": 228.5, "p95_s": 3.21, "max_s": 17.6, "peak_mib": 2254}
+ }
+}
