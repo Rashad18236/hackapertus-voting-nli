@@ -18,7 +18,7 @@ is in [Proposals](#proposals)). Nothing was merged.
 | 1 | Fake model `scripts/stub_llm.py` | **Done.** Chat-completions server, fixed valid answer and token counts, failures and garbage by call number or by marker |
 | 2 | Contract tests `tests/test_contract.py` (real CLI, fake model over HTTP) | **Pass**: 23 tests (with the e5 files and `CONTRACT_SLOW=1`; 21 pass and 2 skip without them, as in CI), **3 expected failures** = gaps in `src/cli.py` (duplicate ids, byte order mark, invalid UTF-8) |
 | 3 | Evidence of session 6's two arms against the booklet pages | **embed-e5-small: pass. section-route: 12 of 284 items fail "verbatim"** (not one contiguous piece of their page); every other rule passes in both arms |
-| 4 | Clean-machine workflow `.github/workflows/clean-machine.yml` | **Pass on GitHub** (no internet, read-only root and `/data`): image 1.29 GB uncompressed, build 19–22 s, cold run on the examples 19 s. Reproduced locally |
+| 4 | Clean-machine workflow `.github/workflows/clean-machine.yml` | **Pass on GitHub** (no internet, read-only root and `/data`): image 1.29 GB uncompressed, build 17–25 s, cold run on the examples 18–19 s with `embed-e5-small` as default, 3 s with `section-route` (default since session 7). Reproduced locally |
 | 5 | 15 unseen booklets (5 dates outside dev and test) | **2026-09-27: 3 of 3 complete. 2018–2019: 0 of 12** (votes found, no parts). Proposal: 14 of 15, dev unchanged |
 | 6 | Router stress test, 300 reworded openings | **131 right, 4 wrong part, 153 fall back**, 12 correct fallbacks. Proposal: 273 right, 0 wrong, dataset routes unchanged |
 | 7 | Speed and memory per dev booklet, host and container (2 CPUs, 4 GB) | **Measured.** Container, 300 dev cases without the model: `embed-e5-small` p95 19.3 s, worst 44.4 s, peak 1.8 GiB; section-route p95 3.7 s, worst 31.9 s (long law parts), peak 2.7 GiB (under 4 GB). Cold start, one task A case: 26–27 s (`embed-e5-small`), 3 s (`section-route`, the default since session 7) |
@@ -156,10 +156,10 @@ in-memory id), and it shows the read-only root works.
 | 1 (PR opened) | `20edd79` | **pass**: build 22 s, run 19 s, image 1,293,593,836 bytes (1.29 GB), 2 calls for 2 cases, format "errors: none", internet unreachable from the network | **fail**: `results.md` not regenerated at that commit, and one order test assumed the e5 files (the hunting law's long part needs e5; without it the case gets the fallback). Fixed in `8eec72c` and `db6770f` (reproduced in a worktree without `models/` first, then 110 passed) |
 | 2 (dispatched) | `5574e20` | **pass**: build 19 s, run 19 s | **pass** (24 s) |
 | 3 (dispatched) | `c0bc479` | **pass**: build 25 s, run 18 s (`actions/checkout@v5`) | **pass** (28 s, `actions/setup-python@v6`) |
+| 4 (push) and 5 (dispatched) | `269c8e6` (session 7 merged: default `section-route`) | **pass** (run 5: build 17 s, **run 3 s**: the task A example is routed, so no booklet is embedded) | **pass** (run 5: 30 s) |
 
-The pushes from this session did not start new `pull_request` runs (only
-opening the PR did), so runs after the first were started by hand
-(`workflow_dispatch`). Pushes by the team start them as usual. Runs 1 and 2 (and the local reproduction) came before session 7 was merged
+Several pushes from this session started no `pull_request` run (the merge
+push did), so those commits were run by hand (`workflow_dispatch`). Runs 1 and 2 (and the local reproduction) came before session 7 was merged
 into this branch, when the default task A context was still `embed-e5-small`:
 their task A case embedded the whole booklet. Later runs use `section-route`.
 

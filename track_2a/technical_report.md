@@ -330,8 +330,8 @@ Further measured steps:
   OUTPUT_DIR=output/dev` after `python3 scripts/fetch_dev_booklets.py`; score
   with the starter's `evaluate.py`.
 - **Hardware:** CPU only. The image is 1.29 GB uncompressed (681 MB
-  compressed); `make build` took 22 s on a fresh GitHub runner, and the cold
-  run on the two examples 19 s (`docs/checks_no_model.md`). TODO: the
+  compressed); `make build` took 17–25 s on a fresh GitHub runner, and the
+  cold run on the two examples 3 s (`docs/checks_no_model.md`). TODO: the
   organisers' evaluation hardware is unknown.
 - **Determinism:** temperature 0, local steps deterministic, booklet cache
   keyed by content; split seed 42. The endpoint's own drift is outside our
@@ -341,7 +341,9 @@ Further measured steps:
 - **Clean machine:** `.github/workflows/clean-machine.yml` builds the image
   with `make build` on a fresh runner and runs it on the examples with no
   internet access, a read-only root filesystem and read-only `/data`, against
-  the fake model; it passed on GitHub (build 19–22 s, run 19 s).
+  the fake model; it passed on GitHub (build 17–25 s; the cold run on the
+  two examples takes 3 s with the `section-route` default, 18–19 s when the
+  default was `embed-e5-small`).
 - **Speed and memory:** without model latency, a task A case takes
   milliseconds once its booklet is prepared; the first case on a booklet pays
   for parsing (up to 3.5 s) and, with `embed-e5-small`, for embedding the
