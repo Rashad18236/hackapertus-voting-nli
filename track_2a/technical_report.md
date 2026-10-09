@@ -63,7 +63,11 @@ cases.jsonl ──► src/cli.py ──┬─ task B: reference text + claim ─
 
 - `src/cli.py`: the official entrypoint (`--input`, `--output`). Reads every
   line, answers every request that has an id, never stops on one bad case
-  (fallback answer: neutral with empty evidence), exit code 0.
+  (fallback answer: neutral with empty evidence), exit code 0. Since session 8
+  it decodes the input line by line (a byte that is not UTF-8 spoils only its
+  line; a byte order mark is ignored), answers a duplicated id once (its first
+  line), and writes each response as soon as it is ready, so a stopped run
+  keeps every finished case.
 - `src/llm.py`: the only module that calls a model. One OpenAI-style
   `chat/completions` request per case to `BASE_URL` with `API_KEY`
   (environment first; `LLM_BASE_URL`/`LLM_API_KEY` as local fallback), model
@@ -108,7 +112,10 @@ variant (`--context-a`):
    comitato afferma …" (the committee's arguments), "Laut dem
    Abstimmungstext …" (the text put to the vote), "Si le vote est accepté …"
    (the detailed explanation). Regular expressions on the normalised opening
-   map it to one of five parts, or to nothing.
+   (leading quotes and dashes removed) map it to one of five parts, or to
+   nothing. Session 8 added the patterns of the router stress test (other
+   prepositions and verbs, "Bundesrat und Parlament", plural committees, "In
+   Kürze / En bref / In breve", a summary named within the first words).
 2. *Parser* (`src/booklet.py`): reads the table of contents ("In Kürze 4 – 5 /
    Im Detail 8 / Argumente 14 / Abstimmungstext 18" and the French and
    Italian equivalents) into one entry per vote, checks every start page
@@ -116,7 +123,8 @@ variant (`--context-a`):
    committee's, a parliamentary debate where there is one, and the Federal
    Council's, and splits the summary pages' recommendation boxes per voice.
    A vote that fails a check gets no parts, so the case falls back instead of
-   guessing.
+   guessing. Session 8 added the 2018–2019 headings ("Argumente Bundesrat"
+   without "und Parlament", "Le deliberazioni in Parlamento").
 3. *Vote match*: the case's `vote` is matched to a contents title by fuzzy
    partial ratio (at least 80, and at least 5 points ahead of the next vote).
 4. *Paragraphs*: the part's pages are split into paragraphs that keep the page
@@ -124,7 +132,9 @@ variant (`--context-a`):
    characters are dropped. Each paragraph keeps its page. The committee's and
    the council's parts also get their recommendation boxes. If the part has
    more than 8,000 characters, only the 8 paragraphs most similar to the claim
-   (multilingual-e5-small) are sent, in page order.
+   (multilingual-e5-small) are sent, in page order. The embedding batches
+   texts of similar length (sorted by length, batches of 16; session 8): the
+   same vectors, the long law parts about twice as fast.
 
 **What the prompt contains.** System message: the instruction and decision
 rule (for `A-v4-section-route`, task B's `v3-topic-first` rule word for word,
@@ -146,7 +156,8 @@ Task B sends `REFERENCE TEXT:` and `CLAIM:` and gets `{"label": …}`.
 
 **Evidence.** Only what Apertus cited, quoted from the booklet with its page
 (team decision, session 5): for `section-route` the cited paragraphs
-(at most 3); for page variants the cited pages cut into pieces of at most
+(at most 3; a paragraph whose text repeats one already taken, such as an
+identical clause of a law, is left out since session 8); for page variants the cited pages cut into pieces of at most
 1,000 characters (`cited-pieces`, at most 5 items). Neutral answers and task B
 answers carry no evidence.
 
@@ -267,8 +278,9 @@ Further measured steps:
   fields, missing or broken booklets, empty claims, unknown languages, failed
   and garbage model answers; the same cases in three orders give identical
   labels and evidence; only `/output` and `/tmp` are written. Three gaps in
-  `src/cli.py` are documented as expected failures (duplicate ids, a UTF-8
-  byte order mark, a byte that is not UTF-8).
+  `src/cli.py` (duplicate ids, a UTF-8 byte order mark, a byte that is not
+  UTF-8) were documented as expected failures; session 8 closed them, and a
+  run killed in the middle keeps its finished cases as valid lines.
 - Evidence of both E5 arms [`2026-10-09_rashad_evidence-check_devA300`]: no
   item over 5,000 characters, no response with more than five items, no
   evidence on a neutral answer, every page exists. Every `embed-e5-small`
@@ -277,11 +289,17 @@ Further measured steps:
   a page number inside the paragraph (partial ratio against the page ≥ 99.0).
 - Booklets outside dev and test [`2026-10-09_rashad_unseen-booklets_15`]:
   the 2026-09-27 booklet (after the dataset) parses completely in all three
-  languages; the 2018–2019 booklets find their votes but no parts, because
+  languages; the 2018–2019 booklets found their votes but no parts, because
   their arguments are titled "Argumente Bundesrat" without "und Parlament".
+  Since session 8: 14 of the 15 booklets parse completely (32 of 33 votes),
+  and the parse of every dev and val booklet is unchanged
+  [`2026-10-09_rashad_prompt-snapshot_devAB-valA`, `gates/`].
 - Router stress test [`2026-10-09_rashad_router-stress_300`]: of 300 reworded
-  claim openings written for the test, 131 are routed to the intended part,
-  4 to a wrong part, and the rest fall back to `embed-e5-small`.
+  claim openings written for the test, 131 were routed to the intended part,
+  4 to a wrong part, and the rest fell back to `embed-e5-small`. Since
+  session 8: 273 right, 0 wrong part; no dev or val claim changes its route.
+  The patterns were written after seeing these openings, so this is not an
+  unseen measure.
 - Speed and memory without the model [`2026-10-09_rashad_speed-memory_dev44`],
   all 300 dev task A cases end to end in the image limited to 2 CPUs and
   4 GB: `embed-e5-small` p95 19.3 s, worst 44.4 s per case (the first case
@@ -289,6 +307,17 @@ Further measured steps:
   `section-route` p95 3.7 s, worst 31.9 s (four long law texts whose
   paragraphs are all embedded), peak 2.7 GiB. Cold start with one task A
   case: 26–27 s with `embed-e5-small`, 3 s with `section-route`.
+- Session 8, length-sorted embedding batches of 16
+  [`2026-10-09_rashad_container-speed_devA300`], same image and limits,
+  `section-route` on the 300 dev task A cases: total 364.9 s → 228.5 s, p95
+  4.2 s → 3.2 s, slowest case 51.2 s → 17.6 s, peak memory 3.2 GiB → 2.2 GiB;
+  identical vectors and selections.
+- Session 8 hardening without a model (`docs/session_8_report.md`): before
+  and after each change, every request the pipeline sends for the 600 dev and
+  580 val cases was hashed, and E5's and E6's saved answers were replayed
+  through the code [`2026-10-09_rashad_prompt-snapshot_devAB-valA`]: no
+  request and no label changed; evidence changed only where a text was
+  repeated (19 responses), and the evidence score stayed the same.
 
 ## 6. Limitations
 
@@ -299,12 +328,14 @@ Further measured steps:
   and the private set have not been run.
 - **`section-route` depends on the claims' openings.** Claims that name their
   source in another way fall back to `embed-e5-small` (still answered, not
-  better); the stress test above shows which wordings do. A source named
-  after the subject ("Der Bundesrat ist laut Zusammenfassung …") is routed to
-  the wrong part.
-- **The parser depends on the 2020–2026 booklet layout.** Older booklets parse
-  to votes without parts, and such cases fall back. Some pages hold no
-  extractable text.
+  better); the stress test above shows which wordings do. Since session 8 a
+  source named after the subject ("Der Bundesrat ist laut Zusammenfassung …")
+  is routed to the summary if it comes within the first 40 characters;
+  reworded openings the stress test did not try may still fall back.
+- **The parser depends on the booklet layout.** It handles the 2020–2026
+  booklets and, since session 8, those of 2018–2019 (14 of 15 checked);
+  older booklets were not checked. A vote that fails a check gets no parts
+  and its cases fall back. Some pages hold no extractable text.
 - **Endpoint drift and the evaluation model.** Public AI's
   `apertus-v1.5-8b` changed its answers during 2026-10-08; results from
   different runs do not compare, and the evaluation's model and server are
@@ -312,10 +343,11 @@ Further measured steps:
 - **Evidence pages:** the starter's scorer does not check pages; whether the
   official one does is unknown. Our pages are the 1-based PDF pages the cited
   text comes from.
-- **Input robustness:** an input file with duplicate ids, a UTF-8 byte order
-  mark or a byte that is not UTF-8 is not handled as well as it could be
-  (proposals in `docs/checks_no_model.md`); the official input is expected to
-  be clean.
+- **Input robustness:** since session 8 the CLI handles duplicate ids, a
+  UTF-8 byte order mark and bytes that are not UTF-8, and writes each answer
+  as soon as it is ready. A line that is not valid JSON still gets no
+  response (it has no readable id); the official input is expected to be
+  clean.
 - **Not political advice.** The system checks a claim against the booklet's
   text only. Its answers are not voting recommendations and must not be read
   as such. Every task A label 0 or 2 comes with the booklet page and the
@@ -356,12 +388,9 @@ Further measured steps:
 - One change per paired comparison: a larger character budget for long detail
   and law parts instead of the 8 most similar paragraphs; the remaining
   "called neutral" errors (all 14 are reading errors).
-- Router and parser: the patterns proposed in `docs/checks_no_model.md`
-  (measured offline: 272 of 300 reworded openings routed right, no change on
-  the dataset's own claims; 14 of 15 older booklets parsed fully, no change on
-  dev).
-- Input hardening in `src/cli.py` (duplicate ids, byte order mark, invalid
-  UTF-8) and incremental writing of the output.
+- Remaining proposals of `docs/checks_no_model.md` not taken in session 8:
+  contiguous evidence text (P8), a response for a broken line that shows an
+  id (P5), and the smaller image (P11, P12).
 
 ## License
 

@@ -332,6 +332,11 @@ packages; the rest the `python:3.12-slim` base.
 For files this branch must not change. Each is measured or reproduced where
 possible; none is applied.
 
+**Update (session 8, `docs/session_8_report.md`):** P1 to P4, P6 (with batch
+size 16), P7, P9 and P10 are applied, each behind gates that compare every
+request and every replayed answer with the code before. P5, P8, P11 and P12
+are not.
+
 | # | File | Proposal | Evidence |
 |---|---|---|---|
 | P1 | `src/cli.py` | Answer each id once (the first line with that id), log the rest | The CLI writes two responses for a duplicated id; the starter's scorer then counts that id invalid. Test `test_duplicate_ids_get_exactly_one_response` (expected failure) |

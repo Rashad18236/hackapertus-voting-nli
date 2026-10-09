@@ -196,7 +196,10 @@ docs/           official contract, reports, reviews
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
                 search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
-                rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py
+                rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py; since PR #12
+                stub_llm.py (fake model), router_stress.py, unseen_booklets.py, speed_memory.py;
+                session 8: prompt_snapshot.py (request hashes and replay, gates G1/G2),
+                embed_equivalence.py, parse_equivalence.py, container_speed.sh
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -249,7 +252,37 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task A context, `section-route` as the default
+## Current stage: hardening without a model (session 8)
+
+Session 8 (2026-10-09, branch `rashad/hardening` from `main` at `25ed5fa`,
+report `track_2a/docs/session_8_report.md`, decisions
+`docs/decisions/2026-10-09-1348_rashad_session-8.md`): five proposals of
+`track_2a/docs/checks_no_model.md` applied, one commit each, **no model
+calls**, every change behind two gates that compare it with a reference:
+
+- **Reference** (`docs/runs/2026-10-09_rashad_prompt-snapshot_devAB-valA`):
+  `scripts/prompt_snapshot.py` runs the real CLI on the 600 dev and 580 val
+  cases against the fake model (`scripts/stub_llm.py`) and records the
+  SHA-256 of every request body and every task A path; the fake model's
+  replay mode returns E5's and E6's saved answers by request hash, which
+  reproduces their scores exactly (dev 0.953 / 0.905, val 0.956 / 0.946).
+- **G1** every request hash and path equal the reference; **G2** every label
+  and evidence equal it (metrics ignored); plus `pytest`. Rerun after any
+  change to `src/`: `scripts/prompt_snapshot.py run --replay ...` then
+  `compare` (about 6 minutes).
+- **A** `src/cli.py`: input decoded line by line (bad bytes, byte order
+  mark), a duplicated id answered once, each response written and flushed at
+  once (a killed run keeps its finished cases). **B** e5 embedding in
+  length-sorted batches of 16: same vectors, section-route on 300 dev cases
+  in the container 364.9 s → 228.5 s, slowest case 51.2 → 17.6 s, peak
+  3.2 → 2.2 GiB. **C** router patterns of the stress test: 273 of 300 right,
+  0 wrong part. **D** parser patterns for 2018–2019 booklets: 14 of 15
+  unseen booklets, dev and val parse identical. **E** a repeated evidence text
+  is left out (19 responses; evidence score unchanged).
+- All five applied; G1 and G2 held for each (E changed only the evidence of
+  the 19 responses that repeated a text). Not done: P5, P8, P11, P12.
+
+Previous stage: task A context, `section-route` as the default.
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
@@ -350,6 +383,8 @@ Rules for this stage:
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,
   selector recall for the vote section) before spending model calls.
 - Cases run one at a time; one retry for HTTP 5xx and timeouts only.
+- A change to `src/` that should not change answers is checked with G1 and G2
+  against the session 8 reference (`scripts/prompt_snapshot.py`).
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 
