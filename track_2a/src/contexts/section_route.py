@@ -71,13 +71,18 @@ def route(pages, vote, claim_text):
     return part, paragraphs
 
 
-def most_similar(paragraphs, claim_text, top_k=TOP_K):
-    """The top_k paragraphs by cosine similarity to the claim (e5-small), in their original order."""
+def similarities(paragraphs, claim_text):
+    """Cosine similarity (e5-small) between the claim and each paragraph as shown, in the paragraphs' order."""
     texts = [display(t) for _, t in paragraphs]
     key = hashlib.sha256("\n\n".join(texts).encode("utf-8")).hexdigest()
     if key not in _vectors:
         _vectors[key] = retrieval.embedder("e5-small").embed([f"passage: {t}" for t in texts])
-    scores = _vectors[key] @ retrieval.query_vector("e5-small", claim_text)
+    return _vectors[key] @ retrieval.query_vector("e5-small", claim_text)
+
+
+def most_similar(paragraphs, claim_text, top_k=TOP_K):
+    """The top_k paragraphs by cosine similarity to the claim (e5-small), in their original order."""
+    scores = similarities(paragraphs, claim_text)
     best = sorted(range(len(paragraphs)), key=lambda i: -scores[i])[:top_k]
     return [paragraphs[i] for i in sorted(best)]
 

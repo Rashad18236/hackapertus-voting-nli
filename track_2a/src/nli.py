@@ -166,6 +166,28 @@ First give the numbers of the paragraphs that justify your label, at most three,
 Answer with one JSON object and nothing else, paragraphs first, for example:
 {{"paragraphs": [2, 5], "label": 0}}"""
 
+# Session 9, phase D (off by default). L1: the routed prompt plus one sentence on what makes a contradiction.
+L1_SENTENCE = ("A claim that gives a different number, share, date, actor or direction than the reference text gives "
+               "for the same thing is a contradiction.")
+PROMPTS_A["A-v4-section-route-L1"] = PROMPTS_A["A-v4-section-route"].replace(
+    _RULE_B, _RULE_B + "\n" + L1_SENTENCE)
+assert PROMPTS_A["A-v4-section-route-L1"] != PROMPTS_A["A-v4-section-route"]
+
+# L2: a second look at a neutral answer, with the three paragraphs most similar to the claim, asking 0, then 2,
+# then 1.
+PROMPTS_A["A-v4-second-look"] = """You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. The reference text is the three paragraphs ("[n] ...") closest to the claim from one part of the booklet's section on the ballot named in VOTE; the line PART says which part it is and whose voice it is. The reference text and the claim may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
+
+Decide in this order:
+0 (entailment) if the reference text supports the claim;
+2 (contradiction) if the reference text states something that cannot be true together with the claim;
+1 (neutral) only if neither: the reference text does not deal with the subject of the claim, or does not say enough to decide.
+Missing information is never a contradiction.
+
+First give the numbers of the paragraphs that justify your label, at most three, most relevant first (for label 1, an empty list). Then the label.
+
+Answer with one JSON object and nothing else, paragraphs first, for example:
+{"paragraphs": [2], "label": 0}"""
+
 ANSWER_SCHEMA_A_PARAGRAPHS = {
     "type": "object",
     "properties": {

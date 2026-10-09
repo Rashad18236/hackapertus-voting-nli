@@ -66,6 +66,11 @@ class Settings:
                                      # dev evidence 0.9055 -> 0.9254, val 0.9461 -> 0.9559, labels and requests unchanged)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
+    label_rule_a: bool = False   # L1 (session 9, phase D): the routed prompt plus one sentence on contradictions
+    second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
+    second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
+                                          # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
+                                          # ones and 11 of the 99 right ones; the best difference of the two shares)
 
 
 log = logging.getLogger("cli")
@@ -130,7 +135,7 @@ def predict_a(case, data_dir, start, raw, settings):
         log.warning("%s: routing failed (%s); running as %s", case_id, raw["route_error"],
                     context.fallback(settings.context_a))
     if routed is not None:
-        return predict_a_paragraphs(case_id, routed, messages, start, raw, settings, len(pages))
+        return predict_a_paragraphs(case_id, routed, messages, start, raw, settings, len(pages), vote, claim_text)
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
         mode = context.fallback(settings.context_a)
@@ -170,15 +175,20 @@ def paragraph_messages(routed, vote, claim_text, settings):
     variant = context.VARIANTS[settings.context_a]
     part, paragraphs = routed
     return nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in paragraphs],
-                                           vote, claim_text, variant.PROMPT_VERSION)
+                                           vote, claim_text, paragraph_prompt_version(settings))
 
 
-def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_total):
+def paragraph_prompt_version(settings):
+    version = context.VARIANTS[settings.context_a].PROMPT_VERSION
+    return version + "-L1" if settings.label_rule_a else version
+
+
+def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_total, vote="", claim_text=""):
     """Task A for a routed case: one part of the vote as numbered paragraphs; the answer cites paragraphs,
     whose verbatim text and page become the evidence. Returns (response, status)."""
     variant = context.VARIANTS[settings.context_a]
     part, paragraphs = routed
-    raw["prompt_version"], raw["route"] = variant.PROMPT_VERSION, part
+    raw["prompt_version"], raw["route"] = paragraph_prompt_version(settings), part
     raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
     raw["pages_total"], raw["context_pages"] = pages_total, sorted({page for page, _ in paragraphs})
     try:
@@ -195,9 +205,55 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
     if label is None:
         raw["parse_reason"] = reason
         return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
+    input_tokens, output_tokens = result.input_tokens, result.output_tokens
+    if label == 1 and settings.second_look_a:
+        second = second_look(routed, vote, claim_text, raw, settings)
+        if second is not None:
+            result2, label2, numbers2, shown2 = second
+            input_tokens, output_tokens = input_tokens + result2.input_tokens, output_tokens + result2.output_tokens
+            if label2 in (0, 2):  # only an entailment or contradiction replaces the first neutral answer
+                label, numbers, paragraphs = label2, numbers2, shown2
     items = variant.evidence_items(paragraphs, numbers, halves=settings.evidence_halves_a) if label in (0, 2) else []
     status = "ok" if label == 1 or items else "no valid paragraphs for label 0/2"
-    return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
+    return response(case_id, label, input_tokens, output_tokens, start, items), status
+
+
+def second_look(routed, vote, claim_text, raw, settings):
+    """L2 (session 9, phase D; off by default): after a neutral answer on a routed case, if the claim's highest e5
+    similarity to a sent paragraph reaches settings.second_look_threshold, ask once more with the three most
+    similar paragraphs (in their order) and prompt A-v4-second-look, which asks for 0, then 2, then 1.
+
+    Returns (result, label, paragraph numbers, the three paragraphs) of the second call, or None when there is no
+    second call or it fails or cannot be read (the first answer stays). Recorded in raw["second_look"]."""
+    variant = context.VARIANTS[settings.context_a]
+    part, paragraphs = routed
+    try:
+        scores = variant.similarities(paragraphs, claim_text)
+    except Exception as e:  # e.g. no e5 files: the first answer stays
+        raw["second_look"] = {"error": f"{type(e).__name__}: {e}"}
+        return None
+    best = float(max(scores))
+    raw["second_look"] = {"similarity": round(best, 4), "asked": best >= settings.second_look_threshold}
+    if best < settings.second_look_threshold:
+        return None
+    top = sorted(sorted(range(len(paragraphs)), key=lambda i: -scores[i])[:3])
+    shown = [paragraphs[i] for i in top]
+    messages = nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in shown],
+                                               vote, claim_text, "A-v4-second-look")
+    try:
+        result = llm.chat(messages, max_tokens=settings.max_tokens_a,
+                          json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
+    except llm.LLMError as e:
+        raw["second_look"].update(error=str(e), attempts=e.attempts)
+        return None
+    label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
+    raw["second_look"].update(answer=result.text, input_tokens=result.input_tokens,
+                              output_tokens=result.output_tokens, attempts=result.attempts,
+                              endpoint=result.endpoint, paragraphs=[[p, len(t)] for p, t in shown])
+    if label is None:
+        raw["second_look"]["parse_reason"] = reason
+        return result, None, [], shown
+    return result, label, numbers, shown
 
 
 def predict(case, data_dir=".", settings=None):
@@ -297,6 +353,12 @@ def main():
                         help="development only: task B context (session 9, phase C)")
     parser.add_argument("--evidence-halves-a", action=argparse.BooleanOptionalAction, default=defaults.evidence_halves_a,
                         help="development only: section-route evidence adds halves of cited paragraphs (session 9, A2)")
+    parser.add_argument("--label-rule-a", action=argparse.BooleanOptionalAction, default=defaults.label_rule_a,
+                        help="development only: L1, the routed prompt plus a sentence on contradictions (session 9, D)")
+    parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
+                        help="development only: L2, a second call after a neutral answer (session 9, D)")
+    parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
+                        help="development only: L2's similarity threshold")
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
     args = parser.parse_args()
@@ -304,7 +366,8 @@ def main():
                         max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a,
                         evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
-                        context_b=args.context_b)
+                        context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
+                        second_look_threshold=args.second_look_threshold)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

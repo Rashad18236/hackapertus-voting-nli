@@ -1,4 +1,7 @@
-"""Task B arms of one interleaved run: one table for all arms, the flips of each comparison, endpoint identity.
+"""Arms of one interleaved run: one table for all arms, the flips of each comparison, endpoint identity.
+
+Written for task B; since session 9 also for task A (--task A: the starter's evidence score per arm, and a
+second call of L2 counted in "calls").
 
 Run from track_2a/ after scoring every arm with the starter's evaluate.py (official_score.json in each arm):
 
@@ -82,9 +85,9 @@ def macro(ids, gold, preds):
     return round(evaluate.label_scores([gold[i]["label"] for i in ids], [preds[i]["label"] for i in ids])["macro_f1"], 4)
 
 
-def arm_numbers(folder, gold):
+def arm_numbers(folder, gold, task="B"):
     preds, raws = load(folder / "predictions.jsonl"), load(folder / "raw_answers.jsonl")
-    official = json.loads((folder / "official_score.json").read_text(encoding="utf-8"))["tasks"]["B"]
+    official = json.loads((folder / "official_score.json").read_text(encoding="utf-8"))["tasks"][task]
     ids = list(gold)
     inputs = [preds[i]["metrics"]["input_tokens"] for i in ids]
     outputs = [preds[i]["metrics"]["output_tokens"] for i in ids]
@@ -94,9 +97,12 @@ def arm_numbers(folder, gold):
     by_position = defaultdict(list)
     for i in ids:
         by_position[raws[i].get("order")].append(preds[i]["metrics"]["inference_time_ms"])
-    return {
+    numbers = {
         "macro_f1": round(official["macro_f1"], 6),
         "f1": {k: round(official["per_class"][k]["f1"], 6) for k in LABELS},
+        "recall": {k: round(official["per_class"][k]["recall"], 6) for k in LABELS},
+        "calls": sum(1 + ("answer" in (raws[i].get("second_look") or {}) or "error" in (raws[i].get("second_look") or {}))
+                     for i in ids),
         "confusion_rows_gold_cols_pred": confusion,
         "mean_input_tokens": round(sum(inputs) / len(ids), 1),
         "p95_input_tokens": evaluate.p95(inputs),
@@ -115,7 +121,11 @@ def arm_numbers(folder, gold):
                                 "unreadable_answers": sum(1 for i in sub if raws[i].get("parse_reason")),
                                 "mean_time_ms": round(sum(preds[i]["metrics"]["inference_time_ms"] for i in sub) / len(sub))}
                        for b, sub in group_by(ids, lambda i: backend(raws[i])).items()},
-    }, preds, raws
+    }
+    if task == "A":
+        numbers["evidence"] = {"score": round(official["evidence_score"], 6), "found": official["evidence"]["found"],
+                               "cases": official["evidence"]["cases"]}
+    return numbers, preds, raws
 
 
 def group_by(ids, key):
@@ -151,12 +161,13 @@ def main():
     ap.add_argument("--compare", action="append", default=[], help="NEW:OLD")
     ap.add_argument("--cases", type=Path, default=ROOT / "output" / "devB")
     ap.add_argument("--canary", nargs=2, metavar=("BEFORE", "AFTER"), help="times of the canary checks")
+    ap.add_argument("--task", choices=("A", "B"), default="B")
     args = ap.parse_args()
 
     gold = load(args.cases / "expected-labels.jsonl")
     arms, preds, raws = {}, {}, {}
     for name in args.arms:
-        arms[name], preds[name], raws[name] = arm_numbers(args.run / name, gold)
+        arms[name], preds[name], raws[name] = arm_numbers(args.run / name, gold, args.task)
 
     comparisons = {}
     for pair in args.compare:
@@ -215,7 +226,11 @@ def main():
             ("Time, mean / p95 (ms)", lambda a: f"{a['mean_time_ms']:,} / {a['p95_time_ms']:,}"),
             ("Failed calls", lambda a: str(a["failed_calls"])),
             ("Unreadable answers", lambda a: str(a["unreadable_answers"])),
-            ("HTTP 429 answers / retries", lambda a: f"{a['http_429']} / {a['retries']}")]
+            ("HTTP 429 answers / retries", lambda a: f"{a['http_429']} / {a['retries']}"),
+            ("Recall E / N / C", lambda a: " / ".join(f"{a['recall'][k]:.3f}" for k in LABELS)),
+            ("Model calls", lambda a: str(a["calls"]))]
+    if args.task == "A":
+        rows.append(("Evidence score", lambda a: f"{a['evidence']['score']:.3f} ({a['evidence']['found']}/{a['evidence']['cases']})"))
     print("| | " + " | ".join(args.arms) + " |")
     print("|---|" + "---|" * len(args.arms))
     for label, fmt in rows:
