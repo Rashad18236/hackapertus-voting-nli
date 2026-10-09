@@ -282,8 +282,12 @@ session 9's answers came from one backend, blablador).
   (reads `BASE_URL/models`, picks the Apertus v1.5 8B id), at most three extra requests per run.
 - Offline analyses (`docs/analysis_offline.md`): all of E6's routed val errors are reading errors; task B
   references over 8,000 characters are 99 of 105 times neutral on dev (a dataset artefact, never used).
-- The session 8 replay reference stays the anchor for G1/G2 until FINISH writes a new one for the new
-  defaults.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`
+  (final defaults; all 1,180 dev and val requests answered from saved real answers: the final dev run and
+  the val L1 arm; replay reproduces dev A 0.980 / 0.980, B 0.967, val A 0.961 / 0.958). It replaces the
+  session 8 reference.
+- **Final defaults on all 600 dev cases through the image** (`2026-10-09_rashad_final-defaults_dev600`):
+  task A 0.980 (evidence 0.980, 1,238 input tokens), task B 0.967 (1,231 input tokens).
 
 ## Previous stage: hardening without a model (session 8)
 
@@ -496,7 +500,8 @@ Rules for this stage:
 - Cases run one at a time; one retry for HTTP 5xx and timeouts, up to two for
   HTTP 429.
 - A change to `src/` that should not change answers is checked with G1 and G2
-  against the session 8 reference (`scripts/prompt_snapshot.py`).
+  against the session 9 reference (`scripts/prompt_snapshot.py`,
+  `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`).
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 

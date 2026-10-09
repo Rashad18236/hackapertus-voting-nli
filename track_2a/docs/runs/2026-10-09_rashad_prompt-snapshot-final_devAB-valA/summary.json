@@ -1,0 +1,40 @@
+{
+ "dev": {
+  "cases": 600,
+  "raw_answers": 600,
+  "model_calls": 600,
+  "replayed": 600,
+  "fixed_answer": 0,
+  "paths": {
+   "task B": 300,
+   "route:council": 102,
+   "route:summary": 67,
+   "route:committee": 48,
+   "route:detail": 43,
+   "route:law": 39,
+   "fallback:embed-e5-small": 1
+  },
+  "seconds": 327.9,
+  "exit_code": 0
+ },
+ "val": {
+  "cases": 580,
+  "raw_answers": 580,
+  "model_calls": 580,
+  "replayed": 580,
+  "fixed_answer": 0,
+  "paths": {
+   "route:council": 175,
+   "route:summary": 139,
+   "route:committee": 102,
+   "route:law": 87,
+   "route:detail": 74,
+   "fallback:embed-e5-small": 3
+  },
+  "seconds": 328.1,
+  "exit_code": 0
+ },
+ "problems": [],
+ "replay_table": "docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/replay_table.json",
+ "cli_args": []
+}
