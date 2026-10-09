@@ -270,6 +270,15 @@ stop: the endpoint changed. Task B rows from before 2026-10-08 13:25 UTC are
 and v5-min (fixed instructions of at most 90 tokens). Never shorten the
 passage. Report: `track_2a/docs/taskb_cheap_fixes.md`.
 
+Status (2026-10-09, 01:52 UTC): **stopped before the first run; the canary
+showed the endpoint changed again** between 01:36 and 01:50 UTC (3 of 30
+answers differ, stable on a repeat). Nothing was run. Done: setup (marks,
+canary, 429 retries, rule, `--schema-b`/`--max-tokens-b`); run 2 (vote name)
+skipped because `vote` always names the passage's own ballot (886/886
+non-test rows); `v5-min` written (86 fixed tokens), not run. Task B stays on
+v3-topic-first. Next: a new v3 baseline on the current endpoint, a new canary
+from it, then run 1 and run 3.
+
 Previous stage, task B confirmation (`track_2a/docs/taskb_confirmation.md`):
 v3-topic-first 0.919 and 0.916 in two runs (session 2's 0.947 was the server
 before 13:25 UTC on 2026-10-08). **Noise floor 0.0033 Macro-F1**, all from one

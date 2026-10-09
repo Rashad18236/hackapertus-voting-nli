@@ -69,5 +69,16 @@ class FindVerbatim(unittest.TestCase):
         self.assertIsNone(nli.find_verbatim("Le Conseil fédéral recommande le rejet.", REF))
 
 
+
+class V5Min(unittest.TestCase):
+    def test_v5_min_keeps_the_three_rules_and_has_no_format_instructions(self):
+        prompt = nli.PROMPTS_B["v5-min"]
+        self.assertIn("different ballot or subject", prompt)
+        self.assertIn("cannot both be true", prompt)
+        self.assertIn("Missing information is 1, never 2", prompt)
+        self.assertNotIn("JSON", prompt)  # strict JSON (--schema-b) fixes the format
+        self.assertEqual(nli.DEFAULT_PROMPT_B, "v3-topic-first")  # prepared, not the default
+
+
 if __name__ == "__main__":
     unittest.main()

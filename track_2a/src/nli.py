@@ -70,6 +70,16 @@ PROMPTS_B["v4-topic-first-examples"] = (
     PROMPTS_B["v3-topic-first"][: -len(_ANSWER_B)] + _EXAMPLES_B.lstrip("\n") + "\n" + _ANSWER_B
 )
 
+# v5-min (task B cheap fixes; prepared, not run yet: the canary stopped the stage on 2026-10-09).
+# For use with --schema-b only: strict JSON fixes the answer format, so the prompt has no format
+# instructions. Fixed instructions: 77 tokens here plus 9 for the user message's labels = 86 (Apertus
+# tokenizer; at most 90 asked). Keeps v3's three rules: another ballot or subject is neutral;
+# contradiction only when both cannot be true; missing information is neutral, never contradiction.
+PROMPTS_B["v5-min"] = """Compare the CLAIM with the REFERENCE TEXT from a Swiss voting booklet (German, French or Italian). Use only the reference text.
+0: the reference supports the claim.
+2: claim and reference cannot both be true.
+1: otherwise, including when the reference is about a different ballot or subject than the claim. Missing information is 1, never 2."""
+
 # The task B answer as a JSON Schema, for schema-constrained output (--schema-b; task B cheap fixes):
 # the endpoint can then only produce {"label": 0|1|2}. Same mechanism as ANSWER_SCHEMA_A.
 ANSWER_SCHEMA_B = {
