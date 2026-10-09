@@ -79,6 +79,12 @@ class V5Min(unittest.TestCase):
         self.assertNotIn("JSON", prompt)  # strict JSON (--schema-b) fixes the format
         self.assertEqual(nli.DEFAULT_PROMPT_B, "v3-topic-first")  # prepared, not the default
 
+    def test_v5_ballot_is_v5_min_plus_one_sentence(self):
+        ballot, minimal = nli.PROMPTS_B["v5-ballot"], nli.PROMPTS_B["v5-min"]
+        self.assertEqual(ballot.replace(" " + nli.BALLOT_SENTENCE, "", 1), minimal)
+        self.assertEqual(ballot.count(nli.BALLOT_SENTENCE), 1)
+        self.assertIn("Use only the reference text. " + nli.BALLOT_SENTENCE + "\n0:", ballot)
+
 
 if __name__ == "__main__":
     unittest.main()

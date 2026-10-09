@@ -132,7 +132,58 @@ class RateLimit(unittest.TestCase):
 
     def test_5xx_and_429_retries_are_counted_separately(self):
         result, calls = run([FakeResponse(503), FakeResponse(429), FakeResponse(429), ok()])
-        self.assertEqual((calls, result.attempts), (4, 4))
+        self.assertEqual((calls, result.attempts, result.http_429), (4, 4, 2))
+
+    def test_429_count_is_kept_on_a_failed_call(self):
+        result, _ = run([FakeResponse(429)] * 3)
+        self.assertEqual((result.attempts, result.http_429), (3, 3))
+
+
+# Headers as Public AI sent them on 2026-10-09 (values shortened); the secret and per-call ones must not be kept.
+PUBLIC_AI_HEADERS = {
+    "Date": "Fri, 09 Oct 2026 02:03:58 GMT", "Server": "cloudflare", "Cf-Placement": "remote-MXP",
+    "CF-RAY": "a479cfd34bfee5f4-IAD", "Inference-Id": "chatcmpl-2e94", "zp-rid": "7fd1",
+    "llm_provider-server": "openresty/1.27.1.2", "llm_provider-x-request-id": "2e94", "llm_provider-date": "Fri",
+    "x-litellm-call-id": "e77a", "x-litellm-key-spend": "0.123", "x-litellm-response-cost": "0.001",
+    "x-litellm-response-duration-ms": "212.072", "x-litellm-model-api-base": "https://backend.example/v1?key=s",
+    "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b", "x-litellm-model-id": "8c42",
+    "x-litellm-model-name": "openai/alias-apertus", "x-litellm-version": "1.98.0",
+    "x-litellm-attempted-fallbacks": "0", "x-litellm-attempted-retries": "0", "Authorization": "Bearer s",
+    "Set-Cookie": "s", "x-upstream-region": "eu", "x-region-token": "s",
+}
+
+
+class EndpointIdentity(unittest.TestCase):
+    def identity(self, headers=PUBLIC_AI_HEADERS, body=None):
+        body = body or {"model": "swiss-ai/apertus-v1.5-8b", "system_fingerprint": "vllm-x", "id": "chatcmpl-1",
+                        "created": 1, "choices": [{"message": {"content": "{}"}}], "usage": {}}
+        result, _ = run([FakeResponse(200, body, headers)])
+        return result.endpoint
+
+    def test_model_fingerprint_identifying_headers_and_datacentre(self):
+        ident = self.identity()
+        self.assertEqual((ident["model"], ident["system_fingerprint"], ident["cf_ray_datacentre"]),
+                         ("swiss-ai/apertus-v1.5-8b", "vllm-x", "IAD"))
+        self.assertEqual(sorted(ident["headers"]), sorted([
+            "server", "cf-placement", "llm_provider-server", "x-litellm-model-api-base", "x-litellm-model-group",
+            "x-litellm-model-id", "x-litellm-model-name", "x-litellm-version", "x-litellm-attempted-fallbacks",
+            "x-litellm-attempted-retries", "x-upstream-region"]))
+
+    def test_nothing_secret_or_per_call_is_kept(self):
+        text = repr(self.identity())
+        for value in ("0.123", "0.001", "212.072", "e77a", "2e94", "7fd1", "chatcmpl", "a479cfd34bfee5f4",
+                      "Bearer", "key=s", "02:03:58"):
+            self.assertNotIn(value, text)
+        self.assertNotIn("x-region-token", text)
+
+    def test_a_response_without_body_fields_or_headers(self):
+        result, _ = run([FakeResponse(200, {"choices": [{"message": {"content": "{}"}}]})])
+        self.assertEqual(result.endpoint, {})
+
+    def test_failed_call_keeps_the_identity(self):
+        result, _ = run([FakeResponse(400, {"error": "bad", "model": "m"}, {"Server": "cloudflare"})])
+        self.assertIsInstance(result, llm.LLMError)
+        self.assertEqual(result.endpoint, {"model": "m", "headers": {"server": "cloudflare"}})
 
 
 if __name__ == "__main__":

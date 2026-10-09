@@ -166,6 +166,22 @@ class TaskBSettings(unittest.TestCase):
             self.assertEqual((seen["schema"], seen["max_tokens"]), expected)
             self.assertEqual((resp["label"], status, resp["evidence"]), (2, "ok", []))
 
+    def test_task_b_raw_records_retries_429s_and_endpoint(self):
+        ident = {"model": "m", "headers": {"server": "s"}}
+        results = [llm.LLMResult(text='{"label": 0}', input_tokens=9, output_tokens=3, elapsed_ms=1, attempts=2,
+                                 http_429=1, endpoint=ident),
+                   llm.LLMError("HTTP 429", attempts=3, http_429=3, endpoint=ident)]
+        for result, label in zip(results, (0, cli.FALLBACK_LABEL)):
+            def chat(*args, **kwargs):
+                if isinstance(result, Exception):
+                    raise result
+                return result
+            with mock.patch.object(llm, "chat", chat):
+                resp, _, raw = cli.predict(b_case("b"), ".", cli.Settings())
+            self.assertEqual(resp["label"], label)
+            self.assertEqual((raw["attempts"], raw["http_429"], raw["endpoint"]),
+                             (result.attempts, result.http_429, ident))
+
     def test_task_b_schema_allows_only_the_label(self):
         schema = cli.nli.ANSWER_SCHEMA_B
         self.assertEqual(schema["required"], ["label"])

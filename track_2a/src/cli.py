@@ -65,6 +65,12 @@ def response(case_id, label, input_tokens=0, output_tokens=0, start=None, eviden
     }
 
 
+def note_call(raw, call):
+    """Record a model call's requests (1 plus retries), HTTP 429 answers and endpoint identity (src/llm.py) in raw.
+    call is an llm.LLMResult or an llm.LLMError; both carry these three fields."""
+    raw["attempts"], raw["http_429"], raw["endpoint"] = call.attempts, call.http_429, call.endpoint
+
+
 def task_of(case):
     """'A', 'B', or None if the request does not have exactly one source."""
     has_booklet, has_reference = "booklet" in case, "reference" in case
@@ -123,9 +129,11 @@ def predict_a(case, data_dir, start, raw, settings):
                           json_schema=nli.ANSWER_SCHEMA_A if settings.schema_a else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
 
-    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
+    note_call(raw, result)
+    raw["answer"], raw["output_tokens"] = result.text, result.output_tokens
     label, page_numbers, reason = nli.parse_label_and_pages(result.text)
     if label is None:
         raw["parse_reason"] = reason
@@ -158,9 +166,11 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
                           json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
 
-    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
+    note_call(raw, result)
+    raw["answer"], raw["output_tokens"] = result.text, result.output_tokens
     label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
     if label is None:
         raw["parse_reason"] = reason
@@ -197,9 +207,11 @@ def predict(case, data_dir=".", settings=None):
                           json_schema=nli.ANSWER_SCHEMA_B if settings.schema_b else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed", raw
 
-    raw["answer"], raw["attempts"] = result.text, result.attempts
+    note_call(raw, result)
+    raw["answer"] = result.text
     label, reason = nli.parse_label(result.text)
     status = "ok"
     if label is None:

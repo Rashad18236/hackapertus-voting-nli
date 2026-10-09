@@ -59,7 +59,7 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 
 Every task B run, stopped ones included, with what its prompt changed against the previous version. "Strict JSON" means the endpoint was asked to enforce a JSON format (`response_format`). Times include failed calls; "not recorded" means the run kept no record of it.
 
-Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour, not comparable": Public AI changed what it serves as `apertus-v1.5-8b` at that time (same prompts, temperature 0, different answers). Since the task B cheap-fixes stage, a run's `task_b.compared_with` names the run it is judged against (the acceptance rule in `docs/decisions.md`).
+Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour, not comparable": Public AI changed what it serves as `apertus-v1.5-8b` at that time (same prompts, temperature 0, different answers). Since the task B cheap-fixes stage, a run's `task_b.compared_with` names the run it is judged against (the acceptance rule in `docs/decisions.md`). Since that stage was continued, versions are compared only inside one interleaved run, and the canary runs immediately before and after each run (`docs/canary_log.md`); a run whose two canary checks differ is marked "endpoint changed during run".
 
 | Date | Start (UTC) | Run | Endpoint | Prompt version | Change against the previous version | Cases | Strict JSON | max_tokens | Macro-F1 | Failed calls | Mean input tokens | Mean time (ms) | p95 time (ms) | Compared with |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

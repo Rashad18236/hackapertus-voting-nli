@@ -197,7 +197,8 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
                 search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
                 rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py,
-                taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py
+                taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py,
+                interleaved_analysis.py (task B arms of one run)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -250,34 +251,47 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task B cheap fixes
+## Current stage: task B cheap fixes, continued
 
-Cheap changes to task B, one per run, each on all 300 dev task B cases and
-judged by the acceptance rule in `docs/decisions.md` (stage file
-`docs/decisions/2026-10-09-0140_rashad_taskb-cheap-fixes.md`):
+**Method (from 2026-10-09 02:00 UTC): versions are compared only inside one
+interleaved run; scores from different runs are never compared.** The
+endpoint changed what it answers twice in 13 hours, so a stored baseline
+stops describing it without warning. In an interleaved run every case goes
+to all versions back to back, in an order that rotates from case to case
+(`scripts/paired_run.py`, two or more arms; balanced Latin square for four),
+paced with `--min-interval 1.0` (HTTP 429 came at about 96 requests per
+minute). Decisions: `docs/decisions/2026-10-09-0200_rashad_taskb-cheap-fixes-continued.md`.
 
-- a change that removes tokens is kept if Macro-F1 falls by no more than
-  0.01 and no label's F1 falls by more than 0.03;
-- a change that adds tokens is kept only if Macro-F1 rises by at least 0.01;
-- each run is compared with the best version kept so far.
+- Every model call records the endpoint identity in the raw answers
+  (`endpoint`: body `model`, `system_fingerprint`, identifying headers,
+  Cloudflare data centre; nothing secret, no per-call ids), plus `attempts`
+  and `http_429`.
+- The canary (`scripts/canary_taskb.py`, 30 fixed dev cases, v3) no longer
+  blocks runs: it runs immediately before and after each task B run and
+  appends to `docs/canary_log.md` and `docs/canary_results.jsonl`. A run whose
+  two checks differ is marked "endpoint changed during run" in
+  `docs/results.md` (from `run.json`'s `canary` block).
+- The run: all 300 dev task B cases, four arms. A v3-topic-first as it is
+  (plain, max_tokens 32); B v3 + `--schema-b`, `--max-tokens-b 10`; C v5-min,
+  schema, 10; D v5-ballot (v5-min plus "The first line of the reference text
+  names the ballot it is about.", +14 tokens), schema, 10.
+- Comparisons: B vs A (keep if Macro-F1 falls by at most 0.01, no unreadable
+  answer, adds fewer than 30 tokens per case; if B fails, stop); C vs B (keep
+  if Macro-F1 falls by at most 0.01 and no label's F1 by more than 0.03);
+  D vs C (keep only if Macro-F1 rises by at least 0.01). Tokens = mean input
+  plus output tokens per case.
+- Recommend one arm to freeze; change no default. Never shorten the passage.
+  Report: `track_2a/docs/taskb_cheap_fixes.md`.
 
-Baseline: `docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1`
-(v3-topic-first, 0.919). Before each run, `scripts/canary_taskb.py` re-sends
-30 fixed dev cases with v3; if any answer text differs from the baseline,
-stop: the endpoint changed. Task B rows from before 2026-10-08 13:25 UTC are
-"old endpoint behaviour, not comparable". The runs: v3 with strict JSON
-(`--schema-b`, max_tokens 10), the vote name (only if it carries a signal),
-and v5-min (fixed instructions of at most 90 tokens). Never shorten the
-passage. Report: `track_2a/docs/taskb_cheap_fixes.md`.
+Status (2026-10-09, 02:30 UTC): setup done (identity logging, canary log,
+v5-ballot, four-arm runner); the run is next. Task B stays on v3-topic-first.
 
-Status (2026-10-09, 01:52 UTC): **stopped before the first run; the canary
-showed the endpoint changed again** between 01:36 and 01:50 UTC (3 of 30
-answers differ, stable on a repeat). Nothing was run. Done: setup (marks,
-canary, 429 retries, rule, `--schema-b`/`--max-tokens-b`); run 2 (vote name)
-skipped because `vote` always names the passage's own ballot (886/886
-non-test rows); `v5-min` written (86 fixed tokens), not run. Task B stays on
-v3-topic-first. Next: a new v3 baseline on the current endpoint, a new canary
-from it, then run 1 and run 3.
+Earlier in this stage (01:40 to 01:52 UTC, `docs/decisions/2026-10-09-0140_rashad_taskb-cheap-fixes.md`):
+the old canary stopped the first run because the endpoint changed between
+01:36 and 01:50 UTC (3 of 30 answers differ); run 2 (vote name) was skipped
+because `vote` always names the passage's own ballot (886/886 non-test rows).
+The thresholds of that stage's acceptance rule still hold, applied between
+arms of one run.
 
 Previous stage, task B confirmation (`track_2a/docs/taskb_confirmation.md`):
 v3-topic-first 0.919 and 0.916 in two runs (session 2's 0.947 was the server
@@ -386,11 +400,13 @@ Rules for this stage:
 - Never run on `data/test/`; do not change the splits or the scorer.
 - One change per comparison; every run gets a folder with `run.json` in
   `docs/runs/` and so a row in the generated `docs/results.md`.
-- Comparisons are paired (`scripts/paired_run.py`): both configurations run
-  on the same case back to back, because the endpoint's output drifts.
+- Comparisons are paired or interleaved (`scripts/paired_run.py`): all
+  configurations run on the same case back to back, because the endpoint's
+  output drifts. Scores from different runs are never compared.
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,
   selector recall for the vote section) before spending model calls.
-- Cases run one at a time; one retry for HTTP 5xx and timeouts only.
+- Cases run one at a time; one retry for HTTP 5xx and timeouts, up to two for
+  HTTP 429.
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 

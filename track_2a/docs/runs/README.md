@@ -7,8 +7,9 @@ One folder per run. `docs/results.md` is generated from these folders by
 
 New runs: `YYYY-MM-DD_person_variant_cases`, for example
 `2026-10-09_kaan_embed-e5-small_devA300`. Sorting the folder list then sorts
-by date and person. A paired comparison is one folder with one subfolder per
-arm (`<comparison>/<arm>/`), as `scripts/paired_run.py` writes it.
+by date and person. A paired or interleaved comparison is one folder with one
+subfolder per arm (`<comparison>/<arm>/`), as `scripts/paired_run.py` writes
+it.
 
 Folders from before 2026-10-08 16:29 UTC keep their old names (`s2-...`,
 `s3-...`), because reports and recorded commands point to them.
@@ -63,12 +64,13 @@ Folders from before 2026-10-08 16:29 UTC keep their old names (`s2-...`,
 | `task` | `A` or `B` |
 | `variant` | task A context variant (`src/context.py`), or `null` |
 | `cases`, `setup`, `format` | which cases; prompt and settings; scorer and whether the run is paired |
-| `paired_with` | the other arm of a paired run, or `null` |
+| `paired_with` | the other arm of a paired run, a list of the other arms of an interleaved run with more than two arms, or `null` |
 | `highlight` | shown in bold in the results table |
 | `model`, `endpoint` | the Apertus model name and the endpoint. One run uses one model name; the only exception is E3 (`2026-10-08_rashad_embed-vs-section_devA300`, recorded before this rule), whose `model` says which cases used which |
 | `summary` | optional one-line result for an offline analysis that has no retrieval numbers |
 | `notes` | path of the notes file, relative to this folder |
 | `task_b` | task B runs only: `prompt_version`, `change` (what the prompt changed against the previous version), `n_cases`, `strict_json` (whether `response_format` was used), `max_tokens`; optional `failed_calls` for runs without a results block. `scripts/build_docs.py` shows them in the task B table and checks `n_cases` against `predictions.jsonl` |
+| `canary` | task B runs since 2026-10-09 02:00 UTC: `{"before": time, "after": time}`, the canary checks made immediately before and after the run (their `time` in `docs/canary_results.jsonl`). If their answers differ, `docs/results.md` marks the run "endpoint changed during run" |
 | `results` | the numbers; `null` for stopped runs. Retrieval checks use their own keys (`hit_at_k`, `evidence_ceiling_selected`, ...); other offline analyses may hold any keys |
 
 `python3 scripts/build_docs.py --check` compares `results` with the run's own

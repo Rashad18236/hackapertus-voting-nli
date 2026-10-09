@@ -25,12 +25,21 @@ failed attempt is added to the result, and the elapsed time covers all
 attempts and waits (it also counts in the case's inference_time_ms, which
 src/cli.py measures around the whole case). All other failures raise LLMError
 at once.
+
+Endpoint identity (task B cheap fixes, continued): Public AI changed what it
+serves under the same model name twice in 13 hours. Every result therefore
+carries what the response says about who answered it (`endpoint_identity`):
+the body's `model` and `system_fingerprint`, the response headers that name a
+model, backend or provider, and the Cloudflare data centre. Nothing secret
+and nothing that changes with every call (request ids, dates, durations,
+spend and cost) is kept.
 """
 
 import logging
 import os
+import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from email.utils import parsedate_to_datetime
 
 import requests
@@ -45,8 +54,34 @@ RATE_LIMIT_PAUSES = (2, 4)  # seconds before the first and second 429 retry, wit
 RATE_LIMIT_MAX_WAIT = 10  # never wait longer than this for one retry
 
 
+# Response headers kept as endpoint identity: the ones Public AI's gateway (LiteLLM behind Cloudflare) sent on
+# 2026-10-09, plus any other header whose name mentions a model, backend, upstream, region, deployment or
+# fingerprint, so that a new kind of backend still shows up. NOT_LOGGED wins over both: account data (key, spend,
+# cost, ...) and values that differ on every call (request ids, dates, durations) are never kept.
+IDENTITY_HEADERS = (
+    "x-litellm-model-api-base",       # the backend LiteLLM forwarded the request to
+    "x-litellm-model-id",             # LiteLLM's id of that deployment
+    "x-litellm-model-name",           # the deployment's own model name
+    "x-litellm-model-group",          # the model name we asked for
+    "x-litellm-version",
+    "x-litellm-attempted-fallbacks",  # > 0: LiteLLM fell back to another deployment
+    "x-litellm-attempted-retries",
+    "llm_provider-server",            # the backend's web server
+    "server",
+    "cf-placement",                   # where Cloudflare ran the gateway
+)
+IDENTITY_PATTERN = re.compile(r"model|backend|upstream|region|deployment|fingerprint", re.I)
+NOT_LOGGED = re.compile(r"key|auth|cookie|token|secret|spend|cost|budget|request-id|call-id|date|duration", re.I)
+
+
 class LLMError(RuntimeError):
-    """A model call failed. The message never contains the URL or the key."""
+    """A model call failed. The message never contains the URL or the key.
+
+    attempts, http_429 and endpoint describe the failed call like the fields of LLMResult."""
+
+    def __init__(self, message, attempts=0, http_429=0, endpoint=None):
+        super().__init__(message)
+        self.attempts, self.http_429, self.endpoint = attempts, http_429, endpoint or {}
 
 
 @dataclass
@@ -55,7 +90,9 @@ class LLMResult:
     input_tokens: int
     output_tokens: int
     elapsed_ms: int
-    attempts: int = 1
+    attempts: int = 1        # requests sent for this call: 1 plus retries
+    http_429: int = 0        # how many of them were answered with HTTP 429
+    endpoint: dict = field(default_factory=dict)  # endpoint_identity() of the last answer
 
 
 DEFAULT_MODEL = "swiss-ai/Apertus-v1.5-8B"
@@ -105,7 +142,7 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
 
     start = time.perf_counter()
     input_tokens = output_tokens = 0  # summed over attempts that report usage
-    attempt = server_retries = rate_retries = 0
+    attempt = server_retries = rate_retries = http_429 = 0
     while True:
         attempt += 1
         try:
@@ -118,14 +155,17 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
                 logging.warning("LLM call timed out; retrying once")
                 time.sleep(RETRY_PAUSE_SECONDS)
                 continue
-            raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({attempt} attempts)") from None
+            raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({attempt} attempts)",
+                           attempt, http_429) from None
         except requests.ConnectionError as e:
             # `from None` drops the original exception, whose text includes the URL.
-            raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})") from None
+            raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})", attempt, http_429) from None
 
         usage = _usage(response)
         input_tokens += usage.get("prompt_tokens", 0)
         output_tokens += usage.get("completion_tokens", 0)
+        if response.status_code == 429:
+            http_429 += 1
         if response.status_code >= 500 and server_retries < MAX_ATTEMPTS - 1:
             server_retries += 1
             logging.warning("LLM call failed with HTTP %d; retrying once", response.status_code)
@@ -143,7 +183,7 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
 
     if response.status_code != 200:
         raise LLMError(f"LLM call failed with HTTP {response.status_code} ({attempt} attempts): "
-                       f"{response.text[:300]}")
+                       f"{response.text[:300]}", attempt, http_429, endpoint_identity(response))
 
     data = response.json()
     if "prompt_tokens" not in (data.get("usage") or {}):
@@ -154,7 +194,33 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
         output_tokens=output_tokens,
         elapsed_ms=elapsed_ms,
         attempts=attempt,
+        http_429=http_429,
+        endpoint=endpoint_identity(response),
     )
+
+
+def endpoint_identity(response):
+    """What one response says about who answered it: the body's model and system_fingerprint (if present), the
+    identifying headers (IDENTITY_HEADERS, IDENTITY_PATTERN; never NOT_LOGGED) and Cloudflare's data centre (the
+    code after the dash in CF-RAY; the ray id before it is per call). Values lose any query string, in case a URL
+    carries one, and are cut at 200 characters."""
+    identity = {}
+    try:
+        body = response.json()
+    except ValueError:
+        body = None
+    if isinstance(body, dict):
+        identity.update({k: body[k] for k in ("model", "system_fingerprint") if body.get(k) is not None})
+    headers = {}
+    for name, value in (getattr(response, "headers", None) or {}).items():
+        name = name.lower()
+        if (name in IDENTITY_HEADERS or IDENTITY_PATTERN.search(name)) and not NOT_LOGGED.search(name):
+            headers[name] = str(value).split("?")[0][:200]
+        elif name == "cf-ray" and "-" in str(value):
+            identity["cf_ray_datacentre"] = str(value).rsplit("-", 1)[1][:10]
+    if headers:
+        identity["headers"] = dict(sorted(headers.items()))
+    return identity
 
 
 def rate_limit_wait(response, retries_so_far):
