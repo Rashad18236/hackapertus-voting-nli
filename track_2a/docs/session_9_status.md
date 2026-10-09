@@ -17,7 +17,6 @@ Updated after every phase. If the session is restarted with "continue", work goe
   built at `7edbae4`).
 - (17:53) Phase C code: `src/taskb_context.py` (B-cut, B-para, off by default), `--context-b`, tests; offline
   tokens per case on 300 dev B: full 1,994, B-cut 1,231 (−38 %), B-para 1,375 (−31 %).
-
 - (18:05) Phase B: `docs/analysis_offline.md` (B1–B6); L2 threshold 0.845 from B6.
 - (18:10) Phase D and E code (L1, L2, closed book, section-route top-k), all off by default; gates pass.
 - (18:20) Phase C dev run: B-cut 0.967 = current, −38 % tokens (passes); B-para 0.963 (does not replace).
@@ -25,16 +24,26 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (19:10) **Task B default changed to `--context-b cut`** (`13da75a`); G1 differs only in the 105 long dev
   task B requests; labels unchanged; 188 tests.
 
+- (19:27) Phase D dev run: L1 0.980 vs 0.966 (passes on dev), L2 0.976 (fails its +0.015 bar).
+- (20:16) Phase D val run (580 cases): L1 0.961 vs 0.950, neutral recall 1.000: passes.
+- (20:58) **Task A default changed to L1** (`label_rule_a`, prompt `A-v4-section-route-L1`; `50cb320`).
+- (20:50) E1 context curve (100 dev): whole booklet 0.858 / embed 0.898 / section-route 0.989 / top-4 0.979 /
+  top-2 0.940 / top-1 0.769.
+- (21:09) E2 closed book 0.435 vs section-route 0.980 (300 dev).
+- (21:22) E3 Apertus as router: 278/300 agree with the rules (dev); stress 283 vs 285 right, 17 vs 0 wrong part.
+- (21:20) Final image `hackapertus-voting-nli:final` built at `50cb320` (defaults: B-cut, L1, halves).
+
 ## Running
 
-- Phase D interleaved run on the 300 dev task A cases (A-current, L1, L2), started 18:56 UTC (resumed 19:00).
+- FINISH: all 600 dev cases with the final defaults through the final image (started about 21:23 UTC).
 
 ## Next
 
-- Phase D: score, apply rules L1 and L2; confirm a passing version on all 580 val task A cases.
-- Stability points 2 (about 02:00 UTC) and 3 (about 10:00 UTC): `stability.sh 2|3` with
-  `IMAGE=hackapertus-voting-nli:stability`.
-- Phase E, then FINISH from 11:30 UTC at the latest.
+- Score the final run; new replay reference (snapshot of the final code + the final run's dev answers + the
+  D-val L1 arm's val answers); gates; tests; CI.
+- Stability points 2 (about 02:00 UTC) and 3 (about 10:00 UTC): `stability.sh 2|3`, image
+  `hackapertus-voting-nli:stability` (built at `7edbae4`, before A2), exactly point 1's settings.
+- FINISH texts: technical report (≤ 6 pages PDF), session report, CLAUDE.md.
 
 ## Numbers so far
 
@@ -46,3 +55,7 @@ Updated after every phase. If the session is restarted with "continue", work goe
 | Phase C dev (300 B, interleaved) | – | current 0.967 / B-cut 0.967 / B-para 0.963; tokens 1,994 / 1,231 / 1,375 |
 | Phase C val (580 B, interleaved) | – | current 0.957 / B-cut 0.961; tokens 1,957 / 1,230 |
 | B1 bootstrap | dev+val pooled 0.955 (0.938–0.970) | dev 0.967 (0.945–0.986) |
+| Phase D dev (300 A, interleaved) | current 0.966 / L1 0.980 / L2 0.976; tokens 1,210 / 1,238 / 1,244 | – |
+| Phase D val (580 A, interleaved) | current 0.950 / L1 0.961 / L2 0.954; tokens 1,178 / 1,206 / 1,217 | – |
+| E1 (100 dev A) | full 0.858 (37.6k tokens), section-route 0.989 (1.2k) | – |
+| E2 (300 dev A) | closed book 0.435, section-route 0.980 | – |
