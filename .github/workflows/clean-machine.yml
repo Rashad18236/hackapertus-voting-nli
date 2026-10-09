@@ -1,0 +1,136 @@
+# Clean-machine check of the submission image (track_2a/), without any model and without internet.
+#
+# 1. Builds the image with the plain Makefile target (`make build`, linux/amd64), as the judges would.
+# 2. Starts the fake model (track_2a/scripts/stub_llm.py) in a container on a Docker network that has
+#    no internet access (`--internal`), and checks that the network really cannot reach the internet.
+# 3. Runs the image on examples/cases.jsonl with the Makefile's own `run` target: read-only root
+#    filesystem, /data mounted read-only, writable only /output and /tmp, BASE_URL pointing at the
+#    fake model, a dummy API_KEY (no secret is used anywhere in this workflow).
+# 4. Fails if the run fails, if any input id has no response, if the format check fails, or if the
+#    fake model was not called once per case (the container could not reach BASE_URL).
+# The image size and the build and run times go to the job summary.
+#
+# The second job runs the unit and contract tests (track_2a/tests/) on the runner's Python, without
+# the e5 model files (the contract tests then use the whole-booklet context for task A answers).
+
+name: clean-machine
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: track_2a
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image (make build, linux/amd64)
+        run: |
+          start=$(date +%s)
+          make build
+          echo "BUILD_SECONDS=$(( $(date +%s) - start ))" >> "$GITHUB_ENV"
+          echo "IMAGE_BYTES=$(docker image inspect hackapertus-voting-nli --format '{{.Size}}')" >> "$GITHUB_ENV"
+          test "$(docker image inspect hackapertus-voting-nli --format '{{.Architecture}}')" = amd64
+
+      - name: Network without internet access, with the fake model on it
+        run: |
+          docker network create --internal nonet
+          docker run -d --name stub --network nonet --read-only \
+            -v "$PWD/scripts/stub_llm.py:/stub/stub_llm.py:ro" \
+            --entrypoint python hackapertus-voting-nli /stub/stub_llm.py --host 0.0.0.0 --port 8099
+          for i in $(seq 1 30); do
+            if docker run --rm --network nonet --entrypoint python hackapertus-voting-nli -c \
+                 "import urllib.request; urllib.request.urlopen('http://stub:8099/health', timeout=2)"; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "the fake model did not start"; docker logs stub; exit 1
+
+      - name: The network really has no internet access
+        run: |
+          for url in https://pypi.org https://huggingface.co https://1.1.1.1; do
+            if docker run --rm --network nonet --entrypoint python hackapertus-voting-nli -c \
+                 "import urllib.request; urllib.request.urlopen('$url', timeout=5)"; then
+              echo "reached $url from the internal network"; exit 1
+            fi
+          done
+
+      - name: Run on examples/cases.jsonl (make run; read-only root and /data, no internet)
+        env:
+          BASE_URL: http://stub:8099/v1
+          API_KEY: ci-dummy-key-not-a-secret
+        run: |
+          start=$(date +%s)
+          # -o build: the image was built in the first step; make would rebuild it from cache anyway.
+          make -o build run DOCKER_RUN_FLAGS="--network nonet" OUTPUT_DIR=output/ci 2>&1 | tee output-ci.log
+          test "${PIPESTATUS[0]}" -eq 0
+          echo "RUN_SECONDS=$(( $(date +%s) - start ))" >> "$GITHUB_ENV"
+
+      - name: Every input id has exactly one response
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          ids = [json.loads(l)["id"] for l in open("examples/cases.jsonl", encoding="utf-8") if l.strip()]
+          got = [json.loads(l)["id"] for l in open("output/ci/predictions.jsonl", encoding="utf-8") if l.strip()]
+          missing = sorted(set(ids) - set(got))
+          extra = sorted(set(got) - set(ids))
+          dups = sorted({i for i in got if got.count(i) > 1})
+          print(f"{len(ids)} ids, {len(got)} responses; missing {missing}, unknown {extra}, duplicated {dups}")
+          sys.exit(1 if missing or extra or dups else 0)
+          EOF
+
+      - name: Format check
+        run: python3 scripts/check_format.py output/ci/predictions.jsonl examples/cases.jsonl
+
+      - name: The fake model answered every case (the container reached BASE_URL)
+        run: |
+          calls=$(docker exec stub python -c "import json, urllib.request; print(len(json.load(urllib.request.urlopen('http://127.0.0.1:8099/_stub/calls'))['calls']))")
+          cases=$(grep -c . examples/cases.jsonl)
+          echo "$calls calls for $cases cases"
+          test "$calls" -eq "$cases"
+          ! grep -q "fallback" output-ci.log
+
+      - name: Image size and times
+        if: always()
+        run: |
+          {
+            echo "### Clean-machine check"
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Image size (uncompressed) | $(( ${IMAGE_BYTES:-0} / 1000000 )) MB |"
+            echo "| Build (make build) | ${BUILD_SECONDS:-?} s |"
+            echo "| Run on examples/cases.jsonl (cold start, 2 cases) | ${RUN_SECONDS:-?} s |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          docker images hackapertus-voting-nli
+          cat output/ci/predictions.jsonl || true
+
+      - name: Fake model log
+        if: failure()
+        run: docker logs stub || true
+
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: track_2a
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Unit and contract tests
+        run: python -m pytest tests -q
