@@ -34,3 +34,8 @@ split was not used.
   `scripts/stub_llm.py`, `tests/test_contract.py` and `technical_report.md` merged without conflict.
 - **`technical_report.md` section 3 names `--schema-b` and why it is off.** Section 3 said only that task B's format is
   requested in the prompt; the option this branch added and its four-arm result belong next to that sentence.
+- **After PR #15 (session 8) was merged, `main` (`418ebfa`) was merged in a third time; in `src/cli.py` `main`'s reading and writing code (`read_lines`, the duplicate-id check, `write_line`) is kept and the task B options sit on top.** Git merged `src/cli.py` without a conflict; its diff against `main` is only the task B lines (`--schema-b`, `--max-tokens-b`, `note_call`).
+- **`CLAUDE.md` keeps both sides: session 8 is the current stage, the task B stage follows as its own section, and the scripts list and the rules (HTTP 429 retries, G1/G2) are combined.** Both stages describe work that is now on `main` or about to be.
+- **Every test of both sides is kept.** Checked by name in all twelve test files the two sides changed: none missing, none duplicated.
+- **Session 8's gates with default settings: G1 0 differences, G2 0 label differences and the same 19 evidence differences as `gates/merge.json` (`gates/merge_taskb.json`, identical).** The task B options only add settings whose defaults equal `main`'s fixed values (32 tokens, no `response_format`), so no request may change.
+- **The val booklet `2025_02_09_fr.pdf` was downloaded for the gates with `scripts/fetch_dev_booklets.py --cases data/val/cases.jsonl`.** The gates need all 45 dev and val booklets; the script refuses test booklets; the PDF is not committed.

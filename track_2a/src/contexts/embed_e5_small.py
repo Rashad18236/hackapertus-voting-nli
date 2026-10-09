@@ -36,7 +36,7 @@ PROMPT_VERSION = "A-v3-excerpts"
 CHUNK_CHARS = 1000  # about 250 to 300 tokens, well under e5's 512-token limit
 TOP_K = 8
 MAX_TOKENS = 512  # e5's maximum input length; longer inputs are truncated
-BATCH_SIZE = 32
+BATCH_SIZE = 16  # session 8: 32 before; with length-sorted batches, 16 is faster and needs less memory
 MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-small"))
 
 
@@ -74,12 +74,18 @@ class E5Embedder:
         self.input_names = {i.name for i in self.session.get_inputs()}
 
     def embed(self, texts):
-        """Return an array (len(texts), 384) of unit-length vectors."""
+        """Return an array (len(texts), 384) of unit-length vectors, in the order of texts.
+
+        Each batch is padded to its longest text, so the texts are batched by length (sorted by number of
+        characters) and the vectors put back in the texts' order afterwards. Session 8: a long law part, which
+        mixes clause lines of a few words with paragraphs of 1,000 characters, embeds 2 to 3 times faster; the
+        vectors are the same (padding is masked out)."""
         import numpy as np
 
+        order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
         vectors = []
         for start in range(0, len(texts), BATCH_SIZE):
-            encoded = self.tokenizer.encode_batch(texts[start:start + BATCH_SIZE])
+            encoded = self.tokenizer.encode_batch([texts[i] for i in order[start:start + BATCH_SIZE]])
             ids = np.array([e.ids for e in encoded], dtype=np.int64)
             mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
             inputs = {"input_ids": ids, "attention_mask": mask}
@@ -90,7 +96,10 @@ class E5Embedder:
             summed = (hidden * mask[:, :, None]).sum(axis=1)
             mean = summed / mask.sum(axis=1, keepdims=True)
             vectors.append(mean / np.linalg.norm(mean, axis=1, keepdims=True))
-        return np.concatenate(vectors)
+        by_length = np.concatenate(vectors)
+        result = np.empty_like(by_length)
+        result[order] = by_length  # row k of by_length belongs to texts[order[k]]
+        return result
 
 
 _embedder = None

@@ -96,13 +96,17 @@ def select(pages, vote, claim_text, cross_language=False):
 def evidence_items(paragraphs, cited, max_items=3):
     """Evidence for cited paragraph numbers (1-based, as shown): verbatim text with its page.
 
-    Unknown or repeated numbers are skipped; a paragraph over 5,000 characters is split.
+    Unknown or repeated numbers are skipped, and so is a paragraph whose text equals one already taken (a law
+    can repeat a clause word for word; session 8, P7); a paragraph over 5,000 characters is split.
     """
-    items, seen = [], set()
+    items, seen, taken = [], set(), set()
     for n in cited:
         if n in seen or not 1 <= n <= len(paragraphs):
             continue
         seen.add(n)
         page, text = paragraphs[n - 1]
+        if text in taken:
+            continue
+        taken.add(text)
         items += [{"page": page, "text": piece} for piece in parse._split(text, parse.MAX_ITEM_CHARS)]
     return items[:max_items]

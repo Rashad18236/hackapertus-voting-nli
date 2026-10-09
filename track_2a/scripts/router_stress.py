@@ -2,8 +2,7 @@
 
 Run from track_2a/:
 
-    python3 scripts/router_stress.py --out docs/runs/<folder>            # the router as it is
-    python3 scripts/router_stress.py --proposal --out docs/runs/<folder>  # with the proposed patterns
+    python3 scripts/router_stress.py --out docs/runs/<folder>
 
 The claims below were written for this test (session of 2026-10-09); none comes from the dataset.
 Each names its source the way a reworded claim might: other verbs and word order, "Initiativkomitee",
@@ -16,15 +15,14 @@ a part was intended: the case runs as embed-e5-small, still answered, not better
 (routed to another part: Apertus reads the wrong passage), "wrongly routed" (routed although no
 source is named), "correct fallback" (None, and None intended).
 
---proposal applies the patterns proposed in docs/checks_no_model.md (Part 6) in memory; the router
-file is not changed. It also re-routes the 300 dev claims and the deduplicated dataset rows outside
-dev and test, and reports any claim whose route the proposal changes (test rows are dropped by their
-booklet date before any claim is read).
+The patterns once proposed here (docs/checks_no_model.md, Part 6, P10) and the stripping of leading
+quotes and dashes are part of src/claim_router.py since session 8, so this script now tests the router
+as it is (273 right, 0 wrong part; was 131 right, 4 wrong part before session 8). The run of the checks
+session (docs/runs/2026-10-09_rashad_router-stress_300) keeps the results before and with the proposal.
 """
 
 import argparse
 import json
-import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -306,60 +304,6 @@ def with_variants(base, n=100):
     return out[:n]
 
 
-# Proposed patterns (Part 6), tried first, before the router's own; applied only with --proposal.
-_LEAD = r"^[\s\"'«»„“”‚‘’‹›–—-]+"
-PROPOSED = [
-    # word order: a source named later in a short opening overrides the subject ("Der Bundesrat ist laut
-    # Zusammenfassung ...", "Le Conseil fédéral, selon le résumé, ...")
-    ("summary", r"[^,.;:]{0,40}\b(laut|gemäss|gemäß) (der )?zusammenfassung\b"),
-    ("summary", r"[^.;:]{0,40}\b(selon|d'après) le résumé\b"),
-    ("summary", r"[^.;:]{0,40}\b(secondo il|stando al|nel) (riassunto|riepilogo)\b"),
-    # summary
-    ("summary", r"(nach der zusammenfassung|wie die zusammenfassung|laut (der )?kurzfassung|in kürze\b)"),
-    ("summary", r"(selon la synthèse|en bref\b|comme l'indique le résumé)"),
-    ("summary", r"(in breve\b|in sintesi\b|secondo la sintesi|dal riassunto|come indica il riassunto)"),
-    # council
-    ("council", r"(bundesrat und parlament|nach (ansicht|meinung|auffassung) (des bundesrat(e)?s|von bundesrat)"
-                r"|aus sicht des bundesrat(e)?s|für den bundesrat|gemäß (dem )?bundesrat)\b"),
-    ("council", r"(conseil fédéral et (le )?parlement|pour le conseil fédéral|de l'avis du conseil fédéral"
-                r"|aux yeux du conseil fédéral|selon l'avis du conseil fédéral)\b"),
-    ("council", r"(consiglio federale e (il )?parlamento|secondo consiglio federale|a parere del consiglio federale"
-                r"|ad avviso del consiglio federale|stando al consiglio federale|secondo il parere del consiglio"
-                r" federale)\b"),
-    # committee
-    ("committee", r"(die (initiativ|referendums)komitees|das [\w-]+ komitee|das initiativ-komitee|gemäss (dem )?komitee"
-                  r"|dem komitee zufolge|nach ansicht des (initiativ|referendums)?komitees"
-                  r"|aus sicht des (initiativ|referendums)?komitees|die initiant(inn)?en)\b"),
-    ("committee", r"(les comités|pour le comité|de l'avis du comité|les initiants|les auteurs de l'initiative)\b"),
-    ("committee", r"(i comitati|stando al comitato|a detta del comitato|a parere del comitato|i promotori"
-                  r"|secondo i promotori)\b"),
-    # law
-    ("law", r"(nach dem abstimmungstext|laut (dem )?(initiativtext|gesetzestext|verfassungstext)"
-            r"|gemäss (dem )?(initiativtext|gesetzestext|verfassungstext))\b"),
-    ("law", r"((selon|d'après) le texte (de l'initiative|de loi|mis aux voix)|aux termes du texte soumis au vote"
-            r"|le texte de loi)\b"),
-    ("law", r"(secondo il testo (dell'iniziativa|della legge|di legge)|il testo di legge)\b"),
-    # detail
-    ("detail", r"(wird die (initiative|gesetzesänderung)|wird das gesetz|wird der bundesbeschluss) angenommen\b"),
-    ("detail", r"(bei annahme der initiative|wenn die initiative angenommen|falls die (vorlage|initiative) angenommen"
-               r"|sollte die (vorlage|initiative) angenommen|bei einem ja\b|mit der annahme der (vorlage|initiative)"
-               r"|nimmt das volk die (vorlage|initiative) an)"),
-    ("detail", r"(si (l'initiative|la loi|la modification|la révision|le projet de loi|l'arrêté fédéral) (est|sera) "
-               r"(accepté|approuvé|adopté)|en cas d'acceptation\b|en cas de oui\b|si le peuple accepte)"),
-    ("detail", r"(se (l'iniziativa|la legge|la modifica|il decreto federale) (viene|verrà|sarà|è) "
-               r"(accettat|approvat|accolt)|in caso di (approvazione|accettazione|sì)\b|se il popolo approva"
-               r"|qualora il progetto|con l'accettazione)"),
-]
-
-
-def proposed_route(text):
-    opening = re.sub(_LEAD, "", claim_router.normalise(text))
-    for part, pattern in PROPOSED:
-        if re.match(pattern, opening):
-            return part
-    return claim_router.route(opening)
-
-
 def outcome(intended, got):
     if intended is None:
         return "correct fallback" if got is None else "wrongly routed"
@@ -368,31 +312,18 @@ def outcome(intended, got):
     return "right" if got == intended else "wrong part"
 
 
-def dataset_claims():
-    """Dev claims and deduplicated dataset rows outside dev and test (test rows dropped by booklet date first)."""
-    import pandas as pd
-    splits = json.loads((ROOT / "data" / "splits.json").read_text(encoding="utf-8"))
-    df = pd.read_parquet(ROOT / "data" / "raw" / "v1.1.parquet")
-    df = df[~df["booklet_publish_date"].astype(str).str[:10].isin(set(splits["test_booklets"]))]
-    claims = {}
-    for row, claim in zip(df.index, df["claim"]):
-        claims.setdefault(claim, row)
-    return list(claims)
-
-
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--proposal", action="store_true")
     args = ap.parse_args()
-    route = proposed_route if args.proposal else claim_router.route
+    route = claim_router.route
     rows = []
     for language, base in (("de", DE), ("fr", FR), ("it", IT)):
         for intended, text, variant in with_variants(base):
             got = route(text)
             rows.append({"language": language, "intended": intended, "routed": got, "variant": variant,
                          "outcome": outcome(intended, got), "claim": text})
-    report = {"proposal": args.proposal, "claims": len(rows), "by_language": {}}
+    report = {"claims": len(rows), "by_language": {}}
     for language in ("de", "fr", "it"):
         mine = [r for r in rows if r["language"] == language]
         report["by_language"][language] = {
@@ -401,14 +332,8 @@ def main():
             "by_intended_part": {str(p): dict(Counter(r["outcome"] for r in mine if r["intended"] == p))
                                  for p in (S, C, K, L, D, N)},
         }
-    if args.proposal:  # the proposal must not change how the dataset's own claims are routed
-        changed = [(c, claim_router.route(c), proposed_route(c)) for c in dataset_claims()
-                   if claim_router.route(c) != proposed_route(c)]
-        report["dataset_claims_checked"] = len(dataset_claims())
-        report["dataset_claims_changed"] = [{"claim": c[:160], "router": a, "proposal": b} for c, a, b in changed]
     args.out.mkdir(parents=True, exist_ok=True)
-    name = "router_stress_proposal" if args.proposal else "router_stress"
-    (args.out / f"{name}.json").write_text(json.dumps({"summary": report, "rows": rows}, ensure_ascii=False, indent=1)
+    (args.out / "router_stress.json").write_text(json.dumps({"summary": report, "rows": rows}, ensure_ascii=False, indent=1)
                                            + "\n", encoding="utf-8")
     for language, r in report["by_language"].items():
         print(f"{language}: {r['claims']} claims; outcomes {r['outcomes']}; routed to {r['routed_to']}")
@@ -416,11 +341,6 @@ def main():
         if r["outcome"] in ("wrong part", "wrongly routed"):
             print(f"  {r['outcome'].upper()} [{r['language']}] intended {r['intended']}, routed {r['routed']}: "
                   f"{r['claim'][:90]!r}")
-    if args.proposal:
-        print(f"dataset claims (dev and outside dev/test) checked: {report['dataset_claims_checked']}, "
-              f"route changed by the proposal: {len(report['dataset_claims_changed'])}")
-        for c in report["dataset_claims_changed"][:20]:
-            print(f"  {c}")
 
 
 if __name__ == "__main__":

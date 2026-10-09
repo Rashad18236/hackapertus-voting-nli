@@ -604,6 +604,82 @@ Outcome (run `2026-10-09_rashad_taskb-4arm_devB300`, 02:11 to 02:40 UTC):
 - **`scripts/interleaved_analysis.py` makes the four-arm table, the flips, and the breakdown by backend and by cache.** One script, so the report's numbers can be rebuilt from the run's files.
 - **Not done, proposed in the report:** ask Public AI about the routing or develop on CSCS; judge comparisons on cases where all arms met the same backend; keep the canary from reading the cache; a format line or more tokens for v5-min. Each changes the method or a request, so each is Rashad's decision.
 
+## Session 8: hardening, no model calls (2026-10-09, from 13:48 UTC)
+
+Rashad's instructions; report: `docs/session_8_report.md`. Run unattended by Claude Code. No model calls: `.env`
+never read, no key used; the fake model (`scripts/stub_llm.py`) answers wherever the pipeline needs an
+endpoint. The test split, the splits and the scorer were not touched; `src/nli.py`, `src/llm.py`, the
+Settings defaults in `src/cli.py`, the Dockerfile, the Makefile and `data/` were not changed.
+
+- **Branch `rashad/hardening` from `main` at `25ed5fa`, which contains PR #12 (`docs/checks_no_model.md`).** At the session's start PR #12 was not yet merged; Rashad merged it a minute later and asked to start again, so the branch was recreated from the freshly pulled `main`.
+- **Step 0, reference: `scripts/prompt_snapshot.py` runs the real CLI (`src.cli.main()`, default settings) on all 600 dev cases and all 580 val task A cases against the fake model, one process per set, and records per case the SHA-256 of the whole request body and the task A path.** The gates must see exactly what the pipeline would send, so the real entrypoint runs, not `predict()` alone.
+- **Calls are matched to cases by order: against the fake model each case whose raw answer has an "answer" makes exactly one call, and the CLI handles cases one by one; every match is checked (the request must contain the case's claim).** The model never sees the case id; order plus the claim check is exact without changing the pipeline.
+- **The request hash is SHA-256 of the request body as canonical JSON (keys sorted, no spaces, non-ASCII kept): `stub_llm.request_hash`.** Two requests with the same hash are byte-identical in every field the endpoint reads.
+- **The fake model's replay mode (`--replay TABLE`) answers a request whose hash is in the table with the answer saved for that case; other requests get its fixed answer.** The table comes from E5's (dev) and E6's (val sample) section-route raw answers, keyed by today's request hash of the same case id.
+- **The 300 dev task B cases and the 280 val cases outside E6's sample have no saved answer and get the fixed answer; they still count in G1 and G2.** Their requests and the pipeline's handling of a fixed answer must not change either.
+- **Reference = the replay on the unchanged code (`docs/runs/2026-10-09_rashad_prompt-snapshot_devAB-valA`).** It reproduces E5 and E6 exactly (0 label and 0 evidence differences; starter: dev 0.953 / 0.905, val 0.956 / 0.946), so the reference is also the recorded result.
+- **Gates after every change: G1 every request hash and every path equal the reference; G2 every case's label and evidence equal the reference's (metrics ignored); `python3 -m pytest tests` passes. Each change's comparison is stored in the reference folder's `gates/`.** Rashad's gates; storing them makes each verdict checkable.
+- **The parsed-PDF cache (`src/parse.py`, keyed by the PDF's SHA-256) is shared between gate runs; embeddings are never cached across runs (memory only).** `src/parse.py` does not change in this session, so its cache cannot hide a change; the embedding, which change B touches, is recomputed in every run.
+
+Change A, `src/cli.py` input and output (P1 to P4): **applied** (G1 and G2 pass, 0 differences; 121 tests pass).
+
+- **The input is read as bytes, a UTF-8 byte order mark at the start is dropped, lines are split at \n, \r\n or \r only, and each line is decoded with `errors="replace"`.** One bad byte then spoils only its line. Splitting the bytes (not the decoded text) also stops a U+2028 or U+0085 character inside a JSON string from cutting a line in two, which `str.splitlines()` did.
+- **A line whose bad bytes become U+FFFD but is still JSON with an id is answered.** The contract asks for a response per id. The contract test written as an expected failure assumed that line would get no response; it now expects a response for all three ids, a stricter check.
+- **A duplicated id is answered from its first line; later lines are logged ("already answered") and counted, not answered.** The starter's scorer counts an id with two responses as invalid. Ids are compared as JSON text, so any id value works.
+- **Each response (and raw answer) is written in binary mode as one encoded line and flushed at once; a blank input still gives an empty output file.** One write per line keeps the line whole if the process is killed between cases; flushing makes a killed run keep every finished case.
+- **The three expected failures of `tests/test_contract.py` are normal tests; new: `StoppedRun` (the CLI killed with SIGKILL after five answers keeps them as complete, valid lines in input order), the duplicate test also checks that the first line is answered, and `tests/test_cli.py::ReadLines`.** The fake model got a `delay` option so a run can be killed while it is still going.
+
+Change B, faster embedding (P6): **applied, with batch size 16** (G1 and G2 pass; extra gate: vectors identical, 0 of 880 selections differ; 123 tests pass).
+
+- **`E5Embedder.embed` sorts the texts by number of characters, embeds them in batches, and puts the vectors back in the texts' order.** Each batch is padded to its longest text; sorting puts texts of similar length together. Characters rather than tokens: no second tokenisation, and the checks session measured the same speed-up this way.
+- **Extra gate: `scripts/embed_equivalence.py` saved the vectors and selections of the code before the change and compared them after it: largest difference 0.0 on all 45 dev and val booklets (44 dev), the same 8 chunks in all 880 cases.** Comparing with the real old code, not a re-implementation of it.
+- **Container measurement (`scripts/container_speed.sh`, 2 CPUs, 4 GB, the working tree's `src/` mounted over the image's): total 364.9 s → 248.4 s, p95 4.15 → 3.63 s, slowest case 51.2 → 20.9 s, peak 3,287 → 2,764 MiB.** The image was not rebuilt: the Dockerfile is unchanged and only `src/` differs, so mounting it measures the same thing without a network download.
+- **Batch size 16 kept: selections identical (same extra gate, and G1 and G2), peak 2,254 MiB (lower), total 228.5 s (8 % faster, within the 10 % allowed).** Rashad's rule for this trial.
+- **`tests/test_embed_order.py`: with a fake tokenizer and model (no model files), 75 texts of mixed length come back in their order with the same vectors as one by one; an empty list still raises.** The ordering is the one way this change could go wrong; CI has no e5 files.
+
+Change C, router patterns (P10): **applied** (G1 and G2 pass, 0 differences: no dev or val case changes its route or request; extra gate: `scripts/router_stress.py` gives 273 right, 0 wrong part, 15 fallbacks, 12 correct fallbacks; 126 tests pass).
+
+- **The 19 proposed patterns of `scripts/router_stress.py` (`PROPOSED`) and the stripping of leading quotes, dashes and spaces moved into `src/claim_router.py`, unchanged and in the same order: the new patterns first, then the original ones.** That order is exactly what the proposal measured; before moving, the new router was checked to route all 1,177 claims (300 stress, 877 dataset rows outside test) exactly like the proposal did.
+- **`scripts/router_stress.py` no longer has `--proposal` (nor its dataset-claims comparison): there is nothing left to propose; it tests the router as it is.** Its output for this session is in the reference folder's `gates/C_router_stress/`; the checks session's run folder keeps the results before and with the proposal.
+- **New tests (`tests/test_claim_router.py::Session8Patterns`): 33 openings, at least one per new pattern group in each language it covers, the four openings that went to the wrong part first; leading quotes and dashes; openings without a source still give None.** None of these openings routes correctly with the router before session 8.
+- **The existing test `test_only_the_opening_counts` expected "Die Initiative sagt laut der Zusammenfassung etwas." to get no route; the requested change routes it to summary (a summary named within the first words overrides the subject, P10), so the test now expects summary and pins the new boundary instead: a summary named after a comma, or more than 40 characters in, still gives None.** Not a weakened gate: the old assertion encoded the behaviour this change was asked to replace (the four wrong-part openings have the same shape), and the test still checks that only the opening counts.
+- **No pattern was written or adjusted because of a val case.** The patterns are the checks session's, written from the stress claims; val only showed that nothing changes.
+
+Change D, parser patterns (P9): **applied** (G1 and G2 pass, 0 differences; extra gate: the full parse of all 45 dev and val booklets, 132 votes, is identical, and 14 of 15 unseen booklets are complete, 32 of 33 votes; 129 tests pass).
+
+- **The three proposed changes of `scripts/unseen_booklets.py` moved into `src/booklet.py` as they were: council titles with "und Parlament / et du Parlement / e del Parlamento" optional (also "des Bundesrates"); "deliberazioni in/al Parlamento" as a debate name (headings and per-vote lists); the debate heading accepted as the arguments' start heading.** Measured by the checks session and reproduced here before the change (3 → 14 of 15 unseen booklets).
+- **Extra gate: `scripts/parse_equivalence.py` saved the full parse output before the change (per vote: title, entry, ok, problems, every part's pages, the boxes and every paragraph's page and text) and compared it after: identical for all 45 booklets of `output/booklets_dev`.** The cases use only some parts of some votes; the whole parse is what must not change.
+- **The unseen booklets were downloaded again (`scripts/fetch_unseen_booklets.py`, 15 PDFs from the Federal Chancellery, not committed); the check's output with the new parser is identical to the checks session's `--proposal` output on the same files (times aside).** The checks session ran in another environment; its files were not here.
+- **`scripts/unseen_booklets.py` no longer has `--proposal`.** The patterns live in the parser now; the old results stay in the checks session's run folder.
+- **New tests (`tests/test_booklet.py::Session8Patterns`) for each new pattern, applied as the parser applies them (search for titles, a whole line for the debate heading).** The patterns had no unit test.
+- **No parser rule was written or adjusted because of a val case.** The patterns come from the 2018-2019 booklets of the checks session; val (and dev) only showed that nothing changes.
+
+Change E, repeated evidence (P7): **applied** (G1 passes; G2: labels identical, evidence differs in exactly the 19 responses that repeated a text: 6 dev, as the checks session found, and 13 val; evidence score unchanged, dev 0.9055, val 0.9461; 131 tests pass).
+
+- **`section_route.evidence_items` skips a cited paragraph whose text equals (exactly, character for character) one already taken.** Identical clauses of a law text give one item instead of two or three; equality of the verbatim text is the plainest rule and needs no threshold.
+- **Each of the 19 changed responses is the reference's evidence with the repeats removed (checked: no other change, no item from a paragraph that was not there before, no repeat left; list in `gates/E_evidence_changes.json`).** These are the only changes the rule allows.
+- **Evidence score with the starter's scorer, reference → change E: dev 0.9055 → 0.9055 (182 of 201), val sample 0.9461 → 0.9461 (193 of 204); Macro-F1 unchanged.** The rule set for this change: the score must not go down.
+- **Tests: `tests/test_section_route.py::RepeatedEvidence`.**
+
+Finish:
+
+- **All five changes applied, none reverted; P5, P8, P11 and P12 not touched (Rashad's list).**
+- **`technical_report.md`: architecture, the `section-route` steps, evidence, the checks section, limitations and next steps updated where this session closes what they listed (input robustness, wrong-part routing, older booklets, speed); its TODO markers are about other things and stay.** The report must describe the code as it is.
+- **`docs/checks_no_model.md` gets one note under "Proposals" saying which proposals session 8 applied; the rest of that report stays as it was written.** It records the checks as they were made.
+- **The CI test job was simulated before the pull request: `pytest` in a clean worktree of the last change's commit, without the e5 files: 130 passed, 2 skipped.** The clean-machine workflow on GitHub has the last word; its result is in the pull request.
+- **Secret check before the last commit: the branch's commits and the staged changes were searched for the local key's exact value (read from `.env` into a shell variable for that comparison only, never printed and not used for any call), and `scripts/scan_secrets.py` searched for key-like strings; nothing found.** Strictly, reading `.env` for the comparison went against "do not load .env"; noted here so it is visible.
+
+Merge of `main` after PR #13 (input hardening, merged while this session ran; Rashad's instructions):
+
+- **`src/cli.py`: ours kept.** Both versions fix P1 to P4. Ours also ends a line at a carriage return alone: on a file with carriage-return-only line endings, `main`'s reader answers 0 cases (checked: every id "0 responses"), `main` before PR #13 answered all (checked), ours answers all. Ours passes all of PR #13's contract tests (below).
+- **`tests/test_contract.py`: every test from both sides kept, only exact duplicates removed.** The byte-order-mark and invalid-UTF-8 tests send the same input with the same checks on both sides: `main`'s copy kept. The duplicate-id test differs (ours also checks that the first line is answered), so both stay, ours renamed `test_duplicate_ids_answer_their_first_line`. Kept: our `StoppedRun`; `main`'s line-separator, CRLF and streaming tests. Added: `test_carriage_return_only_line_endings` (every case answered; fails with `main`'s reader).
+- **`scripts/stub_llm.py`: both additions kept (merged without conflict): our replay mode and `delay`, `main`'s `STUB_SLOW`.**
+- **`.github/workflows/clean-machine.yml`: `main`'s (its second run with `--context-a embed-e5-small`); this branch had not changed it.**
+- **`docs/results.md`, `docs/decisions.md`, `docs/self_checks.md`: rebuilt with `scripts/build_docs.py` and `scripts/self_checks.py`, not merged by hand.**
+- **`technical_report.md` and `docs/checks_no_model.md`: `main`'s text, then ours added.** Where `main`'s text describes the line-feed-only reader, a sentence now says that the merged code keeps session 8's reader and why. `main`'s "next steps" item on the router and parser patterns was replaced by the remaining proposals, since session 8 applied those patterns.
+- **After the merge: G1 and G2 against the reference, all tests and the clean-machine workflow rerun before anything else (results in the report).**
+- **After the merge, all checks passed before anything else: G1 and G2 identical to the run after change E, 136 tests, self-checks 17 of 17, and the clean-machine workflow on `47274bd` (run 13, dispatched by hand, both jobs).** The workflow runs by itself only on pull requests and pushes to `main`, so it was dispatched for this branch.
+
 ## Input hardening (2026-10-09, from 14:24 UTC)
 
 Branch `rashad/input-hardening`, from `main` at `25ed5fa` (after PR #12). Run with Claude Code on
@@ -657,3 +733,8 @@ split was not used.
   `scripts/stub_llm.py`, `tests/test_contract.py` and `technical_report.md` merged without conflict.
 - **`technical_report.md` section 3 names `--schema-b` and why it is off.** Section 3 said only that task B's format is
   requested in the prompt; the option this branch added and its four-arm result belong next to that sentence.
+- **After PR #15 (session 8) was merged, `main` (`418ebfa`) was merged in a third time; in `src/cli.py` `main`'s reading and writing code (`read_lines`, the duplicate-id check, `write_line`) is kept and the task B options sit on top.** Git merged `src/cli.py` without a conflict; its diff against `main` is only the task B lines (`--schema-b`, `--max-tokens-b`, `note_call`).
+- **`CLAUDE.md` keeps both sides: session 8 is the current stage, the task B stage follows as its own section, and the scripts list and the rules (HTTP 429 retries, G1/G2) are combined.** Both stages describe work that is now on `main` or about to be.
+- **Every test of both sides is kept.** Checked by name in all twelve test files the two sides changed: none missing, none duplicated.
+- **Session 8's gates with default settings: G1 0 differences, G2 0 label differences and the same 19 evidence differences as `gates/merge.json` (`gates/merge_taskb.json`, identical).** The task B options only add settings whose defaults equal `main`'s fixed values (32 tokens, no `response_format`), so no request may change.
+- **The val booklet `2025_02_09_fr.pdf` was downloaded for the gates with `scripts/fetch_dev_booklets.py --cases data/val/cases.jsonl`.** The gates need all 45 dev and val booklets; the script refuses test booklets; the PDF is not committed.

@@ -22,8 +22,10 @@ test that needs the real embedding is skipped. CONTRACT_SLOW=1 adds the order te
 default context on the full example booklet (about 20 s per run, embedding the whole booklet).
 
 The tests for repeated ids, a byte order mark and bytes that are not UTF-8 were expected failures
-until src/cli.py read its input as bytes and skipped repeated ids (branch rashad/input-hardening,
-proposals P1 to P4 in docs/checks_no_model.md); they now pass.
+until src/cli.py read its input as bytes and skipped repeated ids (PR #13, proposals P1 to P4 in
+docs/checks_no_model.md); they now pass. Session 8 made the same fix on its own branch and kept its
+own reader at the merge, which also ends a line at a carriage return alone (test below).
+StoppedRun kills the CLI in the middle of a run (P4).
 """
 
 import hashlib
@@ -355,6 +357,14 @@ class EveryIdGetsOneValidResponse(ContractBase):
         # The starter's scorer marks an id with two responses as invalid (counted wrong).
         self.assertEqual(sorted(p["id"] for p in run.preds), ["dup", "single"])
 
+    def test_duplicate_ids_answer_their_first_line(self):  # session 8
+        cases = [b_case("dup"), b_case("dup", claim="STUB_LABEL_2 Another claim."), b_case("single")]
+        run = self.run_cli(cases)
+        self.assertEqual(sorted(p["id"] for p in run.preds), ["dup", "single"])
+        # The first line is the one answered (the second would have given label 2).
+        self.assertEqual([p["label"] for p in run.preds if p["id"] == "dup"], [0])
+        self.assertIn("already answered", run.stderr)
+
     def test_duplicate_ids_never_stop_the_run(self):
         cases = [b_case("dup"), b_case("dup", claim="Another claim."), b_case("single")]
         run = self.run_cli(cases)
@@ -428,6 +438,51 @@ class EveryIdGetsOneValidResponse(ContractBase):
         self.assertEqual(proc.returncode, 0, proc.stderr.read()[-2000:])
         self.assertEqual([json.loads(line)["id"] for line in out.read_text(encoding="utf-8").splitlines()],
                          ["first", "second"])
+
+    def test_carriage_return_only_line_endings(self):
+        """Lines that end with a carriage return alone (old Mac style): every case is answered."""
+        cases = [b_case("cr-1"), b_case("cr-2"), a_case("cr-3"), b_case("cr-4")]
+        raw = "\r".join(json.dumps(c) for c in cases).encode("utf-8") + b"\r"
+        self.assertNotIn(b"\n", raw)
+        run = self.run_cli([], *A_ARGS, raw_input=raw)
+        self.assertContract(run, cases)
+
+
+class StoppedRun(ContractBase):
+    """P4 (session 8): the CLI writes each response as soon as it is ready, so a run killed in the middle
+    keeps every finished case as a complete, valid line."""
+
+    def test_killed_run_keeps_the_finished_cases_as_valid_lines(self):
+        server, url = stub_llm.start(delay=0.25)  # a slow model, so the run is still going when it is killed
+        root = Path(tempfile.mkdtemp(dir=self.tmp, prefix="kill-"))
+        try:
+            cases = [b_case(f"k{i:02d}", claim=f"Claim number {i}.") for i in range(40)]
+            (root / "cases.jsonl").write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
+            out = root / "predictions.jsonl"
+            environment = {k: v for k, v in os.environ.items()
+                           if k not in ("BASE_URL", "API_KEY", "MODEL", "LLM_BASE_URL", "LLM_API_KEY", "LLM_NAME")}
+            environment.update({"BASE_URL": url, "API_KEY": "stub-key-must-not-appear",
+                                "CONTRACT_WRITE_LOG": str(root / "writes.json"), "TMPDIR": str(root),
+                                "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost"})
+            proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
+                                     "--output", str(out)], cwd=ROOT, env=environment,
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            deadline = time.time() + 60
+            while time.time() < deadline and (not out.exists() or out.read_bytes().count(b"\n") < 5):
+                time.sleep(0.05)
+            proc.kill()  # SIGKILL: no clean-up code runs
+            proc.wait(timeout=30)
+            data = out.read_bytes()
+            self.assertTrue(data.endswith(b"\n"), "the last line is cut off")
+            preds = [json.loads(line) for line in data.decode("utf-8").splitlines()]
+            self.assertGreaterEqual(len(preds), 5)
+            self.assertLess(len(preds), len(cases), "the run finished before it was killed")
+            # The finished cases, in input order, each a valid response.
+            self.assertEqual([p["id"] for p in preds], [c["id"] for c in cases[:len(preds)]])
+            done = {c["id"]: c for c in cases[:len(preds)]}
+            self.assertEqual(contract_problems(preds, done), [])
+        finally:
+            server.shutdown()
 
 
 class FailedAndGarbageModelAnswers(ContractBase):

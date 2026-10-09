@@ -196,5 +196,17 @@ class Defaults(unittest.TestCase):
         self.assertEqual(cli.context.fallback(settings.context_a), "embed-e5-small")
 
 
+class ReadLines(unittest.TestCase):
+    """Session 8 (P2, P3): the input is decoded line by line; a byte order mark is ignored."""
+
+    def test_bom_line_endings_and_a_bad_byte(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "cases.jsonl"
+            # \xe2\x80\xa8 is U+2028 (line separator): str.splitlines() would cut the line there, bytes do not.
+            path.write_bytes(b'\xef\xbb\xbf{"id": "a"}\r\n{"id": "b\xff"}\n\n{"id": "c\xe2\x80\xa8d"}\r')
+            lines = cli.read_lines(path)
+        self.assertEqual(lines, ['{"id": "a"}', '{"id": "b\ufffd"}', "", '{"id": "c\u2028d"}'])
+
+
 if __name__ == "__main__":
     unittest.main()

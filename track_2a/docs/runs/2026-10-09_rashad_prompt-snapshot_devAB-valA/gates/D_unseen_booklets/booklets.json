@@ -1,0 +1,1852 @@
+[
+ {
+  "booklet": "2018_09_23_de.pdf",
+  "pages": 40,
+  "characters": 61476,
+  "contents_lines": 18,
+  "votes": 3,
+  "votes_ok": 3,
+  "vote_details": [
+   {
+    "title": "3 bundesbeschluss über die velowege sowie die fuss- und wanderwege (direkter gegen entwurf zur zurückgezogenen volksinit",
+    "detail_page_title": "Bundesbeschluss über die Velowege sowie die Fuss- und Wanderwege (direkter Gegenentwurf zur zurückgezogenen Volks initiative «Zur Förderung der Velo-, Fuss- und",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      10,
+      13
+     ],
+     "committee": [],
+     "parliament": [
+      14,
+      15
+     ],
+     "council": [
+      16,
+      17
+     ],
+     "law": [
+      18,
+      19
+     ]
+    },
+    "boxes": {
+     "committee": 0,
+     "council": 1,
+     "parliament": 2
+    },
+    "paragraphs": {
+     "summary": 8,
+     "detail": 12,
+     "committee": 0,
+     "parliament": 4,
+     "council": 8,
+     "law": 13
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "volksinitiative «für gesunde sowie umwelt freundlich und fair hergestellte lebensmittel (fair-food-initiative)» -",
+    "detail_page_title": "Volksinitiative «Für gesunde sowie umweltfreundlich und fair hergestellte Lebensmittel (Fair-Food-Initiative)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 24,
+     "law": 28
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      23
+     ],
+     "committee": [
+      24,
+      25
+     ],
+     "parliament": [],
+     "council": [
+      26,
+      27
+     ],
+     "law": [
+      28,
+      29
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 7,
+     "committee": 7,
+     "parliament": 0,
+     "council": 8,
+     "law": 33
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "volksinitiative «für ernährungssouveränität. die landwirtschaft betrifft uns alle»",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 30,
+     "arguments": 34,
+     "law": 38
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      30,
+      33
+     ],
+     "committee": [
+      34,
+      35
+     ],
+     "parliament": [],
+     "council": [
+      36,
+      37
+     ],
+     "law": [
+      38,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 3,
+     "detail": 8,
+     "committee": 5,
+     "parliament": 0,
+     "council": 9,
+     "law": 45
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2018_09_23_fr.pdf",
+  "pages": 40,
+  "characters": 67240,
+  "contents_lines": 18,
+  "votes": 3,
+  "votes_ok": 3,
+  "vote_details": [
+   {
+    "title": "3 arrêté fédéral concernant les voies cyclables et les chemins et sentiers pédestres (contre-projet direct à l'initiativ",
+    "detail_page_title": "Arrêté fédéral concernant les voies cyclables et les chemins et sentiers pédestres (contre-projet direct à l’initiative populaire « Pour la promotion des voies ",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      10,
+      13
+     ],
+     "committee": [],
+     "parliament": [
+      14,
+      15
+     ],
+     "council": [
+      16,
+      17
+     ],
+     "law": [
+      18,
+      19
+     ]
+    },
+    "boxes": {
+     "committee": 0,
+     "council": 1,
+     "parliament": 2
+    },
+    "paragraphs": {
+     "summary": 8,
+     "detail": 11,
+     "committee": 0,
+     "parliament": 6,
+     "council": 6,
+     "law": 15
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "initiative populaire « pour des denrées alimentaires saines et produites dans des conditions équitables et écologiques (",
+    "detail_page_title": "Initiative populaire « Pour des denrées alimentaires saines et produites dans des conditions équitables et écologiques (initiative pour des aliments équitables)",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 24,
+     "law": 28
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      23
+     ],
+     "committee": [
+      24,
+      25
+     ],
+     "parliament": [],
+     "council": [
+      26,
+      27
+     ],
+     "law": [
+      28,
+      29
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 11,
+     "committee": 6,
+     "parliament": 0,
+     "council": 9,
+     "law": 33
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "initiative populaire « pour la souveraineté alimentaire. l'agriculture nous concerne toutes et tous »",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 30,
+     "arguments": 34,
+     "law": 38
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      30,
+      33
+     ],
+     "committee": [
+      34,
+      35
+     ],
+     "parliament": [],
+     "council": [
+      36,
+      37
+     ],
+     "law": [
+      38,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 7,
+     "committee": 5,
+     "parliament": 0,
+     "council": 8,
+     "law": 51
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2018_09_23_it.pdf",
+  "pages": 40,
+  "characters": 65648,
+  "contents_lines": 18,
+  "votes": 3,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 decreto federale concernente le vie ciclabili, i sentieri e i percorsi pedonali (controprogetto diretto all'iniziativa",
+    "detail_page_title": "Decreto federale concernente le vie ciclabili, i sentieri e i percorsi pedonali (controprogetto diretto all’iniziativa popolare «Per la promozione delle vie cic",
+    "ok": false,
+    "problems": [
+     "no arguments heading on page 14"
+    ],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {},
+    "boxes": {},
+    "paragraphs": {},
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "iniziativa popolare «per derrate alimentari sane, prodotte nel rispetto dell'ambiente e in modo equo (iniziativa per ali",
+    "detail_page_title": "Iniziativa popolare «Per derrate alimentari sane, prodotte nel rispetto dell’ambiente e in modo equo (Iniziativa per alimenti equi)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 24,
+     "law": 28
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      23
+     ],
+     "committee": [
+      24,
+      25
+     ],
+     "parliament": [],
+     "council": [
+      26,
+      27
+     ],
+     "law": [
+      28,
+      29
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 3,
+     "detail": 7,
+     "committee": 5,
+     "parliament": 0,
+     "council": 9,
+     "law": 37
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "iniziativa popolare «per la sovranità alimentare. l'agricoltura riguarda noi tutti»",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 30,
+     "arguments": 34,
+     "law": 38
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      30,
+      33
+     ],
+     "committee": [
+      34,
+      35
+     ],
+     "parliament": [],
+     "council": [
+      36,
+      37
+     ],
+     "law": [
+      38,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 9,
+     "committee": 6,
+     "parliament": 0,
+     "council": 9,
+     "law": 49
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.02
+ },
+ {
+  "booklet": "2018_11_25_de.pdf",
+  "pages": 40,
+  "characters": 62572,
+  "contents_lines": 18,
+  "votes": 3,
+  "votes_ok": 3,
+  "vote_details": [
+   {
+    "title": "3 volksinitiative «für die würde der landwirtschaftlichen nutztiere (hornkuh-initiative)»",
+    "detail_page_title": "Volksinitiative «Für die Würde der landwirtschaftlichen Nutztiere (Hornkuh-Initiative)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      10,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      17
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 5,
+     "detail": 7,
+     "committee": 6,
+     "parliament": 0,
+     "council": 7,
+     "law": 15
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "volksinitiative «schweizer recht statt fremde richter (selbstbestimmungsinitiative)»",
+    "detail_page_title": "Volksinitiative «Schweizer Recht statt fremde Richter (Selbstbestimmungsinitiative)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 18,
+     "arguments": 22,
+     "law": 26
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      18,
+      21
+     ],
+     "committee": [
+      22,
+      23
+     ],
+     "parliament": [],
+     "council": [
+      24,
+      25
+     ],
+     "law": [
+      26,
+      27
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 15,
+     "committee": 7,
+     "parliament": 0,
+     "council": 8,
+     "law": 25
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "änderung des bundesgesetzes über den allge meinen teil des sozialversicherungsrechts (atsg) (gesetzliche grundlage für d",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 28,
+     "arguments": 32,
+     "law": 36
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      28,
+      31
+     ],
+     "committee": [
+      32,
+      33
+     ],
+     "parliament": [],
+     "council": [
+      34,
+      35
+     ],
+     "law": [
+      36,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 5,
+     "detail": 21,
+     "committee": 5,
+     "parliament": 0,
+     "council": 6,
+     "law": 72
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2018_11_25_fr.pdf",
+  "pages": 40,
+  "characters": 65718,
+  "contents_lines": 16,
+  "votes": 3,
+  "votes_ok": 3,
+  "vote_details": [
+   {
+    "title": "3 initiative populaire « pour la dignité des animaux de rente agricoles (initiative pour les vaches à cornes) »",
+    "detail_page_title": "Initiative populaire « Pour la dignité des animaux de rente agricoles (Initiative pour les vaches à cornes) »",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      10,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      17
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 7,
+     "committee": 6,
+     "parliament": 0,
+     "council": 6,
+     "law": 13
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "initiative populaire « le droit suisse au lieu de juges étrangers (initiative pour l'autodétermination) »",
+    "detail_page_title": "Initiative populaire « Le droit suisse au lieu de juges étrangers (initiative pour l’autodétermination) »",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 18,
+     "arguments": 22,
+     "law": 26
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      18,
+      21
+     ],
+     "committee": [
+      22,
+      23
+     ],
+     "parliament": [],
+     "council": [
+      24,
+      25
+     ],
+     "law": [
+      26,
+      27
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 17,
+     "committee": 8,
+     "parliament": 0,
+     "council": 8,
+     "law": 27
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "modification de la loi fédérale sur la partie générale du droit des assurances sociales (lpga) (base légale pour la surv",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 28,
+     "arguments": 32,
+     "law": 36
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      28,
+      31
+     ],
+     "committee": [
+      32,
+      33
+     ],
+     "parliament": [],
+     "council": [
+      34,
+      35
+     ],
+     "law": [
+      36,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 24,
+     "committee": 8,
+     "parliament": 0,
+     "council": 6,
+     "law": 72
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2018_11_25_it.pdf",
+  "pages": 40,
+  "characters": 66471,
+  "contents_lines": 18,
+  "votes": 3,
+  "votes_ok": 3,
+  "vote_details": [
+   {
+    "title": "3 iniziativa popolare «per la dignità degli animali da reddito agricoli (iniziativa per vacche con le corna)»",
+    "detail_page_title": "Iniziativa popolare «Per la dignità degli animali da reddito agricoli (Iniziativa per vacche con le corna)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 10,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      10,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      17
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 8,
+     "committee": 7,
+     "parliament": 0,
+     "council": 5,
+     "law": 17
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "iniziativa popolare «il diritto svizzero anziché giudici stranieri (iniziativa per l'autodeterminazione)»",
+    "detail_page_title": "Iniziativa popolare «Il diritto svizzero anziché giudici stranieri (Iniziativa per l’autodetermina zione)» ­",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 18,
+     "arguments": 22,
+     "law": 26
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      18,
+      21
+     ],
+     "committee": [
+      22,
+      23
+     ],
+     "parliament": [],
+     "council": [
+      24,
+      25
+     ],
+     "law": [
+      26,
+      27
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 18,
+     "committee": 7,
+     "parliament": 0,
+     "council": 7,
+     "law": 29
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "modifica della legge federale sulla parte generale del diritto delle assicurazioni sociali (lpga) (base legale per la so",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": 28,
+     "arguments": 32,
+     "law": 36
+    },
+    "parts": {
+     "summary": [
+      8,
+      9
+     ],
+     "detail": [
+      28,
+      31
+     ],
+     "committee": [
+      32,
+      33
+     ],
+     "parliament": [],
+     "council": [
+      34,
+      35
+     ],
+     "law": [
+      36,
+      39
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 21,
+     "committee": 6,
+     "parliament": 0,
+     "council": 7,
+     "law": 71
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2019_02_10_de.pdf",
+  "pages": 24,
+  "characters": 21641,
+  "contents_lines": 8,
+  "votes": 1,
+  "votes_ok": 1,
+  "vote_details": [
+   {
+    "title": "3 volksinitiative «zersiedelung stoppen – für eine nachhaltige siedlungsentwicklung (zersiedelungsinitiative)»",
+    "detail_page_title": "Volksinitiative «Zersiedelung stoppen – für eine nachhaltige Siedlungsentwicklung (Zersiedelungsinitiative)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 6,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      6,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      23
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 17,
+     "committee": 5,
+     "parliament": 0,
+     "council": 9,
+     "law": 18
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.01
+ },
+ {
+  "booklet": "2019_02_10_fr.pdf",
+  "pages": 24,
+  "characters": 23762,
+  "contents_lines": 8,
+  "votes": 1,
+  "votes_ok": 1,
+  "vote_details": [
+   {
+    "title": "3 initiative populaire « stopper le mitage – pour un développement durable du milieu bâti (initiative contre le mitage) ",
+    "detail_page_title": "Initiative populaire « Stopper le mitage – pour un développe ment durable du milieu bâti (initiative contre le mitage) »",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 6,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      6,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      23
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 17,
+     "committee": 7,
+     "parliament": 0,
+     "council": 8,
+     "law": 17
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.01
+ },
+ {
+  "booklet": "2019_02_10_it.pdf",
+  "pages": 24,
+  "characters": 24896,
+  "contents_lines": 8,
+  "votes": 1,
+  "votes_ok": 1,
+  "vote_details": [
+   {
+    "title": "3 iniziativa popolare «fermare la dispersione degli insediamenti – per uno sviluppo insediativo sostenibile (iniziativa ",
+    "detail_page_title": "Iniziativa popolare «Fermare la dispersione degli insediamenti – per uno sviluppo insediativo sostenibile (Iniziativa contro la dispersione degli insediamenti)»",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 6,
+     "arguments": 12,
+     "law": 16
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      6,
+      11
+     ],
+     "committee": [
+      12,
+      13
+     ],
+     "parliament": [],
+     "council": [
+      14,
+      15
+     ],
+     "law": [
+      16,
+      23
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 19,
+     "committee": 8,
+     "parliament": 0,
+     "council": 8,
+     "law": 23
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.01
+ },
+ {
+  "booklet": "2019_05_19_de.pdf",
+  "pages": 56,
+  "characters": 120589,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 bundesgesetz über die steuerreform und die ahv-finanzierung (staf)",
+    "detail_page_title": "Bundesgesetz über die Steuerreform und die AHV-Finanzierung (STAF)",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 16,
+     "law": 20
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      15
+     ],
+     "committee": [
+      16,
+      17
+     ],
+     "parliament": [],
+     "council": [
+      18,
+      19
+     ],
+     "law": [
+      20,
+      35
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 50,
+     "committee": 9,
+     "parliament": 0,
+     "council": 6,
+     "law": 229
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "umsetzung einer änderung der eu-waffenrichtlinie (weiterentwicklung von schengen)",
+    "detail_page_title": "Umsetzung einer Änderung der EU-Waffenrichtlinie (Weiterentwicklung von Schengen)",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 36,
+     "arguments": 42,
+     "law": 46
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      36,
+      41
+     ],
+     "committee": [
+      42,
+      43
+     ],
+     "parliament": [],
+     "council": [
+      44,
+      45
+     ],
+     "law": [
+      46,
+      55
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 12,
+     "committee": 8,
+     "parliament": 0,
+     "council": 8,
+     "law": 101
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.03
+ },
+ {
+  "booklet": "2019_05_19_fr.pdf",
+  "pages": 56,
+  "characters": 126880,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 loi fédérale relative à la réforme fiscale et au financement de l'avs (rffa)",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 16,
+     "law": 20
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      15
+     ],
+     "committee": [
+      16,
+      17
+     ],
+     "parliament": [],
+     "council": [
+      18,
+      19
+     ],
+     "law": [
+      20,
+      35
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 38,
+     "committee": 8,
+     "parliament": 0,
+     "council": 7,
+     "law": 221
+    },
+    "find_vote_by_detail_title": null
+   },
+   {
+    "title": "mise en œuvre d'une modification de la directive de l'ue sur les armes (développement de l'acquis de schengen)",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 36,
+     "arguments": 42,
+     "law": 46
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      36,
+      41
+     ],
+     "committee": [
+      42,
+      43
+     ],
+     "parliament": [],
+     "council": [
+      44,
+      45
+     ],
+     "law": [
+      46,
+      55
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 7,
+     "detail": 14,
+     "committee": 8,
+     "parliament": 0,
+     "council": 8,
+     "law": 99
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.04
+ },
+ {
+  "booklet": "2019_05_19_it.pdf",
+  "pages": 56,
+  "characters": 129105,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 legge federale concernente la riforma fiscale e il finanziamento dell'avs (rffa)",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 16,
+     "law": 20
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      15
+     ],
+     "committee": [
+      16,
+      17
+     ],
+     "parliament": [],
+     "council": [
+      18,
+      19
+     ],
+     "law": [
+      20,
+      35
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 5,
+     "detail": 34,
+     "committee": 10,
+     "parliament": 0,
+     "council": 8,
+     "law": 251
+    },
+    "find_vote_by_detail_title": null
+   },
+   {
+    "title": "trasposizione nel diritto svizzero di una modifica della direttiva ue sulle armi (sviluppo di schengen)",
+    "detail_page_title": "",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 36,
+     "arguments": 42,
+     "law": 46
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      36,
+      41
+     ],
+     "committee": [
+      42,
+      43
+     ],
+     "parliament": [],
+     "council": [
+      44,
+      45
+     ],
+     "law": [
+      46,
+      55
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 5,
+     "detail": 14,
+     "committee": 9,
+     "parliament": 0,
+     "council": 8,
+     "law": 89
+    },
+    "find_vote_by_detail_title": null
+   }
+  ],
+  "seconds": 0.04
+ },
+ {
+  "booklet": "2026_09_27_de.pdf",
+  "pages": 32,
+  "characters": 53460,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 zweite vorlage erste vorlage volksinitiative «wahrung der schweizerischen neutralität (neutralitätsinitiative)»",
+    "detail_page_title": "Im Detail Volksinitiative «Wahrung der schweizerischen Neutralität (Neutralitätsinitiative)» Erste Vorlage: Neutralitätsinitiative",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      13
+     ],
+     "committee": [
+      14,
+      15
+     ],
+     "parliament": [],
+     "council": [
+      16,
+      17
+     ],
+     "law": [
+      18,
+      19
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 5,
+     "detail": 22,
+     "committee": 6,
+     "parliament": 0,
+     "council": 7,
+     "law": 26
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "volksinitiative «für eine sichere ernährung – durch stärkung einer nachhaltigen inländischen produktion, mehr pflanzlich",
+    "detail_page_title": "Im Detail Volksinitiative «Für eine sichere Ernährung – durch Stärkung einer nachhaltigen inländischen Produktion, mehr pflanzliche Lebensmittel und sauberes Tr",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 26,
+     "law": 30
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      25
+     ],
+     "committee": [
+      26,
+      27
+     ],
+     "parliament": [],
+     "council": [
+      28,
+      29
+     ],
+     "law": [
+      30,
+      31
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 19,
+     "committee": 5,
+     "parliament": 0,
+     "council": 7,
+     "law": 45
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.02
+ },
+ {
+  "booklet": "2026_09_27_fr.pdf",
+  "pages": 32,
+  "characters": 53805,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 deuxième objet premier objet initiative populaire « sauvegarder la neutralité suisse (initiative sur la neutralité) »",
+    "detail_page_title": "En détail Initiative populaire « Sauvegarder la neutralité suisse (initiative sur la neutralité) » Premier objet  : initiative sur la neutralité",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      13
+     ],
+     "committee": [
+      14,
+      15
+     ],
+     "parliament": [],
+     "council": [
+      16,
+      17
+     ],
+     "law": [
+      18,
+      19
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 20,
+     "committee": 6,
+     "parliament": 0,
+     "council": 8,
+     "law": 29
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "initiative populaire « pour une alimentation sûre – grâce au renforcement de la production indigène durable, à davantage",
+    "detail_page_title": "En détail Initiative populaire « Pour une alimentation sûre – grâce au renforcement de la production indigène durable, à davantage de denrées alimentaires végé-",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 26,
+     "law": 30
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      25
+     ],
+     "committee": [
+      26,
+      27
+     ],
+     "parliament": [],
+     "council": [
+      28,
+      29
+     ],
+     "law": [
+      30,
+      31
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 21,
+     "committee": 7,
+     "parliament": 0,
+     "council": 7,
+     "law": 40
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.02
+ },
+ {
+  "booklet": "2026_09_27_it.pdf",
+  "pages": 32,
+  "characters": 52395,
+  "contents_lines": 14,
+  "votes": 2,
+  "votes_ok": 2,
+  "vote_details": [
+   {
+    "title": "3 secondo oggetto primo oggetto iniziativa popolare «salvaguardia della neutralità svizzera (iniziativa sulla neutralità",
+    "detail_page_title": "In dettaglio Iniziativa popolare «Salvaguardia della neutralità svizzera (Iniziativa sulla neutralità)» Primo oggetto: Iniziativa sulla neutralità",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": 8,
+     "arguments": 14,
+     "law": 18
+    },
+    "parts": {
+     "summary": [
+      4,
+      5
+     ],
+     "detail": [
+      8,
+      13
+     ],
+     "committee": [
+      14,
+      15
+     ],
+     "parliament": [],
+     "council": [
+      16,
+      17
+     ],
+     "law": [
+      18,
+      19
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 4,
+     "detail": 25,
+     "committee": 9,
+     "parliament": 0,
+     "council": 8,
+     "law": 22
+    },
+    "find_vote_by_detail_title": true
+   },
+   {
+    "title": "iniziativa popolare «per un'alimentazione sicura – mediante il rafforzamento di una produzione nazionale sostenibile, pi",
+    "detail_page_title": "In dettaglio Iniziativa popolare «Per un’ali­ mentazione sicura – mediante il rafforzamento di una produ­ zione nazionale sostenibile, più derrate alimentari ve",
+    "ok": true,
+    "problems": [],
+    "entry": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": 20,
+     "arguments": 26,
+     "law": 30
+    },
+    "parts": {
+     "summary": [
+      6,
+      7
+     ],
+     "detail": [
+      20,
+      25
+     ],
+     "committee": [
+      26,
+      27
+     ],
+     "parliament": [],
+     "council": [
+      28,
+      29
+     ],
+     "law": [
+      30,
+      31
+     ]
+    },
+    "boxes": {
+     "committee": 1,
+     "council": 1,
+     "parliament": 1
+    },
+    "paragraphs": {
+     "summary": 6,
+     "detail": 24,
+     "committee": 9,
+     "parliament": 0,
+     "council": 7,
+     "law": 43
+    },
+    "find_vote_by_detail_title": true
+   }
+  ],
+  "seconds": 0.02
+ }
+]
