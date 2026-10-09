@@ -251,6 +251,10 @@ arms of one paired run compare.
 
 ## 6. Recommendation
 
+> **Done in session 7** (commit `d69d820`), after a paired run on 300
+> validation cases nobody had looked at: `section-route` 0.956 against
+> `embed-e5-small` 0.865. See `docs/session_7_report.md`.
+
 **Make `section-route` the task A default** (`Settings.context_a` in
 `src/cli.py`, a commit of its own after the team agrees). Reasons:
 

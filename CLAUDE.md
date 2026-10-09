@@ -178,15 +178,17 @@ src/
                 from the contents lines, checked against page headings; boxes per voice; paragraphs
   claim_router.py  claim opening -> part (summary, council, committee, law, detail), de/fr/it, or None
   context.py    registry of task A context variants: names, prompt per variant, select()
-  contexts/     one file per variant: full.py, vote_section.py, embed_e5_small.py (default;
-                multilingual-e5-small, ONNX, local CPU), and since session 4
+  contexts/     one file per variant: full.py, vote_section.py, embed_e5_small.py (default until
+                session 7; multilingual-e5-small, ONNX, local CPU), and since session 4
                 vote_section_embed_e5_small(_k12).py, embed_granite_97m_r2.py,
                 vote_section_embed_granite_97m_r2.py; shared code in retrieval.py; since
-                session 6 section_route.py (the part the claim names, as numbered paragraphs)
+                session 6 section_route.py (default since session 7: the part the claim names,
+                as numbered paragraphs; falls back to embed-e5-small)
   evidence.py   task A evidence settings: cited-pieces (default since session 6: 1,000-character pieces
                 of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
-data/           raw dataset, dev/ and test/ splits, splits.json
+data/           raw dataset, dev/ and test/ splits, splits.json; val/ (session 7: 580 task A cases from
+                rows in neither dev nor test, and a balanced 300-case sample)
 docs/           official contract, reports, reviews
   runs/         one folder per run: run.json, NOTES.md and the run's files (see runs/README.md)
   decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
@@ -194,7 +196,7 @@ docs/           official contract, reports, reviews
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
                 search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
-                rescore_evidence.py, route_check.py, paired_analysis.py
+                rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -247,7 +249,7 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: task A context, routing claims to the part of the vote they name
+## Current stage: task A context, `section-route` as the default
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
@@ -264,7 +266,8 @@ Two lines of work from 2026-10-08 are merged (PR #5):
   answer (session 3 was not in that branch yet).
 
 `--context-a` picks the task A context (all modes in `src/context.py`); the
-default is `embed-e5-small` since session 4. Every mode uses the json_schema
+default is `section-route` since session 7 (`embed-e5-small` from session 4
+to 6). Every mode uses the json_schema
 answer. `--evidence-a cited-then-retrieved` pads the evidence; it stays off
 (team decision, session 5: evidence holds only pages Apertus cited).
 
@@ -317,11 +320,25 @@ Session 6 (`track_2a/docs/session_6_report.md`, decisions in
 - E5 (paired, all 300 dev task A cases, `apertus-v1.5-8b`): `section-route`
   Macro-F1 0.953 against 0.834 for `embed-e5-small`, evidence 0.905 against
   0.662, 1,210 against 1,868 input tokens, p95 3.9 s against 11.7 s.
-- Recommended, not yet done: `section-route` as the task A default (team
-  decision; its own commit).
 
-Next: decide the default; then, one change per comparison, a larger budget
-for long detail and law parts, and the remaining "called neutral" errors.
+Session 7 (`track_2a/docs/session_7_report.md`, decisions in
+`docs/decisions/2026-10-09-0025_rashad_session-7.md`):
+
+- An error while routing (parser, router, vote match, paragraph prompt) makes
+  the case run as `embed-e5-small` and is counted in the run log; it never
+  gives a neutral answer without a model call.
+- Validation set `data/val/`: 580 task A cases from rows in neither dev nor
+  test, minus the six rows used for router patterns in session 6. Offline:
+  all 580 routed, the routed part holds the gold passage in 399 of 400.
+  Never change router patterns or parser rules because of val results.
+- E6 (paired, 300 balanced val cases, `apertus-v1.5-8b`): `section-route`
+  0.956 against 0.865, evidence 0.946 against 0.588, 1,222 against 1,827
+  input tokens, p95 3.0 s against 12.3 s.
+- **`section-route` is the task A default** (commit `d69d820`).
+
+Next, one change per comparison: a larger budget for long detail and law
+parts, committee claims on votes without a committee, and the remaining
+"called neutral" errors. Measure on dev, confirm on val.
 
 Rules for this stage:
 

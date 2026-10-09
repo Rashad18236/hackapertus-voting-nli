@@ -64,7 +64,7 @@ Paired outcomes on val (300 cases, both arms answered): both right 255, **only s
 | detail | 40 | 5 | 1 | 2 |
 
 - **The dev result holds on val: section-route 0.956 against 0.865 (+0.091; dev 0.953 against 0.834, +0.119).** Evidence 0.946 against 0.588 (dev 0.905 against 0.662), 33 % fewer input tokens, p95 time 3.0 s against 12.3 s.
-- section-route is better or equal in every claim type and in 8 of the 9 language pairs (French booklet with German claim: 0.939 against 0.942). On val its weakest part is detail (0.912), as on dev (0.817), but less so; German booklet with German claim, the one pair it lost on dev, is now its win (0.970 against 0.878).
+- section-route is better or equal in every claim type and in 8 of the 9 language pairs (French booklet with German claim about even: 0.939 against 0.942). On val its weakest part is detail (0.912), as on dev (0.817), but less so; German booklet with German claim, the one pair it lost on dev, is now its win (0.970 against 0.878).
 - Its remaining errors are again mostly gold entailment or contradiction called neutral (9 of 13 wrong answers); it never calls a neutral claim entailed or contradicted (0 of 96).
 - The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
 - **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
