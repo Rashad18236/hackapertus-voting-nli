@@ -117,5 +117,21 @@ class RoutingErrors(unittest.TestCase):
         self.assertIn("Routing failed and the case ran as the fallback variant: 1", " ".join(logs.output))
 
 
+class RepeatedEvidence(unittest.TestCase):
+    """Session 8 (P7): a cited paragraph whose text equals one already taken gives no second item."""
+
+    def test_same_text_cited_twice_gives_one_item(self):
+        paragraphs = [(3, "Art. 1 Der Bund regelt die Jagd."), (4, "Die Kantone vollziehen."),
+                      (7, "Art. 1 Der Bund regelt die Jagd."), (8, "Die Kantone vollziehen es.")]
+        items = section_route.evidence_items(paragraphs, [1, 3, 2, 4])
+        self.assertEqual(items, [{"page": 3, "text": "Art. 1 Der Bund regelt die Jagd."},
+                                 {"page": 4, "text": "Die Kantone vollziehen."},
+                                 {"page": 8, "text": "Die Kantone vollziehen es."}])
+
+    def test_different_texts_on_one_page_are_all_kept(self):
+        paragraphs = [(3, "Erster Satz."), (3, "Zweiter Satz.")]
+        self.assertEqual(len(section_route.evidence_items(paragraphs, [1, 2])), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

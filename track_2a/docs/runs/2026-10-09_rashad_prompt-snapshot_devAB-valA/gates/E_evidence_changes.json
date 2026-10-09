@@ -1,0 +1,192 @@
+[
+ {
+  "id": "v1.1-row-288-A",
+  "set": "dev",
+  "label": 0,
+  "items_before": 3,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1022-A",
+  "set": "dev",
+  "label": 2,
+  "items_before": 3,
+  "items_after": 2,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1205-A",
+  "set": "dev",
+  "label": 2,
+  "items_before": 3,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1283-A",
+  "set": "dev",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1342-A",
+  "set": "dev",
+  "label": 2,
+  "items_before": 3,
+  "items_after": 2,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1407-A",
+  "set": "dev",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-61-A",
+  "set": "val",
+  "label": 0,
+  "items_before": 3,
+  "items_after": 2,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-65-A",
+  "set": "val",
+  "label": 0,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-312-A",
+  "set": "val",
+  "label": 0,
+  "items_before": 3,
+  "items_after": 2,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-366-A",
+  "set": "val",
+  "label": 0,
+  "items_before": 3,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-383-A",
+  "set": "val",
+  "label": 0,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1134-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1158-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1168-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1175-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1299-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1411-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1417-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ },
+ {
+  "id": "v1.1-row-1425-A",
+  "set": "val",
+  "label": 2,
+  "items_before": 2,
+  "items_after": 1,
+  "after_is_dedup_of_before": true,
+  "after_has_repeat": false,
+  "new_texts_not_in_before": 0
+ }
+]

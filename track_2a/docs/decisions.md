@@ -568,3 +568,10 @@ Change D, parser patterns (P9): **applied** (G1 and G2 pass, 0 differences; extr
 - **`scripts/unseen_booklets.py` no longer has `--proposal`.** The patterns live in the parser now; the old results stay in the checks session's run folder.
 - **New tests (`tests/test_booklet.py::Session8Patterns`) for each new pattern, applied as the parser applies them (search for titles, a whole line for the debate heading).** The patterns had no unit test.
 - **No parser rule was written or adjusted because of a val case.** The patterns come from the 2018-2019 booklets of the checks session; val (and dev) only showed that nothing changes.
+
+Change E, repeated evidence (P7): **applied** (G1 passes; G2: labels identical, evidence differs in exactly the 19 responses that repeated a text: 6 dev, as the checks session found, and 13 val; evidence score unchanged, dev 0.9055, val 0.9461; 131 tests pass).
+
+- **`section_route.evidence_items` skips a cited paragraph whose text equals (exactly, character for character) one already taken.** Identical clauses of a law text give one item instead of two or three; equality of the verbatim text is the plainest rule and needs no threshold.
+- **Each of the 19 changed responses is the reference's evidence with the repeats removed (checked: no other change, no item from a paragraph that was not there before, no repeat left; list in `gates/E_evidence_changes.json`).** These are the only changes the rule allows.
+- **Evidence score with the starter's scorer, reference → change E: dev 0.9055 → 0.9055 (182 of 201), val sample 0.9461 → 0.9461 (193 of 204); Macro-F1 unchanged.** The rule set for this change: the score must not go down.
+- **Tests: `tests/test_section_route.py::RepeatedEvidence`.**
