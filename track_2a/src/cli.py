@@ -61,6 +61,8 @@ class Settings:
     context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
                                       # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
                                       # cases it cannot route run as embed-e5-small)
+    evidence_halves_a: bool = True   # section-route evidence: add halves of cited paragraphs up to 5 items (session 9, A2:
+                                     # dev evidence 0.9055 -> 0.9254, val 0.9461 -> 0.9559, labels and requests unchanged)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,
                                       # 0.542 vs 0.373 for whole cited pages, labels unchanged)
 
@@ -192,7 +194,7 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
     if label is None:
         raw["parse_reason"] = reason
         return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
-    items = variant.evidence_items(paragraphs, numbers) if label in (0, 2) else []
+    items = variant.evidence_items(paragraphs, numbers, halves=settings.evidence_halves_a) if label in (0, 2) else []
     status = "ok" if label == 1 or items else "no valid paragraphs for label 0/2"
     return response(case_id, label, result.input_tokens, result.output_tokens, start, items), status
 
@@ -272,13 +274,15 @@ def main():
                         help="development only: force the task A answer schema (response_format json_schema)")
     parser.add_argument("--context-a", default=defaults.context_a, choices=context.MODES,
                         help="development only: which booklet text task A sends")
+    parser.add_argument("--evidence-halves-a", action=argparse.BooleanOptionalAction, default=defaults.evidence_halves_a,
+                        help="development only: section-route evidence adds halves of cited paragraphs (session 9, A2)")
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
     args = parser.parse_args()
     settings = Settings(prompt_b=args.prompt_b, schema_b=args.schema_b, max_tokens_b=args.max_tokens_b,
                         max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a,
-                        evidence_a=args.evidence_a)
+                        evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

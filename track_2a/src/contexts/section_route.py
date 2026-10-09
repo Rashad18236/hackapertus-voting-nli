@@ -93,13 +93,21 @@ def select(pages, vote, claim_text, cross_language=False):
     return text, {p: pages[p] for p, _ in paragraphs}
 
 
-def evidence_items(paragraphs, cited, max_items=3):
+HALVES_FILL_TO = 5  # with halves=True: items up to this many (the scorer looks at the first five)
+_SENTENCE_END = re.compile(r"[.!?](?=\s)")
+
+
+def evidence_items(paragraphs, cited, max_items=3, halves=False):
     """Evidence for cited paragraph numbers (1-based, as shown): verbatim text with its page.
 
     Unknown or repeated numbers are skipped, and so is a paragraph whose text equals one already taken (a law
     can repeat a clause word for word; session 8, P7); a paragraph over 5,000 characters is split.
+
+    halves=True (session 9, A2; off by default): after these items, the two halves of each cited paragraph, cut
+    at the sentence end nearest its middle, are added in turn until there are HALVES_FILL_TO items; a text
+    already present is skipped, and a paragraph with no sentence end inside it gives no halves.
     """
-    items, seen, taken = [], set(), set()
+    items, seen, taken, used = [], set(), set(), []
     for n in cited:
         if n in seen or not 1 <= n <= len(paragraphs):
             continue
@@ -108,5 +116,28 @@ def evidence_items(paragraphs, cited, max_items=3):
         if text in taken:
             continue
         taken.add(text)
+        used.append((page, text))
         items += [{"page": page, "text": piece} for piece in parse._split(text, parse.MAX_ITEM_CHARS)]
-    return items[:max_items]
+    items = items[:max_items]
+    if halves:
+        present = {item["text"] for item in items}
+        for page, text in used:
+            for half in split_in_half(text):
+                if len(items) >= HALVES_FILL_TO:
+                    break
+                if half not in present:
+                    items.append({"page": page, "text": half})
+                    present.add(half)
+    return items
+
+
+def split_in_half(text):
+    """The two halves of a paragraph, cut after the sentence end (. ! ?) nearest its middle; [] if it has
+    no sentence end inside it. Both halves are verbatim pieces of the text."""
+    middle = len(text) / 2
+    ends = [m.end() for m in _SENTENCE_END.finditer(text) if 0 < m.end() < len(text.rstrip())]
+    if not ends:
+        return []
+    cut = min(ends, key=lambda e: abs(e - middle))
+    first, second = text[:cut].strip(), text[cut:].strip()
+    return [h for h in (first, second) if h]

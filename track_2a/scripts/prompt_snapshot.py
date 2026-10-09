@@ -97,7 +97,7 @@ def run(args):
         log = open(out / name / "cli.log", "w", encoding="utf-8")
         proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(folder / "cases.jsonl"),
                                  "--output", str(out / name / "predictions.jsonl"),
-                                 "--raw", str(out / name / "raw_answers.jsonl")],
+                                 "--raw", str(out / name / "raw_answers.jsonl"), *args.cli_arg],
                                 cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT)
         jobs[name] = (server, proc, log, time.time())
 
@@ -136,6 +136,7 @@ def run(args):
                                        encoding="utf-8")
     summary["problems"] = problems
     summary["replay_table"] = args.replay
+    summary["cli_args"] = args.cli_arg
     (out / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=1, ensure_ascii=False))
     return 1 if problems else 0
@@ -198,6 +199,7 @@ def main():
     r = sub.add_parser("run")
     r.add_argument("--out", required=True)
     r.add_argument("--replay")
+    r.add_argument("--cli-arg", action="append", default=[], help="extra argument for the CLI (session 9), repeatable")
     r.add_argument("--booklets", default=str(ROOT / "output" / "booklets_dev"))
     r.add_argument("--cache", default=str(Path(tempfile.gettempdir()) / "booklet-cache-snapshot"),
                    help="parsed-PDF cache (src/parse.py); its content depends only on the PDF")
