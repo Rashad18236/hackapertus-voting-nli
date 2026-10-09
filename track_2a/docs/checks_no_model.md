@@ -330,12 +330,15 @@ packages; the rest the `python:3.12-slim` base.
 ## Proposals
 
 For files this branch must not change. Each is measured or reproduced where
-possible; none is applied.
+possible; none is applied here. P1 to P4 are done on branch
+`rashad/input-hardening` (2026-10-09).
 
-**Update (session 8, `docs/session_8_report.md`):** P1 to P4, P6 (with batch
-size 16), P7, P9 and P10 are applied, each behind gates that compare every
-request and every replayed answer with the code before. P5, P8, P11 and P12
-are not.
+**Update (session 8, `docs/session_8_report.md`):** P6 (with batch size 16),
+P7, P9 and P10 are applied, each behind gates that compare every request and
+every replayed answer with the code before. Session 8 also fixed P1 to P4,
+independently of `rashad/input-hardening` (PR #13); at the merge its reader
+was kept, because it also ends a line at a carriage return alone. P5, P8, P11
+and P12 are not applied.
 
 | # | File | Proposal | Evidence |
 |---|---|---|---|
@@ -349,7 +352,7 @@ are not.
 | P8 | `src/booklet.py` | Keep evidence contiguous: return the page's text from a paragraph's first to its last line (lone `-` lines and page numbers included) as the evidence, while the prompt keeps the cleaned text | 12 E5 items are not one contiguous piece of their page (Part 3) |
 | P9 | `src/booklet.py` | Council titles with "und Parlament / et du Parlement / e del Parlamento" optional; "deliberazioni in Parlamento" as a debate name; accept a debate heading as the arguments' start heading | Measured in memory (`scripts/unseen_booklets.py --proposal`): 14 of 15 unseen booklets complete (was 3), 32 of 33 votes; the 44 dev booklets parse identically. Patterns in that script |
 | P10 | `src/claim_router.py` | Strip leading quotes, dashes and spaces; add the patterns in `scripts/router_stress.py` (`PROPOSED`): more prepositions and verbs, "Bundesrat und Parlament" without article, ß, plural committees, initiants/promotori, the initiative or law as subject of "if accepted", "In Kürze / En bref / In breve", other names for the text; a summary named within the first words overrides the subject | Measured in memory: 273 of 300 right (was 131), 0 wrong (was 4); 0 of 877 dataset claims outside test change route. Written after seeing the stress claims, so not an unseen measure |
-| P11 | `Dockerfile` (allowed, but the submission image; left for its own change) | `RUN mkdir -p /app/models/multilingual-e5-small`, then `ADD --chmod=644 ${E5_URL}/model.onnx ${E5_URL}/tokenizer.json /app/models/multilingual-e5-small/`, instead of `ADD` + `RUN chmod -R a+rX /app/models` (which copies the 487 MB model a second time) | Built and run here: compressed image 681 → **395 MB**, uncompressed about 1.29 → 0.81 GB, same predictions on the examples. **Without the `mkdir`**, `ADD --chmod=644` also gives the folders it creates mode 644, so a non-root user cannot enter them: the model fails to load and every task A case silently gets the neutral fallback (seen here with `--user 1001:1001`). With the `mkdir` first: folders 755, files 644, non-root run identical to today's image (checked). `make run` runs as the caller's user, so CI (non-root) would catch the broken form |
+| P11 | `Dockerfile` (allowed, but the submission image; left for its own change) | `RUN mkdir -p /app/models/multilingual-e5-small`, then `ADD --chmod=644 ${E5_URL}/model.onnx ${E5_URL}/tokenizer.json /app/models/multilingual-e5-small/`, instead of `ADD` + `RUN chmod -R a+rX /app/models` (which copies the 487 MB model a second time) | Built and run here: compressed image 681 → **395 MB**, uncompressed about 1.29 → 0.81 GB, same predictions on the examples. **Without the `mkdir`**, `ADD --chmod=644` also gives the folders it creates mode 644, so a non-root user cannot enter them: the model fails to load and every task A case silently gets the neutral fallback (seen here with `--user 1001:1001`). With the `mkdir` first: folders 755, files 644, non-root run identical to today's image (checked). **Correction (2026-10-09):** CI would not have caught the broken form on `main`. Its run on the examples uses the default context, which since session 7 is `section-route`: it answers the task A example from a short part without loading e5, and the broken image passes that run with no fallback (checked as uid 1001). With `section-route` the broken image fails only the cases that need e5: long parts and claims it cannot route. Only CI runs 1 to 3 on this branch, before session 7 was merged, used `embed-e5-small` by default. **CI catches it since commit `c0bed9c`** (branch `rashad/input-hardening`): a second run of the examples with `--context-a embed-e5-small` fails on the broken image (checked locally as uid 1001 on a read-only root) |
 | P12 | `Dockerfile` | Optional: `ENV HOME=/tmp` so onnxruntime's telemetry id write goes to the writable `/tmp` instead of failing | Log line "Failed to persist telemetry device ID" under `--read-only`; harmless |
 
 ## What could not be verified

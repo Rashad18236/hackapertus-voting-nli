@@ -28,7 +28,7 @@ and after each one both gates held and the full test suite passed:
 | Change | Commit | Result | G1 requests and paths | G2 labels and evidence | Extra gate | Numbers |
 |---|---|---|---|---|---|---|
 | Step 0: reference | `c5e638b` | done | 1,180 requests hashed | replay of E5 and E6 reproduces them exactly | – | dev 0.953 / 0.905, val 0.956 / 0.946 (starter's scorer, as recorded) |
-| A. CLI input and output (P1–P4) | `72cf03a` | **applied** | pass (0 differences) | pass (0 differences) | the 3 expected failures now pass; new kill test passes | 121 tests pass, 0 expected failures |
+| A. CLI input and output (P1–P4) | `72cf03a` | **applied**; the same fix as PR #13 (merged into `main` meanwhile); at the merge **our reader was kept**, because it also ends a line at a carriage return alone (`main`'s answers 0 cases of such a file, ours all; ours passes all of PR #13's contract tests) | pass (0 differences) | pass (0 differences) | the 3 expected failures now pass; new kill test passes; after the merge, PR #13's tests and a new carriage-return-only test pass | 121 tests pass, 0 expected failures |
 | B. Length-sorted embedding batches (P6), batch size 16 | `bdd816c` | **applied** | pass | pass | vectors of 45 booklets identical (largest difference 0.0); same 8 chunks in 880 of 880 cases | container, 300 dev cases: total 364.9 → 228.5 s, p95 4.15 → 3.21 s, slowest case 51.2 → 17.6 s, peak 3,287 → 2,254 MiB |
 | C. Router patterns (P10) | `7343fee` | **applied** | pass | pass | `router_stress.py`: 273 right, 0 wrong part (was 131 and 4) | 126 tests pass |
 | D. Parser patterns (P9) | `6df4a86` | **applied** | pass | pass | full parse of 45 dev and val booklets (132 votes) identical; 14 of 15 unseen booklets complete (was 3) | 129 tests pass |

@@ -39,6 +39,8 @@ request's messages (independent of the order of the cases):
     STUB_NO_USAGE   the normal answer without a usage block
     STUB_LABEL_1, STUB_LABEL_2   the normal answer with that label
     STUB_BAD_PAGES  {"pages": [9999], "paragraphs": [9999], "label": L}: numbers outside what was sent
+    STUB_SLOW       the call is logged at once, then answered after Config.slow_seconds (3 s), as chosen
+                    by the other markers (lets a test look at the output while a case is still running)
 
 GET /_stub/calls returns the log of all calls so far (number, path, model,
 whether an Authorization header and a User-Agent were sent, the answer kind,
@@ -65,7 +67,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 MARKERS = ("STUB_FAIL_ONCE", "STUB_FAIL", "STUB_GARBAGE", "STUB_EMPTY", "STUB_HTML", "STUB_400", "STUB_NO_USAGE",
-           "STUB_LABEL_1", "STUB_LABEL_2", "STUB_BAD_PAGES")
+           "STUB_LABEL_1", "STUB_LABEL_2", "STUB_BAD_PAGES", "STUB_SLOW")
 GARBAGE = "certainly! the label is probably entailment {"
 HTML = "<html><body><h1>502 Bad Gateway</h1></body></html>"
 _PAGE = re.compile(r"=== PAGE (\d+) ===")
@@ -80,6 +82,7 @@ def request_hash(payload):
 
 
 class Config:
+    slow_seconds = 3.0  # how long a STUB_SLOW call waits before its answer
     def __init__(self, label=0, prompt_tokens=100, completion_tokens=10, fail_calls=(), garbage_calls=(),
                  html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0):
         self.label = label
@@ -194,6 +197,8 @@ def make_handler(config):
             entry["kind"] = kind
             usage = {"prompt_tokens": config.prompt_tokens, "completion_tokens": config.completion_tokens,
                      "total_tokens": config.prompt_tokens + config.completion_tokens}
+            if "STUB_SLOW" in _MARKER.findall(_text(payload)):
+                time.sleep(config.slow_seconds)
             if kind == "fail":
                 return self._send(500, {"error": {"message": "stub: internal server error"}})
             if kind == "error":

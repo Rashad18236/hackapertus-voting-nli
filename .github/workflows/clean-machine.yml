@@ -8,6 +8,10 @@
 #    fake model, a dummy API_KEY (no secret is used anywhere in this workflow).
 # 4. Fails if the run fails, if any input id has no response, if the format check fails, or if the
 #    fake model was not called once per case (the container could not reach BASE_URL).
+# 5. Runs the examples a second time with EXTRA_ARGS="--context-a embed-e5-small", into its own output
+#    folder, and fails if its log says "fallback" or the task A example has no evidence. The default
+#    context (section-route) answers the example from a short part without loading the e5 model; this
+#    run proves the model loads inside the image as a non-root user on a read-only filesystem.
 # The image size and the build and run times go to the job summary.
 #
 # The second job runs the unit and contract tests (track_2a/tests/) on the runner's Python, without
@@ -101,6 +105,32 @@ jobs:
           test "$calls" -eq "$cases"
           ! grep -q "fallback" output-ci.log
 
+      - name: Second run with embed-e5-small (the e5 model loads as non-root on a read-only filesystem)
+        env:
+          BASE_URL: http://stub:8099/v1
+          API_KEY: ci-dummy-key-not-a-secret
+        run: |
+          docker exec stub python -c "import urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8099/_stub/reset', data=b'', method='POST'))"
+          start=$(date +%s)
+          make -o build run DOCKER_RUN_FLAGS="--network nonet" OUTPUT_DIR=output/ci-e5 \
+            EXTRA_ARGS="--context-a embed-e5-small" 2>&1 | tee output-ci-e5.log
+          test "${PIPESTATUS[0]}" -eq 0
+          echo "RUN_E5_SECONDS=$(( $(date +%s) - start ))" >> "$GITHUB_ENV"
+          # "! grep" would not stop a "bash -e" step in the middle of a script; test explicitly.
+          if grep -q "fallback" output-ci-e5.log; then echo "a case fell back: the e5 model did not load"; exit 1; fi
+          python3 scripts/check_format.py output/ci-e5/predictions.jsonl examples/cases.jsonl
+          calls=$(docker exec stub python -c "import json, urllib.request; print(len(json.load(urllib.request.urlopen('http://127.0.0.1:8099/_stub/calls'))['calls']))")
+          test "$calls" -eq "$(grep -c . examples/cases.jsonl)"
+          python3 - <<'EOF'
+          import json, sys
+          cases = {json.loads(l)["id"]: json.loads(l) for l in open("examples/cases.jsonl", encoding="utf-8") if l.strip()}
+          preds = {json.loads(l)["id"]: json.loads(l) for l in open("output/ci-e5/predictions.jsonl", encoding="utf-8") if l.strip()}
+          missing = sorted(set(cases) - set(preds))
+          no_evidence = [i for i, c in cases.items() if "booklet" in c and not preds.get(i, {}).get("evidence")]
+          print(f"embed-e5-small run: missing {missing}, task A without evidence {no_evidence}")
+          sys.exit(1 if missing or no_evidence else 0)
+          EOF
+
       - name: Image size and times
         if: always()
         run: |
@@ -111,9 +141,11 @@ jobs:
             echo "| Image size (uncompressed) | $(( ${IMAGE_BYTES:-0} / 1000000 )) MB |"
             echo "| Build (make build) | ${BUILD_SECONDS:-?} s |"
             echo "| Run on examples/cases.jsonl (cold start, 2 cases) | ${RUN_SECONDS:-?} s |"
+            echo "| Same with --context-a embed-e5-small (loads e5, embeds the booklet) | ${RUN_E5_SECONDS:-?} s |"
           } >> "$GITHUB_STEP_SUMMARY"
           docker images hackapertus-voting-nli
           cat output/ci/predictions.jsonl || true
+          cat output/ci-e5/predictions.jsonl || true
 
       - name: Fake model log
         if: failure()

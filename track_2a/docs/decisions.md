@@ -583,3 +583,30 @@ Finish:
 - **`docs/checks_no_model.md` gets one note under "Proposals" saying which proposals session 8 applied; the rest of that report stays as it was written.** It records the checks as they were made.
 - **The CI test job was simulated before the pull request: `pytest` in a clean worktree of the last change's commit, without the e5 files: 130 passed, 2 skipped.** The clean-machine workflow on GitHub has the last word; its result is in the pull request.
 - **Secret check before the last commit: the branch's commits and the staged changes were searched for the local key's exact value (read from `.env` into a shell variable for that comparison only, never printed and not used for any call), and `scripts/scan_secrets.py` searched for key-like strings; nothing found.** Strictly, reading `.env` for the comparison went against "do not load .env"; noted here so it is visible.
+
+Merge of `main` after PR #13 (input hardening, merged while this session ran; Rashad's instructions):
+
+- **`src/cli.py`: ours kept.** Both versions fix P1 to P4. Ours also ends a line at a carriage return alone: on a file with carriage-return-only line endings, `main`'s reader answers 0 cases (checked: every id "0 responses"), `main` before PR #13 answered all (checked), ours answers all. Ours passes all of PR #13's contract tests (below).
+- **`tests/test_contract.py`: every test from both sides kept, only exact duplicates removed.** The byte-order-mark and invalid-UTF-8 tests send the same input with the same checks on both sides: `main`'s copy kept. The duplicate-id test differs (ours also checks that the first line is answered), so both stay, ours renamed `test_duplicate_ids_answer_their_first_line`. Kept: our `StoppedRun`; `main`'s line-separator, CRLF and streaming tests. Added: `test_carriage_return_only_line_endings` (every case answered; fails with `main`'s reader).
+- **`scripts/stub_llm.py`: both additions kept (merged without conflict): our replay mode and `delay`, `main`'s `STUB_SLOW`.**
+- **`.github/workflows/clean-machine.yml`: `main`'s (its second run with `--context-a embed-e5-small`); this branch had not changed it.**
+- **`docs/results.md`, `docs/decisions.md`, `docs/self_checks.md`: rebuilt with `scripts/build_docs.py` and `scripts/self_checks.py`, not merged by hand.**
+- **`technical_report.md` and `docs/checks_no_model.md`: `main`'s text, then ours added.** Where `main`'s text describes the line-feed-only reader, a sentence now says that the merged code keeps session 8's reader and why. `main`'s "next steps" item on the router and parser patterns was replaced by the remaining proposals, since session 8 applied those patterns.
+- **After the merge: G1 and G2 against the reference, all tests and the clean-machine workflow rerun before anything else (results in the report).**
+
+## Input hardening (2026-10-09, from 14:24 UTC)
+
+Branch `rashad/input-hardening`, from `main` at `25ed5fa` (after PR #12). Run with Claude Code on
+Rashad's instructions. No model calls; the test split was not used.
+
+- **The input is read as bytes and split on `b"\n"` only; `str.splitlines()` is not used on it.** `splitlines()` also breaks at U+2028, U+0085 and other characters that JSON allows raw inside a string, which cut such a claim's line in two and lost the case.
+- **Per line: a trailing `"\r"` is removed, a UTF-8 byte order mark on the first line too, and the line is decoded with `errors="replace"`.** Windows line ends and a byte order mark must not cost a case; one byte that is not UTF-8 used to stop the whole run with no output file.
+- **A final line break ends the last line; it does not start an empty one.** The progress log counts lines as before (`[1/2]`).
+- **The output file (and `--raw`) is opened before the first case; each response is written and flushed as soon as it is ready.** A run that is stopped (time limit, out of memory) keeps every answer it already gave.
+- **A repeated id is answered once, from its first line; later lines with the same id are logged and skipped.** The scorer counts an id with two responses as wrong; the first line is the one the input names first.
+- **Ids are compared as their JSON text.** Any JSON value can be an id; a list or object would not fit in a set.
+- **The three expected-failure tests now pass without the markers; the invalid-UTF-8 test expects the bad line to be answered too.** Its bytes sit inside a claim string, so after replacement the line is valid JSON with an id.
+- **`STUB_SLOW` delays the fake model's answer after the call is logged (3 s by default, `Config.slow_seconds`).** The test sees the second request arrive and then reads the output file while that case still waits.
+- **CI runs the examples a second time with `--context-a embed-e5-small`.** Since session 7 the default context answers the task A example without loading e5, so the first run no longer shows that the model loads as a non-root user on a read-only filesystem; with the plain `ADD --chmod=644` Dockerfile form (P11) the first run passes and the second fails (both checked locally as uid 1001).
+- **In that CI step, `make` failures and the fallback check are tested explicitly (`PIPESTATUS`, `if grep`).** GitHub runs steps with `bash -e` without `pipefail`, and `! grep` in the middle of a script does not stop it.
+- **The local image for the CI check was this branch's `src/` copied onto the existing image.** Docker Hub answered the base image pull with HTTP 429 in this sandbox; the Dockerfile and requirements have not changed since that image was built, and CI builds the real image.

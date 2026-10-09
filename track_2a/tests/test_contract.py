@@ -21,9 +21,11 @@ is missing, task A cases on that path get the fallback answer (still a valid res
 test that needs the real embedding is skipped. CONTRACT_SLOW=1 adds the order test with the
 default context on the full example booklet (about 20 s per run, embedding the whole booklet).
 
-The three tests that were marked expectedFailure (duplicate ids, a byte order mark, a byte that
-is not UTF-8; proposals P1 to P3 in docs/checks_no_model.md) pass since session 8 changed
-src/cli.py, and are normal tests now. StoppedRun kills the CLI in the middle of a run (P4).
+The tests for repeated ids, a byte order mark and bytes that are not UTF-8 were expected failures
+until src/cli.py read its input as bytes and skipped repeated ids (PR #13, proposals P1 to P4 in
+docs/checks_no_model.md); they now pass. Session 8 made the same fix on its own branch and kept its
+own reader at the merge, which also ends a line at a carriage return alone (test below).
+StoppedRun kills the CLI in the middle of a run (P4).
 """
 
 import hashlib
@@ -207,8 +209,9 @@ class ContractBase(unittest.TestCase):
         cls.server.shutdown()
         shutil.rmtree(cls.tmp, ignore_errors=True)
 
-    def run_cli(self, lines, *args, env=None, cache_dir=None, server=None, url=None, check=True):
-        """Run the CLI on these lines (dicts are written as JSON, str and bytes as given)."""
+    def run_cli(self, lines, *args, env=None, cache_dir=None, server=None, url=None, check=True, raw_input=None):
+        """Run the CLI on these lines (dicts are written as JSON, str and bytes as given, each followed by a
+        line break), or on raw_input, bytes written to the input file exactly as given."""
         server, url = server or self.server, url or self.url
         with server.config.lock:
             server.config.calls.clear()
@@ -220,7 +223,7 @@ class ContractBase(unittest.TestCase):
         tmp.mkdir()
         raw = b"".join((json.dumps(x, ensure_ascii=False).encode("utf-8") if isinstance(x, dict)
                         else x.encode("utf-8") if isinstance(x, str) else x) + b"\n" for x in lines)
-        (data / "cases.jsonl").write_bytes(raw)
+        (data / "cases.jsonl").write_bytes(raw if raw_input is None else raw_input)
         before = tree_hash(data)
         environment = {k: v for k, v in os.environ.items()
                        if k not in ("BASE_URL", "API_KEY", "MODEL", "LLM_BASE_URL", "LLM_API_KEY", "LLM_NAME")}
@@ -348,10 +351,15 @@ class EveryIdGetsOneValidResponse(ContractBase):
         self.assertEqual(run.preds, [])
         self.assertTrue((run.root / "output" / "predictions.jsonl").exists())
 
-    def test_duplicate_ids_get_exactly_one_response(self):  # P1 (docs/checks_no_model.md), fixed in session 8
-        cases = [b_case("dup"), b_case("dup", claim="STUB_LABEL_2 Another claim."), b_case("single")]
+    def test_duplicate_ids_get_exactly_one_response(self):
+        cases = [b_case("dup"), b_case("dup", claim="Another claim."), b_case("single")]
         run = self.run_cli(cases)
         # The starter's scorer marks an id with two responses as invalid (counted wrong).
+        self.assertEqual(sorted(p["id"] for p in run.preds), ["dup", "single"])
+
+    def test_duplicate_ids_answer_their_first_line(self):  # session 8
+        cases = [b_case("dup"), b_case("dup", claim="STUB_LABEL_2 Another claim."), b_case("single")]
+        run = self.run_cli(cases)
         self.assertEqual(sorted(p["id"] for p in run.preds), ["dup", "single"])
         # The first line is the one answered (the second would have given label 2).
         self.assertEqual([p["label"] for p in run.preds if p["id"] == "dup"], [0])
@@ -363,20 +371,81 @@ class EveryIdGetsOneValidResponse(ContractBase):
         self.assertEqual(run.code, 0)
         self.assertEqual(sum(p["id"] == "single" for p in run.preds), 1)
 
-    def test_byte_order_mark_does_not_lose_the_first_case(self):  # P2, fixed in session 8
+    def test_byte_order_mark_does_not_lose_the_first_case(self):
         cases = [b_case("first"), b_case("second")]
         lines = [b"\xef\xbb\xbf" + json.dumps(cases[0]).encode("utf-8"), cases[1]]
         run = self.run_cli(lines)
         self.assertContract(run, cases)
 
-    def test_invalid_utf8_line_does_not_stop_the_run(self):  # P3, fixed in session 8
-        good = [b_case("before"), b_case("after")]
-        lines = [good[0], b'{"id": "bad-bytes", "claim": {"text": "\xff\xfe"}, "reference": {"text": "r"}}', good[1]]
+    def test_invalid_utf8_line_does_not_stop_the_run(self):
+        # The bytes that are not UTF-8 sit inside a claim string: they become U+FFFD and the case is answered too.
+        cases = [b_case("before"), {"id": "bad-bytes", "claim": {"text": "??"}, "reference": {"text": "r"}},
+                 b_case("after")]
+        lines = [cases[0], b'{"id": "bad-bytes", "claim": {"text": "\xff\xfe"}, "reference": {"text": "r"}}', cases[2]]
         run = self.run_cli(lines, check=False)
         self.assertEqual(run.code, 0, run.stderr[-2000:])
-        # The bad bytes become U+FFFD; the line is still JSON with an id, so it is answered too.
-        bad = {"id": "bad-bytes", "claim": {"text": "\ufffd\ufffd"}, "reference": {"text": "r"}}
-        self.assertEqual(contract_problems(run.preds, {c["id"]: c for c in good + [bad]}), [])
+        self.assertEqual(contract_problems(run.preds, {c["id"]: c for c in cases}), [])
+
+    def test_line_separators_inside_a_claim(self):
+        """U+2028 and U+0085 are line breaks for str.splitlines() but ordinary characters inside a JSON string."""
+        cases = [b_case("b-separators", claim="Der Bund\u2028zahlt\u0085 40 Millionen Franken."), b_case("b-after"),
+                 a_case("a-separators", claim="Le congé\u2028dure deux\u0085semaines.")]
+        lines = [json.dumps(c, ensure_ascii=False) for c in cases]  # the two characters stay raw, not escaped
+        self.assertIn("\u2028", lines[0])
+        run = self.run_cli(lines, *A_ARGS)
+        self.assertContract(run, cases)
+        self.assertEqual(run.by_id["b-separators"]["label"], 0)
+
+    def test_carriage_returns_and_a_missing_final_line_break(self):
+        cases = [b_case("crlf-1"), b_case("crlf-2"), b_case("last-without-newline")]
+        raw = (json.dumps(cases[0]) + "\r\n" + json.dumps(cases[1]) + "\r\n" + json.dumps(cases[2])).encode("utf-8")
+        run = self.run_cli([], raw_input=raw)
+        self.assertContract(run, cases)
+
+    def test_each_response_is_written_as_soon_as_it_is_ready(self):
+        """While the second case waits for the (slow) model, the output file already holds the first response."""
+        cases = [b_case("first"), b_case("second", claim="STUB_SLOW Der Bund zahlt.")]
+        root = Path(tempfile.mkdtemp(dir=self.tmp, prefix="stream-"))
+        (root / "cases.jsonl").write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
+        out = root / "out" / "predictions.jsonl"
+        raw = root / "out" / "raw.jsonl"
+        self.server.config.slow_seconds = 5.0
+        with self.server.config.lock:
+            self.server.config.calls.clear()
+        environment = {k: v for k, v in os.environ.items()
+                       if k not in ("BASE_URL", "API_KEY", "MODEL", "LLM_BASE_URL", "LLM_API_KEY", "LLM_NAME")}
+        environment.update({"BASE_URL": self.url, "API_KEY": "stub", "PYTHONDONTWRITEBYTECODE": "1",
+                            "CONTRACT_WRITE_LOG": str(root / "writes.json"), "NO_PROXY": "127.0.0.1,localhost",
+                            "no_proxy": "127.0.0.1,localhost", "BOOKLET_CACHE_DIR": str(root / "cache")})
+        proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
+                                 "--output", str(out), "--raw", str(raw)],
+                                cwd=ROOT, env=environment, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        try:
+            deadline = time.time() + 60
+            while time.time() < deadline and len(self.server.config.calls) < 2:
+                time.sleep(0.05)
+            self.assertEqual(len(self.server.config.calls), 2, "the second case never reached the model")
+            self.assertIsNone(proc.poll(), "the run ended before the second case was answered")
+            written = out.read_text(encoding="utf-8").splitlines()
+            self.assertEqual([json.loads(line)["id"] for line in written], ["first"])
+            self.assertEqual([json.loads(line)["id"] for line in raw.read_text(encoding="utf-8").splitlines()],
+                             ["first"])
+            proc.wait(timeout=60)
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+            self.server.config.slow_seconds = stub_llm.Config.slow_seconds
+        self.assertEqual(proc.returncode, 0, proc.stderr.read()[-2000:])
+        self.assertEqual([json.loads(line)["id"] for line in out.read_text(encoding="utf-8").splitlines()],
+                         ["first", "second"])
+
+    def test_carriage_return_only_line_endings(self):
+        """Lines that end with a carriage return alone (old Mac style): every case is answered."""
+        cases = [b_case("cr-1"), b_case("cr-2"), a_case("cr-3"), b_case("cr-4")]
+        raw = "\r".join(json.dumps(c) for c in cases).encode("utf-8") + b"\r"
+        self.assertNotIn(b"\n", raw)
+        run = self.run_cli([], *A_ARGS, raw_input=raw)
+        self.assertContract(run, cases)
 
 
 class StoppedRun(ContractBase):
