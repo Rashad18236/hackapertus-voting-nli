@@ -1,0 +1,42 @@
+[
+ {
+  "case": "v1.1-row-500-A",
+  "part": "law",
+  "paragraphs": 636,
+  "as_is_s": 14.85,
+  "sorted_s": 6.74,
+  "speedup": 2.2,
+  "max_abs_difference": 0.0,
+  "same_top8": true
+ },
+ {
+  "case": "v1.1-row-782-A",
+  "part": "law",
+  "paragraphs": 624,
+  "as_is_s": 14.47,
+  "sorted_s": 6.24,
+  "speedup": 2.32,
+  "max_abs_difference": 0.0,
+  "same_top8": true
+ },
+ {
+  "case": "v1.1-row-580-A",
+  "part": "law",
+  "paragraphs": 385,
+  "as_is_s": 12.63,
+  "sorted_s": 4.34,
+  "speedup": 2.91,
+  "max_abs_difference": 0.0,
+  "same_top8": true
+ },
+ {
+  "case": "v1.1-row-904-A",
+  "part": "law",
+  "paragraphs": 604,
+  "as_is_s": 12.28,
+  "sorted_s": 5.55,
+  "speedup": 2.21,
+  "max_abs_difference": 0.0,
+  "same_top8": true
+ }
+]

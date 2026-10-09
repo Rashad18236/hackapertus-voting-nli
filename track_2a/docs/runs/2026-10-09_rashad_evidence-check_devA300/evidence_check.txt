@@ -1,0 +1,29 @@
+== docs/runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route
+   items: 284, items verbatim: 271, items verbatim without hyphen joining: 1, label 0: 99, label 1: 110, label 2: 91, task A responses: 300
+   verbatim: 12 violations
+      v1.1-row-2-A item 1 (page 59): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.8; text starts 'Si le projet est accepté, tous les pères actifs auront droit'
+      v1.1-row-5-A item 1 (page 65): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.5; text starts 'Die Schweiz hat in den letzten zehn Jahren rund 80 Milliar\nd'
+      v1.1-row-168-A item 1 (page 17): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.7; text starts 'Il Consiglio federale e il Parlamento vogliono rafforzare il'
+      v1.1-row-412-A item 1 (page 17): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.8; text starts 'Actuellement, les revenus du capital sont privilégiés de\ndiv'
+      v1.1-row-419-A item 1 (page 12): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.8; text starts 'Die Schweiz überwacht, schützt und verteidigt ihren\nLuftraum'
+      v1.1-row-455-A item 2 (page 19): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.5; text starts 'violation des droits de l’homme internationalement reconnus '
+      v1.1-row-1276-A item 1 (page 8): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.6; text starts 'La pandémie de COVID-19 a atteint la Suisse en février 2020.'
+      v1.1-row-1291-A item 1 (page 27): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.0; text starts 'L’Assemblée fédérale recommande au peuple et aux cantons de '
+      v1.1-row-1302-A item 1 (page 83): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.2; text starts 'Les nouveaux avions de combat représentent un investis\nsemen'
+      v1.1-row-1304-A item 1 (page 6): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.9; text starts 'Comme la plupart des pays, la Suisse participe à la fabri\nca'
+      v1.1-row-1324-A item 1 (page 17): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.7; text starts 'Il Consiglio federale e il Parlamento vogliono rafforzare il'
+      v1.1-row-1335-A item 1 (page 17): not a contiguous part of its page; a substring once the lines the parser drops are removed; partial ratio 99.8; text starts 'Heute sind Kapitaleinkommen auf diverse Arten privi\nlegiert.'
+   page: PASS
+   length: PASS
+   count: PASS
+   neutral: PASS
+   (note) verbatim only without hyphen joining: 1: v1.1-row-232-A item 1 (page 10)
+   (note) duplicate item: 6: v1.1-row-288-A, v1.1-row-1022-A, v1.1-row-1205-A, v1.1-row-1283-A, v1.1-row-1342-A, v1.1-row-1407-A
+== docs/runs/2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small
+   items: 769, items verbatim: 767, items verbatim without hyphen joining: 2, label 0: 83, label 1: 101, label 2: 116, task A responses: 300
+   verbatim: PASS
+   page: PASS
+   length: PASS
+   count: PASS
+   neutral: PASS
+   (note) verbatim only without hyphen joining: 2: v1.1-row-1364-A item 3 (page 54), v1.1-row-1451-A item 3 (page 28)

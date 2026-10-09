@@ -1,0 +1,30 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "01:13",
+ "kind": "offline check",
+ "code": "branch checks-no-model (scripts/scan_secrets.py); image built from the same tree",
+ "task": "A",
+ "variant": null,
+ "cases": "the whole git history (every commit on every fetched branch); the image's Python and Debian packages; the development packages; data/",
+ "setup": "secret patterns over every added line and every file name ever added; licence metadata of every installed package; sizes of data/ and the image",
+ "format": "offline, no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "No secret found in any commit on any branch (values never printed). Runtime packages: MIT, BSD, Apache-2.0, PSF-2.0 and MPL-2.0 (certifi, part of tqdm); development packages BSD, MIT, Apache-2.0; e5 model MIT; base image: 87 Debian packages (GPL, LGPL, BSD, MIT and others, as in any Debian image). data/ 9.6 MB; image 1.29 GB uncompressed, 681 MB compressed.",
+ "results": {
+  "secret_findings": 0,
+  "commits_scanned": 100,
+  "refs_scanned": 13,
+  "runtime_python_packages": 26,
+  "debian_packages": 87,
+  "dev_packages_closure": 16,
+  "e5_licence": "MIT",
+  "data_bytes": 9934439,
+  "image_bytes_uncompressed_github": 1293593836,
+  "image_compressed_mb": 681
+ }
+}

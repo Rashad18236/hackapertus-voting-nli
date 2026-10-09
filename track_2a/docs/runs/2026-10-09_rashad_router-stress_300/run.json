@@ -1,0 +1,54 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "kind": "offline check",
+ "task": "A",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "start_utc": "01:06",
+ "code": "branch checks-no-model (scripts/router_stress.py; src/claim_router.py as in de27e4c)",
+ "variant": "section-route",
+ "cases": "300 claim openings written for this test (100 each in de, fr, it; none from the dataset); for the proposal also the 877 distinct dataset claims outside the test booklets (dev and the rest)",
+ "setup": "each claim through claim_router.route(); outcome against the part a careful reader would route it to; then with the proposed patterns applied in memory",
+ "format": "offline, no model calls",
+ "summary": "Router as it is: 131 of 300 routed to the intended part, 4 to a wrong part (source named after the subject: 'Der Bundesrat ist laut Zusammenfassung ...'), 153 fall back although a part was intended, 12 correct fallbacks; every opening with a leading quote or dash falls back. With the proposed patterns: 273 right, 0 wrong, 15 fallbacks; 0 of 877 dataset claims change route.",
+ "results": {
+  "claims": 300,
+  "right": 131,
+  "wrong_part": 4,
+  "fallback": 153,
+  "correct_fallback": 12,
+  "wrongly_routed": 0,
+  "by_language": {
+   "de": {
+    "right": 40,
+    "wrong_part": 2,
+    "fallback": 54,
+    "correct_fallback": 4
+   },
+   "fr": {
+    "right": 47,
+    "wrong_part": 1,
+    "fallback": 48,
+    "correct_fallback": 4
+   },
+   "it": {
+    "right": 44,
+    "wrong_part": 1,
+    "fallback": 51,
+    "correct_fallback": 4
+   }
+  },
+  "with_proposal": {
+   "right": 273,
+   "wrong_part": 0,
+   "fallback": 15,
+   "correct_fallback": 12
+  },
+  "dataset_claims_checked": 877,
+  "dataset_claims_changed_by_proposal": 0
+ }
+}

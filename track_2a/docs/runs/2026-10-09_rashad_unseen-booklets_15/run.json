@@ -1,0 +1,28 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "kind": "offline check",
+ "task": "A",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "start_utc": "00:52",
+ "code": "branch checks-no-model (scripts/unseen_booklets.py; src/ as in de27e4c)",
+ "variant": "section-route",
+ "cases": "15 booklets (de, fr, it) of 5 vote dates in neither dev nor test: 2018-09-23, 2018-11-25, 2019-02-10, 2019-05-19, 2026-09-27; and the 44 dev booklets for the proposal",
+ "setup": "each booklet parsed with src/booklet.py: votes, parts, boxes, paragraphs per part, vote found again by its detail-page title; then with the proposed patterns applied in memory",
+ "format": "offline, no model calls; booklets downloaded from the Federal Chancellery (bk.admin.ch, admin.ch), not committed",
+ "summary": "2026-09-27: 3 of 3 booklets parse completely (6 of 6 votes). 2018-2019: 0 of 12 booklets parse (0 of 27 votes; every vote found, no parts: the arguments are titled without 'und Parlament'). With the proposed patterns: 14 of 15 booklets, 32 of 33 votes; dev unchanged (44 of 44, identical parts).",
+ "results": {
+  "booklets": 15,
+  "booklets_complete": "3/15",
+  "votes_ok": "6/33",
+  "booklets_complete_with_proposal": "14/15",
+  "votes_ok_with_proposal": "32/33",
+  "dev_booklets_complete_with_proposal": "44/44",
+  "dev_parse_identical_with_proposal": true,
+  "find_vote_wrong": 0
+ }
+}

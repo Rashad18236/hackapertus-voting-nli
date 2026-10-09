@@ -1,0 +1,7 @@
+de: 100 claims; outcomes {'right': 40, 'fallback': 54, 'wrong part': 2, 'correct fallback': 4}; routed to {'summary': 8, 'None': 58, 'council': 12, 'committee': 9, 'law': 6, 'detail': 7}
+fr: 100 claims; outcomes {'right': 47, 'fallback': 48, 'wrong part': 1, 'correct fallback': 4}; routed to {'summary': 10, 'None': 52, 'council': 11, 'committee': 10, 'law': 8, 'detail': 9}
+it: 100 claims; outcomes {'right': 44, 'fallback': 51, 'wrong part': 1, 'correct fallback': 4}; routed to {'summary': 8, 'None': 55, 'council': 10, 'committee': 10, 'law': 11, 'detail': 6}
+  WRONG PART [de] intended summary, routed council: 'Der Bundesrat ist laut Zusammenfassung der Ansicht, dass die Vorlage die Kosten senkt.'
+  WRONG PART [de] intended summary, routed committee: 'Das Komitee kritisiert gemäss der Zusammenfassung die hohen Kosten.'
+  WRONG PART [fr] intended summary, routed council: 'Le Conseil fédéral, selon le résumé, estime que le projet réduit les coûts.'
+  WRONG PART [it] intended summary, routed council: 'Il Consiglio federale, secondo il riassunto, ritiene che il progetto riduca i costi.'

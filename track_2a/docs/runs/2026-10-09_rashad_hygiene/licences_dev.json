@@ -1,0 +1,143 @@
+[
+ {
+  "name": "cloudpickle",
+  "version": "3.1.2",
+  "direct": false,
+  "license_expression": "",
+  "license_field": "BSD-3-Clause",
+  "classifiers": [
+   "BSD License"
+  ]
+ },
+ {
+  "name": "iniconfig",
+  "version": "2.3.1",
+  "direct": false,
+  "license_expression": "MIT",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "joblib",
+  "version": "1.6.0",
+  "direct": false,
+  "license_expression": "BSD-3-Clause",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "narwhals",
+  "version": "2.26.0",
+  "direct": false,
+  "license_expression": "MIT",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "numpy",
+  "version": "2.5.3",
+  "direct": false,
+  "license_expression": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "packaging",
+  "version": "26.3",
+  "direct": false,
+  "license_expression": "Apache-2.0 OR BSD-2-Clause",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "pandas",
+  "version": "3.0.5",
+  "direct": true,
+  "license_expression": "",
+  "license_field": "BSD 3-Clause License",
+  "classifiers": [
+   "BSD License"
+  ]
+ },
+ {
+  "name": "pluggy",
+  "version": "1.6.0",
+  "direct": false,
+  "license_expression": "",
+  "license_field": "MIT",
+  "classifiers": [
+   "MIT License"
+  ]
+ },
+ {
+  "name": "pyarrow",
+  "version": "25.0.1",
+  "direct": true,
+  "license_expression": "Apache-2.0",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "Pygments",
+  "version": "2.21.0",
+  "direct": false,
+  "license_expression": "BSD-2-Clause",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "pytest",
+  "version": "9.1.1",
+  "direct": true,
+  "license_expression": "MIT",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "python-dateutil",
+  "version": "2.9.0.post0",
+  "direct": false,
+  "license_expression": "",
+  "license_field": "Dual License",
+  "classifiers": [
+   "BSD License",
+   "Apache Software License"
+  ]
+ },
+ {
+  "name": "scikit-learn",
+  "version": "1.9.1",
+  "direct": true,
+  "license_expression": "BSD-3-Clause",
+  "license_field": "",
+  "classifiers": []
+ },
+ {
+  "name": "scipy",
+  "version": "1.18.1",
+  "direct": false,
+  "license_expression": "",
+  "license_field": "Copyright (c) 2001-2002 Enthought, Inc. 2003, SciPy Developers.",
+  "classifiers": [
+   "BSD License"
+  ]
+ },
+ {
+  "name": "six",
+  "version": "1.17.0",
+  "direct": false,
+  "license_expression": "",
+  "license_field": "MIT",
+  "classifiers": [
+   "MIT License"
+  ]
+ },
+ {
+  "name": "threadpoolctl",
+  "version": "3.7.0",
+  "direct": false,
+  "license_expression": "BSD-3-Clause",
+  "license_field": "",
+  "classifiers": []
+ }
+]
