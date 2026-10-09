@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "18:26",
+ "kind": "model run",
+ "code": "86791db",
+ "variant": null,
+ "cases": "val, the task B cases of all 580 val rows (output/valB, scripts/make_val_b.py)",
+ "format": "official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 phase C confirmation)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut",
+ "setup": "default before this run: v3-topic-first, plain output, max_tokens 32, the whole reference",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none: the default (phase C control, val)",
+  "n_cases": 580,
+  "strict_json": "no",
+  "max_tokens": 32,
+  "compared_with": null
+ },
+ "results": {
+  "macro_f1": 0.957,
+  "f1": {
+   "entailment": 0.984,
+   "neutral": 0.945,
+   "contradiction": 0.942
+  },
+  "parse_failures": 2,
+  "failed_calls": 0,
+  "mean_input_tokens": 1957,
+  "mean_time_ms": 1481,
+  "p95_time_ms": 2708
+ }
+}
