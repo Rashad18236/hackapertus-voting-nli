@@ -196,7 +196,8 @@ docs/           official contract, reports, reviews
 scripts/        dataset profile, splits, self-checks, format check, offline re-parse,
                 paired runs, retrieval check and grid, dev booklet download, build_docs.py,
                 search_or_reading.py, pad_evidence.py, evidence_loss.py, evidence_forms.py,
-                rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py
+                rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py,
+                taskb_tokens.py, taskb_analysis.py (task B confirmation)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -260,6 +261,15 @@ cases to measure the noise floor (the Macro-F1 gap between two identical
 runs); the errors are listed in `docs/taskb_errors.md`; and the input tokens
 are broken down into their parts. **No prompt changes in this step.** Report:
 `track_2a/docs/taskb_confirmation.md`.
+
+Results (2026-10-09, `apertus-v1.5-8b`): v3-topic-first 0.919 and 0.916 in
+two runs (session 2's 0.947 was the server before 13:25 UTC on 2026-10-08).
+**Noise floor 0.0033 Macro-F1**, all from one failed call (HTTP 429); the
+299 cases both runs answered have identical answers. Errors: 17 of 24 are
+claims about another ballot called a contradiction. Input tokens: passage
+87 %, fixed instructions 203 tokens (10 %), claim 2 %, endpoint 19 tokens
+(1 %). Task B uses no strict JSON; max_tokens 32; 292 of 300 answers are
+exactly `{"label": n}`.
 
 Task A is settled for now: `section-route` is the default since session 7
 (history below).

@@ -52,6 +52,8 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/section-route` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces | **0.865** (E 0.901, N 0.883, C 0.811) | 0.588 (120/204) | 0 | 0 | 1827 | 3185 | 12303 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/section-route`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/section-route/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.956** (E 0.976, N 0.955, C 0.936) | 0.946 (193/204) | 0 | 0 | 1222 | 1818 | 3011 |
+| 2026-10-09 | 01:25 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 1 of two identical runs | **0.919** (E 0.990, N 0.877, C 0.891) | not scored for task B | 1 | 0 | 1994 | 1574 | 2764 |
+| 2026-10-09 | 01:33 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 2 of two identical runs | 0.916 (E 0.990, N 0.872, C 0.886) | not scored for task B | 1 | 1 | 1992 | 624 | 753 |
 
 ## Task B runs
 
@@ -64,6 +66,8 @@ Every task B run, stopped ones included, with what its prompt changed against th
 | 2026-10-08 | 06:01 | [`s2-A-v3-topic-first_attempt1`](runs/s2-A-v3-topic-first_attempt1/) | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 5 (stopped) | no (the prompt asks for a JSON object; no response_format) | 32 | not recorded | 5 | not recorded | not recorded | not recorded |
 | 2026-10-08 | 06:10 | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.947** (E 0.955, N 0.934, C 0.951) | 5 | 1968 | 2748 | 2878 |
 | 2026-10-08 | 06:24 | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | v4-topic-first-examples | against v3-topic-first: three short examples, one per label (invented ballot), +168 input tokens per case | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.933 (E 0.985, N 0.907, C 0.906) | 0 | 2162 | 1765 | 2986 |
+| 2026-10-09 | 01:25 | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.919** (E 0.990, N 0.877, C 0.891) | 0 | 1994 | 1574 | 2764 |
+| 2026-10-09 | 01:33 | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.916 (E 0.990, N 0.872, C 0.886) | 1 | 1992 | 624 | 753 |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -99,7 +103,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (42): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`
+- **rashad** (44): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`
 
 ## Notes per run
 
@@ -461,6 +465,65 @@ Paired outcomes on val (300 cases, both arms answered): both right 255, **only s
 - Its remaining errors are again mostly gold entailment or contradiction called neutral (9 of 13 wrong answers); it never calls a neutral claim entailed or contradicted (0 of 96).
 - The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
 - **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
+
+### 2026-10-09, task B confirmation: v3-topic-first twice on the 300 dev task B cases (run 1 and run 2)
+
+- Command, run twice one after the other (from `track_2a/`, on the host): `LLM_NAME=swiss-ai/apertus-v1.5-8b python3 -m src.cli --input output/devB/cases.jsonl --output docs/runs/<run>/predictions.jsonl --raw docs/runs/<run>/raw_answers.jsonl --prompt-b v3-topic-first`. Run 1: 01:25:24 to 01:33:17 UTC; run 2: 01:33:17 to 01:36:25 UTC. Code `8b1d418` (pipeline code as on `main` after PR #11). `output/devB/cases.jsonl` holds exactly the 300 task B lines of `data/dev/cases.jsonl` (checked).
+- Prompt `v3-topic-first`, unchanged since session 2; no `response_format` (not strict JSON); max_tokens 32; temperature 0. Model `swiss-ai/apertus-v1.5-8b` on Public AI for every call.
+- Scored with the starter's `evaluate.py`; comparison and error list by `scripts/taskb_analysis.py` (`rerun_analysis.json`, `docs/taskb_errors.md`); token breakdown by `scripts/taskb_tokens.py` (`tokens/`).
+
+| | Run 1 | Run 2 |
+|---|---|---|
+| **Macro-F1** | **0.919** | 0.916 |
+| F1 entailment / neutral / contradiction | 0.990 / 0.877 / 0.891 | 0.990 / 0.872 / 0.886 |
+| Failed calls | 0 | 1 (HTTP 429 "Too Many Requests", row 1478; fallback neutral) |
+| Unreadable answers | 1 (a bare `1`, row 645; fallback neutral = its gold label) | 1 (the same case, same answer) |
+| Mean input tokens | 1,994 | 1,992 (the failed call counts as 0) |
+| Mean / median / p95 time | 1,574 / 1,302 / 2,764 ms | 624 / 603 / 753 ms |
+
+- **Cases with different labels: 1 of 300** (row 1478: contradiction in run 1, neutral in run 2), and that one is run 2's failed call. In the 299 cases both runs answered, **the answer text is identical in all 299** and so is the input token count.
+- **Noise floor: Macro-F1 gap 0.0033** (0.9194 against 0.9161), all of it from one failed call. Temperature 0 on this server gave no answer-to-answer variation in back-to-back runs.
+- Run 2 was about 2.5 times faster on the same prompts (median 0.6 s against 1.3 s). The endpoint gives no reason; a server-side cache of repeated prompts is a likely explanation, not verified. Times of a rerun of identical prompts are therefore not comparable with first runs.
+- v3-topic-first scored 0.947 in session 2 (`s2-A-v3-topic-first`, before Public AI changed what it serves as `apertus-v1.5-8b` at about 13:25 UTC on 2026-10-08). Today it scores 0.919: the same prompt on today's server, not a change of ours.
+
+Run 1, confusion matrix (rows: gold; columns: predicted entailment / neutral / contradiction):
+
+| gold | entailment | neutral | contradiction |
+|---|---|---|---|
+| entailment (102) | 100 | 1 | 1 |
+| neutral (99) | 0 | 82 | 17 |
+| contradiction (99) | 0 | 5 | 94 |
+
+Run 1, Macro-F1 by group:
+
+| Group | Cases | Macro-F1 |
+|---|---|---|
+| claim German | 102 | 0.911 |
+| claim French | 99 | 0.919 |
+| claim Italian | 99 | 0.929 |
+| passage German | 100 | 0.900 |
+| passage French | 100 | 0.889 |
+| passage Italian | 100 | 0.970 |
+| same-language | 100 | 0.929 |
+| cross-language | 200 | 0.914 |
+
+Errors (24, all listed in `docs/taskb_errors.md`): 17 unrelated claims called a contradiction, 5 refuted claims called neutral, 1 supported claim called neutral, 1 supported claim called a contradiction.
+
+Token breakdown of run 1's requests (300 cases; `tokens/summary.json`; counted with the Apertus v1 tokenizer, `swiss-ai/Apertus-8B-Instruct-2509`, because the v1.5 repository is gated):
+
+| Part | Mean | p95 | Share of the mean |
+|---|---|---|---|
+| (a) fixed instructions: system prompt 194 + user-message labels 9 | 203 | 203 | 10.2 % |
+| (b) examples | 0 | 0 | 0 % |
+| (c) the passage | 1,737.5 | 4,209 | 87.1 % |
+| (d) claim (the vote name is not sent in task B) | 35.4 | 56 | 1.8 % |
+| (e) added by the endpoint (chat template), system + user message | 19 | 19 | 1.0 % |
+| **total, usage.prompt_tokens (true)** | **1,994.2** | **4,463** | |
+
+- (e) measured on the endpoint with `max_tokens` 1: one user message "Hello" gives prompt_tokens 63, i.e. 62 added (with no system message the template inserts its own default text); a system "Hello" plus a user "Hello" gives 21, i.e. **19 added**, the shape of every task B request.
+- **Our count (a + b + c + d + e) against usage.prompt_tokens: on average 0.65 tokens too high (0.05 %), never more than 1 token off; exact in 106 of 300.** The ungated v1 tokenizer counts this endpoint's tokens almost exactly.
+- Passage length in characters: min 1,068, median 3,674, p95 17,076, max 20,924 (mean 7,010); in tokens: min 250, median 915, p95 4,209, max 5,514. Neutral passages are all long (9,746 to 20,284 characters; the dataset pairs neutral claims with a whole part of another ballot).
+- Output tokens: mean 7.6; 292 answers are exactly `{"label": n}` (7 tokens), 7 add a "Reasoning" paragraph after the JSON and stop at the 32-token cap, 1 is a bare `1` (2 tokens).
 
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.

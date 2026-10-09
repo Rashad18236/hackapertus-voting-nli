@@ -296,8 +296,8 @@ INFO [295/300] v1.1-row-1468-B -> neutral
 INFO [296/300] v1.1-row-1472-B -> contradiction
 INFO [297/300] v1.1-row-1474-B -> contradiction
 INFO [298/300] v1.1-row-1477-B -> contradiction
-INFO [299/300] v1.1-row-1478-B -> contradiction
+INFO [299/300] v1.1-row-1478-B -> neutral (fallback: model call failed)
 INFO [300/300] v1.1-row-1481-B -> contradiction
-INFO Wrote 300 responses to docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1/predictions.jsonl
-WARNING Fallback or skipped cases: unparseable answer: 1
+INFO Wrote 300 responses to docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run2/predictions.jsonl
+WARNING Fallback or skipped cases: unparseable answer: 1, model call failed: 1
 exit 0

@@ -1,0 +1,93 @@
+{
+ "runs": {
+  "2026-10-09_rashad_v3-topic-first_devB300-run1": {
+   "macro_f1": 0.9194,
+   "f1": {
+    "entailment": 0.99,
+    "neutral": 0.877,
+    "contradiction": 0.891
+   },
+   "failed_calls": 0,
+   "unreadable_answers": 1
+  },
+  "2026-10-09_rashad_v3-topic-first_devB300-run2": {
+   "macro_f1": 0.9161,
+   "f1": {
+    "entailment": 0.99,
+    "neutral": 0.872,
+    "contradiction": 0.886
+   },
+   "failed_calls": 1,
+   "unreadable_answers": 1
+  }
+ },
+ "between_runs": {
+  "labels_differ": 1,
+  "ids": [
+   "v1.1-row-1478-B"
+  ],
+  "transitions": {
+   "contradiction -> neutral": 1
+  },
+  "macro_f1_gap": 0.0033
+ },
+ "first_run": {
+  "confusion_rows_gold_E_N_C_cols_pred_E_N_C": [
+   [
+    100,
+    1,
+    1
+   ],
+   [
+    0,
+    82,
+    17
+   ],
+   [
+    0,
+    5,
+    94
+   ]
+  ],
+  "by_group": {
+   "claim de": {
+    "cases": 102,
+    "macro_f1": 0.911
+   },
+   "claim fr": {
+    "cases": 99,
+    "macro_f1": 0.919
+   },
+   "claim it": {
+    "cases": 99,
+    "macro_f1": 0.929
+   },
+   "passage de": {
+    "cases": 100,
+    "macro_f1": 0.9
+   },
+   "passage fr": {
+    "cases": 100,
+    "macro_f1": 0.889
+   },
+   "passage it": {
+    "cases": 100,
+    "macro_f1": 0.97
+   },
+   "same-language": {
+    "cases": 100,
+    "macro_f1": 0.929
+   },
+   "cross-language": {
+    "cases": 200,
+    "macro_f1": 0.914
+   }
+  },
+  "errors_by_pattern": {
+   "Supported claim called neutral: the passage supports the claim, the model said it does not decide it.": 1,
+   "Supported claim called a contradiction: the passage supports the claim, the model said it refutes it.": 1,
+   "Unrelated claim called a contradiction: the passage does not decide the claim, the model said it refutes it.": 17,
+   "Refuted claim called neutral: the passage refutes the claim, the model said it does not decide it.": 5
+  }
+ }
+}

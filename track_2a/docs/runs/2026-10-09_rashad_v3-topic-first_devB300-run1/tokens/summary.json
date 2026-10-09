@@ -1,0 +1,90 @@
+{
+ "run": "docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1",
+ "cases_with_usage": 300,
+ "tokenizer": "swiss-ai/Apertus-8B-Instruct-2509 tokenizer.json (Hugging Face commit b946d40; the v1.5 repository is gated)",
+ "prompt_version": "v3-topic-first",
+ "a_fixed_instructions": {
+  "mean": 203,
+  "p95": 203,
+  "min": 203,
+  "median": 203.0,
+  "max": 203
+ },
+ "a_of_which_system_prompt": {
+  "mean": 194,
+  "p95": 194,
+  "min": 194,
+  "median": 194.0,
+  "max": 194
+ },
+ "a_of_which_user_labels": {
+  "mean": 9,
+  "p95": 9,
+  "min": 9,
+  "median": 9.0,
+  "max": 9
+ },
+ "b_examples": {
+  "mean": 0,
+  "p95": 0,
+  "min": 0,
+  "median": 0.0,
+  "max": 0
+ },
+ "c_passage": {
+  "mean": 1737.5,
+  "p95": 4209,
+  "min": 250,
+  "median": 915.0,
+  "max": 5514
+ },
+ "d_claim_and_vote": {
+  "mean": 35.4,
+  "p95": 56,
+  "min": 15,
+  "median": 33.0,
+  "max": 81
+ },
+ "e_endpoint": {
+  "one_user_message_prompt_tokens": 63,
+  "one_user_message_overhead": 62,
+  "system_and_user_prompt_tokens": 21,
+  "system_and_user_overhead": 19
+ },
+ "true_prompt_tokens": {
+  "mean": 1994.2,
+  "p95": 4463,
+  "min": 505,
+  "median": 1177.0,
+  "max": 5789
+ },
+ "passage_chars": {
+  "mean": 7009.8,
+  "p95": 17076,
+  "min": 1068,
+  "median": 3674.0,
+  "max": 20924
+ },
+ "output_tokens": {
+  "mean": 7.6,
+  "p95": 7,
+  "min": 2,
+  "median": 7.0,
+  "max": 32
+ },
+ "our_count": {
+  "mean": 1994.9,
+  "p95": 4464,
+  "min": 506,
+  "median": 1177.5,
+  "max": 5789
+ },
+ "our_minus_true": {
+  "mean": 0.65,
+  "mean_absolute": 0.65,
+  "mean_relative_percent": 0.05,
+  "min": 0,
+  "max": 1,
+  "exact": 106
+ }
+}
