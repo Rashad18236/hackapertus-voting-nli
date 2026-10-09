@@ -1,0 +1,37 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "01:33",
+ "kind": "model run",
+ "code": "8b1d418",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, all 300 task B cases",
+ "setup": "v3-topic-first (the default), unchanged; run 2 of two identical runs",
+ "format": "official",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "../2026-10-09_rashad_v3-topic-first_devB300-run1/NOTES.md",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none: v3-topic-first rerun unchanged (task B confirmation, noise floor)",
+  "n_cases": 300,
+  "strict_json": "no (the prompt asks for a JSON object; no response_format)",
+  "max_tokens": 32
+ },
+ "results": {
+  "macro_f1": 0.916,
+  "f1": {
+   "entailment": 0.99,
+   "neutral": 0.872,
+   "contradiction": 0.886
+  },
+  "parse_failures": 1,
+  "failed_calls": 1,
+  "mean_input_tokens": 1992,
+  "mean_time_ms": 624,
+  "p95_time_ms": 753
+ }
+}

@@ -1,0 +1,305 @@
+300 cases, 0 booklets parsed; arms: ['A-v3-plain', 'B-v3-schema', 'C-v5-min', 'D-v5-ballot']
+[1/300] v1.1-row-2-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[2/300] v1.1-row-4-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[3/300] v1.1-row-5-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[4/300] v1.1-row-9-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[5/300] v1.1-row-18-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: entailment | C-v5-min: neutral
+[6/300] v1.1-row-21-B | B-v3-schema: neutral | C-v5-min: entailment | A-v3-plain: neutral | D-v5-ballot: neutral
+[7/300] v1.1-row-22-B | C-v5-min: neutral | D-v5-ballot: entailment | B-v3-schema: neutral | A-v3-plain: neutral
+[8/300] v1.1-row-26-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: entailment
+[9/300] v1.1-row-27-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: neutral | C-v5-min: neutral
+[10/300] v1.1-row-31-B | B-v3-schema: contradiction | C-v5-min: neutral (unparseable answer) | A-v3-plain: contradiction | D-v5-ballot: neutral
+[11/300] v1.1-row-35-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: neutral | A-v3-plain: neutral
+[12/300] v1.1-row-36-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: neutral
+[13/300] v1.1-row-40-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: neutral | C-v5-min: entailment
+[14/300] v1.1-row-48-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: entailment | D-v5-ballot: neutral
+[15/300] v1.1-row-49-B | C-v5-min: neutral (unparseable answer) | D-v5-ballot: neutral | B-v3-schema: entailment | A-v3-plain: entailment
+[16/300] v1.1-row-68-B | D-v5-ballot: neutral | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[17/300] v1.1-row-75-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[18/300] v1.1-row-76-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: entailment | D-v5-ballot: neutral
+[19/300] v1.1-row-80-B | C-v5-min: entailment | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: entailment
+[20/300] v1.1-row-84-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[21/300] v1.1-row-85-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: neutral
+[22/300] v1.1-row-86-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[23/300] v1.1-row-93-B | C-v5-min: entailment | D-v5-ballot: neutral | B-v3-schema: entailment | A-v3-plain: neutral
+[24/300] v1.1-row-94-B | D-v5-ballot: entailment | A-v3-plain: neutral | C-v5-min: entailment | B-v3-schema: neutral
+[25/300] v1.1-row-95-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: neutral
+[26/300] v1.1-row-109-B | B-v3-schema: neutral | C-v5-min: entailment | A-v3-plain: contradiction | D-v5-ballot: entailment
+[27/300] v1.1-row-116-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: neutral
+[28/300] v1.1-row-133-B | D-v5-ballot: neutral | A-v3-plain: entailment | C-v5-min: neutral (unparseable answer) | B-v3-schema: neutral
+[29/300] v1.1-row-134-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: neutral | C-v5-min: entailment
+[30/300] v1.1-row-135-B | B-v3-schema: neutral | C-v5-min: entailment | A-v3-plain: neutral | D-v5-ballot: neutral (unparseable answer)
+[31/300] v1.1-row-146-B | C-v5-min: entailment | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[32/300] v1.1-row-150-B | D-v5-ballot: neutral | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[33/300] v1.1-row-154-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: neutral
+[34/300] v1.1-row-160-B | B-v3-schema: neutral | C-v5-min: entailment | A-v3-plain: neutral | D-v5-ballot: neutral
+[35/300] v1.1-row-161-B | C-v5-min: neutral | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[36/300] v1.1-row-162-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[37/300] v1.1-row-166-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[38/300] v1.1-row-167-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[39/300] v1.1-row-168-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[40/300] v1.1-row-170-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[41/300] v1.1-row-179-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[42/300] v1.1-row-180-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[43/300] v1.1-row-188-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[44/300] v1.1-row-189-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[45/300] v1.1-row-198-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[46/300] v1.1-row-205-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[47/300] v1.1-row-212-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[48/300] v1.1-row-216-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[49/300] v1.1-row-223-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[50/300] v1.1-row-228-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[51/300] v1.1-row-232-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[52/300] v1.1-row-237-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[53/300] v1.1-row-240-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[54/300] v1.1-row-241-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[55/300] v1.1-row-247-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[56/300] v1.1-row-260-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[57/300] v1.1-row-262-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[58/300] v1.1-row-263-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[59/300] v1.1-row-269-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[60/300] v1.1-row-273-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[61/300] v1.1-row-288-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[62/300] v1.1-row-290-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[63/300] v1.1-row-293-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[64/300] v1.1-row-303-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[65/300] v1.1-row-304-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[66/300] v1.1-row-308-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[67/300] v1.1-row-310-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[68/300] v1.1-row-313-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[69/300] v1.1-row-330-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[70/300] v1.1-row-331-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[71/300] v1.1-row-333-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[72/300] v1.1-row-339-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[73/300] v1.1-row-345-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[74/300] v1.1-row-347-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[75/300] v1.1-row-350-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[76/300] v1.1-row-359-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[77/300] v1.1-row-363-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[78/300] v1.1-row-367-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[79/300] v1.1-row-370-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[80/300] v1.1-row-371-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[81/300] v1.1-row-380-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[82/300] v1.1-row-408-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[83/300] v1.1-row-412-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[84/300] v1.1-row-414-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[85/300] v1.1-row-418-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[86/300] v1.1-row-419-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[87/300] v1.1-row-424-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[88/300] v1.1-row-429-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[89/300] v1.1-row-430-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[90/300] v1.1-row-431-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[91/300] v1.1-row-439-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[92/300] v1.1-row-450-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[93/300] v1.1-row-455-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[94/300] v1.1-row-458-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[95/300] v1.1-row-469-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[96/300] v1.1-row-471-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[97/300] v1.1-row-474-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[98/300] v1.1-row-478-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[99/300] v1.1-row-482-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[100/300] v1.1-row-491-B | D-v5-ballot: entailment | A-v3-plain: entailment | C-v5-min: entailment | B-v3-schema: entailment
+[101/300] v1.1-row-492-B | A-v3-plain: entailment | B-v3-schema: entailment | D-v5-ballot: entailment | C-v5-min: entailment
+[102/300] v1.1-row-493-B | B-v3-schema: entailment | C-v5-min: entailment | A-v3-plain: entailment | D-v5-ballot: entailment
+[103/300] v1.1-row-500-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[104/300] v1.1-row-501-B | D-v5-ballot: contradiction | A-v3-plain: neutral | C-v5-min: contradiction | B-v3-schema: neutral
+[105/300] v1.1-row-507-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: contradiction
+[106/300] v1.1-row-510-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: contradiction
+[107/300] v1.1-row-511-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[108/300] v1.1-row-515-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[109/300] v1.1-row-517-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: contradiction | C-v5-min: contradiction
+[110/300] v1.1-row-521-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: neutral
+[111/300] v1.1-row-528-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[112/300] v1.1-row-531-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[113/300] v1.1-row-538-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: contradiction
+[114/300] v1.1-row-549-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: neutral
+[115/300] v1.1-row-554-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: neutral
+[116/300] v1.1-row-556-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[117/300] v1.1-row-564-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[118/300] v1.1-row-566-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: contradiction
+[119/300] v1.1-row-567-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[120/300] v1.1-row-568-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: contradiction | B-v3-schema: neutral
+[121/300] v1.1-row-577-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: contradiction | C-v5-min: contradiction
+[122/300] v1.1-row-580-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: contradiction
+[123/300] v1.1-row-608-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[124/300] v1.1-row-614-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: neutral
+[125/300] v1.1-row-616-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: contradiction
+[126/300] v1.1-row-619-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: neutral
+[127/300] v1.1-row-623-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[128/300] v1.1-row-629-B | D-v5-ballot: contradiction | A-v3-plain: neutral | C-v5-min: contradiction | B-v3-schema: contradiction
+[129/300] v1.1-row-633-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[130/300] v1.1-row-637-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: neutral (unparseable answer)
+[131/300] v1.1-row-638-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[132/300] v1.1-row-640-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[133/300] v1.1-row-645-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[134/300] v1.1-row-648-B | B-v3-schema: neutral | C-v5-min: neutral (unparseable answer) | A-v3-plain: neutral | D-v5-ballot: neutral (unparseable answer)
+[135/300] v1.1-row-656-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[136/300] v1.1-row-662-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[137/300] v1.1-row-665-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral (unparseable answer)
+[138/300] v1.1-row-666-B | B-v3-schema: contradiction | C-v5-min: neutral (unparseable answer) | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[139/300] v1.1-row-668-B | C-v5-min: neutral (unparseable answer) | D-v5-ballot: neutral (unparseable answer) | B-v3-schema: neutral | A-v3-plain: neutral
+[140/300] v1.1-row-670-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[141/300] v1.1-row-679-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral
+[142/300] v1.1-row-682-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[143/300] v1.1-row-688-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[144/300] v1.1-row-691-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[145/300] v1.1-row-692-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[146/300] v1.1-row-700-B | B-v3-schema: neutral | C-v5-min: neutral (unparseable answer) | A-v3-plain: neutral | D-v5-ballot: neutral
+[147/300] v1.1-row-711-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[148/300] v1.1-row-713-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[149/300] v1.1-row-720-B | A-v3-plain: neutral | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[150/300] v1.1-row-724-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[151/300] v1.1-row-726-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[152/300] v1.1-row-731-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral (unparseable answer) | B-v3-schema: neutral
+[153/300] v1.1-row-739-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[154/300] v1.1-row-746-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: neutral
+[155/300] v1.1-row-757-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[156/300] v1.1-row-762-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: neutral | C-v5-min: contradiction | B-v3-schema: neutral
+[157/300] v1.1-row-767-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[158/300] v1.1-row-770-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[159/300] v1.1-row-777-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[160/300] v1.1-row-782-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: contradiction
+[161/300] v1.1-row-793-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[162/300] v1.1-row-797-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[163/300] v1.1-row-798-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[164/300] v1.1-row-800-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: neutral | C-v5-min: neutral (unparseable answer) | B-v3-schema: neutral
+[165/300] v1.1-row-810-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[166/300] v1.1-row-820-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[167/300] v1.1-row-821-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[168/300] v1.1-row-826-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[169/300] v1.1-row-830-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[170/300] v1.1-row-836-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[171/300] v1.1-row-841-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[172/300] v1.1-row-843-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[173/300] v1.1-row-844-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[174/300] v1.1-row-849-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[175/300] v1.1-row-852-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[176/300] v1.1-row-853-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[177/300] v1.1-row-854-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[178/300] v1.1-row-869-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: neutral (unparseable answer)
+[179/300] v1.1-row-875-B | C-v5-min: neutral (unparseable answer) | D-v5-ballot: neutral (unparseable answer) | B-v3-schema: contradiction | A-v3-plain: contradiction
+[180/300] v1.1-row-876-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral (unparseable answer) | B-v3-schema: neutral
+[181/300] v1.1-row-896-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[182/300] v1.1-row-899-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[183/300] v1.1-row-901-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[184/300] v1.1-row-904-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[185/300] v1.1-row-909-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral (unparseable answer)
+[186/300] v1.1-row-920-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[187/300] v1.1-row-930-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[188/300] v1.1-row-932-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[189/300] v1.1-row-935-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[190/300] v1.1-row-939-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[191/300] v1.1-row-944-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: neutral | A-v3-plain: neutral
+[192/300] v1.1-row-946-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: contradiction
+[193/300] v1.1-row-947-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[194/300] v1.1-row-948-B | B-v3-schema: neutral | C-v5-min: contradiction | A-v3-plain: neutral | D-v5-ballot: contradiction
+[195/300] v1.1-row-951-B | C-v5-min: contradiction | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: neutral
+[196/300] v1.1-row-953-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: neutral | B-v3-schema: neutral
+[197/300] v1.1-row-965-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: contradiction
+[198/300] v1.1-row-977-B | B-v3-schema: neutral | C-v5-min: neutral | A-v3-plain: neutral | D-v5-ballot: neutral
+[199/300] v1.1-row-980-B | C-v5-min: neutral | D-v5-ballot: contradiction | B-v3-schema: neutral | A-v3-plain: neutral
+[200/300] v1.1-row-981-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: neutral
+[201/300] v1.1-row-988-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: neutral
+[202/300] v1.1-row-994-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: neutral
+[203/300] v1.1-row-1000-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[204/300] v1.1-row-1003-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[205/300] v1.1-row-1011-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[206/300] v1.1-row-1014-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: neutral (unparseable answer)
+[207/300] v1.1-row-1015-B | C-v5-min: neutral | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[208/300] v1.1-row-1016-B | D-v5-ballot: neutral | A-v3-plain: neutral | C-v5-min: contradiction | B-v3-schema: contradiction
+[209/300] v1.1-row-1020-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: contradiction
+[210/300] v1.1-row-1022-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: neutral (unparseable answer)
+[211/300] v1.1-row-1023-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[212/300] v1.1-row-1026-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[213/300] v1.1-row-1039-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: contradiction
+[214/300] v1.1-row-1052-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[215/300] v1.1-row-1056-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[216/300] v1.1-row-1063-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[217/300] v1.1-row-1064-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[218/300] v1.1-row-1067-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[219/300] v1.1-row-1074-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[220/300] v1.1-row-1080-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: contradiction
+[221/300] v1.1-row-1083-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: neutral
+[222/300] v1.1-row-1085-B | B-v3-schema: contradiction | C-v5-min: neutral | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[223/300] v1.1-row-1092-B | C-v5-min: neutral | D-v5-ballot: neutral | B-v3-schema: contradiction | A-v3-plain: contradiction
+[224/300] v1.1-row-1098-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[225/300] v1.1-row-1100-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral | C-v5-min: neutral
+[226/300] v1.1-row-1102-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[227/300] v1.1-row-1110-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[228/300] v1.1-row-1115-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: neutral | B-v3-schema: contradiction
+[229/300] v1.1-row-1117-B | A-v3-plain: neutral | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[230/300] v1.1-row-1118-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[231/300] v1.1-row-1128-B | C-v5-min: contradiction | D-v5-ballot: neutral (unparseable answer) | B-v3-schema: contradiction | A-v3-plain: contradiction
+[232/300] v1.1-row-1138-B | D-v5-ballot: neutral (unparseable answer) | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: neutral
+[233/300] v1.1-row-1144-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[234/300] v1.1-row-1152-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[235/300] v1.1-row-1161-B | C-v5-min: neutral | D-v5-ballot: contradiction | B-v3-schema: neutral | A-v3-plain: contradiction
+[236/300] v1.1-row-1166-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[237/300] v1.1-row-1167-B | A-v3-plain: entailment | B-v3-schema: neutral | D-v5-ballot: neutral | C-v5-min: entailment
+[238/300] v1.1-row-1169-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[239/300] v1.1-row-1177-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[240/300] v1.1-row-1183-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[241/300] v1.1-row-1194-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: neutral (unparseable answer) | C-v5-min: neutral (unparseable answer)
+[242/300] v1.1-row-1198-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[243/300] v1.1-row-1203-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[244/300] v1.1-row-1205-B | D-v5-ballot: neutral | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[245/300] v1.1-row-1208-B | A-v3-plain: neutral | B-v3-schema: neutral | D-v5-ballot: contradiction | C-v5-min: contradiction
+[246/300] v1.1-row-1219-B | B-v3-schema: contradiction | C-v5-min: neutral (unparseable answer) | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[247/300] v1.1-row-1223-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[248/300] v1.1-row-1230-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: contradiction
+[249/300] v1.1-row-1238-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: neutral
+[250/300] v1.1-row-1243-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[251/300] v1.1-row-1246-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[252/300] v1.1-row-1251-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[253/300] v1.1-row-1253-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[254/300] v1.1-row-1258-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[255/300] v1.1-row-1263-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[256/300] v1.1-row-1265-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[257/300] v1.1-row-1267-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[258/300] v1.1-row-1271-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[259/300] v1.1-row-1276-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[260/300] v1.1-row-1280-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[261/300] v1.1-row-1283-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[262/300] v1.1-row-1291-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[263/300] v1.1-row-1297-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[264/300] v1.1-row-1302-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[265/300] v1.1-row-1304-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[266/300] v1.1-row-1308-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[267/300] v1.1-row-1320-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[268/300] v1.1-row-1324-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[269/300] v1.1-row-1326-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[270/300] v1.1-row-1335-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[271/300] v1.1-row-1341-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[272/300] v1.1-row-1342-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[273/300] v1.1-row-1343-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[274/300] v1.1-row-1350-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[275/300] v1.1-row-1364-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[276/300] v1.1-row-1369-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[277/300] v1.1-row-1375-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[278/300] v1.1-row-1376-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[279/300] v1.1-row-1381-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[280/300] v1.1-row-1383-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[281/300] v1.1-row-1384-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[282/300] v1.1-row-1391-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[283/300] v1.1-row-1396-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[284/300] v1.1-row-1403-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[285/300] v1.1-row-1407-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[286/300] v1.1-row-1416-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[287/300] v1.1-row-1421-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[288/300] v1.1-row-1424-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[289/300] v1.1-row-1436-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[290/300] v1.1-row-1444-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[291/300] v1.1-row-1451-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[292/300] v1.1-row-1456-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+[293/300] v1.1-row-1459-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: contradiction
+[294/300] v1.1-row-1464-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[295/300] v1.1-row-1468-B | C-v5-min: entailment | D-v5-ballot: entailment | B-v3-schema: entailment | A-v3-plain: entailment
+[296/300] v1.1-row-1472-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: neutral (unparseable answer) | B-v3-schema: contradiction
+[297/300] v1.1-row-1474-B | A-v3-plain: contradiction | B-v3-schema: contradiction | D-v5-ballot: contradiction | C-v5-min: neutral (unparseable answer)
+[298/300] v1.1-row-1477-B | B-v3-schema: contradiction | C-v5-min: contradiction | A-v3-plain: contradiction | D-v5-ballot: contradiction
+[299/300] v1.1-row-1478-B | C-v5-min: contradiction | D-v5-ballot: contradiction | B-v3-schema: contradiction | A-v3-plain: contradiction
+[300/300] v1.1-row-1481-B | D-v5-ballot: contradiction | A-v3-plain: contradiction | C-v5-min: contradiction | B-v3-schema: contradiction
+A-v3-plain: ok: 300; HTTP 429 answers: 0, retries: 0
+B-v3-schema: ok: 300; HTTP 429 answers: 0, retries: 0
+C-v5-min: ok: 273, unparseable answer: 27; HTTP 429 answers: 0, retries: 0
+D-v5-ballot: ok: 278, unparseable answer: 22; HTTP 429 answers: 0, retries: 0

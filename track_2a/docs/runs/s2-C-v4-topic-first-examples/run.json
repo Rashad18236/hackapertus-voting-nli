@@ -26,5 +26,12 @@
  "variant": null,
  "paired_with": null,
  "highlight": false,
- "notes": "NOTES.md"
+ "notes": "NOTES.md",
+ "task_b": {
+  "prompt_version": "v4-topic-first-examples",
+  "change": "against v3-topic-first: three short examples, one per label (invented ballot), +168 input tokens per case",
+  "n_cases": 300,
+  "strict_json": "no (the prompt asks for a JSON object; no response_format)",
+  "max_tokens": 32
+ }
 }

@@ -519,6 +519,91 @@ what they need is written up as proposals.
 - **Commits whose push started no CI run were run by `workflow_dispatch`.** Several pushes from this session started no `pull_request` run (the merge push did); every commit reported as green has its own run.
 - **The workflow uses `actions/checkout@v5` and `actions/setup-python@v6`.** The first runs warned that the Node 20 versions are deprecated.
 
+## Task B confirmation (2026-10-09, from 01:20 UTC)
+
+Rashad's instructions; report: `docs/taskb_confirmation.md`. Branch
+`claude/eager-cannon-08bx1h-taskb`, from `main` after PR #11 (no task B branch
+existed, so this one was created for the stage). No prompt changes in this step.
+
+- **Every task B run's `run.json` gets a `task_b` block (prompt version, change against the previous version, number of cases, strict JSON, max_tokens), and `docs/results.md` gets a task B table built from it.** results.md is generated; the facts must live in the run records. Values come from each run's notes and from the code at its commit; what no record holds is shown as "not recorded".
+- **No task B run so far used 120 cases.** Every finished run used all 300 dev task B cases; the stopped first attempt of Run A answered 5 (all failed calls) and kept no predictions.
+- **No task B run used strict JSON.** At every run's commit the task B call sends no `response_format`; the prompt asks for `{"label": n}`. max_tokens was 400 for v1-json and 32 since v2-label-only.
+- **The two v3 runs ran one after the other, not paired case by case.** Rashad asked for a run and then a second run on the same cases; this measures rerun noise over a few minutes.
+- **Noise floor of task B on dev: 0.0033 Macro-F1** (run 1 0.9194, run 2 0.9161). All of it comes from one failed call (HTTP 429) in run 2; the 299 cases both runs answered have identical answer texts. A task B difference smaller than this is within rerun noise; failed calls, not the model, set it.
+- **v3-topic-first on today's server: 0.919 (session 2's 0.947 came from the server before the 13:25 UTC change of 2026-10-08).** Only runs on the same server compare.
+- **Tokens are counted with the ungated Apertus v1 tokenizer (`swiss-ai/Apertus-8B-Instruct-2509`, commit b946d40); the endpoint's own addition is measured on the endpoint (19 tokens for a system and a user message).** The v1.5 repository is gated; the v1 count matched usage.prompt_tokens within one token in all 300 cases, so it can be trusted for task B text.
+- **HTTP 429 is not retried, and nothing was changed for it in this step.** The stage's rule allows one retry for 5xx and timeouts only; whether to retry a rate limit is a decision for later.
+- **Errors are grouped by (gold, predicted) and described in plain words in `docs/taskb_errors_intro.md`; `docs/taskb_errors.md` is written by `scripts/taskb_analysis.py`.** The case list stays reproducible, the description is read from the cases.
+
+## Task B cheap fixes (2026-10-09, from 01:40 UTC)
+
+Rashad's instructions; report: `docs/taskb_cheap_fixes.md`. Branch
+`claude/eager-cannon-08bx1h-taskb` (the task B branch). One change per run,
+all 300 dev task B cases each time; the test split is never used.
+
+**Acceptance rule (from this stage on; it replaces the earlier criterion "a variant more than 0.02 Macro-F1 lower loses", used in sessions 4 and 6):**
+
+- **A change that removes tokens is kept if Macro-F1 falls by no more than 0.01 and no label's F1 falls by more than 0.03.**
+- **A change that adds tokens is kept only if Macro-F1 rises by at least 0.01.**
+- **Each run is compared with the best version kept so far.** The first comparison is with the baseline.
+
+- **Baseline of this stage: `2026-10-09_rashad_v3-topic-first_devB300-run1`, v3-topic-first, Macro-F1 0.919.** Rashad's choice; the latest run on the current endpoint without a failed call.
+- **"Tokens" in the rule are the mean input plus output tokens per case.** The organisers' proxy counts both; strict JSON mainly removes output tokens.
+- **Task B rows from before 2026-10-08 13:25 UTC are marked "old endpoint behaviour, not comparable" in `docs/results.md`, computed from each run's date and start time by `scripts/build_docs.py`.** One rule, applied to every row, cannot be forgotten on a new row.
+- **Canary: 30 dev task B cases (10 per gold label, seed 42) with v3's answer texts from the baseline run, in `docs/canary_taskb.json`; `scripts/canary_taskb.py` re-sends exactly the baseline request before each run and stops on any difference.** Run 2 of the confirmation stage showed identical texts for an unchanged endpoint, so any difference means the endpoint changed.
+- **HTTP 429 is retried up to twice: Retry-After if the server sends it, otherwise 2 s then 4 s, never more than 10 s; waits count in the case time and tokens of every attempt count (`src/llm.py`, `tests/test_llm.py`).** One case was lost to a 429 in the confirmation stage; a rate limit is temporary, unlike a bad request.
+- **We send one request at a time: `src/cli.py` and `scripts/paired_run.py` call the model case by case, with no parallelism.** Lowering parallelism could not have avoided the 429: run 2 sent 300 requests in 188 s (about 96 per minute, one after the other, because the endpoint answered in about 0.6 s), and the 429 came at request 299. A pause between requests or the retry avoids it; the retry costs nothing when no 429 comes.
+- **New task B settings `schema_b` and `max_tokens_b` (`--schema-b`, `--max-tokens-b`); the defaults stay as they were (no schema, 32).** Each run names its settings; the defaults change only by a separate decision.
+- **The canary failed before run 1 (01:50 UTC): 3 of 30 answer texts differ from the 01:25 baseline (rows 767 and 869 now neutral instead of contradiction, row 1128 the same label plus a reasoning paragraph). A repeat at 01:51 gave the same three differences. The stage stops here: no run started, not even the 20-case token check.** Rashad's rule; the endpoint changed between 01:36 and 01:50 UTC, so a comparison with the 0.919 baseline would mix two endpoints.
+- **The repeat canary check was made for the report only.** It shows the new answers are stable, i.e. a changed endpoint and not random noise; it compares nothing.
+- **Run 2 (the vote name) is skipped on its merits, independent of the canary.** The contract makes `vote` part of every task B request, and in all 886 dataset rows outside the test split (no empty value) it equals the passage's first line: it names the passage's ballot, which the passage already opens with, so it adds no signal (as `docs/neutral_analysis.md` found for the 300 dev cases).
+- **v5-min is prepared but not run: `nli.PROMPTS_B["v5-min"]`, 77 system tokens plus 9 for the user message's labels = 86 fixed tokens (at most 90 asked), the three rules kept, no format instructions (meant for `--schema-b`).** Writing and counting it needs no model call; running it waits for a new baseline.
+- **No version is frozen in this stage; task B stays on v3-topic-first (unchanged default).** No change was measured. Next: a new baseline of v3 on all 300 dev cases on the current endpoint and a new canary from it, then runs 1 and 3 in that order.
+
+## Task B cheap fixes, continued (2026-10-09, from 02:00 UTC)
+
+Rashad's instructions; report: `docs/taskb_cheap_fixes.md` (section "Continued: one interleaved run"). Branch
+`claude/eager-cannon-08bx1h-taskb`. The test split is never used.
+
+**New method (from this stage on; it replaces "each run is compared with the best version kept so far" and the stored baseline of the earlier cheap-fixes decisions):**
+
+- **Versions are compared only inside one interleaved run: every case is sent to all versions back to back, in an order that rotates from case to case. Scores from different runs are never compared.** The endpoint changed what it answers twice in 13 hours (2026-10-08 13:25 and 2026-10-09 between 01:36 and 01:50 UTC), so a stored baseline stops describing the endpoint without warning.
+- **The acceptance rule's thresholds stay; they are applied between arms of the same run.** This run's three comparisons use Rashad's rules for each one (below).
+
+Setup:
+
+- **Every model call records the endpoint's identity in the raw answers (`endpoint`): the body's `model` and `system_fingerprint`, the response headers that name a model, backend or provider (LiteLLM's `x-litellm-model-*`, `x-litellm-version`, `x-litellm-attempted-fallbacks`/`-retries`, `llm_provider-server`, `server`, `cf-placement`, and any other header naming a model, backend, upstream, region, deployment or fingerprint), and Cloudflare's data centre from `CF-RAY`.** These are what the response says about who answered; a change among them is the first thing to look for when answers change.
+- **Never recorded: headers about our account (key, spend, cost, budget, auth, cookies, tokens) and values that differ on every call (request and call ids, dates, durations, the ray id itself); URLs lose any query string.** Logging nothing secret is Rashad's rule; per-call values would make every call look different.
+- **Each call also records its requests (1 plus retries) and how many were answered with HTTP 429 (`attempts`, `http_429`).** The run must report 429s and retries.
+- **The canary no longer blocks runs. It keeps its 30 cases and its request (v3-topic-first, max_tokens 32, no response_format), runs immediately before and after each task B run, and appends each result to `docs/canary_log.md` (time, the 30 answers, endpoint identity, which earlier results it matches) and `docs/canary_results.jsonl`.** Under the new method a changed endpoint cannot spoil a comparison between runs, but it can still change during a run, and the log shows when it happened.
+- **A task B run's `run.json` names its two canary checks (`"canary": {"before": time, "after": time}`); `scripts/build_docs.py` marks the run "endpoint changed during run" in `docs/results.md` when their answers differ.** Computed from the records, so it cannot be forgotten.
+- **The canary's earlier results are in the log too, written by hand from earlier records: the 01:25 baseline (run 1's answers) and the 01:50 and 01:51 checks (their logs kept only the three differing answers, one cut at 60 characters).** So a new check can say whether the endpoint went back to an earlier behaviour.
+- **One interleaved run on all 300 dev task B cases with four arms: A v3-topic-first as it is (plain output, max_tokens 32); B v3 with `--schema-b` and `--max-tokens-b 10`; C v5-min with schema and 10; D v5-ballot with schema and 10.** Rashad's design: three comparisons of one change each, all inside one run.
+- **v5-ballot is v5-min plus one sentence after "Use only the reference text.": "The first line of the reference text names the ballot it is about." It adds 14 tokens (Apertus v1 tokenizer), 100 fixed tokens in all.** 17 of the 24 v3 errors on dev were claims about another ballot called a contradiction, and every task B passage starts with its own ballot's title. Placed before the label rules, so the model reads it before rule 1 ("a different ballot").
+- **`scripts/paired_run.py` now takes two or more arms. With an even number of arms the order follows a balanced Latin square (Williams design: 0 1 3 2, 1 2 0 3, 2 3 1 0, 3 0 2 1), so each arm is in each position once and directly after each other arm once in every four cases; with two arms it alternates exactly as before.** Arms A and B send the same prompt: under a plain rotation B would come right after A in three of four cases and profit from A's cached prompt; the balanced order gives both the same chance.
+- **Requests are paced: `--min-interval 1.0`, at least one second between the starts of two requests (at most 60 per minute), the pause outside the timed case; the canary uses the same pace.** The HTTP 429 of the confirmation stage came at about 96 requests per minute.
+
+Comparisons (Rashad's rules, fixed before the run):
+
+- **B against A: keep B if Macro-F1 falls by no more than 0.01, no answer is unreadable, and B adds fewer than 30 tokens per case.** If B fails, the comparisons stop there; nothing replaces B.
+- **C against B: keep C if Macro-F1 falls by no more than 0.01 and no label's F1 falls by more than 0.03.**
+- **D against C: keep D only if Macro-F1 rises by at least 0.01.**
+- **"Tokens per case" are the mean input plus output tokens, as in the acceptance rule.**
+- **No default changes in this stage; the report recommends one arm to freeze.** Rashad's instruction.
+
+Outcome (run `2026-10-09_rashad_taskb-4arm_devB300`, 02:11 to 02:40 UTC):
+
+- **B against A: B fails (Macro-F1 0.853 against 0.867, −0.013; 0 unreadable answers; −0.9 tokens per case). The comparisons stop there: C against B and D against C are reported as measurements, without a verdict.** Rashad's rule, applied as written to all 300 cases.
+- **Recommendation: freeze arm A, v3-topic-first as it is (plain output, max_tokens 32). No default changed; it is already the default.** B failed, and A had no unreadable answer.
+- **Finding: Public AI served `swiss-ai/apertus-v1.5-8b` from two backends during the run, blablador.fz-juelich.de (737 answers) and featherless.ai (463; deployment name `swiss-ai/Apertus-8B-Instruct-2509`), switching within minutes.** Visible only because every call now records its identity. A and B equal each other on the 250 cases where they met the same backend (Macro-F1 0.877 both, 3 labels differ), so B's loss is a backend effect; reported, not used to overrule the rule.
+- **Each arm's `run.json` names both backends in `endpoint`.** One model name, two servers: the record must not suggest one.
+- **Finding: Public AI's gateway answers a request identical to one of the last ~10 minutes from its cache (12 arm A answers in the run, 11 of the canary's answers after it; confirmed by a two-call probe). `src/llm.py` now marks such answers `gateway_cache_hit` (only the header's presence, never its value); the canary stores each case's identity and counts cache hits.** A copy says nothing about the backend at the time of the call.
+- **Correction to the confirmation stage: its noise floor of 0.0033 very likely measured the cache, not the model.** Run 2 repeated run 1's requests 3 to 8 minutes later, gave identical texts and ran at the speed of a cache copy. Noted in `docs/taskb_confirmation.md`, in the run's notes and in CLAUDE.md; the numbers themselves stay as recorded.
+- **The run is marked "endpoint changed during run": the canary checks before and after differ in 2 of 30 answers (both cache copies of the run's own arm A answers).** The rule applies as written.
+- **`scripts/canary_taskb.py`'s matching of answers kept only in part (the 01:50 check) was wrong: a short answer matched a longer kept start. Fixed (the full answer must start with the kept part; `tests/test_canary.py`), and the one wrong line in `docs/canary_log.md` corrected by hand with a note.** The log is the record; a wrong line must not stand.
+- **`scripts/interleaved_analysis.py` makes the four-arm table, the flips, and the breakdown by backend and by cache.** One script, so the report's numbers can be rebuilt from the run's files.
+- **Not done, proposed in the report:** ask Public AI about the routing or develop on CSCS; judge comparisons on cases where all arms met the same backend; keep the canary from reading the cache; a format line or more tokens for v5-min. Each changes the method or a request, so each is Rashad's decision.
+
 ## Session 8: hardening, no model calls (2026-10-09, from 13:48 UTC)
 
 Rashad's instructions; report: `docs/session_8_report.md`. Run unattended by Claude Code. No model calls: `.env`
@@ -611,6 +696,48 @@ Rashad's instructions. No model calls; the test split was not used.
 - **CI runs the examples a second time with `--context-a embed-e5-small`.** Since session 7 the default context answers the task A example without loading e5, so the first run no longer shows that the model loads as a non-root user on a read-only filesystem; with the plain `ADD --chmod=644` Dockerfile form (P11) the first run passes and the second fails (both checked locally as uid 1001).
 - **In that CI step, `make` failures and the fallback check are tested explicitly (`PIPESTATUS`, `if grep`).** GitHub runs steps with `bash -e` without `pipefail`, and `! grep` in the middle of a script does not stop it.
 - **The local image for the CI check was this branch's `src/` copied onto the existing image.** Docker Hub answered the base image pull with HTTP 429 in this sandbox; the Dockerfile and requirements have not changed since that image was built, and CI builds the real image.
+
+## Task B branch: main merged, HTTP 429 in the fake model, task B results per run (2026-10-09, from 14:52 UTC)
+
+Branch `claude/eager-cannon-08bx1h-taskb`, run with Claude Code on Rashad's instructions. No model calls; the test
+split was not used.
+
+- **Current `main` (`25ed5fa`, PR #12) was merged in, not `main` with the input hardening.** That pull request is open,
+  not merged; the instruction allowed current `main` in that case.
+- **The merge was a merge commit; `docs/results.md` and `docs/decisions.md` were regenerated with
+  `scripts/build_docs.py`.** They were the only conflicts. `src/cli.py` and `src/llm.py` merged without conflict
+  because `main` had not changed them since this branch started.
+- **The fake model has two HTTP 429 markers: `STUB_429_ONCE` (the first attempt only) and `STUB_429` (every
+  attempt). Both send `Retry-After: 1`.** The first is the case asked for: a rate limit, then an answer. The second
+  shows that a limit that never lifts still ends in a valid fallback response after 1 + 2 attempts. One second keeps
+  the test short and exercises `Retry-After` rather than the default 2 s and 4 s pauses.
+- **The first-attempt bookkeeping of `STUB_FAIL_ONCE` and `STUB_429_ONCE` is one helper, keyed by marker and request
+  hash.** The two markers cannot then use up each other's first attempt.
+- **The 429 markers sit in their own tuple next to `decide()`, and the changes avoid the lines that the input-hardening
+  branch (`STUB_SLOW`) and session 8 changed in the same file.** The three branches can then be merged in any order
+  without conflicts in `scripts/stub_llm.py`.
+- **The contract test checks that the wait is in `inference_time_ms` (at least 1,000 ms) and that the answered case
+  keeps its label and tokens.** On `main`'s `src/llm.py` (no 429 retry) the same test fails: the case gets the
+  neutral fallback.
+- **`technical_report.md`: the task B headline 0.947 is replaced by one row per recorded run of `v3-topic-first` on all
+  300 dev cases (2026-10-08 06:10, 2026-10-09 01:25 and 01:33, four-arm arm A at 02:11), each with its run folder.**
+  The same prompt scored 0.947, 0.919, 0.916 and 0.867 as the endpoint changed; one number would hide that. All numbers
+  come from the runs' `run.json` and notes.
+- **Section 6 names both backends and the model name each reported (`x-litellm-model-name`: `openai/alias-apertus` on
+  blablador.fz-juelich.de, `openai/swiss-ai/Apertus-8B-Instruct-2509` on featherless.ai).** These are the four-arm run's
+  records. Runs before it recorded no backend, and the report says so.
+- **Section 2's retry sentence now describes the HTTP 429 retries this branch added to `src/llm.py`.** It said "exactly
+  one retry, for HTTP 5xx and timeouts only", which this branch's code no longer does.
+- **After Rashad merged PR #13 (input hardening), `main` (`4666149`) was merged in a second time.** The generated
+  `docs/decisions.md` and `docs/self_checks.md` conflicted and were regenerated by their scripts; `src/cli.py`,
+  `scripts/stub_llm.py`, `tests/test_contract.py` and `technical_report.md` merged without conflict.
+- **`technical_report.md` section 3 names `--schema-b` and why it is off.** Section 3 said only that task B's format is
+  requested in the prompt; the option this branch added and its four-arm result belong next to that sentence.
+- **After PR #15 (session 8) was merged, `main` (`418ebfa`) was merged in a third time; in `src/cli.py` `main`'s reading and writing code (`read_lines`, the duplicate-id check, `write_line`) is kept and the task B options sit on top.** Git merged `src/cli.py` without a conflict; its diff against `main` is only the task B lines (`--schema-b`, `--max-tokens-b`, `note_call`).
+- **`CLAUDE.md` keeps both sides: session 8 is the current stage, the task B stage follows as its own section, and the scripts list and the rules (HTTP 429 retries, G1/G2) are combined.** Both stages describe work that is now on `main` or about to be.
+- **Every test of both sides is kept.** Checked by name in all twelve test files the two sides changed: none missing, none duplicated.
+- **Session 8's gates with default settings: G1 0 differences, G2 0 label differences and the same 19 evidence differences as `gates/merge.json` (`gates/merge_taskb.json`, identical).** The task B options only add settings whose defaults equal `main`'s fixed values (32 tokens, no `response_format`), so no request may change.
+- **The val booklet `2025_02_09_fr.pdf` was downloaded for the gates with `scripts/fetch_dev_booklets.py --cases data/val/cases.jsonl`.** The gates need all 45 dev and val booklets; the script refuses test booklets; the PDF is not committed.
 
 ## Session 9: open items, analyses, task B long passages, task A label errors (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
 

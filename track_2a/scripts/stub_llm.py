@@ -36,6 +36,9 @@ request's messages (independent of the order of the cases):
     STUB_EMPTY      HTTP 200, content null
     STUB_HTML       HTTP 200, an HTML body (not JSON)
     STUB_400        HTTP 400 with an error message
+    STUB_429_ONCE   HTTP 429 (rate limit) with "Retry-After: 1" on the first attempt of this request only,
+                    then the normal answer
+    STUB_429        HTTP 429 with "Retry-After: 1" on every attempt
     STUB_NO_USAGE   the normal answer without a usage block
     STUB_LABEL_1, STUB_LABEL_2   the normal answer with that label
     STUB_BAD_PAGES  {"pages": [9999], "paragraphs": [9999], "label": L}: numbers outside what was sent
@@ -97,7 +100,7 @@ class Config:
                 self.by_call[int(n)] = kind
         self.lock = threading.Lock()
         self.calls = []         # one dict per call, in arrival order
-        self.failed_once = set()  # request hashes that already got their STUB_FAIL_ONCE failure
+        self.failed_once = set()  # marker + request hash: already got its first-attempt failure (..._ONCE)
 
 
 def _schema_keys(payload):
@@ -121,9 +124,24 @@ def answer_for(payload, label):
     return {"label": label}
 
 
+# HTTP 429 answers carry "Retry-After: 1", so src/llm.py waits one second before its retry.
+RATE_LIMIT_MARKERS = ("STUB_429_ONCE", "STUB_429")
+RETRY_AFTER_SECONDS = "1"
+
+
+def _first_attempt(config, marker, payload):
+    """True the first time this exact request arrives with this marker, False for its retries."""
+    key = marker + ":" + hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
+    with config.lock:
+        first = key not in config.failed_once
+        config.failed_once.add(key)
+    return first
+
+
 def decide(payload, config, number):
-    """(kind, label) for this call. kind: ok, fail, garbage, empty, html, error, no_usage, bad_pages."""
-    found = set(_MARKER.findall(_text(payload))) & set(MARKERS)
+    """(kind, label) for this call. kind: ok, fail, garbage, empty, html, error, rate_limited, no_usage,
+    bad_pages."""
+    found = set(_MARKER.findall(_text(payload))) & set(MARKERS + RATE_LIMIT_MARKERS)
     label = config.label
     for n in (1, 2):
         if f"STUB_LABEL_{n}" in found:
@@ -131,14 +149,12 @@ def decide(payload, config, number):
     if number in config.by_call:
         return config.by_call[number], label
     if "STUB_FAIL_ONCE" in found:
-        key = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
-        with config.lock:
-            first = key not in config.failed_once
-            config.failed_once.add(key)
-        return ("fail" if first else "ok"), label
-    for marker, kind in (("STUB_FAIL", "fail"), ("STUB_GARBAGE", "garbage"), ("STUB_EMPTY", "empty"),
-                         ("STUB_HTML", "html"), ("STUB_400", "error"), ("STUB_NO_USAGE", "no_usage"),
-                         ("STUB_BAD_PAGES", "bad_pages")):
+        return ("fail" if _first_attempt(config, "STUB_FAIL_ONCE", payload) else "ok"), label
+    if "STUB_429_ONCE" in found:
+        return ("rate_limited" if _first_attempt(config, "STUB_429_ONCE", payload) else "ok"), label
+    for marker, kind in (("STUB_FAIL", "fail"), ("STUB_429", "rate_limited"), ("STUB_GARBAGE", "garbage"),
+                         ("STUB_EMPTY", "empty"), ("STUB_HTML", "html"), ("STUB_400", "error"),
+                         ("STUB_NO_USAGE", "no_usage"), ("STUB_BAD_PAGES", "bad_pages")):
         if marker in found:
             return kind, label
     return "ok", label
@@ -149,11 +165,13 @@ def make_handler(config):
         def log_message(self, *args):  # keep test output quiet
             pass
 
-        def _send(self, status, body, content_type="application/json"):
+        def _send(self, status, body, content_type="application/json", headers=None):
             data = body.encode("utf-8") if isinstance(body, str) else json.dumps(body).encode("utf-8")
             self.send_response(status)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(data)))
+            for name, value in (headers or {}).items():
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(data)
 
@@ -203,6 +221,9 @@ def make_handler(config):
                 return self._send(500, {"error": {"message": "stub: internal server error"}})
             if kind == "error":
                 return self._send(400, {"error": {"message": "stub: bad request"}})
+            if kind == "rate_limited":
+                return self._send(429, {"error": {"message": "stub: too many requests"}},
+                                  headers={"Retry-After": RETRY_AFTER_SECONDS})
             if kind == "html":
                 return self._send(200, HTML, "text/html")
             if kind == "garbage":

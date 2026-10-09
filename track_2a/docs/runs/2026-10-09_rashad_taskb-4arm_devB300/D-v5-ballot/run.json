@@ -1,0 +1,46 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "02:11",
+ "kind": "model run",
+ "code": "75171d7",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, all 300 task B cases",
+ "setup": "arm D: v5-ballot (v5-min + one sentence on the passage's first line) + strict JSON, max_tokens 10",
+ "format": "official, interleaved (four arms, balanced order, at least 1 s between requests)",
+ "paired_with": [
+  "2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain",
+  "2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema",
+  "2026-10-09_rashad_taskb-4arm_devB300/C-v5-min"
+ ],
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes)",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.84,
+  "f1": {
+   "entailment": 0.892,
+   "neutral": 0.784,
+   "contradiction": 0.844
+  },
+  "parse_failures": 22,
+  "failed_calls": 0,
+  "mean_input_tokens": 1891,
+  "mean_time_ms": 1463,
+  "p95_time_ms": 2329
+ },
+ "task_b": {
+  "prompt_version": "v5-ballot",
+  "change": "against arm C: one sentence added, \"The first line of the reference text names the ballot it is about.\" (+14 tokens); strict JSON, max_tokens 10",
+  "n_cases": 300,
+  "strict_json": "yes (json_schema, strict)",
+  "max_tokens": 10,
+  "compared_with": "2026-10-09_rashad_taskb-4arm_devB300/C-v5-min"
+ },
+ "canary": {
+  "before": "2026-10-09 02:11:06",
+  "after": "2026-10-09 02:39:43"
+ }
+}

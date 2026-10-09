@@ -26,5 +26,12 @@
  "endpoint": "Public AI",
  "variant": null,
  "paired_with": null,
- "notes": "NOTES.md"
+ "notes": "NOTES.md",
+ "task_b": {
+  "prompt_version": "v1-json",
+  "change": "first version (pre-contract): label and a verbatim evidence quote as JSON",
+  "n_cases": 300,
+  "strict_json": "no (the prompt asks for a JSON object; no response_format)",
+  "max_tokens": 400
+ }
 }

@@ -1,0 +1,27 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "01:50",
+ "kind": "stopped",
+ "code": "1d6799d",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, 300 task B cases (not started: the canary failed)",
+ "setup": "run 1 of the cheap-fixes stage: v3-topic-first + strict JSON (--schema-b), max_tokens 10",
+ "format": "official",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "NOTES.md",
+ "results": null,
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "against the baseline: strict JSON (json_schema, one field label in 0/1/2) and max_tokens 10; prompt text unchanged",
+  "n_cases": 0,
+  "strict_json": "yes (json_schema, strict)",
+  "max_tokens": 10,
+  "failed_calls": 0,
+  "compared_with": "2026-10-09_rashad_v3-topic-first_devB300-run1"
+ }
+}

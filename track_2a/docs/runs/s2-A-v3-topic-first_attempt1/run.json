@@ -14,5 +14,13 @@
  "variant": null,
  "paired_with": null,
  "highlight": false,
- "notes": "../s2-A-v3-topic-first/NOTES.md"
+ "notes": "../s2-A-v3-topic-first/NOTES.md",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction)",
+  "n_cases": 5,
+  "strict_json": "no (the prompt asks for a JSON object; no response_format)",
+  "max_tokens": 32,
+  "failed_calls": 5
+ }
 }

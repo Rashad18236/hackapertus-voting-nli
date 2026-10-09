@@ -53,6 +53,8 @@ FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 class Settings:
     """Pipeline settings. The defaults are what judges get; flags exist for experiments."""
     prompt_b: str = nli.DEFAULT_PROMPT_B
+    schema_b: bool = False      # response_format json_schema for task B: forces {"label": 0|1|2} (task B cheap fixes)
+    max_tokens_b: int = 32      # answer budget for task B
     max_tokens_a: int = 128     # answer budget for task A ({"pages": [...], "label": n})
     json_mode_a: bool = False   # response_format json_object for task A (tried in session 2, not kept)
     schema_a: bool = True       # response_format json_schema for task A: forces {"pages", "label"} (session 3, E1)
@@ -76,6 +78,12 @@ def response(case_id, label, input_tokens=0, output_tokens=0, start=None, eviden
         "evidence": evidence or [],
         "metrics": {"input_tokens": input_tokens, "output_tokens": output_tokens, "inference_time_ms": elapsed},
     }
+
+
+def note_call(raw, call):
+    """Record a model call's requests (1 plus retries), HTTP 429 answers and endpoint identity (src/llm.py) in raw.
+    call is an llm.LLMResult or an llm.LLMError; both carry these three fields."""
+    raw["attempts"], raw["http_429"], raw["endpoint"] = call.attempts, call.http_429, call.endpoint
 
 
 def task_of(case):
@@ -136,9 +144,11 @@ def predict_a(case, data_dir, start, raw, settings):
                           json_schema=nli.ANSWER_SCHEMA_A if settings.schema_a else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
 
-    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
+    note_call(raw, result)
+    raw["answer"], raw["output_tokens"] = result.text, result.output_tokens
     label, page_numbers, reason = nli.parse_label_and_pages(result.text)
     if label is None:
         raw["parse_reason"] = reason
@@ -171,9 +181,11 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
                           json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed"
 
-    raw["answer"], raw["attempts"], raw["output_tokens"] = result.text, result.attempts, result.output_tokens
+    note_call(raw, result)
+    raw["answer"], raw["output_tokens"] = result.text, result.output_tokens
     label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
     if label is None:
         raw["parse_reason"] = reason
@@ -205,12 +217,16 @@ def predict(case, data_dir=".", settings=None):
 
     raw["prompt_version"] = settings.prompt_b
     try:
-        result = llm.chat(nli.build_messages_b(reference_text, claim_text, settings.prompt_b), max_tokens=32)
+        result = llm.chat(nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
+                          max_tokens=settings.max_tokens_b,
+                          json_schema=nli.ANSWER_SCHEMA_B if settings.schema_b else None)
     except llm.LLMError as e:
         raw["error"] = str(e)
+        note_call(raw, e)
         return response(case_id, FALLBACK_LABEL, start=start), "model call failed", raw
 
-    raw["answer"], raw["attempts"] = result.text, result.attempts
+    note_call(raw, result)
+    raw["answer"] = result.text
     label, reason = nli.parse_label(result.text)
     status = "ok"
     if label is None:
@@ -242,6 +258,10 @@ def main():
     defaults = Settings()
     parser.add_argument("--prompt-b", default=defaults.prompt_b, choices=sorted(nli.PROMPTS_B),
                         help="development only: task B prompt version")
+    parser.add_argument("--schema-b", action="store_true", default=defaults.schema_b,
+                        help="development only: force the task B answer schema (response_format json_schema)")
+    parser.add_argument("--max-tokens-b", type=int, default=defaults.max_tokens_b,
+                        help="development only: answer token budget for task B")
     parser.add_argument("--max-tokens-a", type=int, default=defaults.max_tokens_a,
                         help="development only: answer token budget for task A")
     parser.add_argument("--json-mode-a", action="store_true", default=defaults.json_mode_a,
@@ -253,7 +273,8 @@ def main():
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
     args = parser.parse_args()
-    settings = Settings(prompt_b=args.prompt_b, max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
+    settings = Settings(prompt_b=args.prompt_b, schema_b=args.schema_b, max_tokens_b=args.max_tokens_b,
+                        max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a,
                         evidence_a=args.evidence_a)
     if args.input.resolve() == args.output.resolve():

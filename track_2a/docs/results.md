@@ -18,10 +18,10 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 
 | Date | Start (UTC) | Person | Run | Code | Format | Task | Cases | Model / endpoint | Setup | Macro-F1 | Evidence | Parse failures | Failed calls | Mean input tokens | Mean time (ms) | p95 time (ms) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2026-10-08 | 04:56 | rashad | [`baseline-v0`](runs/baseline-v0/) | 16ec6af | pre-contract, our scorer | B | dev, 300 rows (beginner task = task B, pre-contract input format) | swiss-ai/apertus-v1.5-8b / Public AI | v1-json | 0.202 (E 0.000, N 0.000, C 0.606) | not scored for task B | 8 | 9 | 1938 | 4118 | 6018 |
-| 2026-10-08 | 05:29 | rashad | [`contract-v2-dev`](runs/contract-v2-dev/) | bb78f85 | official | B | dev, 300 task B cases (and 300 task A placeholders) | swiss-ai/apertus-v1.5-8b / Public AI | v2-label-only | **0.541** (E 0.922, N 0.057, C 0.642) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
-| 2026-10-08 | 06:10 | rashad | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | session-2 working tree | official | B | dev, 300 task B cases (Run A) | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
-| 2026-10-08 | 06:24 | rashad | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | session-2 working tree | official | B | dev, 300 task B cases (Run C) | swiss-ai/apertus-v1.5-8b / Public AI | v4-topic-first-examples | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
+| 2026-10-08 | 04:56 | rashad | [`baseline-v0`](runs/baseline-v0/) | 16ec6af | pre-contract, our scorer | B | dev, 300 rows (beginner task = task B, pre-contract input format) | swiss-ai/apertus-v1.5-8b / Public AI | v1-json (**old endpoint behaviour, not comparable**) | 0.202 (E 0.000, N 0.000, C 0.606) | not scored for task B | 8 | 9 | 1938 | 4118 | 6018 |
+| 2026-10-08 | 05:29 | rashad | [`contract-v2-dev`](runs/contract-v2-dev/) | bb78f85 | official | B | dev, 300 task B cases (and 300 task A placeholders) | swiss-ai/apertus-v1.5-8b / Public AI | v2-label-only (**old endpoint behaviour, not comparable**) | **0.541** (E 0.922, N 0.057, C 0.642) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
+| 2026-10-08 | 06:10 | rashad | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | session-2 working tree | official | B | dev, 300 task B cases (Run A) | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (**old endpoint behaviour, not comparable**) | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
+| 2026-10-08 | 06:24 | rashad | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | session-2 working tree | official | B | dev, 300 task B cases (Run C) | swiss-ai/apertus-v1.5-8b / Public AI | v4-topic-first-examples (**old endpoint behaviour, not comparable**) | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A300-A-v3-fulldoc`](runs/s2-A300-A-v3-fulldoc/) | 4e90ddc | official | A | dev, all 300 task A cases (reference row) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc | **0.589** (E 0.671, N 0.635, C 0.462) | 0.209 (42/201) | 110 | 3 | 39706 | 11501 | 30334 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A300-A-v3-fulldoc-reparsed`](runs/s2-A300-A-v3-fulldoc-reparsed/) | session-2 working tree (prose-label parser), answers of s2-A300-A-v3-fulldoc | re-parsed offline (no new calls) | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc + prose-label parser | 0.608 (E 0.686, N 0.647, C 0.491) | 0.209 (42/201) | 97 | 3 | 39706 | 11501 | 30334 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A60-A-v3-fulldoc`](runs/s2-A60-A-v3-fulldoc/) | 4e90ddc | official | A | dev sample, 60 task A cases (20 per label) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc | **0.767** (E 0.872, N 0.744, C 0.684) | 0.375 (15/40) | 6 | 0 | 41124 | 9617 | 23331 |
@@ -52,12 +52,40 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/section-route` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces | **0.865** (E 0.901, N 0.883, C 0.811) | 0.588 (120/204) | 0 | 0 | 1827 | 3185 | 12303 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/section-route`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/section-route/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.956** (E 0.976, N 0.955, C 0.936) | 0.946 (193/204) | 0 | 0 | 1222 | 1818 | 3011 |
+| 2026-10-09 | 01:25 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 1 of two identical runs | **0.919** (E 0.990, N 0.877, C 0.891) | not scored for task B | 1 | 0 | 1994 | 1574 | 2764 |
+| 2026-10-09 | 01:33 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 2 of two identical runs | 0.916 (E 0.990, N 0.872, C 0.886) | not scored for task B | 1 | 1 | 1992 | 624 | 753 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`](runs/2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm A: v3-topic-first as it is, plain output, max_tokens 32 (**endpoint changed during run**) | **0.867** (E 0.917, N 0.812, C 0.870) | not scored for task B | 0 | 0 | 1994 | 1355 | 2346 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`](runs/2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm B: v3-topic-first + strict JSON (--schema-b), max_tokens 10 (**endpoint changed during run**) | 0.853 (E 0.910, N 0.784, C 0.866) | not scored for task B | 0 | 0 | 1994 | 1247 | 2191 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`](runs/2026-10-09_rashad_taskb-4arm_devB300/C-v5-min/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm C: v5-min + strict JSON, max_tokens 10 (**endpoint changed during run**) | 0.786 (E 0.911, N 0.696, C 0.752) | not scored for task B | 27 | 0 | 1877 | 1480 | 2485 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm D: v5-ballot (v5-min + one sentence on the passage's first line) + strict JSON, max_tokens 10 (**endpoint changed during run**) | 0.840 (E 0.892, N 0.784, C 0.844) | not scored for task B | 22 | 0 | 1891 | 1463 | 2329 |
+
+## Task B runs
+
+Every task B run, stopped ones included, with what its prompt changed against the previous version. "Strict JSON" means the endpoint was asked to enforce a JSON format (`response_format`). Times include failed calls; "not recorded" means the run kept no record of it.
+
+Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour, not comparable": Public AI changed what it serves as `apertus-v1.5-8b` at that time (same prompts, temperature 0, different answers). Since the task B cheap-fixes stage, a run's `task_b.compared_with` names the run it is judged against (the acceptance rule in `docs/decisions.md`). Since that stage was continued, versions are compared only inside one interleaved run, and the canary runs immediately before and after each run (`docs/canary_log.md`); a run whose two canary checks differ is marked "endpoint changed during run".
+
+| Date | Start (UTC) | Run | Endpoint | Prompt version | Change against the previous version | Cases | Strict JSON | max_tokens | Macro-F1 | Failed calls | Mean input tokens | Mean time (ms) | p95 time (ms) | Compared with |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-08 | 04:56 | [`baseline-v0`](runs/baseline-v0/) | **old endpoint behaviour, not comparable** | v1-json | first version (pre-contract): label and a verbatim evidence quote as JSON | 300 | no (the prompt asks for a JSON object; no response_format) | 400 | 0.202 (E 0.000, N 0.000, C 0.606) | 9 | 1938 | 4118 | 6018 | – |
+| 2026-10-08 | 05:29 | [`contract-v2-dev`](runs/contract-v2-dev/) | **old endpoint behaviour, not comparable** | v2-label-only | two changes against v1-json: no evidence request (label only), label definitions in the official guide's wording | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.541** (E 0.922, N 0.057, C 0.642) | 1 | 1963 | 1944 | 2815 | – |
+| 2026-10-08 | 06:01 | [`s2-A-v3-topic-first_attempt1`](runs/s2-A-v3-topic-first_attempt1/) | **old endpoint behaviour, not comparable** | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 5 (stopped) | no (the prompt asks for a JSON object; no response_format) | 32 | not recorded | 5 | not recorded | not recorded | not recorded | – |
+| 2026-10-08 | 06:10 | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | **old endpoint behaviour, not comparable** | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.947** (E 0.955, N 0.934, C 0.951) | 5 | 1968 | 2748 | 2878 | – |
+| 2026-10-08 | 06:24 | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | **old endpoint behaviour, not comparable** | v4-topic-first-examples | against v3-topic-first: three short examples, one per label (invented ballot), +168 input tokens per case | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.933 (E 0.985, N 0.907, C 0.906) | 0 | 2162 | 1765 | 2986 | – |
+| 2026-10-09 | 01:25 | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | current | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.919** (E 0.990, N 0.877, C 0.891) | 0 | 1994 | 1574 | 2764 | – |
+| 2026-10-09 | 01:33 | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | current | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.916 (E 0.990, N 0.872, C 0.886) | 1 | 1992 | 624 | 753 | – |
+| 2026-10-09 | 01:50 | [`2026-10-09_rashad_v3-schema_devB300`](runs/2026-10-09_rashad_v3-schema_devB300/) | current | v3-topic-first | against the baseline: strict JSON (json_schema, one field label in 0/1/2) and max_tokens 10; prompt text unchanged | 0 (stopped) | yes (json_schema, strict) | 10 | not recorded | 0 | not recorded | not recorded | not recorded | `2026-10-09_rashad_v3-topic-first_devB300-run1` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`](runs/2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain/) | current; **endpoint changed during run** | v3-topic-first | none: v3-topic-first as it is (plain output, the prompt asks for {"label": n}) | 300 | no | 32 | **0.867** (E 0.917, N 0.812, C 0.870) | 0 | 1994 | 1355 | 2346 | – |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`](runs/2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema/) | current; **endpoint changed during run** | v3-topic-first | against arm A: strict JSON (json_schema, one field label in 0/1/2) and max_tokens 10; prompt text unchanged | 300 | yes (json_schema, strict) | 10 | 0.853 (E 0.910, N 0.784, C 0.866) | 0 | 1994 | 1247 | 2191 | `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`](runs/2026-10-09_rashad_taskb-4arm_devB300/C-v5-min/) | current; **endpoint changed during run** | v5-min | against arm B: v5-min (86 fixed tokens) instead of v3-topic-first (203); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.786 (E 0.911, N 0.696, C 0.752) | 0 | 1877 | 1480 | 2485 | `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | current; **endpoint changed during run** | v5-ballot | against arm C: one sentence added, "The first line of the reference text names the ballot it is about." (+14 tokens); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.840 (E 0.892, N 0.784, C 0.844) | 0 | 1891 | 1463 | 2329 | `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
 - [`s2-A-v3-topic-first_attempt1`](runs/s2-A-v3-topic-first_attempt1/): stopped; 2026-10-08 06:01 UTC, rashad; task B, dev, 300 task B cases (stopped after 5); v3-topic-first.
 - [`s2-A240-A-v3-fulldoc`](runs/s2-A240-A-v3-fulldoc/): part of another run, part of `s2-A300-A-v3-fulldoc`; 2026-10-08 06:49 UTC, rashad; task A, dev, the 240 task A cases outside the 60-case sample; A-v3-fulldoc.
 - [`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`](runs/s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/): stopped; 2026-10-08 08:12 UTC, rashad; task A, dev sample, 60 task A cases (stopped after 24); A-v3-fulldoc, JSON mode (attempt 2).
+- [`2026-10-09_rashad_v3-schema_devB300`](runs/2026-10-09_rashad_v3-schema_devB300/): stopped; 2026-10-09 01:50 UTC, rashad; task B, dev, 300 task B cases (not started: the canary failed); run 1 of the cheap-fixes stage: v3-topic-first + strict JSON (--schema-b), max_tokens 10.
 
 ## Offline retrieval checks (no model calls)
 
@@ -94,7 +122,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (49): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`
+- **rashad** (56): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`
 
 ## Notes per run
 
@@ -457,6 +485,133 @@ Paired outcomes on val (300 cases, both arms answered): both right 255, **only s
 - The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
 - **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
 
+### 2026-10-09, task B confirmation: v3-topic-first twice on the 300 dev task B cases (run 1 and run 2)
+
+- Command, run twice one after the other (from `track_2a/`, on the host): `LLM_NAME=swiss-ai/apertus-v1.5-8b python3 -m src.cli --input output/devB/cases.jsonl --output docs/runs/<run>/predictions.jsonl --raw docs/runs/<run>/raw_answers.jsonl --prompt-b v3-topic-first`. Run 1: 01:25:24 to 01:33:17 UTC; run 2: 01:33:17 to 01:36:25 UTC. Code `8b1d418` (pipeline code as on `main` after PR #11). `output/devB/cases.jsonl` holds exactly the 300 task B lines of `data/dev/cases.jsonl` (checked).
+- Prompt `v3-topic-first`, unchanged since session 2; no `response_format` (not strict JSON); max_tokens 32; temperature 0. Model `swiss-ai/apertus-v1.5-8b` on Public AI for every call.
+- Scored with the starter's `evaluate.py`; comparison and error list by `scripts/taskb_analysis.py` (`rerun_analysis.json`, `docs/taskb_errors.md`); token breakdown by `scripts/taskb_tokens.py` (`tokens/`).
+
+| | Run 1 | Run 2 |
+|---|---|---|
+| **Macro-F1** | **0.919** | 0.916 |
+| F1 entailment / neutral / contradiction | 0.990 / 0.877 / 0.891 | 0.990 / 0.872 / 0.886 |
+| Failed calls | 0 | 1 (HTTP 429 "Too Many Requests", row 1478; fallback neutral) |
+| Unreadable answers | 1 (a bare `1`, row 645; fallback neutral = its gold label) | 1 (the same case, same answer) |
+| Mean input tokens | 1,994 | 1,992 (the failed call counts as 0) |
+| Mean / median / p95 time | 1,574 / 1,302 / 2,764 ms | 624 / 603 / 753 ms |
+
+- **Cases with different labels: 1 of 300** (row 1478: contradiction in run 1, neutral in run 2), and that one is run 2's failed call. In the 299 cases both runs answered, **the answer text is identical in all 299** and so is the input token count.
+- **Noise floor: Macro-F1 gap 0.0033** (0.9194 against 0.9161), all of it from one failed call. Temperature 0 on this server gave no answer-to-answer variation in back-to-back runs.
+- **Correction (2026-10-09, 03:00 UTC, task B cheap fixes continued):** Public AI's gateway answers a request identical to one of the last ~10 minutes from its cache, and run 2 repeated run 1's requests 3 to 8 minutes later. Run 2's identical texts and its speed very likely come from that cache, so the noise floor of 0.0033 does not measure the model; not verifiable now (no endpoint identity was recorded then).
+- Run 2 was about 2.5 times faster on the same prompts (median 0.6 s against 1.3 s). The endpoint gives no reason; a server-side cache of repeated prompts is a likely explanation, not verified. Times of a rerun of identical prompts are therefore not comparable with first runs.
+- v3-topic-first scored 0.947 in session 2 (`s2-A-v3-topic-first`, before Public AI changed what it serves as `apertus-v1.5-8b` at about 13:25 UTC on 2026-10-08). Today it scores 0.919: the same prompt on today's server, not a change of ours.
+
+Run 1, confusion matrix (rows: gold; columns: predicted entailment / neutral / contradiction):
+
+| gold | entailment | neutral | contradiction |
+|---|---|---|---|
+| entailment (102) | 100 | 1 | 1 |
+| neutral (99) | 0 | 82 | 17 |
+| contradiction (99) | 0 | 5 | 94 |
+
+Run 1, Macro-F1 by group:
+
+| Group | Cases | Macro-F1 |
+|---|---|---|
+| claim German | 102 | 0.911 |
+| claim French | 99 | 0.919 |
+| claim Italian | 99 | 0.929 |
+| passage German | 100 | 0.900 |
+| passage French | 100 | 0.889 |
+| passage Italian | 100 | 0.970 |
+| same-language | 100 | 0.929 |
+| cross-language | 200 | 0.914 |
+
+Errors (24, all listed in `docs/taskb_errors.md`): 17 unrelated claims called a contradiction, 5 refuted claims called neutral, 1 supported claim called neutral, 1 supported claim called a contradiction.
+
+Token breakdown of run 1's requests (300 cases; `tokens/summary.json`; counted with the Apertus v1 tokenizer, `swiss-ai/Apertus-8B-Instruct-2509`, because the v1.5 repository is gated):
+
+| Part | Mean | p95 | Share of the mean |
+|---|---|---|---|
+| (a) fixed instructions: system prompt 194 + user-message labels 9 | 203 | 203 | 10.2 % |
+| (b) examples | 0 | 0 | 0 % |
+| (c) the passage | 1,737.5 | 4,209 | 87.1 % |
+| (d) claim (the vote name is not sent in task B) | 35.4 | 56 | 1.8 % |
+| (e) added by the endpoint (chat template), system + user message | 19 | 19 | 1.0 % |
+| **total, usage.prompt_tokens (true)** | **1,994.2** | **4,463** | |
+
+- (e) measured on the endpoint with `max_tokens` 1: one user message "Hello" gives prompt_tokens 63, i.e. 62 added (with no system message the template inserts its own default text); a system "Hello" plus a user "Hello" gives 21, i.e. **19 added**, the shape of every task B request.
+- **Our count (a + b + c + d + e) against usage.prompt_tokens: on average 0.65 tokens too high (0.05 %), never more than 1 token off; exact in 106 of 300.** The ungated v1 tokenizer counts this endpoint's tokens almost exactly.
+- Passage length in characters: min 1,068, median 3,674, p95 17,076, max 20,924 (mean 7,010); in tokens: min 250, median 915, p95 4,209, max 5,514. Neutral passages are all long (9,746 to 20,284 characters; the dataset pairs neutral claims with a whole part of another ballot).
+- Output tokens: mean 7.6; 292 answers are exactly `{"label": n}` (7 tokens), 7 add a "Reasoning" paragraph after the JSON and stop at the 32-token cap, 1 is a bare `1` (2 tokens).
+
+### 2026-10-09, task B cheap fixes, continued: four arms interleaved on the 300 dev task B cases
+
+- Command (from `track_2a/`, on the host, code `75171d7`): `LLM_NAME=swiss-ai/apertus-v1.5-8b python3 scripts/paired_run.py --cases output/devB/cases.jsonl --data-dir output/devB --out-dir docs/runs/2026-10-09_rashad_taskb-4arm_devB300 --min-interval 1.0 --arm '{"name": "A-v3-plain", "prompt_b": "v3-topic-first", "schema_b": false, "max_tokens_b": 32}' --arm '{"name": "B-v3-schema", "prompt_b": "v3-topic-first", "schema_b": true, "max_tokens_b": 10}' --arm '{"name": "C-v5-min", "prompt_b": "v5-min", "schema_b": true, "max_tokens_b": 10}' --arm '{"name": "D-v5-ballot", "prompt_b": "v5-ballot", "schema_b": true, "max_tokens_b": 10}'`.
+- 02:11:42 to 02:39:43 UTC; 1,200 requests, at least 1 s apart. For each case the four arms ran back to back in a balanced order (0 1 3 2, 1 2 0 3, 2 3 1 0, 3 0 2 1, in turn). Canary (`docs/canary_log.md`) immediately before (02:11:06) and after (02:39:43).
+- Scored with the starter's `evaluate.py`; the table, flips, backends and identities come from `scripts/interleaved_analysis.py` (`analysis.json`).
+- **0 failed calls, 0 HTTP 429 answers, 0 retries** in all four arms.
+
+| | A: v3 plain, max_tokens 32 | B: v3 + schema, 10 | C: v5-min + schema, 10 | D: v5-ballot + schema, 10 |
+|---|---|---|---|---|
+| **Macro-F1** | **0.867** | 0.853 | 0.786 | 0.840 |
+| F1 entailment / neutral / contradiction | 0.917 / 0.812 / 0.870 | 0.910 / 0.784 / 0.866 | 0.911 / 0.696 / 0.752 | 0.892 / 0.784 / 0.844 |
+| Confusion, gold E (pred E / N / C) | 88 / 12 / 2 | 86 / 15 / 1 | 87 / 15 / 0 | 83 / 19 / 0 |
+| Confusion, gold N | 0 / 78 / 21 | 0 / 76 / 23 | 0 / 72 / 27 | 0 / 87 / 12 |
+| Confusion, gold C | 2 / 3 / 94 | 1 / 4 / 94 | 2 / 21 / 76 | 1 / 17 / 81 |
+| Input tokens, mean / p95 | 1,994.2 / 4,463 | 1,994.2 / 4,463 | 1,877.2 / 4,346 | 1,891.2 / 4,360 |
+| Output tokens, mean | 7.87 | 7.00 | 9.79 | 9.73 |
+| Tokens per case (input + output) | 2,002.1 | 2,001.2 | 1,887.0 | 1,900.9 |
+| Time, mean / p95 | 1,355 / 2,346 ms | 1,247 / 2,191 ms | 1,480 / 2,485 ms | 1,463 / 2,329 ms |
+| Failed calls | 0 | 0 | 0 | 0 |
+| Unreadable answers | 0 | 0 | 27 | 22 |
+| HTTP 429 answers / retries | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+Comparisons (Rashad's rules, fixed before the run):
+
+| Comparison | Macro-F1 | F1 E / N / C | Tokens per case | Unreadable | Right → wrong | Wrong → right | Verdict |
+|---|---|---|---|---|---|---|---|
+| B against A | −0.0132 | −0.007 / −0.029 / −0.004 | −0.9 | 0 | 12 | 8 | **B fails** (falls by more than 0.01) |
+| C against B | −0.0669 | +0.001 / −0.088 / −0.114 | −114.2 | 27 | 48 | 27 | not judged: the comparisons stopped when B failed |
+| D against C | +0.0536 | −0.019 / +0.088 / +0.091 | +13.9 | 22 | 20 | 36 | not judged: the comparisons stopped when B failed |
+
+**The endpoint served the run from two backends.** Every call asked for `swiss-ai/apertus-v1.5-8b`; Public AI's gateway (LiteLLM) sent each one to one of two deployments, and the responses say which:
+
+| | Backend 1 | Backend 2 |
+|---|---|---|
+| `x-litellm-model-api-base` | `https://api.blablador.fz-juelich.de/v1` | `https://api.featherless.ai/v1` |
+| `x-litellm-model-name` (the deployment's own model name) | `openai/alias-apertus` | `openai/swiss-ai/Apertus-8B-Instruct-2509` |
+| `x-litellm-model-id` | `8c4216b4…` | `d89d2d4e…` |
+| `system_fingerprint` | `vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840` | `fp1-nst-nes` |
+| `llm_provider-server` | `openresty/1.27.1.2` | `cloudflare` |
+| Answers in this run (by fingerprint) | 737 (A 189, B 185, C 183, D 180) | 463 (A 111, B 115, C 117, D 120) |
+
+- The share moved over time: cases 51 to 100 and 251 to 300 went to backend 1 (all but 1 of their 400 calls), cases 126 to 225 mostly to backend 2 (319 of 400 calls). Within one case the four arms did not always meet the same backend (all four did in 191 of 300 cases).
+- **The backend changes the answers.** A and B send the same prompt. Where both were answered by the same backend (250 cases), their labels differ in 3 cases and Macro-F1 is the same (0.877 against 0.877); where they met different backends (50 cases), labels differ in 19 (0.781 against 0.685). So B's −0.013 comes from the cases where A and B met different backends, not from the schema.
+- The deployment name of backend 2 is the September 2025 Apertus release (`Apertus-8B-Instruct-2509`), not v1.5. What weights it serves is not visible from here.
+- Everything else in the identity was constant: `model` in the body (`swiss-ai/apertus-v1.5-8b`), `x-litellm-model-group`, `x-litellm-version` (1.98.0), no LiteLLM fallbacks or retries (`x-litellm-attempted-fallbacks` and `-retries` 0), Cloudflare data centre IAD; `cf-placement` was `remote-MXP` in 1,248 calls and `local-IAD` in 12.
+
+**The gateway caches identical requests for about 10 minutes.** 12 arm A calls (all canary cases, sent 2 to 10 minutes after the canary check) came back in about 0.6 s, without the upstream `llm_provider-*` headers, with exactly the canary's answer; for row 49 the routing headers named backend 2 while the fingerprint was backend 1's. A probe after the run (one new request sent twice) confirmed it: the second answer had the same response id, an `x-litellm-cache-key` header, no `llm_provider-*` headers, and took 604 ms against 890 ms. No arm A call sent more than about 10 minutes after the canary was cached. Arms B, C and D send other requests (schema, other prompts) and had no cache hits. Since this run, `src/llm.py` marks such answers `gateway_cache_hit`.
+
+**The canary after the run differs from the one before in 2 of 30 answers (rows 1014 and 1128): "endpoint changed during run".** Both are cache copies of this run's arm A answers (row 1014 written by backend 2 without the reasoning paragraph the check before had; row 1128 written by backend 1, also without it); 11 of the 30 answers after the run came from the cache. Labels are the same in both checks.
+
+- Unreadable answers in C and D: without format instructions, the schema-constrained model writes JSON with spaces and line breaks (`{\n  "label": 1\n \n`), uses all 10 tokens in 257 (C) and 250 (D) of 300 answers, and is cut before the closing brace in 27 and 22. The label is visible in 27 of 27 and 21 of 22 of them; the parser (unchanged) needs a complete JSON object, so they got the fallback label neutral.
+- v5-ballot's sentence adds exactly 14.0 input tokens per case (D against C), as counted beforehand.
+- Arm A: 289 answers are exactly `{"label": n}`, 11 add text after the JSON (all from backend 1); B's 300 are all exactly `{"label": n}` (7 tokens).
+- Mean time by position in the case's order (1st to 4th): A 1,335 / 1,251 / 1,297 / 1,539 ms; B 1,342 / 1,145 / 1,274 / 1,228; C 1,527 / 1,497 / 1,389 / 1,509; D 1,522 / 1,420 / 1,449 / 1,461. Arm A's mean includes its 12 cache hits.
+
+### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
+
+- Before run 1, `scripts/canary_taskb.py` re-sent the 30 canary cases (`docs/canary_taskb.json`) with exactly the baseline request (v3-topic-first, max_tokens 32, no response_format, temperature 0, `swiss-ai/apertus-v1.5-8b` on Public AI).
+- **01:50:33 UTC (`canary.txt`): 3 of 30 answer texts differ from the baseline run of 01:25** (`2026-10-09_rashad_v3-topic-first_devB300-run1`):
+  - `v1.1-row-767-B`: `{"label": 2}` then, `{"label": 1}` now;
+  - `v1.1-row-869-B`: `{"label": 2}` then, `{"label": 1}` now;
+  - `v1.1-row-1128-B`: `{"label": 2}` then, the same label followed by a "**Reasoning:**" paragraph now.
+- **01:51:32 UTC (`canary_repeat.txt`, a repeat for the report, not a run): the same three differences, character for character.** The new answers are stable, so this is a change of what the endpoint serves, not noise: the baseline runs of 01:25 and 01:33 had given identical texts in all 299 cases both answered.
+- The change happened between 01:36 (end of the second baseline run) and 01:50 UTC. The status page (status.publicai.co) shows `swiss-ai/apertus-v1.5-8b` as "Operational" (27 % uptime over 30 days) and names no supplier change.
+- Both changed labels move from contradiction to neutral on gold-neutral cases (rows 767 and 869 were in the baseline's error list), so the new behaviour may score differently on all 300; that is not measured. **The 0.919 baseline no longer describes the current endpoint.**
+- As the stage rule says, no run started: neither the 20-case token check of the schema nor the 300-case run.
+
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.
 
@@ -712,6 +867,7 @@ Routed evidence cases where no sent paragraph lies inside the gold passage (1):
 - The snapshot of the replay run equals the snapshot with fixed answers (the requests do not depend on the answers).
 - **Replay on the unchanged code reproduces the saved runs exactly:** labels and evidence of all 300 dev and 300 val sample cases equal E5's and E6's predictions (0 differences). The starter's `evaluate.py` gives dev task A Macro-F1 0.9533, evidence 0.9055 (182 of 201), val sample Macro-F1 0.9559, evidence 0.9461 (193 of 204), the recorded numbers (`dev/official_score_A.json`, `val/official_score_A.json`; scored on the task A cases of `data/dev` and `data/val/sample300`).
 - The reference for session 8's gates is this replay: `dev/` and `val/` hold its predictions and raw answers. Its metrics (tokens, times) come from the fake model and mean nothing. `gates/` holds each change's comparison with it (`scripts/prompt_snapshot.py compare`).
+- 2026-10-09, after PR #15: `main` (`418ebfa`) merged into the task B branch (`claude/eager-cannon-08bx1h-taskb`, PR #14), default settings, `run --replay replay_table.json` then `compare --allow-evidence-change`: `gates/merge_taskb.json`. G1 0 differences (1,180 request hashes and 880 paths), G2 0 label differences and the same 19 evidence differences as `gates/merge.json` (the file is identical).
 
 ### 2026-10-09, session 8 change B: length-sorted embedding batches, speed and memory in the container (no model calls)
 
