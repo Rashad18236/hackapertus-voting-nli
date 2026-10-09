@@ -272,7 +272,13 @@ Further measured steps:
 - Router stress test [`2026-10-09_rashad_router-stress_300`]: of 300 reworded
   claim openings written for the test, 131 are routed to the intended part,
   4 to a wrong part, and the rest fall back to `embed-e5-small`.
-- TODO: speed and memory per booklet (Part 7 of the checks).
+- Speed and memory without the model [`2026-10-09_rashad_speed-memory_dev44`],
+  all 300 dev task A cases end to end in the image limited to 2 CPUs and
+  4 GB: `embed-e5-small` p95 19.3 s, worst 44.4 s per case (the first case
+  on a large booklet embeds the whole booklet), peak 1.8 GiB;
+  `section-route` p95 3.7 s, worst 31.9 s (four long law texts whose
+  paragraphs are all embedded), peak 2.7 GiB. Cold start with one task A
+  case: 26–27 s with `embed-e5-small`, 3 s with `section-route`.
 
 ## 6. Limitations
 
@@ -323,7 +329,12 @@ Further measured steps:
 - **Clean machine:** `.github/workflows/clean-machine.yml` builds the image
   with `make build` on a fresh runner and runs it on the examples with no
   internet access, a read-only root filesystem and read-only `/data`, against
-  the fake model. TODO: its first result on GitHub.
+  the fake model; it passed on GitHub (build 19–22 s, run 19 s).
+- **Speed and memory:** without model latency, a task A case takes
+  milliseconds once its booklet is prepared; the first case on a booklet pays
+  for parsing (up to 3.5 s) and, with `embed-e5-small`, for embedding the
+  whole booklet (up to 44.8 s on 2 CPUs). Peak memory is at most 2.8 GiB
+  [`2026-10-09_rashad_speed-memory_dev44`].
 
 ## 8. Next steps
 

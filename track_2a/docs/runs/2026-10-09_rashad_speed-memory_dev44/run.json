@@ -77,6 +77,24 @@
     3.0,
     2.9
    ]
+  },
+  "batching_proposal_host_s": {
+   "v1.1-row-500-A": {
+    "as_is": 14.85,
+    "sorted": 6.74
+   },
+   "v1.1-row-782-A": {
+    "as_is": 14.47,
+    "sorted": 6.24
+   },
+   "v1.1-row-580-A": {
+    "as_is": 12.63,
+    "sorted": 4.34
+   },
+   "v1.1-row-904-A": {
+    "as_is": 12.28,
+    "sorted": 5.55
+   }
   }
  }
 }

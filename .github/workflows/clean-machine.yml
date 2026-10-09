@@ -32,7 +32,7 @@ jobs:
       run:
         working-directory: track_2a
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Build the image (make build, linux/amd64)
         run: |
@@ -126,8 +126,8 @@ jobs:
       run:
         working-directory: track_2a
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install
