@@ -486,7 +486,7 @@ Branch `claude/eager-cannon-08bx1h-val`, from the branch of PR #10 (merged into
 - **Rule met: section-route 0.956 on val, 0.091 above embed-e5-small (needed at least 0.90 and 0.05). `section-route` is the task A default (commit `d69d820`, on its own).** Rashad's rule; the dev result (0.953 against 0.834) held on cases nobody looked at.
 - **After the change: 92 tests and 17 self-checks pass, and `make run` in the rebuilt image answers the example requests in the official format.** As the instructions ask.
 
-## Task B confirmation (2026-10-09, from 01:35 UTC)
+## Task B confirmation (2026-10-09, from 01:20 UTC)
 
 Rashad's instructions; report: `docs/taskb_confirmation.md`. Branch
 `claude/eager-cannon-08bx1h-taskb`, from `main` after PR #11 (no task B branch
