@@ -61,7 +61,9 @@ class Settings:
     context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
                                       # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
                                       # cases it cannot route run as embed-e5-small)
-    context_b: str = "full"      # task B context: full, cut (B-cut) or para (B-para); session 9, phase C, see taskb_context
+    context_b: str = "cut"       # task B context: full, cut (B-cut) or para (B-para); see taskb_context. Session 9,
+                                 # phase C: B-cut kept Macro-F1 (dev 0.967 vs 0.967, val 0.961 vs 0.957) with 37-38 %
+                                 # fewer input tokens; references of at most 8,000 characters are sent unchanged
     evidence_halves_a: bool = True   # section-route evidence: add halves of cited paragraphs up to 5 items (session 9, A2:
                                      # dev evidence 0.9055 -> 0.9254, val 0.9461 -> 0.9559, labels and requests unchanged)
     evidence_a: str = "cited-pieces"  # task A evidence items: see evidence.MODES (session 6: E4's answers re-scored,

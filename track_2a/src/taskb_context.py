@@ -1,9 +1,10 @@
 """Task B context variants (session 9, phase C): how much of the reference passage Apertus reads.
 
-Off by default (`--context-b full`). The passage itself is never changed, only cut or numbered:
+The default since session 9 is "cut" (phase C: the rule held on dev and val). The passage's words are never
+changed, only cut or numbered:
 
-- "full" (default): the whole reference text with task B's prompt (v3-topic-first), as before.
-- "cut" (B-cut): a reference over CUT_CHARS characters becomes its first line (the ballot's title) plus the
+- "full": the whole reference text with task B's prompt (v3-topic-first), the default until session 9.
+- "cut" (B-cut, default): a reference over CUT_CHARS characters becomes its first line (the ballot's title) plus the
   TOP_K paragraphs most similar to the claim (multilingual-e5-small, ranked as section-route ranks a long
   part), in their order; the prompt is unchanged. Shorter references stay whole.
 - "para" (B-para): the same text as numbered paragraphs ("[1] ..."), with task A's paragraph prompt and answer

@@ -46,7 +46,8 @@ Requirements: `runtime, hardware, API keys, model weights`
   image or the repository.
 - **Model weights:** the only local model, `intfloat/multilingual-e5-small` (MIT), is downloaded when the
   image is built and baked into it; nothing is downloaded at run time. It only chooses which booklet text
-  Apertus reads; Apertus makes every entailment decision.
+  Apertus reads (task A), and which paragraphs of a task B reference over 8,000 characters it reads (since
+  session 9); Apertus makes every entailment decision.
 
 **Your own cases and booklets.** Write one JSON request per line, as in `examples/cases.jsonl`: `id`, `vote`,
 `claim` (`text`, `language`), and either `booklet` (`path` relative to the cases file's folder, e.g.
