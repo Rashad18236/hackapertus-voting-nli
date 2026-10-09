@@ -1,0 +1,54 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "kind": "offline check",
+ "task": "A",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "start_utc": "01:01",
+ "code": "branch checks-no-model (scripts/check_evidence.py; src/ as in de27e4c)",
+ "variant": "section-route, embed-e5-small",
+ "cases": "dev, all 300 task A cases of each E5 arm (saved predictions); the 44 dev booklets",
+ "setup": "every evidence item of E5's two arms checked against the page it names: verbatim after the scorer's normalisation, at most 5,000 characters, at most five items, none on a neutral answer",
+ "format": "offline, no model calls; normalisation re-implemented and compared with the starter's normalize() on 3,677 texts (0 differences)",
+ "summary": "embed-e5-small: all 769 items verbatim on their page. section-route: 271 of 284 verbatim, 1 verbatim only without hyphen joining, 12 not one contiguous piece of their page (the parser drops lone '-' lines or a page number inside the paragraph; partial ratio against the page 99.0 to 99.9). No item over 5,000 characters, no response over five items, no evidence on a neutral answer, every page exists.",
+ "results": {
+  "section-route": {
+   "items": 284,
+   "verbatim": 271,
+   "verbatim_without_hyphen_joining": 1,
+   "not_contiguous": 12,
+   "over_5000_chars": 0,
+   "over_five_items": 0,
+   "evidence_on_neutral": 0,
+   "bad_page": 0,
+   "label_0_2_without_evidence": 0,
+   "responses_with_duplicate_items": 6
+  },
+  "embed-e5-small": {
+   "items": 769,
+   "verbatim": 767,
+   "verbatim_without_hyphen_joining": 2,
+   "not_contiguous": 0,
+   "over_5000_chars": 0,
+   "over_five_items": 0,
+   "evidence_on_neutral": 0,
+   "bad_page": 0,
+   "label_0_2_without_evidence": 0,
+   "responses_with_duplicate_items": 0
+  },
+  "starter_rescore": {
+   "section-route": {
+    "macro_f1": 0.953,
+    "evidence": 0.905
+   },
+   "embed-e5-small": {
+    "macro_f1": 0.834,
+    "evidence": 0.662
+   }
+  }
+ }
+}
