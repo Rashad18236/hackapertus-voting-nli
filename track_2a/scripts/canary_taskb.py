@@ -17,12 +17,18 @@ records; it never stops a run (versions are compared inside one interleaved
 run, so a stored baseline is not needed). Each check appends:
 
 - one line to docs/canary_results.jsonl: the time, the 30 answer texts, the
-  failed calls, and the endpoint identity of every call (src/llm.py);
+  failed calls, and the endpoint identity of every call (src/llm.py), as
+  counts and per case;
 - one section to docs/canary_log.md: the time, the 30 answers, and which
   earlier results it matches (all 30 texts identical), or the closest ones.
 
 scripts/build_docs.py marks a task B run "endpoint changed during run" when
 the canary results named before and after it in its run.json differ.
+
+Public AI's gateway answers a request identical to one sent in the last ~10
+minutes from its cache (found on 2026-10-09). The canary request is the same
+as a v3 plain arm's, so a check right after such a run partly returns that
+run's answers; the log counts these gateway cache hits.
 """
 
 import argparse
@@ -74,15 +80,19 @@ def earlier_results():
 
 def identical(a, b):
     """How many of the canary answers are identical in two results. Some early results kept only the start of
-    an answer (their "prefix_only" ids); there the longer answer only has to start with the shorter one."""
-    prefix = set(a.get("prefix_only", [])) | set(b.get("prefix_only", []))
+    an answer (their "prefix_only" ids); a full answer then matches if it starts with that kept start."""
     same = 0
     for case_id, text in a["answers"].items():
         other = b["answers"].get(case_id)
         if other is None:
             continue
-        if case_id in prefix:
+        a_cut, b_cut = case_id in a.get("prefix_only", []), case_id in b.get("prefix_only", [])
+        if a_cut and b_cut:
             same += text.startswith(other) or other.startswith(text)
+        elif b_cut:
+            same += text.startswith(other)
+        elif a_cut:
+            same += other.startswith(text)
         else:
             same += text == other
     return same
@@ -102,7 +112,7 @@ def check(when):
     cases, gold = load(CASES / "cases.jsonl"), load(CASES / "expected-labels.jsonl")
     env.load_env_file()
     started = datetime.datetime.now(datetime.timezone.utc)
-    answers, failed, identities, http_429, last_start = {}, [], Counter(), 0, 0.0
+    answers, failed, identities, http_429, last_start, per_case = {}, [], Counter(), 0, 0.0, {}
     for case_id in canary["answers"]:
         case = cases[case_id]
         time.sleep(max(0.0, last_start + MIN_INTERVAL - time.monotonic()))
@@ -117,11 +127,14 @@ def check(when):
             failed.append(case_id)
         http_429 += call.http_429
         identities[identity_key(call.endpoint)] += 1
+        per_case[case_id] = call.endpoint
 
     result = {"time": f"{started:%Y-%m-%d %H:%M:%S}", "when": when,
               "request": f"{PROMPT}, max_tokens {MAX_TOKENS}, no response_format, temperature 0",
               "answers": answers, "failed_calls": len(failed), "http_429": http_429,
-              "endpoint": [{"calls": n, "identity": json.loads(k)} for k, n in identities.most_common()]}
+              "endpoint": [{"calls": n, "identity": json.loads(k)} for k, n in identities.most_common()],
+              "endpoint_per_case": per_case}
+    cache_hits = sum(1 for e in per_case.values() if e.get("gateway_cache_hit"))
     earlier = earlier_results()
     n = len(answers)
     scores = [(identical(result, e), e) for e in earlier]
@@ -131,7 +144,8 @@ def check(when):
 
     baseline = canary["answers"]
     lines = [f"## {result['time']} UTC: {when}", "",
-             f"- {n} calls ({result['request']}), {len(failed)} failed, {http_429} answered HTTP 429 first.",
+             f"- {n} calls ({result['request']}), {len(failed)} failed, {http_429} answered HTTP 429 first, "
+             f"{cache_hits} answered from the gateway's cache.",
              "- Endpoint identity: " + ("the same in all calls:" if len(identities) == 1 else
                                          f"{len(identities)} different identities:"), ""]
     lines += [f"  - {e['calls']} calls: `{json.dumps(e['identity'], ensure_ascii=False)}`" for e in result["endpoint"]]

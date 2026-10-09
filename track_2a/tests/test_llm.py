@@ -176,6 +176,12 @@ class EndpointIdentity(unittest.TestCase):
             self.assertNotIn(value, text)
         self.assertNotIn("x-region-token", text)
 
+    def test_gateway_cache_hit_is_marked_without_the_key_value(self):
+        ident = self.identity(headers={"Server": "cloudflare", "x-litellm-cache-key": "4f2a9c"})
+        self.assertEqual((ident["gateway_cache_hit"], ident["headers"]), (True, {"server": "cloudflare"}))
+        self.assertNotIn("4f2a9c", repr(ident))
+        self.assertNotIn("gateway_cache_hit", self.identity())
+
     def test_a_response_without_body_fields_or_headers(self):
         result, _ = run([FakeResponse(200, {"choices": [{"message": {"content": "{}"}}]})])
         self.assertEqual(result.endpoint, {})

@@ -12,6 +12,7 @@ used. Runs: `docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1/` and
 - **v3-topic-first scores 0.919 on today's server** (0.947 in session 2,
   before Public AI changed what it serves as `apertus-v1.5-8b`). It passes
   the 0.75 minimum comfortably.
+- **Correction (2026-10-09, 03:00 UTC): run 2 was very likely answered from Public AI's gateway cache, so 0.0033 is not the model's noise floor** (`docs/taskb_cheap_fixes.md`, section 4).
 - **Two identical runs differ by 0.0033 Macro-F1, our noise floor.** The two
   runs gave the same answer text in all 299 cases both answered; the whole
   gap is one call that failed with HTTP 429 in the second run.
@@ -51,6 +52,12 @@ from the run notes and the code at each run's commit:
 | Failed calls | 0 | 1 |
 | Cases with a different label than the other run | 1 | 1 |
 
+- **Correction (2026-10-09, 03:00 UTC):** the gateway in front of the model
+  caches identical requests for about 10 minutes, and run 2 repeated each of
+  run 1's requests 3 to 8 minutes later at the speed of a cache copy. So the
+  identical texts below very likely came from the cache, and the noise floor
+  of fresh answers is unknown. Not verifiable now: these runs recorded no
+  endpoint identity.
 - **Noise floor: 0.0033.** The one case with a different label is row 1478,
   whose call in run 2 failed with HTTP 429 ("Too Many Requests") and got the
   fallback label neutral. In all 299 cases both runs answered, the answer

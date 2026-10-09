@@ -32,7 +32,9 @@ carries what the response says about who answered it (`endpoint_identity`):
 the body's `model` and `system_fingerprint`, the response headers that name a
 model, backend or provider, and the Cloudflare data centre. Nothing secret
 and nothing that changes with every call (request ids, dates, durations,
-spend and cost) is kept.
+spend and cost) is kept. Public AI's gateway also answers a request identical
+to one sent in the last ~10 minutes from its cache (measured on 2026-10-09);
+such an answer is marked `gateway_cache_hit`.
 """
 
 import logging
@@ -72,6 +74,9 @@ IDENTITY_HEADERS = (
 )
 IDENTITY_PATTERN = re.compile(r"model|backend|upstream|region|deployment|fingerprint", re.I)
 NOT_LOGGED = re.compile(r"key|auth|cookie|token|secret|spend|cost|budget|request-id|call-id|date|duration", re.I)
+# LiteLLM sends this header (its value is a hash; we keep only the fact that it is there) when the answer comes
+# from its response cache: the same request was answered earlier, and this answer is a copy of that one.
+CACHE_HIT_HEADER = "x-litellm-cache-key"
 
 
 class LLMError(RuntimeError):
@@ -201,9 +206,11 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
 
 def endpoint_identity(response):
     """What one response says about who answered it: the body's model and system_fingerprint (if present), the
-    identifying headers (IDENTITY_HEADERS, IDENTITY_PATTERN; never NOT_LOGGED) and Cloudflare's data centre (the
-    code after the dash in CF-RAY; the ray id before it is per call). Values lose any query string, in case a URL
-    carries one, and are cut at 200 characters."""
+    identifying headers (IDENTITY_HEADERS, IDENTITY_PATTERN; never NOT_LOGGED), Cloudflare's data centre (the
+    code after the dash in CF-RAY; the ray id before it is per call) and gateway_cache_hit: True when the gateway
+    answered from its cache (CACHE_HIT_HEADER present; then the routing headers describe the gateway's current
+    choice, while model and system_fingerprint belong to the cached answer). Values lose any query string, in
+    case a URL carries one, and are cut at 200 characters."""
     identity = {}
     try:
         body = response.json()
@@ -218,6 +225,8 @@ def endpoint_identity(response):
             headers[name] = str(value).split("?")[0][:200]
         elif name == "cf-ray" and "-" in str(value):
             identity["cf_ray_datacentre"] = str(value).rsplit("-", 1)[1][:10]
+        elif name == CACHE_HIT_HEADER:
+            identity["gateway_cache_hit"] = True
     if headers:
         identity["headers"] = dict(sorted(headers.items()))
     return identity

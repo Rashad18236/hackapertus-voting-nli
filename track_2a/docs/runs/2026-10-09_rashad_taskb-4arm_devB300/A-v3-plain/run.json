@@ -1,0 +1,46 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "02:11",
+ "kind": "model run",
+ "code": "75171d7",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, all 300 task B cases",
+ "setup": "arm A: v3-topic-first as it is, plain output, max_tokens 32",
+ "format": "official, interleaved (four arms, balanced order, at least 1 s between requests)",
+ "paired_with": [
+  "2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema",
+  "2026-10-09_rashad_taskb-4arm_devB300/C-v5-min",
+  "2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot"
+ ],
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes)",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.867,
+  "f1": {
+   "entailment": 0.917,
+   "neutral": 0.812,
+   "contradiction": 0.87
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1994,
+  "mean_time_ms": 1355,
+  "p95_time_ms": 2346
+ },
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none: v3-topic-first as it is (plain output, the prompt asks for {\"label\": n})",
+  "n_cases": 300,
+  "strict_json": "no",
+  "max_tokens": 32,
+  "compared_with": null
+ },
+ "canary": {
+  "before": "2026-10-09 02:11:06",
+  "after": "2026-10-09 02:39:43"
+ }
+}

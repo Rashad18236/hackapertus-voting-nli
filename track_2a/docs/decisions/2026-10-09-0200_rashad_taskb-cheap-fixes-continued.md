@@ -28,3 +28,16 @@ Comparisons (Rashad's rules, fixed before the run):
 - **D against C: keep D only if Macro-F1 rises by at least 0.01.**
 - **"Tokens per case" are the mean input plus output tokens, as in the acceptance rule.**
 - **No default changes in this stage; the report recommends one arm to freeze.** Rashad's instruction.
+
+Outcome (run `2026-10-09_rashad_taskb-4arm_devB300`, 02:11 to 02:40 UTC):
+
+- **B against A: B fails (Macro-F1 0.853 against 0.867, −0.013; 0 unreadable answers; −0.9 tokens per case). The comparisons stop there: C against B and D against C are reported as measurements, without a verdict.** Rashad's rule, applied as written to all 300 cases.
+- **Recommendation: freeze arm A, v3-topic-first as it is (plain output, max_tokens 32). No default changed; it is already the default.** B failed, and A had no unreadable answer.
+- **Finding: Public AI served `swiss-ai/apertus-v1.5-8b` from two backends during the run, blablador.fz-juelich.de (737 answers) and featherless.ai (463; deployment name `swiss-ai/Apertus-8B-Instruct-2509`), switching within minutes.** Visible only because every call now records its identity. A and B equal each other on the 250 cases where they met the same backend (Macro-F1 0.877 both, 3 labels differ), so B's loss is a backend effect; reported, not used to overrule the rule.
+- **Each arm's `run.json` names both backends in `endpoint`.** One model name, two servers: the record must not suggest one.
+- **Finding: Public AI's gateway answers a request identical to one of the last ~10 minutes from its cache (12 arm A answers in the run, 11 of the canary's answers after it; confirmed by a two-call probe). `src/llm.py` now marks such answers `gateway_cache_hit` (only the header's presence, never its value); the canary stores each case's identity and counts cache hits.** A copy says nothing about the backend at the time of the call.
+- **Correction to the confirmation stage: its noise floor of 0.0033 very likely measured the cache, not the model.** Run 2 repeated run 1's requests 3 to 8 minutes later, gave identical texts and ran at the speed of a cache copy. Noted in `docs/taskb_confirmation.md`, in the run's notes and in CLAUDE.md; the numbers themselves stay as recorded.
+- **The run is marked "endpoint changed during run": the canary checks before and after differ in 2 of 30 answers (both cache copies of the run's own arm A answers).** The rule applies as written.
+- **`scripts/canary_taskb.py`'s matching of answers kept only in part (the 01:50 check) was wrong: a short answer matched a longer kept start. Fixed (the full answer must start with the kept part; `tests/test_canary.py`), and the one wrong line in `docs/canary_log.md` corrected by hand with a note.** The log is the record; a wrong line must not stand.
+- **`scripts/interleaved_analysis.py` makes the four-arm table, the flips, and the breakdown by backend and by cache.** One script, so the report's numbers can be rebuilt from the run's files.
+- **Not done, proposed in the report:** ask Public AI about the routing or develop on CSCS; judge comparisons on cases where all arms met the same backend; keep the canary from reading the cache; a format line or more tokens for v5-min. Each changes the method or a request, so each is Rashad's decision.

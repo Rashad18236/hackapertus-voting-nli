@@ -15,6 +15,7 @@
 
 - **Cases with different labels: 1 of 300** (row 1478: contradiction in run 1, neutral in run 2), and that one is run 2's failed call. In the 299 cases both runs answered, **the answer text is identical in all 299** and so is the input token count.
 - **Noise floor: Macro-F1 gap 0.0033** (0.9194 against 0.9161), all of it from one failed call. Temperature 0 on this server gave no answer-to-answer variation in back-to-back runs.
+- **Correction (2026-10-09, 03:00 UTC, task B cheap fixes continued):** Public AI's gateway answers a request identical to one of the last ~10 minutes from its cache, and run 2 repeated run 1's requests 3 to 8 minutes later. Run 2's identical texts and its speed very likely come from that cache, so the noise floor of 0.0033 does not measure the model; not verifiable now (no endpoint identity was recorded then).
 - Run 2 was about 2.5 times faster on the same prompts (median 0.6 s against 1.3 s). The endpoint gives no reason; a server-side cache of repeated prompts is a likely explanation, not verified. Times of a rerun of identical prompts are therefore not comparable with first runs.
 - v3-topic-first scored 0.947 in session 2 (`s2-A-v3-topic-first`, before Public AI changed what it serves as `apertus-v1.5-8b` at about 13:25 UTC on 2026-10-08). Today it scores 0.919: the same prompt on today's server, not a change of ours.
 

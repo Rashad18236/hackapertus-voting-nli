@@ -145,6 +145,12 @@ Response:
   (task A); select it with `LLM_NAME` in the environment, never in code.
   The 8B was down on 2026-10-08 from about 17:30 until at least 19:44 UTC
   (answering again at 20:20); E4 ran entirely on the thinking model.
+- Public AI routes `swiss-ai/apertus-v1.5-8b` to more than one backend
+  (2026-10-09: api.blablador.fz-juelich.de, fingerprint `vllm-0.23.1rc1…`, and
+  api.featherless.ai, fingerprint `fp1-nst-nes`, deployment name
+  `swiss-ai/Apertus-8B-Instruct-2509`), and its LiteLLM gateway answers a
+  request identical to one of the last ~10 minutes from its cache. `src/llm.py`
+  records both per call (raw answers, `endpoint`).
 - In sandboxes where Docker containers cannot reach the internet directly,
   pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
@@ -283,8 +289,25 @@ minute). Decisions: `docs/decisions/2026-10-09-0200_rashad_taskb-cheap-fixes-con
 - Recommend one arm to freeze; change no default. Never shorten the passage.
   Report: `track_2a/docs/taskb_cheap_fixes.md`.
 
-Status (2026-10-09, 02:30 UTC): setup done (identity logging, canary log,
-v5-ballot, four-arm runner); the run is next. Task B stays on v3-topic-first.
+Status (2026-10-09, 03:00 UTC): **run done; B fails its rule, so the
+comparisons stopped; recommendation: freeze arm A (v3-topic-first as it is),
+the current default; no default changed.** Run
+`docs/runs/2026-10-09_rashad_taskb-4arm_devB300` (02:11 to 02:40 UTC, marked
+"endpoint changed during run"): A 0.867, B 0.853 (−0.013, 0 unreadable,
+−0.9 tokens per case), C 0.786 (27 unreadable), D 0.840 (22 unreadable;
+C and D not judged). 0 failed calls, 0 HTTP 429.
+
+- **Public AI served `swiss-ai/apertus-v1.5-8b` from two backends during the
+  run** (blablador.fz-juelich.de 737 answers, featherless.ai 463 with the
+  deployment name `swiss-ai/Apertus-8B-Instruct-2509`), switching within
+  minutes. The backend changes answers: A and B are equal on the 250 cases
+  where they met the same backend (0.877 both, 3 labels differ). Every Public
+  AI number mixes backends; earlier runs recorded no identity.
+- **The gateway answers identical requests from a cache for ~10 minutes**
+  (`gateway_cache_hit` in the identity since this run). The confirmation
+  stage's noise floor (0.0033) very likely measured this cache.
+- Proposals, not done (Rashad decides): ask Public AI or use CSCS; judge on
+  cases where all arms met the same backend; keep the canary off the cache.
 
 Earlier in this stage (01:40 to 01:52 UTC, `docs/decisions/2026-10-09-0140_rashad_taskb-cheap-fixes.md`):
 the old canary stopped the first run because the endpoint changed between
@@ -295,9 +318,9 @@ arms of one run.
 
 Previous stage, task B confirmation (`track_2a/docs/taskb_confirmation.md`):
 v3-topic-first 0.919 and 0.916 in two runs (session 2's 0.947 was the server
-before 13:25 UTC on 2026-10-08). **Noise floor 0.0033 Macro-F1**, all from one
-failed call (HTTP 429, now retried); the 299 cases both runs answered have
-identical answers. Errors: 17 of 24 are claims about another ballot called a
+before 13:25 UTC on 2026-10-08). The 299 cases both runs answered have
+identical answers, but run 2 very likely came from the gateway's cache, so
+its "noise floor" of 0.0033 does not measure the model (corrected at 03:00). Errors: 17 of 24 are claims about another ballot called a
 contradiction. Input tokens: passage 87 %, fixed instructions 203 tokens
 (10 %), claim 2 %, endpoint 19 tokens (1 %).
 

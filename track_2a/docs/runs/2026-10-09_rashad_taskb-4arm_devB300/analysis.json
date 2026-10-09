@@ -1,0 +1,682 @@
+{
+ "run": "docs/runs/2026-10-09_rashad_taskb-4arm_devB300",
+ "arms": {
+  "A-v3-plain": {
+   "macro_f1": 0.866512,
+   "f1": {
+    "entailment": 0.916667,
+    "neutral": 0.8125,
+    "contradiction": 0.87037
+   },
+   "confusion_rows_gold_cols_pred": [
+    [
+     88,
+     12,
+     2
+    ],
+    [
+     0,
+     78,
+     21
+    ],
+    [
+     2,
+     3,
+     94
+    ]
+   ],
+   "mean_input_tokens": 1994.2,
+   "p95_input_tokens": 4463,
+   "mean_output_tokens": 7.87,
+   "tokens_per_case": 2002.1,
+   "mean_time_ms": 1355,
+   "p95_time_ms": 2346,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "exactly {\"label\": n}": 289,
+    "JSON plus text": 11
+   },
+   "mean_time_ms_by_position": {
+    "1": 1335,
+    "2": 1251,
+    "3": 1297,
+    "4": 1539
+   },
+   "gateway_cache_hits": 12,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 189,
+     "macro_f1": 0.9664,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1153
+    },
+    "fp1-nst-nes": {
+     "calls": 111,
+     "macro_f1": 0.5658,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1700
+    }
+   }
+  },
+  "B-v3-schema": {
+   "macro_f1": 0.853306,
+   "f1": {
+    "entailment": 0.910053,
+    "neutral": 0.783505,
+    "contradiction": 0.866359
+   },
+   "confusion_rows_gold_cols_pred": [
+    [
+     86,
+     15,
+     1
+    ],
+    [
+     0,
+     76,
+     23
+    ],
+    [
+     1,
+     4,
+     94
+    ]
+   ],
+   "mean_input_tokens": 1994.2,
+   "p95_input_tokens": 4463,
+   "mean_output_tokens": 7.0,
+   "tokens_per_case": 2001.2,
+   "mean_time_ms": 1247,
+   "p95_time_ms": 2191,
+   "failed_calls": 0,
+   "unreadable_answers": 0,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "exactly {\"label\": n}": 300
+   },
+   "mean_time_ms_by_position": {
+    "1": 1342,
+    "2": 1145,
+    "3": 1274,
+    "4": 1228
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 185,
+     "macro_f1": 0.9742,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1101
+    },
+    "fp1-nst-nes": {
+     "calls": 115,
+     "macro_f1": 0.5222,
+     "unreadable_answers": 0,
+     "mean_time_ms": 1483
+    }
+   }
+  },
+  "C-v5-min": {
+   "macro_f1": 0.786374,
+   "f1": {
+    "entailment": 0.910995,
+    "neutral": 0.695652,
+    "contradiction": 0.752475
+   },
+   "confusion_rows_gold_cols_pred": [
+    [
+     87,
+     15,
+     0
+    ],
+    [
+     0,
+     72,
+     27
+    ],
+    [
+     2,
+     21,
+     76
+    ]
+   ],
+   "mean_input_tokens": 1877.2,
+   "p95_input_tokens": 4346,
+   "mean_output_tokens": 9.79,
+   "tokens_per_case": 1887.0,
+   "mean_time_ms": 1480,
+   "p95_time_ms": 2485,
+   "failed_calls": 0,
+   "unreadable_answers": 27,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "JSON with other spacing": 273,
+    "JSON plus text": 27
+   },
+   "mean_time_ms_by_position": {
+    "1": 1527,
+    "2": 1497,
+    "3": 1389,
+    "4": 1509
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 183,
+     "macro_f1": 0.5828,
+     "unreadable_answers": 8,
+     "mean_time_ms": 1463
+    },
+    "fp1-nst-nes": {
+     "calls": 117,
+     "macro_f1": 0.5057,
+     "unreadable_answers": 19,
+     "mean_time_ms": 1508
+    }
+   }
+  },
+  "D-v5-ballot": {
+   "macro_f1": 0.840002,
+   "f1": {
+    "entailment": 0.892473,
+    "neutral": 0.783784,
+    "contradiction": 0.84375
+   },
+   "confusion_rows_gold_cols_pred": [
+    [
+     83,
+     19,
+     0
+    ],
+    [
+     0,
+     87,
+     12
+    ],
+    [
+     1,
+     17,
+     81
+    ]
+   ],
+   "mean_input_tokens": 1891.2,
+   "p95_input_tokens": 4360,
+   "mean_output_tokens": 9.73,
+   "tokens_per_case": 1900.9,
+   "mean_time_ms": 1463,
+   "p95_time_ms": 2329,
+   "failed_calls": 0,
+   "unreadable_answers": 22,
+   "http_429": 0,
+   "retries": 0,
+   "answer_forms": {
+    "JSON with other spacing": 278,
+    "JSON plus text": 22
+   },
+   "mean_time_ms_by_position": {
+    "1": 1522,
+    "2": 1420,
+    "3": 1449,
+    "4": 1461
+   },
+   "gateway_cache_hits": 0,
+   "by_backend": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+     "calls": 180,
+     "macro_f1": 0.8593,
+     "unreadable_answers": 1,
+     "mean_time_ms": 1415
+    },
+    "fp1-nst-nes": {
+     "calls": 120,
+     "macro_f1": 0.4402,
+     "unreadable_answers": 21,
+     "mean_time_ms": 1535
+    }
+   }
+  }
+ },
+ "comparisons": {
+  "B-v3-schema:A-v3-plain": {
+   "macro_f1_change": -0.0132,
+   "f1_change": {
+    "entailment": -0.0066,
+    "neutral": -0.029,
+    "contradiction": -0.004
+   },
+   "tokens_per_case_change": -0.9,
+   "input_tokens_change": 0.0,
+   "output_tokens_change": -0.87,
+   "unreadable_new": 0,
+   "right_to_wrong": 12,
+   "wrong_to_right": 8,
+   "labels_differ": 22,
+   "right_to_wrong_ids": [
+    "v1.1-row-1138-B",
+    "v1.1-row-1161-B",
+    "v1.1-row-133-B",
+    "v1.1-row-36-B",
+    "v1.1-row-48-B",
+    "v1.1-row-554-B",
+    "v1.1-row-629-B",
+    "v1.1-row-720-B",
+    "v1.1-row-76-B",
+    "v1.1-row-770-B",
+    "v1.1-row-80-B",
+    "v1.1-row-951-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-1016-B",
+    "v1.1-row-1117-B",
+    "v1.1-row-116-B",
+    "v1.1-row-26-B",
+    "v1.1-row-549-B",
+    "v1.1-row-614-B",
+    "v1.1-row-93-B",
+    "v1.1-row-981-B"
+   ],
+   "same_backend": {
+    "cases": 250,
+    "macro_f1_old": 0.8772,
+    "macro_f1_new": 0.8771,
+    "labels_differ": 3,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1
+   },
+   "different_backend": {
+    "cases": 50,
+    "macro_f1_old": 0.781,
+    "macro_f1_new": 0.6848,
+    "labels_differ": 19,
+    "right_to_wrong": 11,
+    "wrong_to_right": 7
+   }
+  },
+  "C-v5-min:B-v3-schema": {
+   "macro_f1_change": -0.0669,
+   "f1_change": {
+    "entailment": 0.0009,
+    "neutral": -0.0879,
+    "contradiction": -0.1139
+   },
+   "tokens_per_case_change": -114.2,
+   "input_tokens_change": -117.0,
+   "output_tokens_change": 2.79,
+   "unreadable_new": 27,
+   "right_to_wrong": 48,
+   "wrong_to_right": 27,
+   "labels_differ": 77,
+   "right_to_wrong_ids": [
+    "v1.1-row-1000-B",
+    "v1.1-row-1003-B",
+    "v1.1-row-1015-B",
+    "v1.1-row-1026-B",
+    "v1.1-row-1052-B",
+    "v1.1-row-1064-B",
+    "v1.1-row-1080-B",
+    "v1.1-row-1083-B",
+    "v1.1-row-1085-B",
+    "v1.1-row-1092-B",
+    "v1.1-row-1100-B",
+    "v1.1-row-1115-B",
+    "v1.1-row-1194-B",
+    "v1.1-row-1219-B",
+    "v1.1-row-1230-B",
+    "v1.1-row-1238-B",
+    "v1.1-row-1472-B",
+    "v1.1-row-1474-B",
+    "v1.1-row-154-B",
+    "v1.1-row-161-B",
+    "v1.1-row-26-B",
+    "v1.1-row-27-B",
+    "v1.1-row-49-B",
+    "v1.1-row-501-B",
+    "v1.1-row-507-B",
+    "v1.1-row-510-B",
+    "v1.1-row-511-B",
+    "v1.1-row-517-B",
+    "v1.1-row-521-B",
+    "v1.1-row-538-B",
+    "v1.1-row-568-B",
+    "v1.1-row-577-B",
+    "v1.1-row-580-B",
+    "v1.1-row-616-B",
+    "v1.1-row-619-B",
+    "v1.1-row-623-B",
+    "v1.1-row-637-B",
+    "v1.1-row-638-B",
+    "v1.1-row-75-B",
+    "v1.1-row-762-B",
+    "v1.1-row-777-B",
+    "v1.1-row-85-B",
+    "v1.1-row-930-B",
+    "v1.1-row-948-B",
+    "v1.1-row-95-B",
+    "v1.1-row-965-B",
+    "v1.1-row-981-B",
+    "v1.1-row-994-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-109-B",
+    "v1.1-row-1208-B",
+    "v1.1-row-135-B",
+    "v1.1-row-146-B",
+    "v1.1-row-160-B",
+    "v1.1-row-21-B",
+    "v1.1-row-35-B",
+    "v1.1-row-36-B",
+    "v1.1-row-554-B",
+    "v1.1-row-640-B",
+    "v1.1-row-666-B",
+    "v1.1-row-670-B",
+    "v1.1-row-688-B",
+    "v1.1-row-711-B",
+    "v1.1-row-720-B",
+    "v1.1-row-746-B",
+    "v1.1-row-767-B",
+    "v1.1-row-770-B",
+    "v1.1-row-782-B",
+    "v1.1-row-80-B",
+    "v1.1-row-854-B",
+    "v1.1-row-869-B",
+    "v1.1-row-875-B",
+    "v1.1-row-904-B",
+    "v1.1-row-94-B",
+    "v1.1-row-946-B",
+    "v1.1-row-947-B"
+   ],
+   "same_backend": {
+    "cases": 238,
+    "macro_f1_old": 0.8836,
+    "macro_f1_new": 0.8349,
+    "labels_differ": 47,
+    "right_to_wrong": 29,
+    "wrong_to_right": 17
+   },
+   "different_backend": {
+    "cases": 62,
+    "macro_f1_old": 0.7045,
+    "macro_f1_new": 0.5982,
+    "labels_differ": 30,
+    "right_to_wrong": 19,
+    "wrong_to_right": 10
+   }
+  },
+  "D-v5-ballot:C-v5-min": {
+   "macro_f1_change": 0.0536,
+   "f1_change": {
+    "entailment": -0.0185,
+    "neutral": 0.0881,
+    "contradiction": 0.0913
+   },
+   "tokens_per_case_change": 13.9,
+   "input_tokens_change": 14.0,
+   "output_tokens_change": -0.06,
+   "unreadable_new": 22,
+   "right_to_wrong": 20,
+   "wrong_to_right": 36,
+   "labels_differ": 57,
+   "right_to_wrong_ids": [
+    "v1.1-row-1014-B",
+    "v1.1-row-1016-B",
+    "v1.1-row-1020-B",
+    "v1.1-row-1022-B",
+    "v1.1-row-1039-B",
+    "v1.1-row-1128-B",
+    "v1.1-row-1205-B",
+    "v1.1-row-134-B",
+    "v1.1-row-135-B",
+    "v1.1-row-146-B",
+    "v1.1-row-150-B",
+    "v1.1-row-160-B",
+    "v1.1-row-21-B",
+    "v1.1-row-40-B",
+    "v1.1-row-566-B",
+    "v1.1-row-666-B",
+    "v1.1-row-68-B",
+    "v1.1-row-80-B",
+    "v1.1-row-93-B",
+    "v1.1-row-980-B"
+   ],
+   "wrong_to_right_ids": [
+    "v1.1-row-1003-B",
+    "v1.1-row-1015-B",
+    "v1.1-row-1052-B",
+    "v1.1-row-1080-B",
+    "v1.1-row-1083-B",
+    "v1.1-row-1085-B",
+    "v1.1-row-1161-B",
+    "v1.1-row-1219-B",
+    "v1.1-row-1230-B",
+    "v1.1-row-1238-B",
+    "v1.1-row-1472-B",
+    "v1.1-row-1474-B",
+    "v1.1-row-154-B",
+    "v1.1-row-161-B",
+    "v1.1-row-18-B",
+    "v1.1-row-22-B",
+    "v1.1-row-507-B",
+    "v1.1-row-511-B",
+    "v1.1-row-521-B",
+    "v1.1-row-528-B",
+    "v1.1-row-538-B",
+    "v1.1-row-567-B",
+    "v1.1-row-568-B",
+    "v1.1-row-608-B",
+    "v1.1-row-616-B",
+    "v1.1-row-619-B",
+    "v1.1-row-623-B",
+    "v1.1-row-637-B",
+    "v1.1-row-638-B",
+    "v1.1-row-762-B",
+    "v1.1-row-777-B",
+    "v1.1-row-85-B",
+    "v1.1-row-930-B",
+    "v1.1-row-95-B",
+    "v1.1-row-951-B",
+    "v1.1-row-965-B"
+   ],
+   "same_backend": {
+    "cases": 237,
+    "macro_f1_old": 0.8558,
+    "macro_f1_new": 0.8899,
+    "labels_differ": 12,
+    "right_to_wrong": 2,
+    "wrong_to_right": 10
+   },
+   "different_backend": {
+    "cases": 63,
+    "macro_f1_old": 0.5248,
+    "macro_f1_new": 0.6174,
+    "labels_differ": 45,
+    "right_to_wrong": 18,
+    "wrong_to_right": 26
+   }
+  }
+ },
+ "canary": {
+  "before": {
+   "time": "2026-10-09 02:11:06",
+   "failed_calls": 0,
+   "http_429": 0
+  },
+  "after": {
+   "time": "2026-10-09 02:39:43",
+   "failed_calls": 0,
+   "http_429": 0
+  },
+  "answers_differ": [
+   "v1.1-row-1014-B",
+   "v1.1-row-1128-B"
+  ]
+ },
+ "endpoint_identity": {
+  "calls": 1260,
+  "distinct_identities": 7,
+  "identities": [
+   {
+    "calls": 766,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "remote-MXP",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 459,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "remote-MXP",
+     "header llm_provider-server": "cloudflare",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.featherless.ai/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "d89d2d4ebfc61c2082d128556c6125ba971a2da6e1c9580fc600de521d001ce5",
+     "header x-litellm-model-name": "openai/swiss-ai/Apertus-8B-Instruct-2509",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "fp1-nst-nes"
+    }
+   },
+   {
+    "calls": 21,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "remote-MXP",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 8,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "local-IAD",
+     "header llm_provider-server": "openresty/1.27.1.2",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 4,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "local-IAD",
+     "header llm_provider-server": "cloudflare",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.featherless.ai/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "d89d2d4ebfc61c2082d128556c6125ba971a2da6e1c9580fc600de521d001ce5",
+     "header x-litellm-model-name": "openai/swiss-ai/Apertus-8B-Instruct-2509",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "fp1-nst-nes"
+    }
+   },
+   {
+    "calls": 1,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "remote-MXP",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.featherless.ai/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "d89d2d4ebfc61c2082d128556c6125ba971a2da6e1c9580fc600de521d001ce5",
+     "header x-litellm-model-name": "openai/swiss-ai/Apertus-8B-Instruct-2509",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+    }
+   },
+   {
+    "calls": 1,
+    "identity": {
+     "cf_ray_datacentre": "IAD",
+     "header cf-placement": "remote-MXP",
+     "header server": "cloudflare",
+     "header x-litellm-attempted-fallbacks": "0",
+     "header x-litellm-attempted-retries": "0",
+     "header x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "header x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "header x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "header x-litellm-model-name": "openai/alias-apertus",
+     "header x-litellm-version": "1.98.0",
+     "model": "swiss-ai/apertus-v1.5-8b",
+     "system_fingerprint": "fp1-nst-nes"
+    }
+   }
+  ],
+  "fields_that_vary": {
+   "header cf-placement": {
+    "remote-MXP": 1248,
+    "local-IAD": 12
+   },
+   "header llm_provider-server": {
+    "openresty/1.27.1.2": 774,
+    "cloudflare": 463,
+    "<absent>": 23
+   },
+   "header x-litellm-model-api-base": {
+    "https://api.blablador.fz-juelich.de/v1": 796,
+    "https://api.featherless.ai/v1": 464
+   },
+   "header x-litellm-model-id": {
+    "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca": 796,
+    "d89d2d4ebfc61c2082d128556c6125ba971a2da6e1c9580fc600de521d001ce5": 464
+   },
+   "header x-litellm-model-name": {
+    "openai/alias-apertus": 796,
+    "openai/swiss-ai/Apertus-8B-Instruct-2509": 464
+   },
+   "system_fingerprint": {
+    "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 796,
+    "fp1-nst-nes": 464
+   }
+  }
+ },
+ "backend_hosts": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+   "https://api.blablador.fz-juelich.de/v1": 725
+  },
+  "fp1-nst-nes": {
+   "https://api.featherless.ai/v1": 463
+  }
+ }
+}
