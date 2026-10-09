@@ -25,23 +25,29 @@ sending only the vote's pages instead of the whole booklet raised task A's Macro
 0.858 with 37,586 input tokens per case, the routed part 0.989 with 1,248; without any booklet text (claim and
 vote name only) Apertus scores 0.435 [E2-cb]: the context, chosen well, carries the result.
 
-| Final defaults (starter's scorer) | Task A Macro-F1 | Task A evidence | Task B Macro-F1 | Input tokens / case (A, B) | Mean / p95 time per case (A, B) |
+| Final defaults | Task A Macro-F1 | Task A evidence | Task B Macro-F1 | Input tokens / case (A, B) | Mean / p95 time (A; B) |
 |---|---|---|---|---|---|
-| dev, all 600 cases through the Docker image [FIN] | ⟨FIN⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
-| val, all 580 rows (task A [D-val], task B [C-val]) | 0.961 | 0.958 | 0.961 | 1,206, 1,230 | 1.9 / 3.0 s, 1.8 / 3.8 s |
+| dev, 600 cases, Docker image [FIN] | **0.980** | **0.980** | **0.967** | 1,238, 1,231 | 2.2 / 4.5 s; 2.0 / 3.8 s |
+| val, 580 rows [D-val, C-val] | 0.961 | 0.958 | 0.961 | 1,206, 1,230 | 1.9 / 3.0 s; 1.8 / 3.8 s |
 
-⟨Stability sentence and default changes of session 9⟩ Both tasks are far above the starter's minimum for a
+Session 9 changed three defaults, each by a rule fixed before its interleaved runs and confirmed on val:
+evidence adds halves of the cited paragraphs (A2), task B cuts long references (B-cut, −37 % tokens at equal
+Macro-F1) and task A's prompt names what makes a contradiction (L1, +0.010 to +0.014). Both tasks are far above the starter's minimum for a
 valid submission (task A 0.60, task B 0.75). The private test set may differ (section 6).
 
 ## 2. Architecture
 
 ```
-cases.jsonl ─► src/cli.py ─┬─ task B: reference text (+ B-cut for long passages) + claim ─► src/nli.py prompt ─┐
-                           └─ task A: booklet PDF ─► src/parse.py (pypdf, text per 1-based page)               │
-                                ├─ section-route: src/claim_router.py (part named by the claim's opening)    ▼
-                                │   + src/booklet.py (votes and parts) ─► numbered paragraphs        src/llm.py ─► BASE_URL
-                                └─ fallback: embed-e5-small (8 most similar chunks, multilingual-e5-small)   │ (Apertus)
-                        label + cited paragraphs ─► section_route.evidence_items ─► predictions.jsonl ◄──┘
+cases.jsonl ─► src/cli.py
+  task B: reference text ─► B-cut if over 8,000 characters ─► prompt ─────────┐
+  task A: booklet PDF ─► src/parse.py (pypdf, text per 1-based page)          │
+          ├─ section-route: src/claim_router.py (part named by the opening)   │
+          │  + src/booklet.py (votes, parts) ─► numbered paragraphs ─► prompt ─┤
+          └─ fallback: embed-e5-small (8 most similar chunks) ─► prompt ───────┤
+                                                                               ▼
+               src/llm.py ─► BASE_URL (Apertus v1.5): label + cited paragraphs
+                                                                               │
+  predictions.jsonl ◄─ evidence: cited paragraphs, verbatim, with page ◄───────┘
 ```
 
 - `src/cli.py`: the official entrypoint (`--input`, `--output`). Answers every request that has an id, never
@@ -182,12 +188,13 @@ at neutral answers similar to the text (L2) fixed fewer (3 on dev, 2 on val) for
 **Evidence pages.** Every evidence item's page is the page that holds its quote; 179 of 182 dev items that
 match the gold passage lie on one of its pages, 107 on its first page (a passage often spans pages).
 
-**Token usage and inference time** (default pipeline, stability point 1, per case):
+**Token usage and inference time** (final defaults, all 600 dev cases through the image [FIN], per case;
+time is wall-clock per case including local work; the model's own share is not separable):
 
-| Task | Input tokens (mean) | Output tokens (mean) | Model calls | Mean / p95 time |
+| Task | Input tokens (mean / p95) | Output tokens (mean) | Model calls | Mean / p95 time |
 |---|---|---|---|---|
-| A | 1,210 | 14.5 | 1 | 2.6 / 5.4 s |
-| B | 1,994 | 8.7 | 1 | 1.5 / 2.6 s |
+| A | 1,238 / 2,132 | 14.5 | 1 | 2.2 / 4.5 s |
+| B | 1,231 / 2,182 | 8.4 | 1 | 2.0 / 3.8 s |
 
 Since session 9, task B sends a reference over 8,000 characters as its first line plus the 8 paragraphs most
 similar to the claim (B-cut): 37–38 % fewer input tokens at the same Macro-F1, for about 0.3 s more per case
@@ -235,9 +242,13 @@ booklet is parsed; the first case on a booklet pays up to 3.5 s for parsing, and
 
 ## 8. Next steps
 
-- ⟨from phases C/D/E⟩
-- Ask the organisers which model, server and page rule the evaluation uses.
-- Remaining proposals of `docs/checks_no_model.md` (contiguous evidence text, a smaller image).
+- Ask the organisers which model, server and page rule the evaluation uses, and whether Public AI's two
+  backends (one serving the v1 release under the v1.5 name) will be in play.
+- Cut routed parts to their 4 most similar paragraphs: −36 % tokens for −0.01 Macro-F1 on 100 dev cases
+  (E1); needs its own interleaved run on dev and val.
+- Ask Apertus to route only when the rules find no part (E3: it routes all 15 openings the rules miss, but
+  also picks parts for openings that name none).
+- L2 as an option if tokens matter less than the last errors; a smaller image (P11, P12).
 
 ## License
 
@@ -253,4 +264,7 @@ Creative Commons Attribution 4.0 (CC-BY-4.0). All HackApertus projects are open-
 - Runs (`docs/runs/`): S2 `s2-A300-A-v3-fulldoc`; E2 `s3-E2-A300`; E5
   `2026-10-08_rashad_section-route-vs-embed_devA300`; E6 `2026-10-09_rashad_section-route-vs-embed_valA300`;
   B4arm `2026-10-09_rashad_taskb-4arm_devB300`; S1 `2026-10-09_rashad_stability-1_dev600`; C-dev
-  `2026-10-09_rashad_taskb-context_devB300`; C-val `2026-10-09_rashad_taskb-cut-confirm_valB580`; ⟨D, E, S2, S3⟩.
+  `2026-10-09_rashad_taskb-context_devB300`; C-val `2026-10-09_rashad_taskb-cut-confirm_valB580`; D-dev `2026-10-09_rashad_label-errors_devA300`;
+  D-val `2026-10-09_rashad_label-errors-confirm_valA580`; E1-curve `2026-10-09_rashad_context-curve_devA100`;
+  E2-cb `2026-10-09_rashad_closed-book_devA300`; E3-router `2026-10-09_rashad_llm-router_dev300-stress300`;
+  FIN `2026-10-09_rashad_final-defaults_dev600`; S2, S3 `2026-10-10_rashad_stability-{2,3}_dev600`.
