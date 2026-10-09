@@ -18,17 +18,20 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (17:53) Phase C code: `src/taskb_context.py` (B-cut, B-para, off by default), `--context-b`, tests; offline
   tokens per case on 300 dev B: full 1,994, B-cut 1,231 (−38 %), B-para 1,375 (−31 %).
 
+- (18:05) Phase B: `docs/analysis_offline.md` (B1–B6); L2 threshold 0.845 from B6.
+- (18:10) Phase D and E code (L1, L2, closed book, section-route top-k), all off by default; gates pass.
+- (18:20) Phase C dev run: B-cut 0.967 = current, −38 % tokens (passes); B-para 0.963 (does not replace).
+- (19:00) Phase C val run (580 cases): B-cut 0.961 vs 0.957, −37 % tokens: passes.
+- (19:10) **Task B default changed to `--context-b cut`** (`13da75a`); G1 differs only in the 105 long dev
+  task B requests; labels unchanged; 188 tests.
+
 ## Running
 
-- Phase C interleaved run on the 300 dev task B cases (B-current, B-cut, B-para), started 17:53 UTC.
-- Phase B offline analyses (`scripts/analysis_offline.py`).
+- Phase D interleaved run on the 300 dev task A cases (A-current, L1, L2), started 18:56 UTC (resumed 19:00).
 
 ## Next
 
-- Phase C: score the dev run, apply the rule; if B-cut (or B-para) passes, confirm on the 580 val task B cases
-  (`output/valB`, built by `scripts/make_val_b.py`).
-- Phase B: write `docs/analysis_offline.md` (B1–B6); B6 decides whether L2 has a threshold.
-- Phase D: L1 and L2 code, interleaved run on 300 dev task A, val confirmation.
+- Phase D: score, apply rules L1 and L2; confirm a passing version on all 580 val task A cases.
 - Stability points 2 (about 02:00 UTC) and 3 (about 10:00 UTC): `stability.sh 2|3` with
   `IMAGE=hackapertus-voting-nli:stability`.
 - Phase E, then FINISH from 11:30 UTC at the latest.
@@ -40,3 +43,6 @@ Updated after every phase. If the session is restarted with "continue", work goe
 | Stability point 1 (600 dev, Docker, 17:28–17:48 UTC) | Macro-F1 0.966, evidence 0.930 (no halves in that image), 1,210 input tokens | Macro-F1 0.967, 3 unreadable, 1,994 input tokens |
 | Backends in point 1 | all 300 answers from the blablador vllm backend | all 300 from the same backend |
 | A2 replay (E5 / E6 answers) | evidence dev 0.906 → 0.925, val 0.946 → 0.956 | – |
+| Phase C dev (300 B, interleaved) | – | current 0.967 / B-cut 0.967 / B-para 0.963; tokens 1,994 / 1,231 / 1,375 |
+| Phase C val (580 B, interleaved) | – | current 0.957 / B-cut 0.961; tokens 1,957 / 1,230 |
+| B1 bootstrap | dev+val pooled 0.955 (0.938–0.970) | dev 0.967 (0.945–0.986) |
