@@ -209,7 +209,10 @@ at three times [S1, S2, S3]:
 |---|---|---|---|
 | 1, 10-09 17:28 | 0.966 | 0.967 | – |
 | 2, 10-10 01:56 | 0.966 | 0.967 | 299/300; 300/300 |
-| 3, 10-10 ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| 3, 10-10 09:56 | 0.966 | 0.963 | 300/300; 299/300 |
+
+Over 16.5 hours two of 600 labels ever changed, all answers came from one backend, and no answer came from
+the gateway's cache.
 
 ## 6. Limitations
 

@@ -43,15 +43,16 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (02:18) Stability point 2: task A 0.966 (evidence 0.935), task B 0.967; labels agree with point 1 in
   299/300 (A) and 300/300 (B); one backend.
 
+- (10:16) Stability point 3: task A 0.966 (evidence 0.930), task B 0.963; labels equal to point 1 in 300/300 (A)
+  and 299/300 (B); over the three points two of 600 labels ever changed; one backend.
+
 ## Running
 
-- nothing (the model is idle until stability point 3).
+- nothing (all model runs done).
 
 ## Next
 
-- About 10:00 UTC: stability point 3, the same; then the three-point comparison
-  (`scripts/stability_report.py --points` with all three) into the technical report's stability paragraph
-  and the session report's first page; rebuild `technical_report.pdf` (≤ 6 pages); CI green; push by 13:00.
+- FINISH texts: rebuild `technical_report.pdf` (≤ 6 pages), tests, CI green on the last commit, push by 13:00.
 
 ## Numbers so far
 
@@ -69,3 +70,4 @@ Updated after every phase. If the session is restarted with "continue", work goe
 | E2 (300 dev A) | closed book 0.435, section-route 0.980 | – |
 | Final defaults (600 dev, Docker, 21:22–21:44 UTC) | 0.980, evidence 0.980, 1,238 tokens | 0.967, 1,231 tokens |
 | Stability point 2 (600 dev, Docker, 01:56–02:18 UTC) | 0.966, evidence 0.935, 1,210 tokens | 0.967, 4 unreadable, 1,994 tokens |
+| Stability point 3 (600 dev, Docker, 09:56–10:16 UTC) | 0.966, evidence 0.930, 1,210 tokens | 0.963, 1 unreadable, 1,994 tokens |

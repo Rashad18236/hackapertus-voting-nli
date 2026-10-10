@@ -45,7 +45,7 @@ input tokens), task B **0.967** (1,231 input tokens, was 1,994). On all 580 val 
 |---|---|---|---|---|---|---|
 | 1 (2026-10-09 17:28) | 0.966 | 0.930 | 0.967 | 3 | – | blablador, all 600 |
 | 2 (2026-10-10 01:56) | 0.966 | 0.935 | 0.967 | 4 | 299/300; 300/300 | blablador, all 600 |
-| 3 (2026-10-10 ⟨S3 time⟩) | ⟨S3⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| 3 (2026-10-10 09:56) | 0.966 | 0.930 | 0.963 | 1 | 300/300; 299/300 | blablador, all 600 |
 
 **Dropped for time:** nothing. **Not done:** the 4-paragraph cut on val, an Apertus fallback router, L2 as a
 default (all reported as options).
@@ -110,13 +110,17 @@ task and per backend by `scripts/stability_report.py` (task B's numbers in each 
 |---|---|---|---|---|---|---|
 | 1 (2026-10-09 17:28) | 0.966 | 0.930 | 0.967 | 3 | – | blablador, all 600 |
 | 2 (2026-10-10 01:56) | 0.966 | 0.935 | 0.967 | 4 | 299/300; 300/300 | blablador, all 600 |
-| 3 (2026-10-10 ⟨S3 time⟩) | ⟨S3⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| 3 (2026-10-10 09:56) | 0.966 | 0.930 | 0.963 | 1 | 300/300; 299/300 | blablador, all 600 |
 
 - Point 1 (`2026-10-09_rashad_stability-1_dev600`, 17:28–17:48 UTC), point 2
   (`2026-10-10_rashad_stability-2_dev600`, 01:56–02:18 UTC), point 3 (`2026-10-10_rashad_stability-3_dev600`,
-  ⟨S3 times⟩).
-- Between points 1 and 2 the sandbox restarted; the Docker daemon was started again, the image was unchanged.
-  Point 2 had no gateway cache hits (its requests were last sent eight hours before), so its answers are fresh.
+  09:56–10:16 UTC).
+- Over 16.5 hours two of the 600 cases ever changed label: row 1138 (task A, a gold contradiction: neutral,
+  entailment, neutral) and row 640 (task B, a gold neutral: neutral, neutral, contradiction); the endpoint, on
+  this one backend, answered the same requests almost identically.
+- The sandbox restarted before points 2 and 3; the Docker daemon was started again each time and the image was
+  unchanged. Points 2 and 3 had no gateway cache hits (their requests were last sent eight hours before), so
+  their answers are fresh.
 
 ## Phase B: offline analyses (no model calls)
 
@@ -279,8 +283,10 @@ endpoint's `usage` as recorded per case (gateway cache hits included: the endpoi
 | E1 context curve (6 arms) | 600 | 600 | 4,264,620 | 9,387 |
 | E2 closed book (2 arms) | 600 | 600 | 438,123 | 7,690 |
 | FINISH final defaults | 600 | 600 | 740,677 | 6,871 |
+| stability point 2 | 600 | 600 | 961,224 | 6,934 |
+| stability point 3 | 600 | 600 | 961,224 | 6,887 |
 | E3 Apertus as router | 600 | 600 | 126,204 | 4,580 |
-| **Total** | **7,756** | **7,756** | **12,955,645** | **94,175** |
+| **Total** | **8,956** | **8,956** | **14,878,093** | **107,996** |
 
 The gates, the replay reference and every test used the fake model (`scripts/stub_llm.py`), not the endpoint.
 

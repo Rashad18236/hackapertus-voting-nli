@@ -288,6 +288,9 @@ session 9's answers came from one backend, blablador).
   session 8 reference.
 - **Final defaults on all 600 dev cases through the image** (`2026-10-09_rashad_final-defaults_dev600`):
   task A 0.980 (evidence 0.980, 1,238 input tokens), task B 0.967 (1,231 input tokens).
+- **Stability** (the image from before session 9's default changes, same settings, all 600 dev cases, at
+  17:28, 01:56 and 09:56 UTC): task A 0.966 / 0.966 / 0.966, task B 0.967 / 0.967 / 0.963; two of 600 labels
+  ever changed; one backend throughout.
 
 ## Previous stage: hardening without a model (session 8)
 
