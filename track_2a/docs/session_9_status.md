@@ -40,14 +40,15 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (22:05) Technical report (6 pages PDF) and session report drafted; only the stability points 2 and 3 are
   missing from them.
 
+- (02:18) Stability point 2: task A 0.966 (evidence 0.935), task B 0.967; labels agree with point 1 in
+  299/300 (A) and 300/300 (B); one backend.
+
 ## Running
 
-- nothing (the model is idle until stability point 2).
+- nothing (the model is idle until stability point 3).
 
 ## Next
 
-- About 02:00 UTC: stability point 2 (`$SP/s9/stability.sh 2`, image `hackapertus-voting-nli:stability`);
-  score with the starter and `scripts/stability_report.py --split-task-b`; run.json, NOTES; commit, push.
 - About 10:00 UTC: stability point 3, the same; then the three-point comparison
   (`scripts/stability_report.py --points` with all three) into the technical report's stability paragraph
   and the session report's first page; rebuild `technical_report.pdf` (≤ 6 pages); CI green; push by 13:00.
@@ -67,3 +68,4 @@ Updated after every phase. If the session is restarted with "continue", work goe
 | E1 (100 dev A) | full 0.858 (37.6k tokens), section-route 0.989 (1.2k) | – |
 | E2 (300 dev A) | closed book 0.435, section-route 0.980 | – |
 | Final defaults (600 dev, Docker, 21:22–21:44 UTC) | 0.980, evidence 0.980, 1,238 tokens | 0.967, 1,231 tokens |
+| Stability point 2 (600 dev, Docker, 01:56–02:18 UTC) | 0.966, evidence 0.935, 1,210 tokens | 0.967, 4 unreadable, 1,994 tokens |
