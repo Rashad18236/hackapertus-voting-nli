@@ -261,7 +261,7 @@ rules stay the router.
   requests (600 dev, 580 val), each answered from a saved real answer (the final dev run; the val L1 arm). The
   replay reproduces them exactly (0 label, 0 evidence differences): dev A 0.980 / 0.980, B 0.967, val A
   0.961 / 0.958. It replaces the session 8 reference for G1/G2.
-- Tests: 189 pass, 1 skipped (`pytest`, after every code change). Clean-machine workflow (`image` and `tests` jobs on GitHub): green on every pushed commit checked, last on `⟨last commit⟩`.
+- Tests: 189 pass, 1 skipped (`pytest`, after every code change). Clean-machine workflow (`image` and `tests` jobs on GitHub): green on every pushed commit checked, last on `8447cf3` (stability point 3 and the final reports); this record's own commit is checked the same way.
 - `technical_report.md` rewritten to six A4 pages at 10 pt (`technical_report.pdf`, built by
   `scripts/build_report_pdf.sh`: pandoc and headless Chromium); template sections kept; token usage and
   inference time in section 5. Remaining TODOs: team name and members only.

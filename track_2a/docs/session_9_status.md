@@ -46,13 +46,16 @@ Updated after every phase. If the session is restarted with "continue", work goe
 - (10:16) Stability point 3: task A 0.966 (evidence 0.930), task B 0.963; labels equal to point 1 in 300/300 (A)
   and 299/300 (B); over the three points two of 600 labels ever changed; one backend.
 
+- (10:24) FINISH done: reports final (technical report 6 pages), 189 tests pass, CI green on `8447cf3`.
+
 ## Running
 
-- nothing (all model runs done).
+- nothing. **Session 9 is finished.**
 
 ## Next
 
-- FINISH texts: rebuild `technical_report.pdf` (≤ 6 pages), tests, CI green on the last commit, push by 13:00.
+- For the team: the held-out test run (once), team name and members in the technical report, the tag
+  `submission`, the submission form; PR #16 stays a draft (never merged in this session).
 
 ## Numbers so far
 
