@@ -1,0 +1,19 @@
+{
+ "G1_request_or_path_differs": 105,
+ "G2_label_differs": 0,
+ "G2_evidence_differs": 0,
+ "g1_examples": [
+  "v1.1-row-1468-B: {'task': 'B', 'set': 'dev', 'request_sha256': '6f6db8ff7bf0c2d28da939c6bc39e7ce12d1c28885bed6585c07acfc6a0a928f', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '744ef6a31c8a376585311f2f60cdffec34059835e3a035e69ccf500409a13af8', 'path': 'task B'}",
+  "v1.1-row-188-B: {'task': 'B', 'set': 'dev', 'request_sha256': '72ef5045e57c14dbd2d59d7a82fd0e261ec72ca77234347ed8bfd77cdda655e2', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': 'f8fa14ee86d8162cb6503cf52d4e46653939aa69a8b4430939bd82b9218afa37', 'path': 'task B'}",
+  "v1.1-row-345-B: {'task': 'B', 'set': 'dev', 'request_sha256': '99d67a77e903c500ebd71edad3488402c8ce41f9cd49868895d743586667d966', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '1ecde413b1205b82a5d09db270348bf9777f3cc9b6fe777949355aba2659156f', 'path': 'task B'}",
+  "v1.1-row-347-B: {'task': 'B', 'set': 'dev', 'request_sha256': '0c14f888b9f4d18f08097f9c336f3b9632afddecefe49b4035e5b24b5f090dc2', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': 'a06979574b278d0beaf9ef0c72d243db11f2ceb260ac4c2fc9f2135ef2ec75ef', 'path': 'task B'}",
+  "v1.1-row-493-B: {'task': 'B', 'set': 'dev', 'request_sha256': '489a806b0d94310bbb2bad1b678f362fa75b2f7a4774820003771752006e8a09', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '048a14f245f3e5d3450aa2801c6b8302802c14f381e7e0949416161bcc77c76d', 'path': 'task B'}",
+  "v1.1-row-500-B: {'task': 'B', 'set': 'dev', 'request_sha256': '609fcfaa5b5ab0e093eae3d7d46d11600506fe057f1bdce25645af8af0ecd98e', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '193d8b5db3b0aad54971cc54d1bc31f375c71b0963a6846144ba9c5ea608c2e5', 'path': 'task B'}",
+  "v1.1-row-501-B: {'task': 'B', 'set': 'dev', 'request_sha256': '5112edf942d6778d16430dd4c1cc414bfd64f8f38a77b8760dcce06759b4c868', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '6f97b491b563570cc10663e0bbc2351d831019fc0e1afa345b95d0b0f8a37918', 'path': 'task B'}",
+  "v1.1-row-507-B: {'task': 'B', 'set': 'dev', 'request_sha256': 'bd294bdb900324d1d72e2ce1386cd6d58dec6b1961660e0135467e1059a7e81d', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '0632444bc4f544f310b942885fc912519c7c9e533ec9e22ff9cbb79b77e5c10d', 'path': 'task B'}",
+  "v1.1-row-510-B: {'task': 'B', 'set': 'dev', 'request_sha256': 'bae21caa24caaab4781c7447f3b8afddccf01392c5d88bdcd7e787cc612eaf50', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': '001910fcf49175483e9439ead6e70763d7982eb2755ed0ab52757a7dcbbb5f75', 'path': 'task B'}",
+  "v1.1-row-511-B: {'task': 'B', 'set': 'dev', 'request_sha256': '6d36556b0321b16b479bfd699ed156edb5c1eae5ab8116e3ab834688829e66ef', 'path': 'task B'} -> {'task': 'B', 'set': 'dev', 'request_sha256': 'b6c9571ad4c9796b4be55e1640a871e5eb01560775e6c758a12776c3fd9c8f44', 'path': 'task B'}"
+ ],
+ "label_examples": [],
+ "evidence_cases": []
+}

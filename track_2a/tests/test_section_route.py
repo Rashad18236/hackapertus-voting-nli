@@ -133,5 +133,30 @@ class RepeatedEvidence(unittest.TestCase):
         self.assertEqual(len(section_route.evidence_items(paragraphs, [1, 2])), 2)
 
 
+class EvidenceHalves(unittest.TestCase):
+    """Session 9 (A2): halves of the cited paragraphs fill the evidence up to five items."""
+
+    def test_split_at_the_sentence_end_nearest_the_middle(self):
+        self.assertEqual(section_route.split_in_half("Erster Satz hier. Zweiter Satz da. Dritter Satz dort."),
+                         ["Erster Satz hier. Zweiter Satz da.", "Dritter Satz dort."])
+        self.assertEqual(section_route.split_in_half("Kein Satzende in diesem Absatz"), [])
+        self.assertEqual(section_route.split_in_half("Nur ein Satz."), [])
+
+    def test_halves_follow_the_cited_paragraphs_up_to_five_items(self):
+        paragraphs = [(3, "A eins. B zwei. C drei. D vier."), (4, "E fünf. F sechs."), (5, "G sieben.")]
+        items = section_route.evidence_items(paragraphs, [1, 2, 3], halves=True)
+        self.assertEqual([i["text"] for i in items], ["A eins. B zwei. C drei. D vier.", "E fünf. F sechs.",
+                                                      "G sieben.", "A eins. B zwei.", "C drei. D vier."])
+        self.assertEqual([i["page"] for i in items], [3, 4, 5, 3, 3])
+        for item in items:  # every half is a verbatim piece of its paragraph
+            self.assertTrue(any(item["text"] in text for _, text in paragraphs))
+
+    def test_without_halves_nothing_is_added_and_present_texts_are_skipped(self):
+        paragraphs = [(3, "A eins. B zwei.")]
+        self.assertEqual(len(section_route.evidence_items(paragraphs, [1])), 1)
+        self.assertEqual(len(section_route.evidence_items(paragraphs, [1], halves=True)), 3)
+        self.assertEqual(section_route.evidence_items([(3, "A eins.")], [1], halves=True), [{"page": 3, "text": "A eins."}])
+
+
 if __name__ == "__main__":
     unittest.main()

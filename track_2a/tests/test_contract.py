@@ -526,6 +526,23 @@ class FailedAndGarbageModelAnswers(ContractBase):
         self.assertTrue(run.by_id["a-once"]["evidence"])
         self.assertGreater(time.perf_counter() - start, 4)
 
+    def test_rate_limited_call_waits_and_its_answer_is_used(self):
+        # HTTP 429 with "Retry-After: 1" on the first attempt, then the answer: src/llm.py waits and retries.
+        cases = [b_case("b-429", claim="STUB_429_ONCE STUB_LABEL_2"), a_case("a-429", claim="STUB_429_ONCE"),
+                 b_case("b-429-always", claim="STUB_429")]
+        run = self.run_cli(cases, *A_ARGS)
+        self.assertContract(run, cases)
+        self.assertEqual(run.by_id["b-429"]["label"], 2)
+        self.assertEqual(run.by_id["b-429"]["metrics"]["input_tokens"], 100)
+        self.assertGreaterEqual(run.by_id["b-429"]["metrics"]["inference_time_ms"], 1000)  # the wait counts
+        self.assertEqual(run.by_id["a-429"]["label"], 0)
+        self.assertTrue(run.by_id["a-429"]["evidence"])
+        self.assertGreaterEqual(run.by_id["a-429"]["metrics"]["inference_time_ms"], 1000)
+        # A rate limit that never lifts: the first attempt and two retries (RATE_LIMIT_RETRIES), then the fallback.
+        self.assertEqual((run.by_id["b-429-always"]["label"], run.by_id["b-429-always"]["evidence"]), (1, []))
+        kinds = [c["kind"] for c in self.server.config.calls]
+        self.assertEqual(kinds.count("rate_limited"), 2 + 3)
+
     def test_failures_chosen_by_call_number(self):
         server, url = stub_llm.start(garbage_calls=[1], fail_calls=[2, 3], html_calls=[5], error_calls=[6])
         try:
@@ -666,6 +683,9 @@ class FakeModel(unittest.TestCase):
         self.assertEqual(stub_llm.decide(msg("STUB_FAIL_ONCE"), cfg, 1), ("fail", 2))
         self.assertEqual(stub_llm.decide(msg("STUB_FAIL_ONCE"), cfg, 2), ("ok", 2))
         self.assertEqual(stub_llm.decide(msg("STUB_FAIL"), cfg, 3), ("fail", 2))
+        self.assertEqual(stub_llm.decide(msg("STUB_429_ONCE"), cfg, 5), ("rate_limited", 2))
+        self.assertEqual(stub_llm.decide(msg("STUB_429_ONCE"), cfg, 6), ("ok", 2))
+        self.assertEqual(stub_llm.decide(msg("STUB_429"), cfg, 7), ("rate_limited", 2))
         self.assertEqual(stub_llm.decide(msg("STUB_LABEL_1 STUB_GARBAGE"), cfg, 4), ("garbage", 1))
 
 

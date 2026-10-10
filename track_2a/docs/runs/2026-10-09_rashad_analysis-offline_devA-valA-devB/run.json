@@ -1,0 +1,62 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "17:54",
+ "kind": "offline check",
+ "code": "dbb30fa (scripts/analysis_offline.py)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "task A: E5's 300 dev and E6's 300 val sample answers; task B: stability point 1's 300 dev answers",
+ "setup": "session 9 phase B (B1-B6): bootstrap intervals and language tables, evidence pages under three rules, claim tags, rules without a model, E6's val errors, similarity of E5's neutral answers",
+ "format": "offline, no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Task A Macro-F1 dev+val pooled 0.955 (95 % bootstrap 0.938-0.970); every evidence page holds its quote (rule 3), 179/182 lie on a gold page, 107/182 on its first page; task B references over 8,000 characters are 99/105 neutral, shorter ones 0/195; 12 of E6's 13 val errors had the gold passage sent (reading errors); L2 threshold 0.845 flags 10/11 wrong and 11/99 right neutral answers of E5.",
+ "results": {
+  "A_pooled_macro_f1": 0.9546,
+  "A_pooled_interval": [
+   0.9375,
+   0.97
+  ],
+  "B_dev_macro_f1": 0.9666,
+  "B_dev_interval": [
+   0.9451,
+   0.9858
+  ],
+  "evidence_page_rules_dev": {
+   "text_matches": 182,
+   "any_gold_page": 179,
+   "first_gold_page": 107,
+   "page_of_quote": 182
+  },
+  "evidence_page_rules_val": {
+   "text_matches": 193,
+   "any_gold_page": 189,
+   "first_gold_page": 114,
+   "page_of_quote": 193
+  },
+  "taskB_long_refs_neutral": [
+   99,
+   105
+  ],
+  "taskB_short_refs_neutral": [
+   0,
+   195
+  ],
+  "val_errors": 13,
+  "val_errors_gold_sent": 12,
+  "val_errors_fallback": 1,
+  "l2_threshold": 0.845,
+  "l2_flags_wrong_neutral": [
+   10,
+   11
+  ],
+  "l2_flags_right_neutral": [
+   11,
+   99
+  ]
+ }
+}

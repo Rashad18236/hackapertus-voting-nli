@@ -1,0 +1,46 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "02:11",
+ "kind": "model run",
+ "code": "75171d7",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, all 300 task B cases",
+ "setup": "arm C: v5-min + strict JSON, max_tokens 10",
+ "format": "official, interleaved (four arms, balanced order, at least 1 s between requests)",
+ "paired_with": [
+  "2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain",
+  "2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema",
+  "2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot"
+ ],
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes)",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.786,
+  "f1": {
+   "entailment": 0.911,
+   "neutral": 0.696,
+   "contradiction": 0.752
+  },
+  "parse_failures": 27,
+  "failed_calls": 0,
+  "mean_input_tokens": 1877,
+  "mean_time_ms": 1480,
+  "p95_time_ms": 2485
+ },
+ "task_b": {
+  "prompt_version": "v5-min",
+  "change": "against arm B: v5-min (86 fixed tokens) instead of v3-topic-first (203); strict JSON, max_tokens 10",
+  "n_cases": 300,
+  "strict_json": "yes (json_schema, strict)",
+  "max_tokens": 10,
+  "compared_with": "2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema"
+ },
+ "canary": {
+  "before": "2026-10-09 02:11:06",
+  "after": "2026-10-09 02:39:43"
+ }
+}

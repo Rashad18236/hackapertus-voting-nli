@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "20:50",
+ "kind": "model run",
+ "code": "58bd7b8 (plus the uncommitted L1 default of 50cb320; both arms set their prompt explicitly)",
+ "cases": "dev, all 300 task A cases",
+ "format": "official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 E2, information only)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-09_rashad_closed-book_devA300/closed-book",
+ "variant": "section-route",
+ "setup": "section-route with L1 (A-v4-section-route-L1), the default since phase D",
+ "results": {
+  "macro_f1": 0.98,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.99,
+   "contradiction": 0.969
+  },
+  "evidence": {
+   "score": 0.98,
+   "found": 197,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1238,
+  "mean_time_ms": 2302,
+  "p95_time_ms": 4184
+ }
+}

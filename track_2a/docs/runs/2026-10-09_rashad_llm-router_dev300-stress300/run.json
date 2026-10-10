@@ -1,0 +1,41 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "21:09",
+ "kind": "model check",
+ "code": "50cb320 (scripts/llm_router_check.py)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "the 300 dev task A claims and the 300 openings of the router stress test",
+ "setup": "session 9 E3 (information only): one Apertus call per claim asks which part the opening names (summary, council, committee, law, detail, none; json_schema), compared with src/claim_router.py's rules and, for the stress openings, with the intended part",
+ "format": "model calls outside the pipeline, at most 1 per second",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "notes": "NOTES.md",
+ "summary": "Dev: Apertus agrees with the rules on 278 of 300 claims (16 law claims naming the Federal Assembly's recommendation it calls council). Stress: right 283 of 300 (rules 285), wrong part 17 (rules 0), no fallback where the rules fall back 15 times; 220 input and 8 output tokens, 1.3 s per call.",
+ "results": {
+  "dev_agrees_with_rules": [
+   278,
+   300
+  ],
+  "stress_model_right": 283,
+  "stress_rules_right": 285,
+  "stress_model_wrong_part": 17,
+  "stress_rules_wrong_part": 0,
+  "mean_input_tokens_per_call": {
+   "dev": 220.4,
+   "stress": 200.3
+  },
+  "mean_output_tokens_per_call": {
+   "dev": 7.79,
+   "stress": 7.47
+  },
+  "mean_time_ms_per_call": {
+   "dev": 1284,
+   "stress": 1311
+  },
+  "failed_calls": 0
+ }
+}

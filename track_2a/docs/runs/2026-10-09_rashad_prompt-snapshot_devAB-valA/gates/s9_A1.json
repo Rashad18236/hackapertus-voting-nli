@@ -1,0 +1,28 @@
+{
+ "G1_request_or_path_differs": 0,
+ "G2_label_differs": 0,
+ "G2_evidence_differs": 19,
+ "g1_examples": [],
+ "label_examples": [],
+ "evidence_cases": [
+  "v1.1-row-1022-A",
+  "v1.1-row-1205-A",
+  "v1.1-row-1283-A",
+  "v1.1-row-1342-A",
+  "v1.1-row-1407-A",
+  "v1.1-row-288-A",
+  "v1.1-row-1134-A",
+  "v1.1-row-1158-A",
+  "v1.1-row-1168-A",
+  "v1.1-row-1175-A",
+  "v1.1-row-1299-A",
+  "v1.1-row-1411-A",
+  "v1.1-row-1417-A",
+  "v1.1-row-1425-A",
+  "v1.1-row-312-A",
+  "v1.1-row-366-A",
+  "v1.1-row-383-A",
+  "v1.1-row-61-A",
+  "v1.1-row-65-A"
+ ]
+}

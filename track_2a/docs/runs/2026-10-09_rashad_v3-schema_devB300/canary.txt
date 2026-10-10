@@ -1,0 +1,5 @@
+canary check 2026-10-09 01:50:33 UTC, 30 cases, baseline docs/runs/2026-10-09_rashad_v3-topic-first_devB300-run1
+DIFFERS v1.1-row-767-B: expected '{"label": 2}', got '{"label": 1}'
+DIFFERS v1.1-row-869-B: expected '{"label": 2}', got '{"label": 1}'
+DIFFERS v1.1-row-1128-B: expected '{"label": 2}', got '{"label": 2}\n**Reasoning:**\nThe reference text explicitly st'
+ENDPOINT CHANGED: do not run

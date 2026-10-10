@@ -1,0 +1,85 @@
+[50/600]
+[100/600]
+[150/600]
+[200/600]
+[250/600]
+[300/600]
+[350/600]
+[400/600]
+[450/600]
+[500/600]
+[550/600]
+[600/600]
+{
+ "started_utc": "2026-10-09 21:09:40",
+ "ended_utc": "2026-10-09 21:22:40",
+ "dev": {
+  "claims": 300,
+  "failed_calls": 0,
+  "unreadable": 0,
+  "agrees_with_rules": 278,
+  "model_parts": {
+   "detail": 44,
+   "council": 119,
+   "committee": 49,
+   "summary": 66,
+   "law": 19,
+   "none": 3
+  },
+  "rule_parts": {
+   "detail": 43,
+   "council": 102,
+   "committee": 49,
+   "law": 39,
+   "summary": 67
+  },
+  "disagreements_rules_to_model": {
+   "law -> council": 16,
+   "law -> detail": 2,
+   "law -> none": 2,
+   "detail -> none": 1,
+   "summary -> council": 1
+  },
+  "mean_input_tokens": 220.4,
+  "mean_output_tokens": 7.79,
+  "mean_time_ms": 1284
+ },
+ "stress": {
+  "claims": 300,
+  "failed_calls": 0,
+  "unreadable": 0,
+  "agrees_with_rules": 268,
+  "model_parts": {
+   "summary": 50,
+   "detail": 70,
+   "council": 71,
+   "committee": 58,
+   "law": 48,
+   "none": 3
+  },
+  "rule_parts": {
+   "summary": 52,
+   "none": 27,
+   "council": 57,
+   "committee": 58,
+   "law": 45,
+   "detail": 61
+  },
+  "disagreements_rules_to_model": {
+   "summary -> detail": 1,
+   "none -> summary": 4,
+   "summary -> council": 5,
+   "none -> council": 9,
+   "none -> law": 5,
+   "none -> detail": 6,
+   "law -> detail": 2
+  },
+  "mean_input_tokens": 200.3,
+  "mean_output_tokens": 7.47,
+  "mean_time_ms": 1311,
+  "model_right": 283,
+  "rules_right": 285,
+  "model_wrong_part": 17,
+  "rules_wrong_part": 0
+ }
+}

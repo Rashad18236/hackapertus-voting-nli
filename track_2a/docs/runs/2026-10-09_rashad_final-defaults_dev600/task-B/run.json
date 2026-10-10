@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "21:22",
+ "kind": "model run",
+ "code": "0b68c57 (Docker image hackapertus-voting-nli:final, built at 50cb320; same src/)",
+ "cases": "dev, all 600 cases (300 task A, 300 task B), one file",
+ "format": "official, Docker image via make run (session 9 FINISH: the final defaults)",
+ "paired_with": null,
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "B",
+ "variant": null,
+ "setup": "final defaults: v3-topic-first, plain output, max_tokens 32, B-cut (references over 8,000 characters: first line + 8 most similar paragraphs); LLM_MIN_INTERVAL=1",
+ "notes": "../NOTES.md",
+ "results": {
+  "macro_f1": 0.967,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.963,
+   "contradiction": 0.951
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1231,
+  "mean_time_ms": 2021,
+  "p95_time_ms": 3774
+ },
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "B-cut (session 9 default) for references over 8,000 characters",
+  "n_cases": 300,
+  "strict_json": "no",
+  "max_tokens": 32,
+  "compared_with": null
+ }
+}

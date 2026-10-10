@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "21:22",
+ "kind": "model run",
+ "code": "0b68c57 (Docker image hackapertus-voting-nli:final, built at 50cb320; same src/)",
+ "cases": "dev, all 600 cases (300 task A, 300 task B), one file",
+ "format": "official, Docker image via make run (session 9 FINISH: the final defaults)",
+ "paired_with": null,
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "variant": "section-route",
+ "setup": "final defaults: section-route, A-v4-section-route-L1 + json_schema, evidence with halves; LLM_MIN_INTERVAL=1",
+ "notes": "NOTES.md",
+ "results": {
+  "macro_f1": 0.98,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.99,
+   "contradiction": 0.969
+  },
+  "evidence": {
+   "score": 0.98,
+   "found": 197,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1238,
+  "mean_time_ms": 2236,
+  "p95_time_ms": 4477
+ }
+}

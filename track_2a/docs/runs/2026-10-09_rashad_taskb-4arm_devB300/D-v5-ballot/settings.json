@@ -1,0 +1,11 @@
+{
+ "name": "D-v5-ballot",
+ "prompt_b": "v5-ballot",
+ "schema_b": true,
+ "max_tokens_b": 10,
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "section-route",
+ "evidence_a": "cited-pieces"
+}

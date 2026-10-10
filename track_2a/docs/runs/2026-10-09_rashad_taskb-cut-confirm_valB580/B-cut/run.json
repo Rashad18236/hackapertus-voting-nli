@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "18:26",
+ "kind": "model run",
+ "code": "86791db",
+ "variant": null,
+ "cases": "val, the task B cases of all 580 val rows (output/valB, scripts/make_val_b.py)",
+ "format": "official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 phase C confirmation)",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-09_rashad_taskb-cut-confirm_valB580/B-current",
+ "setup": "--context-b cut: a reference over 8,000 characters becomes its first line plus the 8 paragraphs most similar to the claim (e5), in their order; prompt unchanged",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "B-cut: long references cut to the title and 8 most similar paragraphs",
+  "n_cases": 580,
+  "strict_json": "no",
+  "max_tokens": 32,
+  "compared_with": "2026-10-09_rashad_taskb-cut-confirm_valB580/B-current"
+ },
+ "results": {
+  "macro_f1": 0.961,
+  "f1": {
+   "entailment": 0.984,
+   "neutral": 0.951,
+   "contradiction": 0.947
+  },
+  "parse_failures": 1,
+  "failed_calls": 0,
+  "mean_input_tokens": 1230,
+  "mean_time_ms": 1800,
+  "p95_time_ms": 3774
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "person": "rashad",
+ "date": "2026-10-09",
+ "start_utc": "20:17",
+ "kind": "model run",
+ "code": "5e1d864",
+ "cases": "dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json)",
+ "format": "official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de)",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-09_rashad_context-curve_devA100/full",
+  "2026-10-09_rashad_context-curve_devA100/embed-e5-small",
+  "2026-10-09_rashad_context-curve_devA100/section-route",
+  "2026-10-09_rashad_context-curve_devA100/section-k2",
+  "2026-10-09_rashad_context-curve_devA100/section-k1"
+ ],
+ "variant": "section-route",
+ "setup": "section-route with L1, cut to the 4 paragraphs most similar to the claim (--section-top-k-a 4)",
+ "results": {
+  "macro_f1": 0.979,
+  "f1": {
+   "entailment": 0.986,
+   "neutral": 0.986,
+   "contradiction": 0.963
+  },
+  "evidence": {
+   "score": 0.984,
+   "found": 63,
+   "cases": 64
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 803,
+  "mean_time_ms": 2017,
+  "p95_time_ms": 3236
+ }
+}

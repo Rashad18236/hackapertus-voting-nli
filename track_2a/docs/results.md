@@ -18,10 +18,10 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 
 | Date | Start (UTC) | Person | Run | Code | Format | Task | Cases | Model / endpoint | Setup | Macro-F1 | Evidence | Parse failures | Failed calls | Mean input tokens | Mean time (ms) | p95 time (ms) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2026-10-08 | 04:56 | rashad | [`baseline-v0`](runs/baseline-v0/) | 16ec6af | pre-contract, our scorer | B | dev, 300 rows (beginner task = task B, pre-contract input format) | swiss-ai/apertus-v1.5-8b / Public AI | v1-json | 0.202 (E 0.000, N 0.000, C 0.606) | not scored for task B | 8 | 9 | 1938 | 4118 | 6018 |
-| 2026-10-08 | 05:29 | rashad | [`contract-v2-dev`](runs/contract-v2-dev/) | bb78f85 | official | B | dev, 300 task B cases (and 300 task A placeholders) | swiss-ai/apertus-v1.5-8b / Public AI | v2-label-only | **0.541** (E 0.922, N 0.057, C 0.642) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
-| 2026-10-08 | 06:10 | rashad | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | session-2 working tree | official | B | dev, 300 task B cases (Run A) | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
-| 2026-10-08 | 06:24 | rashad | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | session-2 working tree | official | B | dev, 300 task B cases (Run C) | swiss-ai/apertus-v1.5-8b / Public AI | v4-topic-first-examples | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
+| 2026-10-08 | 04:56 | rashad | [`baseline-v0`](runs/baseline-v0/) | 16ec6af | pre-contract, our scorer | B | dev, 300 rows (beginner task = task B, pre-contract input format) | swiss-ai/apertus-v1.5-8b / Public AI | v1-json (**old endpoint behaviour, not comparable**) | 0.202 (E 0.000, N 0.000, C 0.606) | not scored for task B | 8 | 9 | 1938 | 4118 | 6018 |
+| 2026-10-08 | 05:29 | rashad | [`contract-v2-dev`](runs/contract-v2-dev/) | bb78f85 | official | B | dev, 300 task B cases (and 300 task A placeholders) | swiss-ai/apertus-v1.5-8b / Public AI | v2-label-only (**old endpoint behaviour, not comparable**) | **0.541** (E 0.922, N 0.057, C 0.642) | not scored for task B | 0 | 1 | 1963 | 1944 | 2815 |
+| 2026-10-08 | 06:10 | rashad | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | session-2 working tree | official | B | dev, 300 task B cases (Run A) | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (**old endpoint behaviour, not comparable**) | **0.947** (E 0.955, N 0.934, C 0.951) | not scored for task B | 2 | 5 | 1968 | 2748 | 2878 |
+| 2026-10-08 | 06:24 | rashad | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | session-2 working tree | official | B | dev, 300 task B cases (Run C) | swiss-ai/apertus-v1.5-8b / Public AI | v4-topic-first-examples (**old endpoint behaviour, not comparable**) | 0.933 (E 0.985, N 0.907, C 0.906) | not scored for task B | 0 | 0 | 2162 | 1765 | 2986 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A300-A-v3-fulldoc`](runs/s2-A300-A-v3-fulldoc/) | 4e90ddc | official | A | dev, all 300 task A cases (reference row) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc | **0.589** (E 0.671, N 0.635, C 0.462) | 0.209 (42/201) | 110 | 3 | 39706 | 11501 | 30334 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A300-A-v3-fulldoc-reparsed`](runs/s2-A300-A-v3-fulldoc-reparsed/) | session-2 working tree (prose-label parser), answers of s2-A300-A-v3-fulldoc | re-parsed offline (no new calls) | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc + prose-label parser | 0.608 (E 0.686, N 0.647, C 0.491) | 0.209 (42/201) | 97 | 3 | 39706 | 11501 | 30334 |
 | 2026-10-08 | 06:39 | rashad | [`s2-A60-A-v3-fulldoc`](runs/s2-A60-A-v3-fulldoc/) | 4e90ddc | official | A | dev sample, 60 task A cases (20 per label) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-fulldoc | **0.767** (E 0.872, N 0.744, C 0.684) | 0.375 (15/40) | 6 | 0 | 41124 | 9617 | 23331 |
@@ -52,12 +52,76 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-08 | 23:41 | rashad | [`2026-10-08_rashad_section-route-vs-embed_devA300/section-route`](runs/2026-10-08_rashad_section-route-vs-embed_devA300/section-route/) | 02ecd5d | official, paired (E5), order alternating; paired with `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.953** (E 0.965, N 0.947, C 0.947) | 0.905 (182/201) | 0 | 0 | 1210 | 2026 | 3861 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/section-route` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v3-excerpts + json_schema, top 8 chunks by e5 (control); evidence setting cited-pieces | **0.865** (E 0.901, N 0.883, C 0.811) | 0.588 (120/204) | 0 | 0 | 1827 | 3185 | 12303 |
 | 2026-10-09 | 00:38 | rashad | [`2026-10-09_rashad_section-route-vs-embed_valA300/section-route`](runs/2026-10-09_rashad_section-route-vs-embed_valA300/section-route/) | 2d4a435 | official, paired (E6, val), order alternating; paired with `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small` | A | val sample of 300 task A cases (data/val/sample300, balanced, seed 42) | swiss-ai/apertus-v1.5-8b / Public AI | A-v4-section-route + json_schema {"paragraphs","label"}: the part the claim opening names, as numbered paragraphs (top 8 by e5 above 8,000 characters); evidence: cited paragraphs; 1 case fell back to embed-e5-small | **0.956** (E 0.976, N 0.955, C 0.936) | 0.946 (193/204) | 0 | 0 | 1222 | 1818 | 3011 |
+| 2026-10-09 | 01:25 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 1 of two identical runs | **0.919** (E 0.990, N 0.877, C 0.891) | not scored for task B | 1 | 0 | 1994 | 1574 | 2764 |
+| 2026-10-09 | 01:33 | rashad | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | 8b1d418 | official | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI | v3-topic-first (the default), unchanged; run 2 of two identical runs | 0.916 (E 0.990, N 0.872, C 0.886) | not scored for task B | 1 | 1 | 1992 | 624 | 753 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`](runs/2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm A: v3-topic-first as it is, plain output, max_tokens 32 (**endpoint changed during run**) | **0.867** (E 0.917, N 0.812, C 0.870) | not scored for task B | 0 | 0 | 1994 | 1355 | 2346 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`](runs/2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm B: v3-topic-first + strict JSON (--schema-b), max_tokens 10 (**endpoint changed during run**) | 0.853 (E 0.910, N 0.784, C 0.866) | not scored for task B | 0 | 0 | 1994 | 1247 | 2191 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`](runs/2026-10-09_rashad_taskb-4arm_devB300/C-v5-min/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm C: v5-min + strict JSON, max_tokens 10 (**endpoint changed during run**) | 0.786 (E 0.911, N 0.696, C 0.752) | not scored for task B | 27 | 0 | 1877 | 1480 | 2485 |
+| 2026-10-09 | 02:11 | rashad | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | 75171d7 | official, interleaved (four arms, balanced order, at least 1 s between requests); paired with `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (routed to two backends during the run: blablador.fz-juelich.de and featherless.ai; see the notes) | arm D: v5-ballot (v5-min + one sentence on the passage's first line) + strict JSON, max_tokens 10 (**endpoint changed during run**) | 0.840 (E 0.892, N 0.784, C 0.844) | not scored for task B | 22 | 0 | 1891 | 1463 | 2329 |
+| 2026-10-09 | 17:28 | rashad | [`2026-10-09_rashad_stability-1_dev600`](runs/2026-10-09_rashad_stability-1_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 1 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default settings at 7edbae4: section-route, A-v4-section-route + json_schema, cited-pieces evidence without the A2 halves (the image predates A2); LLM_MIN_INTERVAL=1 | 0.966 (E 0.985, N 0.966, C 0.947) | 0.930 (187/201) | 0 | 0 | 1210 | 2606 | 5375 |
+| 2026-10-09 | 17:28 | rashad | [`2026-10-09_rashad_stability-1_dev600/task-B`](runs/2026-10-09_rashad_stability-1_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 1 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default settings at 7edbae4: v3-topic-first, plain output, max_tokens 32, whole reference; LLM_MIN_INTERVAL=1 | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 3 | 0 | 1994 | 1494 | 2611 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-current`](runs/2026-10-09_rashad_taskb-context_devB300/B-current/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default: v3-topic-first, plain output, max_tokens 32, the whole reference | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 3 | 0 | 1994 | 1252 | 2217 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-cut`](runs/2026-10-09_rashad_taskb-context_devB300/B-cut/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-para` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --context-b cut: a reference over 8,000 characters becomes its first line plus the 8 paragraphs most similar to the claim (e5), in their order; prompt unchanged | **0.967** (E 0.985, N 0.963, C 0.951) | not scored for task B | 0 | 0 | 1231 | 1864 | 6325 |
+| 2026-10-09 | 17:53 | rashad | [`2026-10-09_rashad_taskb-context_devB300/B-para`](runs/2026-10-09_rashad_taskb-context_devB300/B-para/) | dbb30fa | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase C); paired with `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --context-b para: B-cut's text as numbered paragraphs with task A's prompt A-v4-section-route and paragraph answer schema (max_tokens 128) | 0.963 (E 0.985, N 0.961, C 0.942) | not scored for task B | 0 | 0 | 1375 | 2118 | 5444 |
+| 2026-10-09 | 18:26 | rashad | [`2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`](runs/2026-10-09_rashad_taskb-cut-confirm_valB580/B-current/) | 86791db | official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 phase C confirmation); paired with `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut` | B | val, the task B cases of all 580 val rows (output/valB, scripts/make_val_b.py) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default before this run: v3-topic-first, plain output, max_tokens 32, the whole reference | 0.957 (E 0.984, N 0.945, C 0.942) | not scored for task B | 2 | 0 | 1957 | 1481 | 2708 |
+| 2026-10-09 | 18:26 | rashad | [`2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`](runs/2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut/) | 86791db | official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 phase C confirmation); paired with `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current` | B | val, the task B cases of all 580 val rows (output/valB, scripts/make_val_b.py) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --context-b cut: a reference over 8,000 characters becomes its first line plus the 8 paragraphs most similar to the claim (e5), in their order; prompt unchanged | **0.961** (E 0.984, N 0.951, C 0.947) | not scored for task B | 1 | 0 | 1230 | 1800 | 3774 |
+| 2026-10-09 | 18:56 | rashad | [`2026-10-09_rashad_label-errors_devA300/A-current`](runs/2026-10-09_rashad_label-errors_devA300/A-current/) | 5ae4357 (src/ as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D); paired with `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default: section-route, A-v4-section-route + json_schema, evidence with halves (A2) | 0.966 (E 0.985, N 0.966, C 0.947) | 0.955 (192/201) | 0 | 0 | 1210 | 1453 | 2760 |
+| 2026-10-09 | 18:56 | rashad | [`2026-10-09_rashad_label-errors_devA300/L1`](runs/2026-10-09_rashad_label-errors_devA300/L1/) | 5ae4357 (src/ as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D); paired with `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L2` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --label-rule-a: A-v4-section-route-L1 = the default prompt plus 'A claim that gives a different number, share, date, actor or direction than the reference text gives for the same thing is a contradiction.' | **0.980** (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 1238 | 1986 | 3135 |
+| 2026-10-09 | 18:56 | rashad | [`2026-10-09_rashad_label-errors_devA300/L2`](runs/2026-10-09_rashad_label-errors_devA300/L2/) | 5ae4357 (src/ as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D); paired with `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --second-look-a: after a neutral answer whose highest claim-paragraph e5 similarity is at least 0.845, a second call with the 3 most similar paragraphs (A-v4-second-look, asks 0, then 2, then 1); a 0 or 2 replaces the neutral; tokens summed | 0.976 (E 0.985, N 0.980, C 0.964) | 0.970 (195/201) | 0 | 0 | 1244 | 1923 | 3654 |
+| 2026-10-09 | 19:28 | rashad | [`2026-10-09_rashad_label-errors-confirm_valA580/A-current`](runs/2026-10-09_rashad_label-errors-confirm_valA580/A-current/) | 5e1d864 (task A code as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D confirmation); paired with `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | default before this run: section-route, A-v4-section-route + json_schema, evidence with halves (A2) | 0.950 (E 0.979, N 0.940, C 0.932) | 0.943 (378/401) | 0 | 0 | 1178 | 1199 | 2218 |
+| 2026-10-09 | 19:28 | rashad | [`2026-10-09_rashad_label-errors-confirm_valA580/L1`](runs/2026-10-09_rashad_label-errors-confirm_valA580/L1/) | 5e1d864 (task A code as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D confirmation); paired with `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L2` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --label-rule-a: A-v4-section-route-L1 (the default prompt plus one sentence on different numbers, shares, dates, actors or directions) | **0.961** (E 0.976, N 0.957, C 0.948) | 0.958 (384/401) | 0 | 0 | 1206 | 1892 | 3013 |
+| 2026-10-09 | 19:28 | rashad | [`2026-10-09_rashad_label-errors-confirm_valA580/L2`](runs/2026-10-09_rashad_label-errors-confirm_valA580/L2/) | 5e1d864 (task A code as in 86791db) | official, interleaved (three arms, rotating order, at least 1 s between requests; session 9 phase D confirmation); paired with `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | --second-look-a (information only: failed its rule on dev): second call after a neutral answer with similarity >= 0.845 | 0.954 (E 0.979, N 0.945, C 0.937) | 0.948 (380/401) | 0 | 0 | 1217 | 1748 | 3078 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/embed-e5-small`](runs/2026-10-09_rashad_context-curve_devA100/embed-e5-small/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k1` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | the 8 chunks most similar to the claim, A-v3-excerpts + json_schema | 0.898 (E 0.930, N 0.892, C 0.873) | 0.656 (42/64) | 0 | 0 | 1885 | 4933 | 15261 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/full`](runs/2026-10-09_rashad_context-curve_devA100/full/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k1` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | the whole booklet, every page after === PAGE n ===, A-v3-fulldoc + json_schema | 0.858 (E 0.914, N 0.879, C 0.781) | 0.422 (27/64) | 0 | 0 | 37586 | 7266 | 17568 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/section-k1`](runs/2026-10-09_rashad_context-curve_devA100/section-k1/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-k2` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | section-route with L1, cut to the 1 most similar paragraph (--section-top-k-a 1) | 0.769 (E 0.844, N 0.783, C 0.682) | 0.641 (41/64) | 0 | 0 | 510 | 1924 | 2944 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/section-k2`](runs/2026-10-09_rashad_context-curve_devA100/section-k2/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-k1` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | section-route with L1, cut to the 2 most similar paragraphs (--section-top-k-a 2) | 0.940 (E 0.943, N 0.935, C 0.943) | 0.922 (59/64) | 0 | 0 | 614 | 1830 | 2587 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/section-k4`](runs/2026-10-09_rashad_context-curve_devA100/section-k4/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k1` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | section-route with L1, cut to the 4 paragraphs most similar to the claim (--section-top-k-a 4) | 0.979 (E 0.986, N 0.986, C 0.963) | 0.984 (63/64) | 0 | 0 | 803 | 2017 | 3236 |
+| 2026-10-09 | 20:17 | rashad | [`2026-10-09_rashad_context-curve_devA100/section-route`](runs/2026-10-09_rashad_context-curve_devA100/section-route/) | 5e1d864 | official, interleaved (six arms, balanced Latin square, at least 1 s between requests; session 9 E1, information only); paired with `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k1` | A | dev, 100 balanced task A cases (scripts/make_dev_sample.py, seed 42; rows in sample_rows.json) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | section-route with L1 (A-v4-section-route-L1): the routed part (top 8 by e5 above 8,000 characters) | 0.989 (E 0.986, N 1.000, C 0.982) | 1.000 (64/64) | 0 | 0 | 1248 | 1931 | 3006 |
+| 2026-10-09 | 20:50 | rashad | [`2026-10-09_rashad_closed-book_devA300/closed-book`](runs/2026-10-09_rashad_closed-book_devA300/closed-book/) | 58bd7b8 (plus the uncommitted L1 default of 50cb320; both arms set their prompt explicitly) | official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 E2, information only); paired with `2026-10-09_rashad_closed-book_devA300/section-route` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | no booklet text: VOTE and CLAIM only, prompt A-v0-closed-book, task A answer schema (pages always empty, so no evidence) | 0.435 (E 0.271, N 0.531, C 0.503) | 0.000 (0/201) | 0 | 0 | 223 | 1503 | 2139 |
+| 2026-10-09 | 20:50 | rashad | [`2026-10-09_rashad_closed-book_devA300/section-route`](runs/2026-10-09_rashad_closed-book_devA300/section-route/) | 58bd7b8 (plus the uncommitted L1 default of 50cb320; both arms set their prompt explicitly) | official, interleaved (two arms, alternating order, at least 1 s between requests; session 9 E2, information only); paired with `2026-10-09_rashad_closed-book_devA300/closed-book` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | section-route with L1 (A-v4-section-route-L1), the default since phase D | 0.980 (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 1238 | 2302 | 4184 |
+| 2026-10-09 | 21:22 | rashad | [`2026-10-09_rashad_final-defaults_dev600`](runs/2026-10-09_rashad_final-defaults_dev600/) | 0b68c57 (Docker image hackapertus-voting-nli:final, built at 50cb320; same src/) | official, Docker image via make run (session 9 FINISH: the final defaults) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | final defaults: section-route, A-v4-section-route-L1 + json_schema, evidence with halves; LLM_MIN_INTERVAL=1 | **0.980** (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 1238 | 2236 | 4477 |
+| 2026-10-09 | 21:22 | rashad | [`2026-10-09_rashad_final-defaults_dev600/task-B`](runs/2026-10-09_rashad_final-defaults_dev600/task-B/) | 0b68c57 (Docker image hackapertus-voting-nli:final, built at 50cb320; same src/) | official, Docker image via make run (session 9 FINISH: the final defaults) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | final defaults: v3-topic-first, plain output, max_tokens 32, B-cut (references over 8,000 characters: first line + 8 most similar paragraphs); LLM_MIN_INTERVAL=1 | **0.967** (E 0.985, N 0.963, C 0.951) | not scored for task B | 0 | 0 | 1231 | 2021 | 3774 |
+| 2026-10-10 | 01:56 | rashad | [`2026-10-10_rashad_stability-2_dev600`](runs/2026-10-10_rashad_stability-2_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 2 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (section-route, A-v4-section-route + json_schema, cited-pieces evidence without halves); LLM_MIN_INTERVAL=1 | 0.966 (E 0.981, N 0.971, C 0.947) | 0.935 (188/201) | 0 | 0 | 1210 | 2476 | 4838 |
+| 2026-10-10 | 01:56 | rashad | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 2 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 4 | 0 | 1994 | 1812 | 3066 |
+| 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600`](runs/2026-10-10_rashad_stability-3_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (section-route, A-v4-section-route + json_schema, cited-pieces evidence without halves); LLM_MIN_INTERVAL=1 | 0.966 (E 0.985, N 0.966, C 0.947) | 0.930 (187/201) | 0 | 0 | 1210 | 2395 | 5139 |
+| 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.963 (E 0.985, N 0.958, C 0.946) | not scored for task B | 1 | 0 | 1994 | 1637 | 2595 |
+
+## Task B runs
+
+Every task B run, stopped ones included, with what its prompt changed against the previous version. "Strict JSON" means the endpoint was asked to enforce a JSON format (`response_format`). Times include failed calls; "not recorded" means the run kept no record of it.
+
+Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour, not comparable": Public AI changed what it serves as `apertus-v1.5-8b` at that time (same prompts, temperature 0, different answers). Since the task B cheap-fixes stage, a run's `task_b.compared_with` names the run it is judged against (the acceptance rule in `docs/decisions.md`). Since that stage was continued, versions are compared only inside one interleaved run, and the canary runs immediately before and after each run (`docs/canary_log.md`); a run whose two canary checks differ is marked "endpoint changed during run".
+
+| Date | Start (UTC) | Run | Endpoint | Prompt version | Change against the previous version | Cases | Strict JSON | max_tokens | Macro-F1 | Failed calls | Mean input tokens | Mean time (ms) | p95 time (ms) | Compared with |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-08 | 04:56 | [`baseline-v0`](runs/baseline-v0/) | **old endpoint behaviour, not comparable** | v1-json | first version (pre-contract): label and a verbatim evidence quote as JSON | 300 | no (the prompt asks for a JSON object; no response_format) | 400 | 0.202 (E 0.000, N 0.000, C 0.606) | 9 | 1938 | 4118 | 6018 | – |
+| 2026-10-08 | 05:29 | [`contract-v2-dev`](runs/contract-v2-dev/) | **old endpoint behaviour, not comparable** | v2-label-only | two changes against v1-json: no evidence request (label only), label definitions in the official guide's wording | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.541** (E 0.922, N 0.057, C 0.642) | 1 | 1963 | 1944 | 2815 | – |
+| 2026-10-08 | 06:01 | [`s2-A-v3-topic-first_attempt1`](runs/s2-A-v3-topic-first_attempt1/) | **old endpoint behaviour, not comparable** | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 5 (stopped) | no (the prompt asks for a JSON object; no response_format) | 32 | not recorded | 5 | not recorded | not recorded | not recorded | – |
+| 2026-10-08 | 06:10 | [`s2-A-v3-topic-first`](runs/s2-A-v3-topic-first/) | **old endpoint behaviour, not comparable** | v3-topic-first | against v2-label-only: the decision rule (does the reference deal with the claim's subject; contradiction only for an incompatible statement; missing information is never a contradiction) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.947** (E 0.955, N 0.934, C 0.951) | 5 | 1968 | 2748 | 2878 | – |
+| 2026-10-08 | 06:24 | [`s2-C-v4-topic-first-examples`](runs/s2-C-v4-topic-first-examples/) | **old endpoint behaviour, not comparable** | v4-topic-first-examples | against v3-topic-first: three short examples, one per label (invented ballot), +168 input tokens per case | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.933 (E 0.985, N 0.907, C 0.906) | 0 | 2162 | 1765 | 2986 | – |
+| 2026-10-09 | 01:25 | [`2026-10-09_rashad_v3-topic-first_devB300-run1`](runs/2026-10-09_rashad_v3-topic-first_devB300-run1/) | current | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | **0.919** (E 0.990, N 0.877, C 0.891) | 0 | 1994 | 1574 | 2764 | – |
+| 2026-10-09 | 01:33 | [`2026-10-09_rashad_v3-topic-first_devB300-run2`](runs/2026-10-09_rashad_v3-topic-first_devB300-run2/) | current | v3-topic-first | none: v3-topic-first rerun unchanged (task B confirmation, noise floor) | 300 | no (the prompt asks for a JSON object; no response_format) | 32 | 0.916 (E 0.990, N 0.872, C 0.886) | 1 | 1992 | 624 | 753 | – |
+| 2026-10-09 | 01:50 | [`2026-10-09_rashad_v3-schema_devB300`](runs/2026-10-09_rashad_v3-schema_devB300/) | current | v3-topic-first | against the baseline: strict JSON (json_schema, one field label in 0/1/2) and max_tokens 10; prompt text unchanged | 0 (stopped) | yes (json_schema, strict) | 10 | not recorded | 0 | not recorded | not recorded | not recorded | `2026-10-09_rashad_v3-topic-first_devB300-run1` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`](runs/2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain/) | current; **endpoint changed during run** | v3-topic-first | none: v3-topic-first as it is (plain output, the prompt asks for {"label": n}) | 300 | no | 32 | **0.867** (E 0.917, N 0.812, C 0.870) | 0 | 1994 | 1355 | 2346 | – |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`](runs/2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema/) | current; **endpoint changed during run** | v3-topic-first | against arm A: strict JSON (json_schema, one field label in 0/1/2) and max_tokens 10; prompt text unchanged | 300 | yes (json_schema, strict) | 10 | 0.853 (E 0.910, N 0.784, C 0.866) | 0 | 1994 | 1247 | 2191 | `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`](runs/2026-10-09_rashad_taskb-4arm_devB300/C-v5-min/) | current; **endpoint changed during run** | v5-min | against arm B: v5-min (86 fixed tokens) instead of v3-topic-first (203); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.786 (E 0.911, N 0.696, C 0.752) | 0 | 1877 | 1480 | 2485 | `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema` |
+| 2026-10-09 | 02:11 | [`2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`](runs/2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot/) | current; **endpoint changed during run** | v5-ballot | against arm C: one sentence added, "The first line of the reference text names the ballot it is about." (+14 tokens); strict JSON, max_tokens 10 | 300 | yes (json_schema, strict) | 10 | 0.840 (E 0.892, N 0.784, C 0.844) | 0 | 1891 | 1463 | 2329 | `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min` |
+| 2026-10-09 | 17:28 | [`2026-10-09_rashad_stability-1_dev600/task-B`](runs/2026-10-09_rashad_stability-1_dev600/task-B/) | current | v3-topic-first | none: the default (stability point) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1494 | 2611 | – |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-current`](runs/2026-10-09_rashad_taskb-context_devB300/B-current/) | current | v3-topic-first | none: the default (phase C control) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1252 | 2217 | – |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-cut`](runs/2026-10-09_rashad_taskb-context_devB300/B-cut/) | current | v3-topic-first | B-cut: long references cut to the title and 8 most similar paragraphs | 300 | no | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 1864 | 6325 | `2026-10-09_rashad_taskb-context_devB300/B-current` |
+| 2026-10-09 | 17:53 | [`2026-10-09_rashad_taskb-context_devB300/B-para`](runs/2026-10-09_rashad_taskb-context_devB300/B-para/) | current | A-v4-section-route | B-para: B-cut's text as numbered paragraphs, task A's prompt and schema | 300 | yes (json_schema {paragraphs, label}) | 128 | 0.963 (E 0.985, N 0.961, C 0.942) | 0 | 1375 | 2118 | 5444 | `2026-10-09_rashad_taskb-context_devB300/B-cut` |
+| 2026-10-09 | 18:26 | [`2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`](runs/2026-10-09_rashad_taskb-cut-confirm_valB580/B-current/) | current | v3-topic-first | none: the default (phase C control, val) | 580 | no | 32 | 0.957 (E 0.984, N 0.945, C 0.942) | 0 | 1957 | 1481 | 2708 | – |
+| 2026-10-09 | 18:26 | [`2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`](runs/2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut/) | current | v3-topic-first | B-cut: long references cut to the title and 8 most similar paragraphs | 580 | no | 32 | **0.961** (E 0.984, N 0.951, C 0.947) | 0 | 1230 | 1800 | 3774 | `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current` |
+| 2026-10-09 | 21:22 | [`2026-10-09_rashad_final-defaults_dev600/task-B`](runs/2026-10-09_rashad_final-defaults_dev600/task-B/) | current | v3-topic-first | B-cut (session 9 default) for references over 8,000 characters | 300 | no | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 2021 | 3774 | – |
+| 2026-10-10 | 01:56 | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | current | v3-topic-first | none: stability point 2 (point 1's image and settings) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1812 | 3066 | – |
+| 2026-10-10 | 09:56 | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | current | v3-topic-first | none: stability point 3 (point 1's image and settings) | 300 | no | 32 | 0.963 (E 0.985, N 0.958, C 0.946) | 0 | 1994 | 1637 | 2595 | – |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
 - [`s2-A-v3-topic-first_attempt1`](runs/s2-A-v3-topic-first_attempt1/): stopped; 2026-10-08 06:01 UTC, rashad; task B, dev, 300 task B cases (stopped after 5); v3-topic-first.
 - [`s2-A240-A-v3-fulldoc`](runs/s2-A240-A-v3-fulldoc/): part of another run, part of `s2-A300-A-v3-fulldoc`; 2026-10-08 06:49 UTC, rashad; task A, dev, the 240 task A cases outside the 60-case sample; A-v3-fulldoc.
 - [`s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`](runs/s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped/): stopped; 2026-10-08 08:12 UTC, rashad; task A, dev sample, 60 task A cases (stopped after 24); A-v3-fulldoc, JSON mode (attempt 2).
+- [`2026-10-09_rashad_v3-schema_devB300`](runs/2026-10-09_rashad_v3-schema_devB300/): stopped; 2026-10-09 01:50 UTC, rashad; task B, dev, 300 task B cases (not started: the canary failed); run 1 of the cheap-fixes stage: v3-topic-first + strict JSON (--schema-b), max_tokens 10.
 
 ## Offline retrieval checks (no model calls)
 
@@ -77,7 +141,7 @@ check, the best evidence score a model could reach by citing it.
 | 2026-10-08 | 15:46 | rashad | [`2026-10-08_rashad_retrieval-check_embed-e5-small-merge`](runs/2026-10-08_rashad_retrieval-check_embed-e5-small-merge/) | 9081b8b (merge with session 3) | embed-e5-small: same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
 | 2026-10-08 | 19:16 | rashad | [`2026-10-08_rashad_search-grid_devA201`](runs/2026-10-08_rashad_search-grid_devA201/) | df3028f | vote-section-embed-e5-small-k12: grid of 72 settings (2 models x booklet/section x k 4/8/12 x neighbours 0/1 x cross rule same/double/section); chosen: e5-small, vote section, k 12, no neighbours, rule same - missed the targets (evidence ceiling) | 0.846 (same language 0.896, cross-language 0.821) | 0.672 | 0.856 | 8,610 / 128,537 |
 
-## Other offline analyses (no model calls)
+## Other analyses (no model calls, except where marked "model check")
 
 - [`2026-10-08_rashad_e3-embed-errors_devA300`](runs/2026-10-08_rashad_e3-embed-errors_devA300/): 2026-10-08 19:16 UTC, rashad; Part 1: was the gold passage in the chunks sent? (scripts/search_or_reading.py). Of 84 wrong answers (5 failed calls apart): 18 search misses, 39 reading errors with the gold passage sent, 27 on gold-neutral cases; 16 of the 18 misses are cross-language.
 - [`2026-10-08_rashad_evidence-loss-e4_devA201`](runs/2026-10-08_rashad_evidence-loss-e4_devA201/): 2026-10-08 22:27 UTC, rashad; Steps 2 and 4 (session 5): where evidence is lost, and the realistic maximum with cited pages only (scripts/evidence_loss.py). Of 201 cases: hit 75, gold page not sent 23, predicted neutral 20, gold page sent but not cited 43, cited but text did not match 40; maximum with cited pages only and whole-page items: 0.657.
@@ -90,11 +154,14 @@ check, the best evidence score a model could reach by citing it.
 - [`2026-10-09_rashad_speed-memory_dev44`](runs/2026-10-09_rashad_speed-memory_dev44/): 2026-10-09 01:13 UTC, rashad; local steps without any model call: per booklet in a fresh process (PDF, sections, model load, routing, embedding, peak memory), and the CLI end to end against the fake model; on the host (4 CPUs) and in the image limited to 2 CPUs and 4 GB. Container (2 CPUs, 4 GB), 300 dev task A cases end to end without the model: embed-e5-small 786 s, p95 19.3 s, max 44.4 s per case, peak 1.89 GB; section-route 287 s, p95 3.7 s, max 31.9 s (long law parts), peak 2.90 GB. Cold start in the container, one case: task B 1.0 s, task A 26-27 s (embed-e5-small) and 2.9-3.0 s (section-route).
 - [`2026-10-09_rashad_prompt-snapshot_devAB-valA`](runs/2026-10-09_rashad_prompt-snapshot_devAB-valA/): 2026-10-09 13:58 UTC, rashad; session 8 reference: the real CLI (default settings) against the fake model; SHA-256 of every request body and the path of every task A case; E5's and E6's saved section-route answers replayed by request hash. Replay on the unchanged code reproduces E5 and E6 exactly: dev 0.953 / evidence 0.905, val sample 0.956 / 0.946; 0 label and 0 evidence differences against the saved predictions.
 - [`2026-10-09_rashad_container-speed_devA300`](runs/2026-10-09_rashad_container-speed_devA300/): 2026-10-09 14:30 UTC, rashad; session 8 change B: the real CLI inside the image (2 CPUs, 4 GB, read-only root, no internet) against the fake model; before, with length-sorted batches of 32, and with batches of 16. Length-sorted batches: total 364.9 s -> 248.4 s (32) -> 228.5 s (16), p95 4.15 -> 3.63 -> 3.21 s, slowest case 51.2 -> 20.9 -> 17.6 s, peak memory 3,287 -> 2,764 -> 2,254 MiB; vectors identical, same selections.
+- [`2026-10-09_rashad_analysis-offline_devA-valA-devB`](runs/2026-10-09_rashad_analysis-offline_devA-valA-devB/): 2026-10-09 17:54 UTC, rashad; session 9 phase B (B1-B6): bootstrap intervals and language tables, evidence pages under three rules, claim tags, rules without a model, E6's val errors, similarity of E5's neutral answers. Task A Macro-F1 dev+val pooled 0.955 (95 % bootstrap 0.938-0.970); every evidence page holds its quote (rule 3), 179/182 lie on a gold page, 107/182 on its first page; task B references over 8,000 characters are 99/105 neutral, shorter ones 0/195; 12 of E6's 13 val errors had the gold passage sent (reading errors); L2 threshold 0.845 flags 10/11 wrong and 11/99 right neutral answers of E5.
+- [`2026-10-09_rashad_llm-router_dev300-stress300`](runs/2026-10-09_rashad_llm-router_dev300-stress300/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-09 21:09 UTC, rashad; session 9 E3 (information only): one Apertus call per claim asks which part the opening names (summary, council, committee, law, detail, none; json_schema), compared with src/claim_router.py's rules and, for the stress openings, with the intended part. Dev: Apertus agrees with the rules on 278 of 300 claims (16 law claims naming the Federal Assembly's recommendation it calls council). Stress: right 283 of 300 (rules 285), wrong part 17 (rules 0), no fallback where the rules fall back 15 times; 220 input and 8 output tokens, 1.3 s per call.
+- [`2026-10-09_rashad_prompt-snapshot-final_devAB-valA`](runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/): 2026-10-09 21:46 UTC, rashad; session 9 reference for the final defaults (B-cut, L1, evidence halves): the real CLI against the fake model; SHA-256 of every request body and every task A path; the final dev run's 600 answers and the val L1 arm's 580 answers replayed by request hash. Replay of the final code reproduces the saved answers exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.980 / evidence 0.980, task B 0.967; val task A (all 580) 0.961 / 0.958. Replaces the session 8 reference as the anchor of G1 and G2.
 
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (49): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`
+- **rashad** (86): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`
 
 ## Notes per run
 
@@ -457,6 +524,477 @@ Paired outcomes on val (300 cases, both arms answered): both right 255, **only s
 - The control arm scores higher on val (0.865) than on dev (0.834); the two sets are different cases, so the arms of each run compare, not runs with each other.
 - **Part 4 rule met (section-route at least 0.90 and at least 0.05 above embed-e5-small on val): section-route becomes the task A default in its own commit.**
 
+### 2026-10-09, task B confirmation: v3-topic-first twice on the 300 dev task B cases (run 1 and run 2)
+
+- Command, run twice one after the other (from `track_2a/`, on the host): `LLM_NAME=swiss-ai/apertus-v1.5-8b python3 -m src.cli --input output/devB/cases.jsonl --output docs/runs/<run>/predictions.jsonl --raw docs/runs/<run>/raw_answers.jsonl --prompt-b v3-topic-first`. Run 1: 01:25:24 to 01:33:17 UTC; run 2: 01:33:17 to 01:36:25 UTC. Code `8b1d418` (pipeline code as on `main` after PR #11). `output/devB/cases.jsonl` holds exactly the 300 task B lines of `data/dev/cases.jsonl` (checked).
+- Prompt `v3-topic-first`, unchanged since session 2; no `response_format` (not strict JSON); max_tokens 32; temperature 0. Model `swiss-ai/apertus-v1.5-8b` on Public AI for every call.
+- Scored with the starter's `evaluate.py`; comparison and error list by `scripts/taskb_analysis.py` (`rerun_analysis.json`, `docs/taskb_errors.md`); token breakdown by `scripts/taskb_tokens.py` (`tokens/`).
+
+| | Run 1 | Run 2 |
+|---|---|---|
+| **Macro-F1** | **0.919** | 0.916 |
+| F1 entailment / neutral / contradiction | 0.990 / 0.877 / 0.891 | 0.990 / 0.872 / 0.886 |
+| Failed calls | 0 | 1 (HTTP 429 "Too Many Requests", row 1478; fallback neutral) |
+| Unreadable answers | 1 (a bare `1`, row 645; fallback neutral = its gold label) | 1 (the same case, same answer) |
+| Mean input tokens | 1,994 | 1,992 (the failed call counts as 0) |
+| Mean / median / p95 time | 1,574 / 1,302 / 2,764 ms | 624 / 603 / 753 ms |
+
+- **Cases with different labels: 1 of 300** (row 1478: contradiction in run 1, neutral in run 2), and that one is run 2's failed call. In the 299 cases both runs answered, **the answer text is identical in all 299** and so is the input token count.
+- **Noise floor: Macro-F1 gap 0.0033** (0.9194 against 0.9161), all of it from one failed call. Temperature 0 on this server gave no answer-to-answer variation in back-to-back runs.
+- **Correction (2026-10-09, 03:00 UTC, task B cheap fixes continued):** Public AI's gateway answers a request identical to one of the last ~10 minutes from its cache, and run 2 repeated run 1's requests 3 to 8 minutes later. Run 2's identical texts and its speed very likely come from that cache, so the noise floor of 0.0033 does not measure the model; not verifiable now (no endpoint identity was recorded then).
+- Run 2 was about 2.5 times faster on the same prompts (median 0.6 s against 1.3 s). The endpoint gives no reason; a server-side cache of repeated prompts is a likely explanation, not verified. Times of a rerun of identical prompts are therefore not comparable with first runs.
+- v3-topic-first scored 0.947 in session 2 (`s2-A-v3-topic-first`, before Public AI changed what it serves as `apertus-v1.5-8b` at about 13:25 UTC on 2026-10-08). Today it scores 0.919: the same prompt on today's server, not a change of ours.
+
+Run 1, confusion matrix (rows: gold; columns: predicted entailment / neutral / contradiction):
+
+| gold | entailment | neutral | contradiction |
+|---|---|---|---|
+| entailment (102) | 100 | 1 | 1 |
+| neutral (99) | 0 | 82 | 17 |
+| contradiction (99) | 0 | 5 | 94 |
+
+Run 1, Macro-F1 by group:
+
+| Group | Cases | Macro-F1 |
+|---|---|---|
+| claim German | 102 | 0.911 |
+| claim French | 99 | 0.919 |
+| claim Italian | 99 | 0.929 |
+| passage German | 100 | 0.900 |
+| passage French | 100 | 0.889 |
+| passage Italian | 100 | 0.970 |
+| same-language | 100 | 0.929 |
+| cross-language | 200 | 0.914 |
+
+Errors (24, all listed in `docs/taskb_errors.md`): 17 unrelated claims called a contradiction, 5 refuted claims called neutral, 1 supported claim called neutral, 1 supported claim called a contradiction.
+
+Token breakdown of run 1's requests (300 cases; `tokens/summary.json`; counted with the Apertus v1 tokenizer, `swiss-ai/Apertus-8B-Instruct-2509`, because the v1.5 repository is gated):
+
+| Part | Mean | p95 | Share of the mean |
+|---|---|---|---|
+| (a) fixed instructions: system prompt 194 + user-message labels 9 | 203 | 203 | 10.2 % |
+| (b) examples | 0 | 0 | 0 % |
+| (c) the passage | 1,737.5 | 4,209 | 87.1 % |
+| (d) claim (the vote name is not sent in task B) | 35.4 | 56 | 1.8 % |
+| (e) added by the endpoint (chat template), system + user message | 19 | 19 | 1.0 % |
+| **total, usage.prompt_tokens (true)** | **1,994.2** | **4,463** | |
+
+- (e) measured on the endpoint with `max_tokens` 1: one user message "Hello" gives prompt_tokens 63, i.e. 62 added (with no system message the template inserts its own default text); a system "Hello" plus a user "Hello" gives 21, i.e. **19 added**, the shape of every task B request.
+- **Our count (a + b + c + d + e) against usage.prompt_tokens: on average 0.65 tokens too high (0.05 %), never more than 1 token off; exact in 106 of 300.** The ungated v1 tokenizer counts this endpoint's tokens almost exactly.
+- Passage length in characters: min 1,068, median 3,674, p95 17,076, max 20,924 (mean 7,010); in tokens: min 250, median 915, p95 4,209, max 5,514. Neutral passages are all long (9,746 to 20,284 characters; the dataset pairs neutral claims with a whole part of another ballot).
+- Output tokens: mean 7.6; 292 answers are exactly `{"label": n}` (7 tokens), 7 add a "Reasoning" paragraph after the JSON and stop at the 32-token cap, 1 is a bare `1` (2 tokens).
+
+### 2026-10-09, task B cheap fixes, continued: four arms interleaved on the 300 dev task B cases
+
+- Command (from `track_2a/`, on the host, code `75171d7`): `LLM_NAME=swiss-ai/apertus-v1.5-8b python3 scripts/paired_run.py --cases output/devB/cases.jsonl --data-dir output/devB --out-dir docs/runs/2026-10-09_rashad_taskb-4arm_devB300 --min-interval 1.0 --arm '{"name": "A-v3-plain", "prompt_b": "v3-topic-first", "schema_b": false, "max_tokens_b": 32}' --arm '{"name": "B-v3-schema", "prompt_b": "v3-topic-first", "schema_b": true, "max_tokens_b": 10}' --arm '{"name": "C-v5-min", "prompt_b": "v5-min", "schema_b": true, "max_tokens_b": 10}' --arm '{"name": "D-v5-ballot", "prompt_b": "v5-ballot", "schema_b": true, "max_tokens_b": 10}'`.
+- 02:11:42 to 02:39:43 UTC; 1,200 requests, at least 1 s apart. For each case the four arms ran back to back in a balanced order (0 1 3 2, 1 2 0 3, 2 3 1 0, 3 0 2 1, in turn). Canary (`docs/canary_log.md`) immediately before (02:11:06) and after (02:39:43).
+- Scored with the starter's `evaluate.py`; the table, flips, backends and identities come from `scripts/interleaved_analysis.py` (`analysis.json`).
+- **0 failed calls, 0 HTTP 429 answers, 0 retries** in all four arms.
+
+| | A: v3 plain, max_tokens 32 | B: v3 + schema, 10 | C: v5-min + schema, 10 | D: v5-ballot + schema, 10 |
+|---|---|---|---|---|
+| **Macro-F1** | **0.867** | 0.853 | 0.786 | 0.840 |
+| F1 entailment / neutral / contradiction | 0.917 / 0.812 / 0.870 | 0.910 / 0.784 / 0.866 | 0.911 / 0.696 / 0.752 | 0.892 / 0.784 / 0.844 |
+| Confusion, gold E (pred E / N / C) | 88 / 12 / 2 | 86 / 15 / 1 | 87 / 15 / 0 | 83 / 19 / 0 |
+| Confusion, gold N | 0 / 78 / 21 | 0 / 76 / 23 | 0 / 72 / 27 | 0 / 87 / 12 |
+| Confusion, gold C | 2 / 3 / 94 | 1 / 4 / 94 | 2 / 21 / 76 | 1 / 17 / 81 |
+| Input tokens, mean / p95 | 1,994.2 / 4,463 | 1,994.2 / 4,463 | 1,877.2 / 4,346 | 1,891.2 / 4,360 |
+| Output tokens, mean | 7.87 | 7.00 | 9.79 | 9.73 |
+| Tokens per case (input + output) | 2,002.1 | 2,001.2 | 1,887.0 | 1,900.9 |
+| Time, mean / p95 | 1,355 / 2,346 ms | 1,247 / 2,191 ms | 1,480 / 2,485 ms | 1,463 / 2,329 ms |
+| Failed calls | 0 | 0 | 0 | 0 |
+| Unreadable answers | 0 | 0 | 27 | 22 |
+| HTTP 429 answers / retries | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+Comparisons (Rashad's rules, fixed before the run):
+
+| Comparison | Macro-F1 | F1 E / N / C | Tokens per case | Unreadable | Right → wrong | Wrong → right | Verdict |
+|---|---|---|---|---|---|---|---|
+| B against A | −0.0132 | −0.007 / −0.029 / −0.004 | −0.9 | 0 | 12 | 8 | **B fails** (falls by more than 0.01) |
+| C against B | −0.0669 | +0.001 / −0.088 / −0.114 | −114.2 | 27 | 48 | 27 | not judged: the comparisons stopped when B failed |
+| D against C | +0.0536 | −0.019 / +0.088 / +0.091 | +13.9 | 22 | 20 | 36 | not judged: the comparisons stopped when B failed |
+
+**The endpoint served the run from two backends.** Every call asked for `swiss-ai/apertus-v1.5-8b`; Public AI's gateway (LiteLLM) sent each one to one of two deployments, and the responses say which:
+
+| | Backend 1 | Backend 2 |
+|---|---|---|
+| `x-litellm-model-api-base` | `https://api.blablador.fz-juelich.de/v1` | `https://api.featherless.ai/v1` |
+| `x-litellm-model-name` (the deployment's own model name) | `openai/alias-apertus` | `openai/swiss-ai/Apertus-8B-Instruct-2509` |
+| `x-litellm-model-id` | `8c4216b4…` | `d89d2d4e…` |
+| `system_fingerprint` | `vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840` | `fp1-nst-nes` |
+| `llm_provider-server` | `openresty/1.27.1.2` | `cloudflare` |
+| Answers in this run (by fingerprint) | 737 (A 189, B 185, C 183, D 180) | 463 (A 111, B 115, C 117, D 120) |
+
+- The share moved over time: cases 51 to 100 and 251 to 300 went to backend 1 (all but 1 of their 400 calls), cases 126 to 225 mostly to backend 2 (319 of 400 calls). Within one case the four arms did not always meet the same backend (all four did in 191 of 300 cases).
+- **The backend changes the answers.** A and B send the same prompt. Where both were answered by the same backend (250 cases), their labels differ in 3 cases and Macro-F1 is the same (0.877 against 0.877); where they met different backends (50 cases), labels differ in 19 (0.781 against 0.685). So B's −0.013 comes from the cases where A and B met different backends, not from the schema.
+- The deployment name of backend 2 is the September 2025 Apertus release (`Apertus-8B-Instruct-2509`), not v1.5. What weights it serves is not visible from here.
+- Everything else in the identity was constant: `model` in the body (`swiss-ai/apertus-v1.5-8b`), `x-litellm-model-group`, `x-litellm-version` (1.98.0), no LiteLLM fallbacks or retries (`x-litellm-attempted-fallbacks` and `-retries` 0), Cloudflare data centre IAD; `cf-placement` was `remote-MXP` in 1,248 calls and `local-IAD` in 12.
+
+**The gateway caches identical requests for about 10 minutes.** 12 arm A calls (all canary cases, sent 2 to 10 minutes after the canary check) came back in about 0.6 s, without the upstream `llm_provider-*` headers, with exactly the canary's answer; for row 49 the routing headers named backend 2 while the fingerprint was backend 1's. A probe after the run (one new request sent twice) confirmed it: the second answer had the same response id, an `x-litellm-cache-key` header, no `llm_provider-*` headers, and took 604 ms against 890 ms. No arm A call sent more than about 10 minutes after the canary was cached. Arms B, C and D send other requests (schema, other prompts) and had no cache hits. Since this run, `src/llm.py` marks such answers `gateway_cache_hit`.
+
+**The canary after the run differs from the one before in 2 of 30 answers (rows 1014 and 1128): "endpoint changed during run".** Both are cache copies of this run's arm A answers (row 1014 written by backend 2 without the reasoning paragraph the check before had; row 1128 written by backend 1, also without it); 11 of the 30 answers after the run came from the cache. Labels are the same in both checks.
+
+- Unreadable answers in C and D: without format instructions, the schema-constrained model writes JSON with spaces and line breaks (`{\n  "label": 1\n \n`), uses all 10 tokens in 257 (C) and 250 (D) of 300 answers, and is cut before the closing brace in 27 and 22. The label is visible in 27 of 27 and 21 of 22 of them; the parser (unchanged) needs a complete JSON object, so they got the fallback label neutral.
+- v5-ballot's sentence adds exactly 14.0 input tokens per case (D against C), as counted beforehand.
+- Arm A: 289 answers are exactly `{"label": n}`, 11 add text after the JSON (all from backend 1); B's 300 are all exactly `{"label": n}` (7 tokens).
+- Mean time by position in the case's order (1st to 4th): A 1,335 / 1,251 / 1,297 / 1,539 ms; B 1,342 / 1,145 / 1,274 / 1,228; C 1,527 / 1,497 / 1,389 / 1,509; D 1,522 / 1,420 / 1,449 / 1,461. Arm A's mean includes its 12 cache hits.
+
+### Stability point 1 of 3 (session 9, A4): all 600 dev cases through the Docker image
+
+**What ran.** `make run` with the Docker image `hackapertus-voting-nli:stability` (built from commit `7edbae4`,
+image id in `image.txt`), the real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `track_2a/.env`),
+default settings of that commit, `LLM_MIN_INTERVAL=1` (at most one request per second). Input: `data/dev/cases.jsonl`
+(300 task A and 300 task B cases in one file); output and raw answers in this folder. Started 17:28:05 UTC,
+ended 17:48:38 UTC (`started_utc.txt`, `ended_utc.txt`); exit code 0, 600 responses.
+
+The image predates A2 (evidence halves), so task A's evidence here has no halves. Stability points 2 and 3
+(about 02:00 and 10:00 UTC) run the same image with the same settings, so the three points differ only in
+time (and in what the endpoint does).
+
+**Scores** (the starter's `evaluate.py`, `official_score.json`; per backend by `scripts/stability_report.py`,
+`stability.json`):
+
+| Task | Macro-F1 | Evidence | Unreadable | Failed calls | Cache hits | Mean input tokens | Mean / p95 time (ms) |
+|---|---|---|---|---|---|---|---|
+| A (300) | 0.966 | 0.930 (187/201) | 0 | 0 | 1 | 1,210 | 2,606 / 5,375 |
+| B (300) | 0.967 | not scored | 3 | 0 | 1 | 1,994 | 1,494 / 2,611 |
+
+**Backends.** Every one of the 600 answers came from one backend (system_fingerprint
+`vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840`, routed to `api.blablador.fz-juelich.de`); the second
+backend seen on 2026-10-09 (`fp1-nst-nes`, featherless.ai) answered none. So the per-backend table has one row,
+equal to the totals above.
+
+**For comparison only (different run, not a paired comparison).** In the four-arm task B run of 02:11 UTC
+(`2026-10-09_rashad_taskb-4arm_devB300`), the same prompt and settings (arm A) scored 0.867 overall: 0.966 on
+the 189 cases the blablador backend answered and 0.566 on the 111 the featherless backend answered. Today's
+task B 0.967 matches the blablador figure. Which backend answers is the largest source of variation we have
+seen; stability points 2 and 3 show whether it changes at night and in the morning.
+
+Task B's `run.json` is in `task-B/` (one task per `run.json`); its `predictions.jsonl` and
+`raw_answers.jsonl` there are the task B lines of this folder's files.
+
+### Phase C on dev: B-current, B-cut and B-para on all 300 dev task B cases (one interleaved run)
+
+**Command** (from `track_2a/`, code `dbb30fa`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3
+scripts/paired_run.py --cases output/devB/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_taskb-context_devB300 --min-interval 1.0 --arm '{"name": "B-current"}' --arm
+'{"name": "B-cut", "context_b": "cut"}' --arm '{"name": "B-para", "context_b": "para"}'`; 17:53:20 to 18:20:24
+UTC; the three arms answer each case back to back, the order rotating (three arms: plain rotation). Model
+`swiss-ai/apertus-v1.5-8b` on Public AI. Progress log: `paired_run.log`; numbers: `analysis.json`
+(`scripts/interleaved_analysis.py`), each arm's `official_score.json` (the starter's scorer).
+
+| | B-current | B-cut | B-para |
+|---|---|---|---|
+| Macro-F1 (all 300) | 0.967 | 0.967 | 0.963 |
+| F1 E / N / C | 0.985 / 0.963 / 0.951 | 0.985 / 0.963 / 0.951 | 0.985 / 0.961 / 0.942 |
+| Mean input tokens (p95) | 1,994 (4,463) | 1,231 (2,182) | 1,375 (2,336) |
+| Change against B-current | – | **−38.3 %** | −31.0 % |
+| Mean output tokens | 8.5 | 8.4 | 14.0 |
+| Mean / p95 time (ms) | 1,252 / 2,217 | 1,864 / 6,325 | 2,118 / 5,444 |
+| Unreadable answers | 3 | 0 | 0 |
+| Gateway cache hits | 66 | 129 | 0 |
+
+**Backends.** All 900 answers came from one backend (system_fingerprint `...dd237840`, blablador), so
+"same-backend cases" are all 300 cases and both views of the rule give the same numbers.
+
+**Long and short references.** The 195 references of at most 8,000 characters are sent unchanged by B-cut:
+the same request as B-current, and the same label in all 195 (many from the gateway's cache, which explains
+B-cut's 129 cache hits). On the 105 long references (99 of them gold neutral; `docs/analysis_offline.md`, B4):
+B-current 97 right, B-cut 97 right (3 right → wrong, 3 wrong → right; B-current's 3 unreadable answers were
+on long references), B-para 104 right. B-para loses on short references instead (185 of 195 right against
+193: 8 contradictions answered neutral), so B-para's total is lower.
+
+**Time.** B-cut's long cases took 3.6 s on average against 1.5 s for B-current: the reference's paragraphs
+are embedded with e5 on the CPU for each new reference (and the first long case loads the model). Two gate runs
+of the fake model (`scripts/prompt_snapshot.py`, both CPU-heavy) ran on the same machine between about 17:54
+and 18:13, so these times are inflated by an unknown amount; the val run measures them without that load.
+Time is not part of phase C's rule.
+
+**Rule (Rashad's, fixed):** B-cut passes if its Macro-F1 is at most 0.01 below current (all cases and
+same-backend cases) and its input tokens are at least 25 % lower. B-para replaces it only if it beats B-cut by
+at least 0.02.
+
+- B-cut: 0.9666 against 0.9666 (difference 0.000, all and same-backend), input tokens −38.3 %: **passes**.
+- B-para: 0.9628, 0.004 below B-cut: does not replace B-cut.
+- Next: confirm B-cut against B-current on the task B cases of all 580 val rows
+  (`2026-10-09_rashad_taskb-cut-confirm_valB580`); only if the same rule holds there does the default change.
+
+### Phase C on val: B-cut confirmed against B-current on the task B cases of all 580 val rows
+
+**Command** (from `track_2a/`, code `86791db`; `src/` as in `dbb30fa` for task B): `EMBED_MODEL_DIR=models/multilingual-e5-small
+python3 scripts/paired_run.py --cases output/valB/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_taskb-cut-confirm_valB580 --min-interval 1.0 --arm '{"name": "B-current"}' --arm
+'{"name": "B-cut", "context_b": "cut"}'`; 18:26:26 to 18:59:46 UTC. The cases are the starter's task B lines of
+the 580 rows in `data/val/rows.json` (`scripts/make_val_b.py`, written to the git-ignored `output/valB/`).
+
+**Interruption.** The run was started as a background job with the default 30-minute limit and was stopped
+at 18:56 UTC after case 517 (B-current) and 516 (B-cut). It was continued with `--resume` at 18:57 UTC (same
+command plus `--resume`): case 517 ran only its B-cut arm then, about a minute after its B-current arm; the
+other 63 cases ran both arms back to back as before. `paired_run.log` holds both parts.
+
+| | B-current | B-cut |
+|---|---|---|
+| Macro-F1 (all 580 = same backend) | 0.957 | **0.961** |
+| F1 E / N / C | 0.984 / 0.945 / 0.942 | 0.984 / 0.951 / 0.947 |
+| Mean input tokens (p95) | 1,957 (4,652) | **1,230** (2,200), **−37.1 %** |
+| Mean / p95 time (ms) | 1,481 / 2,708 | 1,800 / 3,774 |
+| Unreadable answers | 2 | 1 |
+| Labels that differ | – | 6 (2 right → wrong, 4 wrong → right) |
+
+All 1,160 answers came from one backend (`...dd237840`, blablador); 384 calls were gateway cache hits
+(mostly the identical requests of the 384 short references, which B-cut sends unchanged: same label in all
+384). On the 196 long references (179 gold neutral), B-current had 177 right and B-cut 179.
+
+**Time.** B-cut costs time where it saves tokens: on the long references 2.8 s per case against 1.9 s
+(embedding the reference's paragraphs with e5 on the CPU), +0.3 s per case over all 580. Phase D's gate
+runs (CPU-heavy) did not overlap this run.
+
+**Rule (fixed):** B-cut passes if its Macro-F1 is at most 0.01 below current (all cases and same-backend
+cases) and its input tokens are at least 25 % lower; the same rule must hold on val.
+
+- Dev (`2026-10-09_rashad_taskb-context_devB300`): 0.967 against 0.967, −38.3 % tokens: passes.
+- Val (this run): 0.961 against 0.957 (+0.004, all cases = same-backend cases), −37.1 % tokens: **passes**.
+- So **the task B default becomes `--context-b cut`** (commit after this run).
+
+### Phase D on dev: A-current, L1 and L2 on all 300 dev task A cases (one interleaved run)
+
+**Command** (from `track_2a/`; `src/` as in `86791db`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3
+scripts/paired_run.py --cases output/devA/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_label-errors_devA300 --min-interval 1.0 --arm '{"name": "A-current"}' --arm
+'{"name": "L1", "label_rule_a": true}' --arm '{"name": "L2", "second_look_a": true}'`. Started 18:56:29 UTC,
+stopped after 2 cases to let the phase C val run finish first (one model run at a time), continued with
+`--resume` at 19:00 and finished at 19:27:21 UTC. Three arms: the order rotates (A-current, L1, L2 / L1, L2,
+A-current / L2, A-current, L1). Model `swiss-ai/apertus-v1.5-8b` on Public AI. Progress log:
+`paired_run.log`; numbers: `analysis.json` (`scripts/interleaved_analysis.py --task A`) and each arm's
+`official_score.json` (the starter's scorer).
+
+| | A-current | L1 | L2 |
+|---|---|---|---|
+| Macro-F1 (all 300 = same backend) | 0.966 | **0.980** | 0.976 |
+| F1 E / N / C | 0.985 / 0.966 / 0.947 | 0.980 / 0.990 / 0.969 | 0.985 / 0.980 / 0.964 |
+| Recall E / N / C | 0.990 / 1.000 / 0.909 | 0.980 / 1.000 / 0.960 | 0.990 / 1.000 / 0.939 |
+| Gold contradictions answered neutral | 7 | 2 | 4 |
+| Evidence score (starter) | 0.955 (192/201) | 0.980 (197/201) | 0.970 (195/201) |
+| Mean input tokens (p95) | 1,210 (2,104) | 1,238 (2,132), +2.3 % | 1,244 (2,107), +2.8 % |
+| Model calls | 300 | 300 | 317 |
+| Mean / p95 time (ms) | 1,453 / 2,760 | 1,986 / 3,135 | 1,923 / 3,654 |
+| Gateway cache hits | 200 | 1 | 101 |
+
+**Backends and cache.** All 917 answers came from one backend (`...dd237840`, blablador), so all cases are
+same-backend cases. L2's first call is the same request as A-current's, so whichever of the two ran second got
+the gateway's cached answer (A-current ran after L2 in two of the three orders: 200 hits; L2 after A-current
+in one: 101). This makes A-current's time look shorter than a model call; the time differences in this run say
+little.
+
+**Flips.** L1 against A-current: 5 wrong → right (4 contradictions that A-current called neutral, 1 it
+called entailment: rows 1014, 1117, 1230, 1384, 1468) and 1 right → wrong (row 232, an entailment L1 calls a
+contradiction). L2 against A-current: 3 wrong → right (rows 1014, 1016, 1384), none right → wrong.
+
+**L2's second looks.** 106 first answers were neutral; 17 reached the threshold 0.845 and got a second call
+(10,337 extra input tokens, +34 per case on average). Of the 11 that were gold neutral, all 11 stayed neutral;
+of the 6 wrong neutral answers, 3 became contradictions (right) and 3 stayed neutral.
+
+**Rules (fixed):**
+
+- L1: Macro-F1 +0.01 on dev and +0.005 on val, and neutral recall ≥ 0.98 on both. Dev: **+0.0137**, neutral
+  recall **1.000**: passes on dev; confirmation on all 580 val cases follows
+  (`2026-10-09_rashad_label-errors-confirm_valA580`).
+- L2: Macro-F1 +0.015 on both and mean input tokens up by at most 5 %. Dev: +0.0102 (tokens +2.8 %): **fails
+  on dev**; reported as an option (gain and cost above), default unchanged. It runs on val as a third arm for
+  information only.
+
+### Phase D on val: A-current, L1 and L2 on all 580 val task A cases (one interleaved run)
+
+**Command** (from `track_2a/`; task A code as in `86791db`): `EMBED_MODEL_DIR=models/multilingual-e5-small
+python3 scripts/paired_run.py --cases data/val/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_label-errors-confirm_valA580 --min-interval 1.0 --arm '{"name": "A-current"}' --arm
+'{"name": "L1", "label_rule_a": true}' --arm '{"name": "L2", "second_look_a": true}'`; 19:28:06 to 20:16:40
+UTC, three arms rotating. L2 failed its rule on dev and runs here for information only.
+
+| | A-current | L1 | L2 |
+|---|---|---|---|
+| Macro-F1 (all 580 = same backend) | 0.950 | **0.961** (+0.0104) | 0.954 (+0.0034) |
+| Recall E / N / C | 0.984 / 1.000 / 0.877 | 0.979 / 1.000 / 0.910 | 0.984 / 1.000 / 0.886 |
+| Gold contradictions answered neutral | 21 | 14 | 19 |
+| Evidence score (starter) | 0.943 (378/401) | 0.958 (384/401) | 0.948 (380/401) |
+| Mean input tokens (p95) | 1,178 (2,079) | 1,206 (2,107), +2.4 % | 1,217 (2,101), +3.3 % |
+| Model calls | 580 | 580 | 619 |
+| Mean / p95 time (ms) | 1,199 / 2,218 | 1,892 / 3,013 | 1,748 / 3,078 |
+| Gateway cache hits | 386 | 2 | 195 |
+
+All 1,779 answers came from one backend (`...dd237840`, blablador), so all cases are same-backend cases.
+As on dev, L2's first call equals A-current's request, so one of the two is usually a gateway cache hit; the
+time differences mean little.
+
+**Flips.** L1: 7 wrong → right (rows 1162, 1215, 1237, 1325, 1360, 1389, 1452), 1 right → wrong (row 17).
+L2: 2 wrong → right (rows 1053, 1162), none right → wrong; 199 first answers were neutral, 39 reached the
+threshold (30 of them gold neutral, all kept), 2 changed; 22,445 extra input tokens.
+
+**Rules (fixed):**
+
+- L1: +0.01 on dev (+0.0137) and +0.005 on val (**+0.0104**), neutral recall ≥ 0.98 on both (1.000 and
+  **1.000**): **passes. The task A default becomes `--label-rule-a`** (prompt `A-v4-section-route-L1`).
+- L2: failed on dev (+0.0102 < +0.015); on val +0.0034 with +3.3 % input tokens. Stays off; an option.
+
+### E1, the context curve: how much booklet text Apertus needs (100 dev task A cases, one interleaved run)
+
+Session 9, phase E1, **information only: no default changed**. The challenge's central experiment ("full
+document → Apertus" against "selected context → Apertus") as one curve, all arms on the same cases back to
+back.
+
+**Command** (from `track_2a/`, code `5e1d864`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3
+scripts/paired_run.py --cases output/devA100/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-09_rashad_context-curve_devA100 --min-interval 1.0 --arm '{"name": "full", "context_a":
+"full"}' --arm '{"name": "embed-e5-small", "context_a": "embed-e5-small"}' --arm '{"name": "section-route",
+"label_rule_a": true}' --arm '{"name": "section-k4", "section_top_k_a": 4, "label_rule_a": true}' --arm
+'{"name": "section-k2", "section_top_k_a": 2, "label_rule_a": true}' --arm '{"name": "section-k1",
+"section_top_k_a": 1, "label_rule_a": true}'`; 20:17:15 to 20:50:28 UTC; six arms in a balanced Latin square.
+Cases: 100 dev task A cases sampled with `make_splits.py`'s round-robin over (label, claim language, booklet
+language), seed 42 (`scripts/make_dev_sample.py`; 36 entailment, 36 neutral, 28 contradiction; rows in
+`sample_rows.json`). The routed arms use L1 (`A-v4-section-route-L1`), which became the default after phase D.
+
+| Context (what Apertus reads) | Macro-F1 | Evidence | Input tokens, mean (p95) | Mean / p95 time |
+|---|---|---|---|---|
+| whole booklet (`full`) | 0.858 | 0.422 | 37,586 (78,489) | 7.3 / 17.6 s |
+| 8 chunks most similar to the claim (`embed-e5-small`) | 0.898 | 0.656 | 1,885 (2,482) | 4.9 / 15.3 s |
+| the routed part (`section-route`, default) | **0.989** | **1.000** | 1,248 (1,986) | 1.9 / 3.0 s |
+| the routed part's 4 most similar paragraphs | 0.979 | 0.984 | 804 (1,002) | 2.0 / 3.2 s |
+| … 2 most similar paragraphs | 0.940 | 0.922 | 614 (822) | 1.8 / 2.6 s |
+| … 1 most similar paragraph | 0.769 | 0.641 | 510 (680) | 1.9 / 2.9 s |
+
+All 600 answers came from one backend (`...dd237840`, blablador); 6 were gateway cache hits. No failed call,
+no unreadable answer (one `section-k1` contradiction cited no valid paragraph).
+
+**Reading.** More text is not better: the whole booklet (30 times the tokens) is 0.13 below section-route, and
+its errors are mostly contradictions and neutrals confused. The right part of the vote matters more than
+similarity: the 8 most similar chunks of the booklet (embed-e5-small) score 0.09 below the routed part with
+more tokens. Inside the routed part, 4 paragraphs keep most of the result (−0.011 at 64 % of the tokens),
+2 lose 0.05, and 1 loses 0.22 (half the contradictions become neutral: the deciding detail is not in the one
+paragraph). The 100-case sample is small (one case moves Macro-F1 by about 0.01); the curve's shape, not the
+third decimal, is the result.
+
+### E2, closed book: the claim and the vote's name only (300 dev task A cases, one interleaved run)
+
+Session 9, phase E2, **information only**. How much does Apertus answer from what it already knows about a
+ballot, without the booklet? The official reference point is always the supplied source, so closed book is
+not a solution; it measures how much the context matters.
+
+**Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/paired_run.py
+--cases output/devA/cases.jsonl --data-dir output/data_dev --out-dir docs/runs/2026-10-09_rashad_closed-book_devA300
+--min-interval 1.0 --arm '{"name": "section-route", "label_rule_a": true}' --arm '{"name": "closed-book",
+"context_a": "closed-book"}'`; 20:50:37 to 21:09:40 UTC, order alternating. The closed-book prompt
+(`A-v0-closed-book`, `src/nli.py`) gives VOTE and CLAIM and asks whether "the booklet" supports, does not deal
+with, or contradicts the claim.
+
+| | section-route (default) | closed book |
+|---|---|---|
+| Macro-F1 | **0.980** | 0.435 |
+| Confusion rows gold E / N / C (pred E/N/C) | 100/0/2, 0/99/0, 2/2/95 | 16/85/1, 0/89/10, 0/62/37 |
+| Input tokens, mean | 1,238 | 223 |
+| Mean / p95 time | 2.3 / 4.2 s | 1.5 / 2.1 s |
+
+All 600 answers from one backend (`...dd237840`); no cache hits. Without the booklet Apertus answers neutral in
+236 of 300 cases (the closed-book status "no valid pages for label 0/2" on the other 64 only means it cited no
+page, which it cannot); it confirms 16 of 102 true claims and refutes 37 of 99 false ones. **The booklet text
+supplies almost all of the result**; Apertus's own knowledge of these ballots is thin, which also means the
+task is not solved by memorised facts.
+
+### FINISH: all 600 dev cases with the final defaults of session 9, through the Docker image
+
+**What ran.** `make run IMAGE=hackapertus-voting-nli:final` (image built at `50cb320` by
+the session's sandbox build, which differs from `make build` only by giving pip the sandbox's proxy
+certificate as a build secret; id in `image.txt`), the real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `.env`),
+`LLM_MIN_INTERVAL=1`, input `data/dev/cases.jsonl` (300 task A and 300 task B cases in one file). Started
+21:22:41 UTC, ended 21:44:01 UTC; exit code 0, 600 responses, no failures. The image's defaults were checked
+before the run: task B `--context-b cut`, task A `label_rule_a` (prompt `A-v4-section-route-L1`), evidence
+halves on, L2 off, context `section-route`.
+
+**Scores** (the starter's `evaluate.py`: `official_score.json`, `.txt`; per task and backend:
+`breakdown_by_task.json` from `scripts/stability_report.py`):
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Unreadable | Mean input / output tokens | Mean / p95 time |
+|---|---|---|---|---|---|---|
+| A (300) | **0.980** | 0.980 / 0.990 / 0.969 | **0.980** (197/201) | 0 | 1,238 / 14.5 | 2.2 / 4.5 s |
+| B (300) | **0.967** | 0.985 / 0.963 / 0.951 | not scored | 0 | 1,231 / 8.4 | 2.0 / 3.8 s |
+
+All 600 answers came from one backend (`...dd237840`, blablador); no gateway cache hits.
+
+**Compared with what (same day, different runs, so only indicative):** stability point 1 at 17:28 UTC with the
+defaults before session 9's changes scored task A 0.966 (evidence 0.930, no halves) with 1,210 input tokens
+and task B 0.967 with 1,994. The changes were adopted on interleaved runs (phases C and D), not on this
+comparison.
+
+These answers, with the val L1 arm's (`2026-10-09_rashad_label-errors-confirm_valA580/L1`), are the saved
+answers of the new replay reference `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`.
+
+Task B's `run.json` is in `task-B/` with the task B lines of this folder's files.
+
+### Stability point 2 of 3 (session 9, A4): all 600 dev cases through the Docker image, about 8.5 hours after point 1
+
+**What ran.** Exactly stability point 1's settings: `make run IMAGE=hackapertus-voting-nli:stability` (the
+image of point 1, built at `7edbae4`, id `sha256:af004f5d…` in `image.txt`, before session 9's default
+changes), the real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `.env`), `LLM_MIN_INTERVAL=1`, input
+`data/dev/cases.jsonl`. Started 01:56:21 UTC, ended 02:17:58 UTC; exit code 0, 600 responses. The sandbox had
+restarted since point 1, so the Docker daemon was started again first; the image was still there, unchanged.
+
+| Task | Macro-F1 | Evidence | Unreadable | Failed calls | Cache hits | Mean input tokens | Mean / p95 time |
+|---|---|---|---|---|---|---|---|
+| A (300) | 0.966 | 0.935 (188/201) | 0 | 0 | 0 | 1,210 | 2.5 / 4.8 s |
+| B (300) | 0.967 | not scored | 4 | 0 | 0 | 1,994 | 1.8 / 3.1 s |
+
+**Backends.** All 600 answers came from the same backend as point 1 (`...dd237840`, blablador).
+
+**Against point 1** (`stability.json`, `scripts/stability_report.py`): task A labels agree in 299 of 300 cases,
+task B labels in 300 of 300 (the one task A difference, row 1138, a gold contradiction, was neutral at point 1
+and entailment at point 2, wrong both times); Macro-F1 is the same to four decimals in both tasks (A 0.9662, B 0.9666); the
+evidence score moved by one case (187 → 188). No gateway cache hit (the same requests were last sent more than
+eight hours earlier), so these are fresh model answers.
+
+Task B's `run.json` is in `task-B/`.
+
+### Stability point 3 of 3 (session 9, A4): all 600 dev cases through the Docker image, about 16.5 hours after point 1
+
+**What ran.** Exactly stability point 1's settings: `make run IMAGE=hackapertus-voting-nli:stability` (the
+image of points 1 and 2, built at `7edbae4`, id `sha256:af004f5d…` in `image.txt`), the real endpoint (Public
+AI, `swiss-ai/apertus-v1.5-8b` from `.env`), `LLM_MIN_INTERVAL=1`, input `data/dev/cases.jsonl`. Started
+09:56:01 UTC, ended 10:16:21 UTC; exit code 0, 600 responses. The sandbox had restarted again since point 2;
+the Docker daemon was started again, the image was unchanged.
+
+| Task | Macro-F1 | Evidence | Unreadable | Failed calls | Cache hits | Mean input tokens | Mean / p95 time |
+|---|---|---|---|---|---|---|---|
+| A (300) | 0.966 | 0.930 (187/201) | 0 | 0 | 0 | 1,210 | 2.4 / 5.1 s |
+| B (300) | 0.963 | not scored | 1 | 0 | 0 | 1,994 | 1.6 / 2.6 s |
+
+**Backends.** All 600 answers came from the same backend as points 1 and 2 (`...dd237840`, blablador).
+
+**The three points** (`stability.json`, `scripts/stability_report.py --points` with all three):
+
+| Point (UTC) | Task A | Evidence | Task B | Unreadable (B) | Labels equal to point 1 (A; B) |
+|---|---|---|---|---|---|
+| 1, 2026-10-09 17:28 | 0.966 | 0.930 | 0.967 | 3 | – |
+| 2, 2026-10-10 01:56 | 0.966 | 0.935 | 0.967 | 4 | 299/300; 300/300 |
+| 3, 2026-10-10 09:56 | 0.966 | 0.930 | 0.963 | 1 | 300/300; 299/300 |
+
+Across the three points, two of the 600 cases ever changed label: row 1138 (task A, gold contradiction:
+neutral, entailment, neutral, wrong every time) and row 640 (task B, gold neutral: neutral, neutral,
+contradiction, wrong only at point 3, which explains task B's 0.967 → 0.963). Over 16.5 hours the endpoint,
+on this one backend, answered the same requests almost identically; no gateway cache was involved (each
+point's requests were last sent eight hours before).
+
+Task B's `run.json` is in `task-B/`.
+
+### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
+
+- Before run 1, `scripts/canary_taskb.py` re-sent the 30 canary cases (`docs/canary_taskb.json`) with exactly the baseline request (v3-topic-first, max_tokens 32, no response_format, temperature 0, `swiss-ai/apertus-v1.5-8b` on Public AI).
+- **01:50:33 UTC (`canary.txt`): 3 of 30 answer texts differ from the baseline run of 01:25** (`2026-10-09_rashad_v3-topic-first_devB300-run1`):
+  - `v1.1-row-767-B`: `{"label": 2}` then, `{"label": 1}` now;
+  - `v1.1-row-869-B`: `{"label": 2}` then, `{"label": 1}` now;
+  - `v1.1-row-1128-B`: `{"label": 2}` then, the same label followed by a "**Reasoning:**" paragraph now.
+- **01:51:32 UTC (`canary_repeat.txt`, a repeat for the report, not a run): the same three differences, character for character.** The new answers are stable, so this is a change of what the endpoint serves, not noise: the baseline runs of 01:25 and 01:33 had given identical texts in all 299 cases both answered.
+- The change happened between 01:36 (end of the second baseline run) and 01:50 UTC. The status page (status.publicai.co) shows `swiss-ai/apertus-v1.5-8b` as "Operational" (27 % uptime over 30 days) and names no supplier change.
+- Both changed labels move from contradiction to neutral on gold-neutral cases (rows 767 and 869 were in the baseline's error list), so the new behaviour may score differently on all 300; that is not measured. **The 0.919 baseline no longer describes the current endpoint.**
+- As the stage rule says, no run started: neither the 20-case token check of the schema nor the 300-case run.
+
 ### 2026-10-08, `embedding` branch (Kaan): offline retrieval check, embed-e5-small
 - By label: hit@8 0.784 for entailment, 0.697 for contradiction.
 
@@ -712,6 +1250,7 @@ Routed evidence cases where no sent paragraph lies inside the gold passage (1):
 - The snapshot of the replay run equals the snapshot with fixed answers (the requests do not depend on the answers).
 - **Replay on the unchanged code reproduces the saved runs exactly:** labels and evidence of all 300 dev and 300 val sample cases equal E5's and E6's predictions (0 differences). The starter's `evaluate.py` gives dev task A Macro-F1 0.9533, evidence 0.9055 (182 of 201), val sample Macro-F1 0.9559, evidence 0.9461 (193 of 204), the recorded numbers (`dev/official_score_A.json`, `val/official_score_A.json`; scored on the task A cases of `data/dev` and `data/val/sample300`).
 - The reference for session 8's gates is this replay: `dev/` and `val/` hold its predictions and raw answers. Its metrics (tokens, times) come from the fake model and mean nothing. `gates/` holds each change's comparison with it (`scripts/prompt_snapshot.py compare`).
+- 2026-10-09, after PR #15: `main` (`418ebfa`) merged into the task B branch (`claude/eager-cannon-08bx1h-taskb`, PR #14), default settings, `run --replay replay_table.json` then `compare --allow-evidence-change`: `gates/merge_taskb.json`. G1 0 differences (1,180 request hashes and 880 paths), G2 0 label differences and the same 19 evidence differences as `gates/merge.json` (the file is identical).
 
 ### 2026-10-09, session 8 change B: length-sorted embedding batches, speed and memory in the container (no model calls)
 
@@ -728,3 +1267,77 @@ Routed evidence cases where no sent paragraph lies inside the gold passage (1):
 - Batch size 16 was kept by the rule set for it: selections identical (below), peak memory lower (2,254 against 2,764 MiB), total time at most 10 % worse (it was 8 % better).
 - Vectors and selections (`scripts/embed_equivalence.py`, host; files `embed_equivalence_B32.json`, `embed_equivalence_B16.json`): the "passage:" vectors of every chunk of the 45 dev and val booklets and the 880 query vectors are identical to the code before change B (largest absolute difference 0.0, both batch sizes), and embed-e5-small selects the same 8 chunks in all 880 dev and val task A cases. The host times in those files (old 803.6 s, new 328 to 330 s for all booklets) are not a fair comparison: the old run overlapped other work on the machine.
 - The earlier measurement of the checks session (same image, same limits, code before session 7's merge was complete) gave 287 s total and a peak of 2,763 MiB for section-route; the "before" run here is slower and higher, which this note does not explain; only the three runs here compare with each other.
+
+### Offline analyses B1–B6 (session 9, phase B)
+
+`scripts/analysis_offline.py`, run at commit `dbb30fa` with `EMBED_MODEL_DIR=models/multilingual-e5-small`;
+no model calls. `analysis.json` holds every number, `per_case.jsonl` the B2 and B6 rows. The write-up is
+`docs/analysis_offline.md`.
+
+B5 and B6 rebuild the paragraphs sent with today's code; session 8's gate G1 showed that the code sends the
+same requests for these cases as when E5 and E6 ran.
+
+### E3, Apertus as the router (information only)
+
+Session 9, phase E3. Would Apertus route a claim to the right part of the vote better than
+`src/claim_router.py`'s regular expressions, and at what cost? Nothing in the pipeline changed: the rules
+stay the router.
+
+**Command** (from `track_2a/`, code `50cb320`): `LLM_MIN_INTERVAL=1 python3 scripts/llm_router_check.py --out
+docs/runs/2026-10-09_rashad_llm-router_dev300-stress300`; 21:09:40 to 21:22:40 UTC, 600 calls, model
+`swiss-ai/apertus-v1.5-8b` on Public AI. One call per claim: the prompt (`ROUTER_PROMPT` in the script) lists
+the five parts and "none", the answer is forced to `{"part": ...}` by json_schema. Per claim:
+`per_claim.jsonl`; totals: `summary.json`.
+
+**Dev claims (300, no intended part recorded):** Apertus agrees with the rules on **278**. Of the 22
+disagreements, 16 are claims the rules send to the text put to the vote and Apertus to the Federal Council's
+part; 14 of them open like "Laut dem Abstimmungstext empfiehlt die Bundesversammlung …" / "Selon le texte
+soumis au vote, l'Assemblée fédérale recommande …" (the text put to the vote holds that recommendation).
+Apertus calls 2 more law claims detail, routes 3 nowhere (2 law, 1 detail) and calls 1 summary claim council.
+
+**Stress openings (300, each with the intended part or none):**
+
+| | Apertus | Rules |
+|---|---|---|
+| Right (intended part, or none when none is intended) | 283 | 285 |
+| Routed to a wrong part (Apertus would read the wrong passage) | **17** | **0** |
+| Fell back where a part was intended (runs as embed-e5-small, still answered) | 0 | 15 |
+
+Apertus routes every opening the rules miss (15 of 15), but it also picks a part for 9 of the 12 openings that
+name no source, and a wrong part for 8 that do (for example "Der Bundesrat ist laut Zusammenfassung …" →
+council). A wrong part is worse than a fallback: the case is answered from the wrong text.
+
+**Cost:** 220 input and 8 output tokens per call on dev claims, 1.3 s per call; per case that is about +18 %
+input tokens over the default's 1,238 and one more model call. All 600 calls answered, none failed.
+
+**Reading:** on the dataset's own claims the rules and Apertus nearly agree, and where they differ the rules
+are right in the cases we looked at (the law text does contain the Federal Assembly's recommendation). On
+reworded openings Apertus is more willing to route but makes wrong-part errors the rules do not. An Apertus
+router would cost a call and tokens per case for no measured gain; a fallback-only use (ask Apertus only when
+the rules give none) would fix the 15 stress fallbacks, which this check did not measure end to end.
+
+### 2026-10-09, session 9 reference for the final defaults: request snapshot and replay (no model calls)
+
+- Code: `3e7063d` (`src/` as in `50cb320`; defaults: section-route with `A-v4-section-route-L1`, evidence
+  halves, task B `--context-b cut`). Commands (from `track_2a/`): `python3 scripts/prompt_snapshot.py run --out
+  <dir>` (fixed fake answers), then `python3 scripts/prompt_snapshot.py table --snapshot snapshot.json --runs
+  docs/runs/2026-10-09_rashad_final-defaults_dev600 docs/runs/2026-10-09_rashad_label-errors-confirm_valA580/L1
+  --out replay_table.json`, then `python3 scripts/prompt_snapshot.py run --out <this folder> --replay
+  replay_table.json`. `.env` never read, no key used.
+- `snapshot.json`: per case, the SHA-256 of the whole request body and, for task A, the path: dev 299 routed
+  and 1 fallback, val 577 routed and 3 fallbacks (the same paths as the session 8 reference). It equals the
+  snapshot of the gate run for the L1 default (`s9_D1`): no code changed in between.
+- `replay_table.json`: **1,180** request hashes, every request of both sets, with the answer the final
+  defaults got from the real endpoint: dev from `2026-10-09_rashad_final-defaults_dev600` (all 600 cases,
+  through the Docker image, 21:22–21:44 UTC), val from the L1 arm of
+  `2026-10-09_rashad_label-errors-confirm_valA580` (all 580 cases, 19:28–20:16 UTC; the same task A settings
+  as the final defaults). No request has two different saved answers. Unlike the session 8 reference, every
+  case is answered from the table (no fixed answers), and task B and all 580 val cases are covered.
+- **The replay reproduces the saved answers exactly:** 0 label and 0 evidence differences against the final
+  dev run (600) and the val L1 arm (580). The starter's `evaluate.py` on the replay (`scores/`): dev task A
+  Macro-F1 0.9799, evidence 0.9801 (197 of 201); task B 0.9666; val task A 0.9606, evidence 0.9576 (384 of
+  401).
+- **This folder replaces `2026-10-09_rashad_prompt-snapshot_devAB-valA` as the anchor for G1 and G2** from now
+  on: `python3 scripts/prompt_snapshot.py run --out <dir> --replay <this folder>/replay_table.json`, then
+  `compare --reference <this folder> --new <dir>`. Metrics in `dev/` and `val/` come from the fake model and
+  mean nothing.

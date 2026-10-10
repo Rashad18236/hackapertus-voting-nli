@@ -1,0 +1,13 @@
+{
+ "name": "B-cut",
+ "prompt_b": "v3-topic-first",
+ "schema_b": false,
+ "max_tokens_b": 32,
+ "max_tokens_a": 128,
+ "json_mode_a": false,
+ "schema_a": true,
+ "context_a": "section-route",
+ "context_b": "cut",
+ "evidence_halves_a": true,
+ "evidence_a": "cited-pieces"
+}

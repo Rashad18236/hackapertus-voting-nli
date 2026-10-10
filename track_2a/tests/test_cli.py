@@ -105,6 +105,8 @@ class NeverDropACase(unittest.TestCase):
 
     def test_every_context_mode_sends_the_answer_schema(self):
         for mode in cli.context.MODES:
+            if mode == "closed-book":  # shows no page; tested in ClosedBook
+                continue
             with self.subTest(mode=mode):
                 seen = {}
 
@@ -150,6 +152,62 @@ class NeverDropACase(unittest.TestCase):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):
             with self.assertRaises(SystemExit):
                 cli.main()
+
+
+class ClosedBook(unittest.TestCase):
+    """Session 9, E2 (information only): no booklet text, the label kept, no evidence."""
+
+    def test_closed_book_sends_only_vote_and_claim(self):
+        seen = {}
+
+        def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
+            seen["messages"], seen["schema"] = messages, json_schema
+            return llm.LLMResult(text='{"pages": [], "label": 2}', input_tokens=9, output_tokens=3, elapsed_ms=1)
+        with mock.patch.object(llm, "chat", chat), \
+             mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
+             mock.patch.object(cli.Path, "is_file", return_value=True):
+            resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a="closed-book"))
+        self.assertEqual(seen["messages"][1]["content"], "VOTE: v\n\nCLAIM:\nc")
+        self.assertEqual(seen["messages"][0]["content"], cli.nli.PROMPTS_A["A-v0-closed-book"])
+        self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)
+        self.assertEqual((resp["label"], resp["evidence"], raw["pages_sent"]), (2, [], 0))
+
+
+class TaskBSettings(unittest.TestCase):
+    def test_task_b_schema_and_max_tokens(self):
+        for settings, expected in ((cli.Settings(), (None, 32)),
+                                   (cli.Settings(schema_b=True, max_tokens_b=10), (cli.nli.ANSWER_SCHEMA_B, 10))):
+            seen = {}
+
+            def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
+                seen["schema"], seen["max_tokens"] = json_schema, max_tokens
+                return llm.LLMResult(text='{"label": 2}', input_tokens=9, output_tokens=3, elapsed_ms=1)
+            with mock.patch.object(llm, "chat", chat):
+                resp, status, _ = cli.predict(b_case("b"), ".", settings)
+            self.assertEqual((seen["schema"], seen["max_tokens"]), expected)
+            self.assertEqual((resp["label"], status, resp["evidence"]), (2, "ok", []))
+
+    def test_task_b_raw_records_retries_429s_and_endpoint(self):
+        ident = {"model": "m", "headers": {"server": "s"}}
+        results = [llm.LLMResult(text='{"label": 0}', input_tokens=9, output_tokens=3, elapsed_ms=1, attempts=2,
+                                 http_429=1, endpoint=ident),
+                   llm.LLMError("HTTP 429", attempts=3, http_429=3, endpoint=ident)]
+        for result, label in zip(results, (0, cli.FALLBACK_LABEL)):
+            def chat(*args, **kwargs):
+                if isinstance(result, Exception):
+                    raise result
+                return result
+            with mock.patch.object(llm, "chat", chat):
+                resp, _, raw = cli.predict(b_case("b"), ".", cli.Settings())
+            self.assertEqual(resp["label"], label)
+            self.assertEqual((raw["attempts"], raw["http_429"], raw["endpoint"]),
+                             (result.attempts, result.http_429, ident))
+
+    def test_task_b_schema_allows_only_the_label(self):
+        schema = cli.nli.ANSWER_SCHEMA_B
+        self.assertEqual(schema["required"], ["label"])
+        self.assertEqual(schema["properties"], {"label": {"type": "integer", "enum": [0, 1, 2]}})
+        self.assertFalse(schema["additionalProperties"])
 
 
 class Defaults(unittest.TestCase):

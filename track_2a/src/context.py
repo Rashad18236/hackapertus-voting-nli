@@ -16,6 +16,8 @@ replaced by "_"):
 - "section-route" (contexts/section_route.py, session 6): the part of the vote the claim's
   opening names (summary, council, committee, law text, detail), as numbered paragraphs;
   the answer cites paragraphs. Falls back to embed-e5-small when it cannot route.
+- "closed-book" (contexts/closed_book.py, session 9, E2; information only): no booklet text, only the
+  claim and the vote's name.
 
 Every variant runs locally: no Apertus call, no tokens. Apertus alone makes
 the entailment decision; a variant only chooses what it reads.
@@ -35,12 +37,13 @@ and a test. Never change what an existing name does; changed behaviour gets a
 new name, so every recorded run names exactly what ran.
 """
 
-from src.contexts import (embed_e5_small, embed_granite_97m_r2, full, section_route, vote_section,
+from src.contexts import (closed_book, embed_e5_small, embed_granite_97m_r2, full, section_route, vote_section,
                           vote_section_embed_e5_small, vote_section_embed_e5_small_k12,
                           vote_section_embed_granite_97m_r2)
 
 VARIANTS = {v.NAME: v for v in (full, vote_section, embed_e5_small, vote_section_embed_e5_small, embed_granite_97m_r2,
-                                vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12, section_route)}
+                                vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12, section_route,
+                                closed_book)}
 MODES = tuple(VARIANTS)
 
 

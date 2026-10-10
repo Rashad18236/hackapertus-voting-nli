@@ -145,6 +145,12 @@ Response:
   (task A); select it with `LLM_NAME` in the environment, never in code.
   The 8B was down on 2026-10-08 from about 17:30 until at least 19:44 UTC
   (answering again at 20:20); E4 ran entirely on the thinking model.
+- Public AI routes `swiss-ai/apertus-v1.5-8b` to more than one backend
+  (2026-10-09: api.blablador.fz-juelich.de, fingerprint `vllm-0.23.1rc1…`, and
+  api.featherless.ai, fingerprint `fp1-nst-nes`, deployment name
+  `swiss-ai/Apertus-8B-Instruct-2509`), and its LiteLLM gateway answers a
+  request identical to one of the last ~10 minutes from its cache. `src/llm.py`
+  records both per call (raw answers, `endpoint`).
 - In sandboxes where Docker containers cannot reach the internet directly,
   pass proxy flags with `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
@@ -199,7 +205,9 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 rescore_evidence.py, route_check.py, paired_analysis.py, make_val.py; since PR #12
                 stub_llm.py (fake model), router_stress.py, unseen_booklets.py, speed_memory.py;
                 session 8: prompt_snapshot.py (request hashes and replay, gates G1/G2),
-                embed_equivalence.py, parse_equivalence.py, container_speed.sh
+                embed_equivalence.py, parse_equivalence.py, container_speed.sh; task B (PR #14):
+                taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py,
+                interleaved_analysis.py (task B arms of one run)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -252,7 +260,39 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: hardening without a model (session 8)
+## Current stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+
+Branch `rashad/until-1600` from `main` at `418ebfa` (draft PR #16, never merged, no tag); report
+`track_2a/docs/session_9_report.md`, status log `track_2a/docs/session_9_status.md`, decisions
+`docs/decisions/2026-10-09-1707_rashad_session-9.md`. Model runs on Public AI's `apertus-v1.5-8b`, at most
+one request per second (`LLM_MIN_INTERVAL=1` for `make run`), one run at a time; every comparison is one
+interleaved run, reported on all cases and on cases where all versions met the same backend (all of
+session 9's answers came from one backend, blablador).
+
+- **Defaults changed in session 9, each by a fixed rule:** task A evidence adds halves of the cited
+  paragraphs up to five items (A2; replayed answers: evidence dev 0.906 → 0.925, val 0.946 → 0.956, labels
+  unchanged); task B cuts references over 8,000 characters to the first line plus the 8 paragraphs most
+  similar to the claim (`--context-b cut`; dev 0.967 = 0.967, val 0.961 vs 0.957, −37 to −38 % input
+  tokens); task A's routed prompt adds one sentence on contradictions (`A-v4-section-route-L1`,
+  `label_rule_a`; dev 0.980 vs 0.966, val 0.961 vs 0.950, neutral recall 1.000).
+- **Kept off:** B-para (task B as numbered paragraphs, 0.963), L2 (a second look at neutral answers:
+  +0.010 dev, +0.003 val, below its +0.015 bar), `closed-book` and `--section-top-k-a` (phase E,
+  information only).
+- `src/llm.py` falls back when the endpoint refuses `response_format` (resend without it) or the model name
+  (reads `BASE_URL/models`, picks the Apertus v1.5 8B id), at most three extra requests per run.
+- Offline analyses (`docs/analysis_offline.md`): all of E6's routed val errors are reading errors; task B
+  references over 8,000 characters are 99 of 105 times neutral on dev (a dataset artefact, never used).
+- **New replay reference for G1/G2:** `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`
+  (final defaults; all 1,180 dev and val requests answered from saved real answers: the final dev run and
+  the val L1 arm; replay reproduces dev A 0.980 / 0.980, B 0.967, val A 0.961 / 0.958). It replaces the
+  session 8 reference.
+- **Final defaults on all 600 dev cases through the image** (`2026-10-09_rashad_final-defaults_dev600`):
+  task A 0.980 (evidence 0.980, 1,238 input tokens), task B 0.967 (1,231 input tokens).
+- **Stability** (the image from before session 9's default changes, same settings, all 600 dev cases, at
+  17:28, 01:56 and 09:56 UTC): task A 0.966 / 0.966 / 0.966, task B 0.967 / 0.967 / 0.963; two of 600 labels
+  ever changed; one backend throughout.
+
+## Previous stage: hardening without a model (session 8)
 
 Session 8 (2026-10-09, branch `rashad/hardening` from `main` at `25ed5fa`,
 report `track_2a/docs/session_8_report.md`, decisions
@@ -286,7 +326,80 @@ calls**, every change behind two gates that compare it with a reference:
   answered 0 cases of such a file). After the merge: G1 and G2 unchanged,
   136 tests, clean-machine workflow green (run 13).
 
-Previous stage: task A context, `section-route` as the default.
+Earlier stages: task B confirmation and cheap fixes (next section, PR #14) and task A
+context with `section-route` as the default (history below).
+
+## Task B: confirmation and cheap fixes (2026-10-09, 01:20 to 03:00 UTC, PR #14)
+
+**Method (from 2026-10-09 02:00 UTC): versions are compared only inside one
+interleaved run; scores from different runs are never compared.** The
+endpoint changed what it answers twice in 13 hours, so a stored baseline
+stops describing it without warning. In an interleaved run every case goes
+to all versions back to back, in an order that rotates from case to case
+(`scripts/paired_run.py`, two or more arms; balanced Latin square for four),
+paced with `--min-interval 1.0` (HTTP 429 came at about 96 requests per
+minute). Decisions: `docs/decisions/2026-10-09-0200_rashad_taskb-cheap-fixes-continued.md`.
+
+- Every model call records the endpoint identity in the raw answers
+  (`endpoint`: body `model`, `system_fingerprint`, identifying headers,
+  Cloudflare data centre; nothing secret, no per-call ids), plus `attempts`
+  and `http_429`.
+- The canary (`scripts/canary_taskb.py`, 30 fixed dev cases, v3) no longer
+  blocks runs: it runs immediately before and after each task B run and
+  appends to `docs/canary_log.md` and `docs/canary_results.jsonl`. A run whose
+  two checks differ is marked "endpoint changed during run" in
+  `docs/results.md` (from `run.json`'s `canary` block).
+- The run: all 300 dev task B cases, four arms. A v3-topic-first as it is
+  (plain, max_tokens 32); B v3 + `--schema-b`, `--max-tokens-b 10`; C v5-min,
+  schema, 10; D v5-ballot (v5-min plus "The first line of the reference text
+  names the ballot it is about.", +14 tokens), schema, 10.
+- Comparisons: B vs A (keep if Macro-F1 falls by at most 0.01, no unreadable
+  answer, adds fewer than 30 tokens per case; if B fails, stop); C vs B (keep
+  if Macro-F1 falls by at most 0.01 and no label's F1 by more than 0.03);
+  D vs C (keep only if Macro-F1 rises by at least 0.01). Tokens = mean input
+  plus output tokens per case.
+- Recommend one arm to freeze; change no default. Never shorten the passage.
+  Report: `track_2a/docs/taskb_cheap_fixes.md`.
+
+Status (2026-10-09, 03:00 UTC): **run done; B fails its rule, so the
+comparisons stopped; recommendation: freeze arm A (v3-topic-first as it is),
+the current default; no default changed.** Run
+`docs/runs/2026-10-09_rashad_taskb-4arm_devB300` (02:11 to 02:40 UTC, marked
+"endpoint changed during run"): A 0.867, B 0.853 (−0.013, 0 unreadable,
+−0.9 tokens per case), C 0.786 (27 unreadable), D 0.840 (22 unreadable;
+C and D not judged). 0 failed calls, 0 HTTP 429.
+
+- **Public AI served `swiss-ai/apertus-v1.5-8b` from two backends during the
+  run** (blablador.fz-juelich.de 737 answers, featherless.ai 463 with the
+  deployment name `swiss-ai/Apertus-8B-Instruct-2509`), switching within
+  minutes. The backend changes answers: A and B are equal on the 250 cases
+  where they met the same backend (0.877 both, 3 labels differ). Every Public
+  AI number mixes backends; earlier runs recorded no identity.
+- **The gateway answers identical requests from a cache for ~10 minutes**
+  (`gateway_cache_hit` in the identity since this run). The confirmation
+  stage's noise floor (0.0033) very likely measured this cache.
+- Proposals, not done (Rashad decides): ask Public AI or use CSCS; judge on
+  cases where all arms met the same backend; keep the canary off the cache.
+
+Earlier in this stage (01:40 to 01:52 UTC, `docs/decisions/2026-10-09-0140_rashad_taskb-cheap-fixes.md`):
+the old canary stopped the first run because the endpoint changed between
+01:36 and 01:50 UTC (3 of 30 answers differ); run 2 (vote name) was skipped
+because `vote` always names the passage's own ballot (886/886 non-test rows).
+The thresholds of that stage's acceptance rule still hold, applied between
+arms of one run.
+
+Previous stage, task B confirmation (`track_2a/docs/taskb_confirmation.md`):
+v3-topic-first 0.919 and 0.916 in two runs (session 2's 0.947 was the server
+before 13:25 UTC on 2026-10-08). The 299 cases both runs answered have
+identical answers, but run 2 very likely came from the gateway's cache, so
+its "noise floor" of 0.0033 does not measure the model (corrected at 03:00). Errors: 17 of 24 are claims about another ballot called a
+contradiction. Input tokens: passage 87 %, fixed instructions 203 tokens
+(10 %), claim 2 %, endpoint 19 tokens (1 %).
+
+Task A is settled for now: `section-route` is the default since session 7
+(history below).
+
+## Task A history (sessions 3 to 7)
 
 Two lines of work from 2026-10-08 are merged (PR #5):
 
@@ -382,13 +495,16 @@ Rules for this stage:
 - Never run on `data/test/`; do not change the splits or the scorer.
 - One change per comparison; every run gets a folder with `run.json` in
   `docs/runs/` and so a row in the generated `docs/results.md`.
-- Comparisons are paired (`scripts/paired_run.py`): both configurations run
-  on the same case back to back, because the endpoint's output drifts.
+- Comparisons are paired or interleaved (`scripts/paired_run.py`): all
+  configurations run on the same case back to back, because the endpoint's
+  output drifts. Scores from different runs are never compared.
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,
   selector recall for the vote section) before spending model calls.
-- Cases run one at a time; one retry for HTTP 5xx and timeouts only.
+- Cases run one at a time; one retry for HTTP 5xx and timeouts, up to two for
+  HTTP 429.
 - A change to `src/` that should not change answers is checked with G1 and G2
-  against the session 8 reference (`scripts/prompt_snapshot.py`).
+  against the session 9 reference (`scripts/prompt_snapshot.py`,
+  `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`).
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 

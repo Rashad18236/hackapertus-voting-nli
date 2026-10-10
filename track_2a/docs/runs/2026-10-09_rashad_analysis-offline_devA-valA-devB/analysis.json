@@ -1,0 +1,1105 @@
+{
+ "B1": {
+  "A": {
+   "pooled": {
+    "macro_f1": 0.9546,
+    "low": 0.9375,
+    "high": 0.97,
+    "cases": 600
+   },
+   "sets": [
+    "dev (E5)",
+    "val (E6)"
+   ],
+   "dev (E5)": {
+    "macro_f1": 0.9533,
+    "low": 0.9269,
+    "high": 0.9754,
+    "cases": 300
+   },
+   "val (E6)": {
+    "macro_f1": 0.9559,
+    "low": 0.9299,
+    "high": 0.9789,
+    "cases": 300
+   },
+   "claim_x_source": {
+    "de->de": {
+     "cases": 68,
+     "right": 61,
+     "accuracy": 0.897
+    },
+    "de->fr": {
+     "cases": 68,
+     "right": 64,
+     "accuracy": 0.941
+    },
+    "de->it": {
+     "cases": 65,
+     "right": 63,
+     "accuracy": 0.969
+    },
+    "fr->de": {
+     "cases": 67,
+     "right": 63,
+     "accuracy": 0.94
+    },
+    "fr->fr": {
+     "cases": 67,
+     "right": 65,
+     "accuracy": 0.97
+    },
+    "fr->it": {
+     "cases": 67,
+     "right": 65,
+     "accuracy": 0.97
+    },
+    "it->de": {
+     "cases": 66,
+     "right": 63,
+     "accuracy": 0.955
+    },
+    "it->fr": {
+     "cases": 66,
+     "right": 64,
+     "accuracy": 0.97
+    },
+    "it->it": {
+     "cases": 66,
+     "right": 65,
+     "accuracy": 0.985
+    }
+   }
+  },
+  "B": {
+   "pooled": {
+    "macro_f1": 0.9666,
+    "low": 0.9451,
+    "high": 0.9858,
+    "cases": 300
+   },
+   "sets": [
+    "dev (stability 1)"
+   ],
+   "dev (stability 1)": {
+    "macro_f1": 0.9666,
+    "low": 0.9451,
+    "high": 0.9858,
+    "cases": 300
+   },
+   "claim_x_source": {
+    "de->de": {
+     "cases": 34,
+     "right": 34,
+     "accuracy": 1.0
+    },
+    "de->fr": {
+     "cases": 34,
+     "right": 32,
+     "accuracy": 0.941
+    },
+    "de->it": {
+     "cases": 34,
+     "right": 32,
+     "accuracy": 0.941
+    },
+    "fr->de": {
+     "cases": 33,
+     "right": 31,
+     "accuracy": 0.939
+    },
+    "fr->fr": {
+     "cases": 33,
+     "right": 33,
+     "accuracy": 1.0
+    },
+    "fr->it": {
+     "cases": 33,
+     "right": 32,
+     "accuracy": 0.97
+    },
+    "it->de": {
+     "cases": 33,
+     "right": 31,
+     "accuracy": 0.939
+    },
+    "it->fr": {
+     "cases": 33,
+     "right": 32,
+     "accuracy": 0.97
+    },
+    "it->it": {
+     "cases": 33,
+     "right": 33,
+     "accuracy": 1.0
+    }
+   }
+  }
+ },
+ "B3": {
+  "A": {
+   "any tag": {
+    "cases": 306,
+    "right": 295,
+    "accuracy": 0.964
+   },
+   "date: no": {
+    "cases": 517,
+    "right": 491,
+    "accuracy": 0.95
+   },
+   "date: yes": {
+    "cases": 83,
+    "right": 82,
+    "accuracy": 0.988
+   },
+   "negation: no": {
+    "cases": 523,
+    "right": 501,
+    "accuracy": 0.958
+   },
+   "negation: yes": {
+    "cases": 77,
+    "right": 72,
+    "accuracy": 0.935
+   },
+   "no tag": {
+    "cases": 294,
+    "right": 278,
+    "accuracy": 0.946
+   },
+   "number: no": {
+    "cases": 400,
+    "right": 380,
+    "accuracy": 0.95
+   },
+   "number: yes": {
+    "cases": 200,
+    "right": 193,
+    "accuracy": 0.965
+   },
+   "qualifier: no": {
+    "cases": 522,
+    "right": 497,
+    "accuracy": 0.952
+   },
+   "qualifier: yes": {
+    "cases": 78,
+    "right": 76,
+    "accuracy": 0.974
+   }
+  },
+  "B": {
+   "any tag": {
+    "cases": 150,
+    "right": 144,
+    "accuracy": 0.96
+   },
+   "date: no": {
+    "cases": 257,
+    "right": 249,
+    "accuracy": 0.969
+   },
+   "date: yes": {
+    "cases": 43,
+    "right": 41,
+    "accuracy": 0.953
+   },
+   "negation: no": {
+    "cases": 260,
+    "right": 250,
+    "accuracy": 0.962
+   },
+   "negation: yes": {
+    "cases": 40,
+    "right": 40,
+    "accuracy": 1.0
+   },
+   "no tag": {
+    "cases": 150,
+    "right": 146,
+    "accuracy": 0.973
+   },
+   "number: no": {
+    "cases": 201,
+    "right": 197,
+    "accuracy": 0.98
+   },
+   "number: yes": {
+    "cases": 99,
+    "right": 93,
+    "accuracy": 0.939
+   },
+   "qualifier: no": {
+    "cases": 264,
+    "right": 257,
+    "accuracy": 0.973
+   },
+   "qualifier: yes": {
+    "cases": 36,
+    "right": 33,
+    "accuracy": 0.917
+   }
+  }
+ },
+ "B4": {
+  "A dev (E5)": {
+   "always neutral": 0.1654
+  },
+  "A val (E6)": {
+   "always neutral": 0.1616
+  },
+  "B dev (stability 1)": {
+   "always neutral": 0.1654,
+   "long references": {
+    "cases": 105,
+    "neutral": 99
+   },
+   "short references": {
+    "cases": 195,
+    "neutral": 0
+   },
+   "long -> neutral, else entailment": 0.5413,
+   "long -> neutral, else the model's answer": 0.9734,
+   "the model's answer": 0.9666
+  }
+ },
+ "B2": {
+  "dev (E5)": {
+   "gold cases": 201,
+   "text matches": 182,
+   "rule 1: any gold page": 179,
+   "rule 2: first gold page": 107,
+   "rule 3: page of the quoted text": 182,
+   "no gold page found": 0
+  },
+  "val (E6)": {
+   "gold cases": 204,
+   "text matches": 193,
+   "rule 1: any gold page": 189,
+   "rule 2: first gold page": 114,
+   "rule 3: page of the quoted text": 193,
+   "no gold page found": 0
+  }
+ },
+ "B5": [
+  {
+   "id": "v1.1-row-186-A",
+   "gold": 0,
+   "pred": 2,
+   "claim_language": "fr",
+   "booklet_language": "it",
+   "route": "detail",
+   "claim": "Si le vote est approuvé, les entreprises ne seront plus tenues de payer la moindre redevance radiotélévisuelle.",
+   "answer": "{\"paragraphs\": [5], \"label\": 2}",
+   "sent_paragraphs": 8,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    4,
+    5,
+    7,
+    8
+   ],
+   "cited": [
+    5
+   ]
+  },
+  {
+   "id": "v1.1-row-341-A",
+   "gold": 0,
+   "pred": 1,
+   "claim_language": "it",
+   "booklet_language": "de",
+   "route": "detail",
+   "claim": "Se il voto verrà approvato, i redditi da capitale saranno conteggiati con un coefficiente di 1,5 nel calcolo delle imposte federali e cantonali, a partire da una soglia che dovrà essere stabilita dal Parlamento.",
+   "answer": "{\"paragraphs\": [8], \"label\": 1}",
+   "sent_paragraphs": 8,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7
+   ],
+   "cited": [
+    8
+   ]
+  },
+  {
+   "id": "v1.1-row-1025-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "de",
+   "booklet_language": "fr",
+   "route": "law",
+   "claim": "Dem Abstimmungstext zufolge beträgt der Steuersatz auf Erbschaften und Schenkungen 20 %.",
+   "answer": "{\"paragraphs\": [], \"label\": 1}",
+   "sent_paragraphs": 8,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "cited": []
+  },
+  {
+   "id": "v1.1-row-1036-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "de",
+   "booklet_language": "it",
+   "route": null,
+   "claim": "Das Komitee vertritt die Ansicht, die Minderheit habe einen niedrigeren Anteil für die Bundesregierung verlangt und die Einnahmen stärker ungleich zwischen den Kantonen verteilen wollen, wodurch die steuerlich attraktiven Kantone zusätzlich begünstigt würden.",
+   "answer": "{\"pages\": [16], \"label\": 1}",
+   "sent": "fell back to embed-e5-small"
+  },
+  {
+   "id": "v1.1-row-1053-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "de",
+   "booklet_language": "fr",
+   "route": "council",
+   "claim": "Der Bundesrat vertritt die Ansicht, dass der Schweizer Obligationenmarkt bereits gut entwickelt sei und die Reform zu weiteren Einbußen bei Arbeitsplätzen und Steuereinnahmen führen würde.",
+   "answer": "{\"paragraphs\": [3], \"label\": 1}",
+   "sent_paragraphs": 9,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "cited": [
+    3
+   ]
+  },
+  {
+   "id": "v1.1-row-1151-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "de",
+   "booklet_language": "de",
+   "route": "summary",
+   "claim": "Die Zusammenfassung besagt, dass der überwiegende Anteil der Umverteilung durch die Einkommenssteuern erfolgt.",
+   "answer": "{\"paragraphs\": [1], \"label\": 1}",
+   "sent_paragraphs": 4,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2
+   ],
+   "cited": [
+    1
+   ]
+  },
+  {
+   "id": "v1.1-row-1215-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "fr",
+   "booklet_language": "fr",
+   "route": "committee",
+   "claim": "Le comité affirme que l’initiative toucherait la plupart des exploitations agricoles suisses.",
+   "answer": "{\"paragraphs\": [4], \"label\": 1}",
+   "sent_paragraphs": 9,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9
+   ],
+   "cited": [
+    4
+   ]
+  },
+  {
+   "id": "v1.1-row-1226-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "fr",
+   "booklet_language": "de",
+   "route": "summary",
+   "claim": "Le résumé indique que les finances de l’AHV resteront instables jusqu’en 2030.",
+   "answer": "{\"paragraphs\": [1], \"label\": 1}",
+   "sent_paragraphs": 5,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2
+   ],
+   "cited": [
+    1
+   ]
+  },
+  {
+   "id": "v1.1-row-1259-A",
+   "gold": 2,
+   "pred": 0,
+   "claim_language": "fr",
+   "booklet_language": "de",
+   "route": "committee",
+   "claim": "Le comité affirme que l’initiative requiert la dénonciation des accords bilatéraux avec l’UE.",
+   "answer": "{\"paragraphs\": [4], \"label\": 0}",
+   "sent_paragraphs": 5,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "cited": [
+    4
+   ]
+  },
+  {
+   "id": "v1.1-row-1312-A",
+   "gold": 2,
+   "pred": 0,
+   "claim_language": "fr",
+   "booklet_language": "fr",
+   "route": "summary",
+   "claim": "Le résumé précise qu’un tiers des recettes de l’impôt sur les successions et les donations reviendrait à la Confédération, et les deux tiers restants aux cantons.",
+   "answer": "{\"paragraphs\": [2], \"label\": 0}",
+   "sent_paragraphs": 4,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2
+   ],
+   "cited": [
+    2
+   ]
+  },
+  {
+   "id": "v1.1-row-1325-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "it",
+   "booklet_language": "de",
+   "route": "council",
+   "claim": "Il Consiglio federale afferma che la proposta comporta l'introduzione di nuove imposte per finanziare i sei progetti di ampliamento.",
+   "answer": "{\"paragraphs\": [2], \"label\": 1}",
+   "sent_paragraphs": 8,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "cited": [
+    2
+   ]
+  },
+  {
+   "id": "v1.1-row-1360-A",
+   "gold": 2,
+   "pred": 1,
+   "claim_language": "it",
+   "booklet_language": "fr",
+   "route": "detail",
+   "claim": "Se il voto viene approvato, le prestazioni di sostegno elencate non avranno più una base giuridica.",
+   "answer": "{\"paragraphs\": [12], \"label\": 1}",
+   "sent_paragraphs": 14,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    14
+   ],
+   "cited": [
+    12
+   ]
+  },
+  {
+   "id": "v1.1-row-1457-A",
+   "gold": 2,
+   "pred": 0,
+   "claim_language": "it",
+   "booklet_language": "fr",
+   "route": "summary",
+   "claim": "Il riassunto sostiene che, per recedere dal contratto di locazione per uso proprio, il preavviso legale è di 6 mesi per gli alloggi e di 3 mesi per i locali commerciali.",
+   "answer": "{\"paragraphs\": [1], \"label\": 0}",
+   "sent_paragraphs": 5,
+   "gold_passage_sent": true,
+   "gold_paragraphs": [
+    1,
+    2,
+    4
+   ],
+   "cited": [
+    1
+   ]
+  }
+ ],
+ "B6": {
+  "neutral_answers": 110,
+  "true_neutral": {
+   "n": 99,
+   "min": 0.768,
+   "median": 0.8216,
+   "max": 0.8622
+  },
+  "wrongly_neutral": {
+   "n": 11,
+   "min": 0.8358,
+   "median": 0.8752,
+   "max": 0.9139
+  },
+  "thresholds": [
+   {
+    "threshold": 0.768,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 99
+   },
+   {
+    "threshold": 0.773,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 98
+   },
+   {
+    "threshold": 0.78,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 97
+   },
+   {
+    "threshold": 0.7822,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 96
+   },
+   {
+    "threshold": 0.783,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 95
+   },
+   {
+    "threshold": 0.7841,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 94
+   },
+   {
+    "threshold": 0.7845,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 93
+   },
+   {
+    "threshold": 0.7873,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 92
+   },
+   {
+    "threshold": 0.7928,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 91
+   },
+   {
+    "threshold": 0.7936,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 90
+   },
+   {
+    "threshold": 0.7955,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 89
+   },
+   {
+    "threshold": 0.7984,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 88
+   },
+   {
+    "threshold": 0.7992,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 87
+   },
+   {
+    "threshold": 0.7996,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 86
+   },
+   {
+    "threshold": 0.8004,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 85
+   },
+   {
+    "threshold": 0.8009,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 84
+   },
+   {
+    "threshold": 0.8013,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 82
+   },
+   {
+    "threshold": 0.8023,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 81
+   },
+   {
+    "threshold": 0.8028,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 80
+   },
+   {
+    "threshold": 0.8039,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 79
+   },
+   {
+    "threshold": 0.8043,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 78
+   },
+   {
+    "threshold": 0.8047,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 77
+   },
+   {
+    "threshold": 0.8052,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 76
+   },
+   {
+    "threshold": 0.8053,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 75
+   },
+   {
+    "threshold": 0.8055,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 74
+   },
+   {
+    "threshold": 0.8058,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 72
+   },
+   {
+    "threshold": 0.8076,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 71
+   },
+   {
+    "threshold": 0.8079,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 70
+   },
+   {
+    "threshold": 0.8084,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 69
+   },
+   {
+    "threshold": 0.8093,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 68
+   },
+   {
+    "threshold": 0.8098,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 67
+   },
+   {
+    "threshold": 0.8108,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 66
+   },
+   {
+    "threshold": 0.8113,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 65
+   },
+   {
+    "threshold": 0.8144,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 64
+   },
+   {
+    "threshold": 0.815,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 63
+   },
+   {
+    "threshold": 0.8158,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 62
+   },
+   {
+    "threshold": 0.816,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 61
+   },
+   {
+    "threshold": 0.8165,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 60
+   },
+   {
+    "threshold": 0.8167,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 59
+   },
+   {
+    "threshold": 0.8168,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 58
+   },
+   {
+    "threshold": 0.8169,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 57
+   },
+   {
+    "threshold": 0.8173,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 56
+   },
+   {
+    "threshold": 0.818,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 54
+   },
+   {
+    "threshold": 0.8196,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 53
+   },
+   {
+    "threshold": 0.8198,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 52
+   },
+   {
+    "threshold": 0.8208,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 51
+   },
+   {
+    "threshold": 0.8216,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 50
+   },
+   {
+    "threshold": 0.8218,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 49
+   },
+   {
+    "threshold": 0.8224,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 48
+   },
+   {
+    "threshold": 0.8229,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 47
+   },
+   {
+    "threshold": 0.8234,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 46
+   },
+   {
+    "threshold": 0.8241,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 45
+   },
+   {
+    "threshold": 0.8252,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 44
+   },
+   {
+    "threshold": 0.8254,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 43
+   },
+   {
+    "threshold": 0.8264,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 42
+   },
+   {
+    "threshold": 0.8265,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 41
+   },
+   {
+    "threshold": 0.8272,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 40
+   },
+   {
+    "threshold": 0.8273,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 39
+   },
+   {
+    "threshold": 0.8275,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 38
+   },
+   {
+    "threshold": 0.8276,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 37
+   },
+   {
+    "threshold": 0.8278,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 36
+   },
+   {
+    "threshold": 0.828,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 35
+   },
+   {
+    "threshold": 0.8281,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 34
+   },
+   {
+    "threshold": 0.8313,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 33
+   },
+   {
+    "threshold": 0.8318,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 32
+   },
+   {
+    "threshold": 0.8319,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 30
+   },
+   {
+    "threshold": 0.833,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 29
+   },
+   {
+    "threshold": 0.8337,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 28
+   },
+   {
+    "threshold": 0.8341,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 27
+   },
+   {
+    "threshold": 0.8347,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 26
+   },
+   {
+    "threshold": 0.8355,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 25
+   },
+   {
+    "threshold": 0.8358,
+    "wrongly_neutral_at_or_above": 11,
+    "true_neutral_at_or_above": 24
+   },
+   {
+    "threshold": 0.8362,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 24
+   },
+   {
+    "threshold": 0.8363,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 22
+   },
+   {
+    "threshold": 0.8373,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 21
+   },
+   {
+    "threshold": 0.8374,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 20
+   },
+   {
+    "threshold": 0.8381,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 19
+   },
+   {
+    "threshold": 0.8393,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 18
+   },
+   {
+    "threshold": 0.8406,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 17
+   },
+   {
+    "threshold": 0.8421,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 16
+   },
+   {
+    "threshold": 0.8426,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 15
+   },
+   {
+    "threshold": 0.843,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 14
+   },
+   {
+    "threshold": 0.8432,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 13
+   },
+   {
+    "threshold": 0.8449,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 12
+   },
+   {
+    "threshold": 0.8451,
+    "wrongly_neutral_at_or_above": 10,
+    "true_neutral_at_or_above": 11
+   },
+   {
+    "threshold": 0.8458,
+    "wrongly_neutral_at_or_above": 9,
+    "true_neutral_at_or_above": 11
+   },
+   {
+    "threshold": 0.8467,
+    "wrongly_neutral_at_or_above": 9,
+    "true_neutral_at_or_above": 9
+   },
+   {
+    "threshold": 0.847,
+    "wrongly_neutral_at_or_above": 8,
+    "true_neutral_at_or_above": 9
+   },
+   {
+    "threshold": 0.8497,
+    "wrongly_neutral_at_or_above": 8,
+    "true_neutral_at_or_above": 8
+   },
+   {
+    "threshold": 0.8503,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 8
+   },
+   {
+    "threshold": 0.851,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 7
+   },
+   {
+    "threshold": 0.8519,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 6
+   },
+   {
+    "threshold": 0.8524,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 5
+   },
+   {
+    "threshold": 0.8538,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 4
+   },
+   {
+    "threshold": 0.8563,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 3
+   },
+   {
+    "threshold": 0.8575,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 2
+   },
+   {
+    "threshold": 0.8622,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 1
+   },
+   {
+    "threshold": 0.8703,
+    "wrongly_neutral_at_or_above": 7,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.8752,
+    "wrongly_neutral_at_or_above": 6,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.8807,
+    "wrongly_neutral_at_or_above": 5,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.8841,
+    "wrongly_neutral_at_or_above": 4,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.8998,
+    "wrongly_neutral_at_or_above": 3,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.9064,
+    "wrongly_neutral_at_or_above": 2,
+    "true_neutral_at_or_above": 0
+   },
+   {
+    "threshold": 0.9139,
+    "wrongly_neutral_at_or_above": 1,
+    "true_neutral_at_or_above": 0
+   }
+  ]
+ }
+}

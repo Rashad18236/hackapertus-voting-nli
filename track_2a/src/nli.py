@@ -70,6 +70,33 @@ PROMPTS_B["v4-topic-first-examples"] = (
     PROMPTS_B["v3-topic-first"][: -len(_ANSWER_B)] + _EXAMPLES_B.lstrip("\n") + "\n" + _ANSWER_B
 )
 
+# v5-min (task B cheap fixes; prepared while the canary stopped the stage on 2026-10-09).
+# For use with --schema-b only: strict JSON fixes the answer format, so the prompt has no format
+# instructions. Fixed instructions: 77 tokens here plus 9 for the user message's labels = 86 (Apertus
+# tokenizer; at most 90 asked). Keeps v3's three rules: another ballot or subject is neutral;
+# contradiction only when both cannot be true; missing information is neutral, never contradiction.
+PROMPTS_B["v5-min"] = """Compare the CLAIM with the REFERENCE TEXT from a Swiss voting booklet (German, French or Italian). Use only the reference text.
+0: the reference supports the claim.
+2: claim and reference cannot both be true.
+1: otherwise, including when the reference is about a different ballot or subject than the claim. Missing information is 1, never 2."""
+
+# v5-ballot (task B cheap fixes, continued): v5-min plus one sentence, BALLOT_SENTENCE, after "Use only the
+# reference text.": every task B passage starts with the title of its own ballot, and most v3 errors on dev were
+# claims about another ballot called a contradiction. The sentence adds 14 tokens (Apertus v1 tokenizer): 91
+# here plus 9 for the user message's labels = 100. Also for --schema-b only.
+BALLOT_SENTENCE = "The first line of the reference text names the ballot it is about."
+PROMPTS_B["v5-ballot"] = PROMPTS_B["v5-min"].replace(
+    "Use only the reference text.", "Use only the reference text. " + BALLOT_SENTENCE, 1)
+
+# The task B answer as a JSON Schema, for schema-constrained output (--schema-b; task B cheap fixes):
+# the endpoint can then only produce {"label": 0|1|2}. Same mechanism as ANSWER_SCHEMA_A.
+ANSWER_SCHEMA_B = {
+    "type": "object",
+    "properties": {"label": {"type": "integer", "enum": [0, 1, 2]}},
+    "required": ["label"],
+    "additionalProperties": False,
+}
+
 # Task A: the whole booklet, page by page. Same decision rule as task B's
 # v3-topic-first; the answer also names the pages that justify the label.
 _RULE_A = """You check a CLAIM against an official Swiss federal voting booklet. The booklet is given page by page; each page starts with a line "=== PAGE n ===". A booklet can cover several ballots: use only the part about the ballot named in VOTE. The booklet and the claim may be in different languages (German, French or Italian). Use only the booklet, never outside knowledge.
@@ -139,6 +166,38 @@ First give the numbers of the paragraphs that justify your label, at most three,
 Answer with one JSON object and nothing else, paragraphs first, for example:
 {{"paragraphs": [2, 5], "label": 0}}"""
 
+# Session 9, phase D (off by default). L1: the routed prompt plus one sentence on what makes a contradiction.
+L1_SENTENCE = ("A claim that gives a different number, share, date, actor or direction than the reference text gives "
+               "for the same thing is a contradiction.")
+PROMPTS_A["A-v4-section-route-L1"] = PROMPTS_A["A-v4-section-route"].replace(
+    _RULE_B, _RULE_B + "\n" + L1_SENTENCE)
+assert PROMPTS_A["A-v4-section-route-L1"] != PROMPTS_A["A-v4-section-route"]
+
+# L2: a second look at a neutral answer, with the three paragraphs most similar to the claim, asking 0, then 2,
+# then 1.
+PROMPTS_A["A-v4-second-look"] = """You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. The reference text is the three paragraphs ("[n] ...") closest to the claim from one part of the booklet's section on the ballot named in VOTE; the line PART says which part it is and whose voice it is. The reference text and the claim may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
+
+Decide in this order:
+0 (entailment) if the reference text supports the claim;
+2 (contradiction) if the reference text states something that cannot be true together with the claim;
+1 (neutral) only if neither: the reference text does not deal with the subject of the claim, or does not say enough to decide.
+Missing information is never a contradiction.
+
+First give the numbers of the paragraphs that justify your label, at most three, most relevant first (for label 1, an empty list). Then the label.
+
+Answer with one JSON object and nothing else, paragraphs first, for example:
+{"paragraphs": [2], "label": 0}"""
+
+# Session 9, E2 (information only): no booklet text. The answer keeps task A's schema; "pages" stays empty.
+PROMPTS_A["A-v0-closed-book"] = """You get a CLAIM about the official Swiss federal voting booklet's section on the ballot named in VOTE, but not the booklet itself. Decide from what you know about this ballot and its booklet:
+0 (entailment) if the booklet supports the claim;
+2 (contradiction) if the booklet states something that cannot be true together with the claim;
+1 (neutral) if the booklet does not deal with the claim, or you cannot tell.
+The claim may be in German, French or Italian.
+
+Answer with one JSON object and nothing else, with an empty list of pages, for example:
+{"pages": [], "label": 0}"""
+
 ANSWER_SCHEMA_A_PARAGRAPHS = {
     "type": "object",
     "properties": {
@@ -163,6 +222,8 @@ def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, ve
 def build_messages_a(booklet_text, vote, claim_text, version=PROMPT_VERSION_A):
     heading = "BOOKLET EXCERPTS" if version == "A-v3-excerpts" else "BOOKLET"
     user = f"{heading}:\n{booklet_text}\n\nVOTE: {vote}\n\nCLAIM:\n{claim_text}"
+    if version == "A-v0-closed-book":  # session 9, E2: no booklet text
+        user = f"VOTE: {vote}\n\nCLAIM:\n{claim_text}"
     return [
         {"role": "system", "content": PROMPTS_A[version]},
         {"role": "user", "content": user},

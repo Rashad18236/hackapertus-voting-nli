@@ -1,0 +1,201 @@
+{
+ "points": {
+  "2026-10-09_rashad_stability-1_dev600": {
+   "A": {
+    "cases": 300,
+    "macro_f1": 0.9662,
+    "f1": {
+     "entailment": 0.9854,
+     "neutral": 0.9659,
+     "contradiction": 0.9474
+    },
+    "unreadable_answers": 0,
+    "failed_calls": 0,
+    "gateway_cache_hits": 1,
+    "mean_input_tokens": 1209.9,
+    "mean_output_tokens": 14.51,
+    "mean_time_ms": 2606,
+    "p95_time_ms": 5375,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9662
+     }
+    },
+    "evidence": {
+     "score": 0.9303,
+     "found": 187,
+     "cases": 201
+    }
+   },
+   "B": {
+    "cases": 300,
+    "macro_f1": 0.9666,
+    "f1": {
+     "entailment": 0.9854,
+     "neutral": 0.9634,
+     "contradiction": 0.951
+    },
+    "unreadable_answers": 3,
+    "failed_calls": 0,
+    "gateway_cache_hits": 1,
+    "mean_input_tokens": 1994.2,
+    "mean_output_tokens": 8.68,
+    "mean_time_ms": 1494,
+    "p95_time_ms": 2611,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9666
+     }
+    }
+   }
+  },
+  "2026-10-10_rashad_stability-2_dev600": {
+   "A": {
+    "cases": 300,
+    "macro_f1": 0.9662,
+    "f1": {
+     "entailment": 0.9806,
+     "neutral": 0.9706,
+     "contradiction": 0.9474
+    },
+    "unreadable_answers": 0,
+    "failed_calls": 0,
+    "gateway_cache_hits": 0,
+    "mean_input_tokens": 1209.9,
+    "mean_output_tokens": 14.51,
+    "mean_time_ms": 2476,
+    "p95_time_ms": 4838,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9662
+     }
+    },
+    "evidence": {
+     "score": 0.9353,
+     "found": 188,
+     "cases": 201
+    }
+   },
+   "B": {
+    "cases": 300,
+    "macro_f1": 0.9666,
+    "f1": {
+     "entailment": 0.9854,
+     "neutral": 0.9634,
+     "contradiction": 0.951
+    },
+    "unreadable_answers": 4,
+    "failed_calls": 0,
+    "gateway_cache_hits": 0,
+    "mean_input_tokens": 1994.2,
+    "mean_output_tokens": 8.6,
+    "mean_time_ms": 1812,
+    "p95_time_ms": 3066,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9666
+     }
+    }
+   }
+  },
+  "2026-10-10_rashad_stability-3_dev600": {
+   "A": {
+    "cases": 300,
+    "macro_f1": 0.9662,
+    "f1": {
+     "entailment": 0.9854,
+     "neutral": 0.9659,
+     "contradiction": 0.9474
+    },
+    "unreadable_answers": 0,
+    "failed_calls": 0,
+    "gateway_cache_hits": 0,
+    "mean_input_tokens": 1209.9,
+    "mean_output_tokens": 14.51,
+    "mean_time_ms": 2395,
+    "p95_time_ms": 5139,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9662
+     }
+    },
+    "evidence": {
+     "score": 0.9303,
+     "found": 187,
+     "cases": 201
+    }
+   },
+   "B": {
+    "cases": 300,
+    "macro_f1": 0.9632,
+    "f1": {
+     "entailment": 0.9854,
+     "neutral": 0.9579,
+     "contradiction": 0.9463
+    },
+    "unreadable_answers": 1,
+    "failed_calls": 0,
+    "gateway_cache_hits": 0,
+    "mean_input_tokens": 1994.2,
+    "mean_output_tokens": 8.45,
+    "mean_time_ms": 1637,
+    "p95_time_ms": 2595,
+    "by_backend": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": {
+      "calls": 300,
+      "macro_f1": 0.9632
+     }
+    }
+   }
+  }
+ },
+ "agreement": {
+  "2026-10-09_rashad_stability-1_dev600 vs 2026-10-10_rashad_stability-2_dev600": {
+   "A": {
+    "cases": 300,
+    "labels_agree": 299,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 299
+   },
+   "B": {
+    "cases": 300,
+    "labels_agree": 300,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 300
+   }
+  },
+  "2026-10-09_rashad_stability-1_dev600 vs 2026-10-10_rashad_stability-3_dev600": {
+   "A": {
+    "cases": 300,
+    "labels_agree": 300,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 300
+   },
+   "B": {
+    "cases": 300,
+    "labels_agree": 299,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 299
+   }
+  },
+  "2026-10-10_rashad_stability-2_dev600 vs 2026-10-10_rashad_stability-3_dev600": {
+   "A": {
+    "cases": 300,
+    "labels_agree": 299,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 299
+   },
+   "B": {
+    "cases": 300,
+    "labels_agree": 299,
+    "same_backend_cases": 300,
+    "labels_agree_same_backend": 299
+   }
+  }
+ }
+}
