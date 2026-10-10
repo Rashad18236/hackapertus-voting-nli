@@ -14,7 +14,8 @@ restarted since point 1, so the Docker daemon was started again first; the image
 **Backends.** All 600 answers came from the same backend as point 1 (`...dd237840`, blablador).
 
 **Against point 1** (`stability.json`, `scripts/stability_report.py`): task A labels agree in 299 of 300 cases,
-task B labels in 300 of 300; Macro-F1 is the same to four decimals in both tasks (A 0.9662, B 0.9666); the
+task B labels in 300 of 300 (the one task A difference, row 1138, a gold contradiction, was neutral at point 1
+and entailment at point 2, wrong both times); Macro-F1 is the same to four decimals in both tasks (A 0.9662, B 0.9666); the
 evidence score moved by one case (187 → 188). No gateway cache hit (the same requests were last sent more than
 eight hours earlier), so these are fresh model answers.
 
