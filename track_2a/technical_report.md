@@ -202,7 +202,14 @@ similar to the claim (B-cut): 37–38 % fewer input tokens at the same Macro-F1,
 booklet is parsed; the first case on a booklet pays up to 3.5 s for parsing, and long parts are embedded
 (slowest case 17.6 s on 2 CPUs, peak memory 2.2 GiB).
 
-**Stability.** The same image and settings on all 600 dev cases at three times: ⟨S1/S2/S3 table⟩
+**Stability.** The same image (built before session 9's default changes) and settings on all 600 dev cases
+at three times [S1, S2, S3]:
+
+| Point (UTC) | Task A Macro-F1 | Task B Macro-F1 | Labels equal to point 1 (A; B) |
+|---|---|---|---|
+| 1, 10-09 17:28 | 0.966 | 0.967 | – |
+| 2, 10-10 01:56 | 0.966 | 0.967 | 299/300; 300/300 |
+| 3, 10-10 ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
 
 ## 6. Limitations
 

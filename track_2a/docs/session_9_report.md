@@ -41,7 +41,11 @@ input tokens), task B **0.967** (1,231 input tokens, was 1,994). On all 580 val 
 
 **Stability points** (the image built at `7edbae4`, 17:26 UTC, before session 9's default changes; the same settings each time; all 600 dev cases):
 
-⟨stability table⟩
+| Point (start, UTC) | Task A Macro-F1 | Evidence | Task B Macro-F1 | Unreadable (B) | Labels equal to point 1 (A; B) | Backend |
+|---|---|---|---|---|---|---|
+| 1 (2026-10-09 17:28) | 0.966 | 0.930 | 0.967 | 3 | – | blablador, all 600 |
+| 2 (2026-10-10 01:56) | 0.966 | 0.935 | 0.967 | 4 | 299/300; 300/300 | blablador, all 600 |
+| 3 (2026-10-10 ⟨S3 time⟩) | ⟨S3⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
 
 **Dropped for time:** nothing. **Not done:** the 4-paragraph cut on val, an Apertus fallback router, L2 as a
 default (all reported as options).
@@ -97,7 +101,22 @@ are on by default (`evidence_halves_a=True`; `--no-evidence-halves-a` switches t
 - `README.md`: requirements, running with one's own cases and booklets (`make run CASES=… BOOKLETS=…
   OUTPUT_DIR=…`), and the statement that answers are not political advice and are traceable to the booklet.
 
-**A4. Stability point 1** (`2026-10-09_rashad_stability-1_dev600`): ⟨stability section⟩
+**A4. Stability points.** All 600 dev cases with default settings through the Docker image, `make run` and
+the real endpoint, at three times with exactly the same image and settings (`hackapertus-voting-nli:stability`,
+built at `7edbae4` at 17:26 UTC, before A2 and the later default changes; `LLM_MIN_INTERVAL=1`). Scores per
+task and per backend by `scripts/stability_report.py` (task B's numbers in each point's `task-B/run.json`):
+
+| Point (start, UTC) | Task A Macro-F1 | Evidence | Task B Macro-F1 | Unreadable (B) | Labels equal to point 1 (A; B) | Backend |
+|---|---|---|---|---|---|---|
+| 1 (2026-10-09 17:28) | 0.966 | 0.930 | 0.967 | 3 | – | blablador, all 600 |
+| 2 (2026-10-10 01:56) | 0.966 | 0.935 | 0.967 | 4 | 299/300; 300/300 | blablador, all 600 |
+| 3 (2026-10-10 ⟨S3 time⟩) | ⟨S3⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+
+- Point 1 (`2026-10-09_rashad_stability-1_dev600`, 17:28–17:48 UTC), point 2
+  (`2026-10-10_rashad_stability-2_dev600`, 01:56–02:18 UTC), point 3 (`2026-10-10_rashad_stability-3_dev600`,
+  ⟨S3 times⟩).
+- Between points 1 and 2 the sandbox restarted; the Docker daemon was started again, the image was unchanged.
+  Point 2 had no gateway cache hits (its requests were last sent eight hours before), so its answers are fresh.
 
 ## Phase B: offline analyses (no model calls)
 
@@ -238,7 +257,7 @@ rules stay the router.
   requests (600 dev, 580 val), each answered from a saved real answer (the final dev run; the val L1 arm). The
   replay reproduces them exactly (0 label, 0 evidence differences): dev A 0.980 / 0.980, B 0.967, val A
   0.961 / 0.958. It replaces the session 8 reference for G1/G2.
-- Tests: 189 pass, 1 skipped (`pytest`, after every code change). Clean-machine workflow: ⟨CI⟩.
+- Tests: 189 pass, 1 skipped (`pytest`, after every code change). Clean-machine workflow (`image` and `tests` jobs on GitHub): green on every pushed commit checked, last on `⟨last commit⟩`.
 - `technical_report.md` rewritten to six A4 pages at 10 pt (`technical_report.pdf`, built by
   `scripts/build_report_pdf.sh`: pandoc and headless Chromium); template sections kept; token usage and
   inference time in section 5. Remaining TODOs: team name and members only.
