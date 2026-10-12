@@ -35,17 +35,23 @@ Updated after every step. If the session is restarted with "continue", work goes
   per case at 1.0 s per request (today 0.015), 0.837 s at 0.3 s (today 0.300); B-cut4 0.107 / 0.744 s (today 0.008 /
   0.009).
 
+- (15:00) Step 5, task A on val: K4 fails (0.944 vs 0.959, evidence 0.938 vs 0.955); nothing adopted for task A.
+- (15:05) Step 7: 100 dev task A cases without response_format: 0 unreadable; nothing changes.
+- (14:45) Step 8: vote names by meaning (e5, lead ≥ 0.04) when the title match fails; G1/G2 unchanged; adopted.
+- (15:50) Step 6: anyOf enforced; CS fails (on-topic neutral share), SL fails on val (+0.0034, p 0.25); nothing
+  adopted. Python rule offline: dev +0.0001, val +0.014, on-topic 3 of 3 changes wrong.
+- Lanes (two worker processes owning whole booklets): G1/G2 pass; task A at 0.3 s per request 0.316 → 0.206 s per
+  case; at 1.0 s 0.015 → 0.018 (the busy lanes slow the request loop); peak memory 2.3 GB.
+
 ## Running
 
-- Step 5, task A on val: today vs K4 (`docs/runs/2026-10-12_rashad_fewer-tokens-A_valA580`).
-- G1/G2 for step 8 (vote names by meaning, `src/contexts/section_route.py` vote_by_meaning).
-- Code (not yet measured): two worker processes ("lanes"), each owning whole booklets (`src/pipeline.py`).
+- Lanes with lower CPU priority (`os.nice`), measured against one lane at 1.0 s (twice) and 0.3 s.
 
 ## Next
 
-- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4, then val; TOKEN RULE; REF SCORE.
-- Lanes: G1/G2, local time with 1 and 2 lanes; K4's local time with 2 lanes.
-- Step 6: anyOf check, then dev + on-topic set (today, CS, SL), then val.
+- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4 (after the measurement); val only if one passes.
+- Lanes default by the measurement; then FINISH (publish, final runs through the published image, replay
+  reference, report, PDF).
 
 ## Numbers so far
 
