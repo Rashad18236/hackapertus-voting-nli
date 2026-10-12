@@ -105,6 +105,18 @@ def default_workers():
 
 
 LIGHT_FIRST = False  # session 11, step 4: a lane prepares the cases that need no embedding model first (deferral.py)
+SHARE_CPUS = False  # session 11, step 4: the lanes share the CPUs for onnxruntime's threads (embedding_threads)
+LANES = {"count": 0}  # lanes of this run, set before they are forked (each lane inherits it)
+
+
+def embedding_threads():
+    """onnxruntime threads for one process's embedding model: every CPU (session 10), or with SHARE_CPUS each lane
+    its share of them, so that two lanes embedding at once do not run more threads than there are CPUs (an idle
+    onnxruntime thread spins and takes CPU time from the other lane)."""
+    cpus = available_cpus()
+    if SHARE_CPUS and LANES["count"] > 1:
+        return max(1, cpus // LANES["count"])
+    return cpus
 
 
 class Lanes:
@@ -193,6 +205,7 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
         groups = [[] for _ in range(max(1, workers))]
         for number, case in order:
             groups[(lane_key(case) if lane_key else 0) % len(groups)].append((number, case))
+        LANES["count"] = sum(1 for g in groups if g)
         lanes = Lanes([g for g in groups if g], prepare)  # forked before any thread below starts
         preparing = {lanes.futures[number]: (number, case) for number, case in order}
         preparers = None

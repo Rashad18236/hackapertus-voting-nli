@@ -85,7 +85,7 @@ class E5Embedder:
         # Session 10: as many threads as the container may use. By default onnxruntime starts one per core of the
         # machine, which under a CPU limit (docker run --cpus 2 on 4 cores) is throttled: 2 threads embedded 124
         # paragraphs in 9.5-10.1 s against 11.3-12.5 s. The vectors are the same for 1, 2 and 4 threads.
-        options.intra_op_num_threads = pipeline.available_cpus()
+        options.intra_op_num_threads = pipeline.embedding_threads()  # session 11: the lanes' share with SHARE_CPUS
         # Session 11, step 5 (off by default): onnxruntime's memory arena keeps the largest batch's buffers for the
         # rest of the run; without it they are freed after each batch (the same arithmetic, so the same vectors).
         options.enable_cpu_mem_arena = MEMORY_ARENA

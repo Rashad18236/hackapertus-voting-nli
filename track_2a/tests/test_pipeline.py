@@ -279,3 +279,33 @@ class LightFirst(unittest.TestCase):
                 deferral.check()
             except Exception:  # what the fallbacks in src/ catch
                 self.fail("NeedsModel was caught as an ordinary exception")
+
+
+class EmbeddingThreads(unittest.TestCase):
+    """Session 11, step 4: with SHARE_CPUS the lanes split the CPUs for onnxruntime's threads."""
+
+    def threads(self, share, lanes, cpus):
+        with mock.patch.object(pipeline, "SHARE_CPUS", share), mock.patch.dict(pipeline.LANES, {"count": lanes}), \
+                mock.patch.object(pipeline, "available_cpus", return_value=cpus):
+            return pipeline.embedding_threads()
+
+    def test_every_cpu_without_sharing(self):
+        self.assertEqual(self.threads(False, 2, 2), 2)
+
+    def test_each_lane_its_share(self):
+        self.assertEqual(self.threads(True, 2, 2), 1)
+        self.assertEqual(self.threads(True, 2, 4), 2)
+        self.assertEqual(self.threads(True, 2, 1), 1)  # never fewer than one
+
+    def test_one_lane_or_none_keeps_every_cpu(self):
+        self.assertEqual(self.threads(True, 1, 2), 2)
+        self.assertEqual(self.threads(True, 0, 2), 2)
+
+    def test_run_sets_the_lane_count_before_forking(self):
+        seen = []
+        items = [(0, {"booklet": "a"}), (1, {"booklet": "b"})]
+        with mock.patch.dict(pipeline.LANES, {"count": 0}):
+            pipeline.run(items, prepare=lambda c: seen.append(pipeline.LANES["count"]) or c, complete=lambda p: p,
+                         fallback=lambda c: c, emit=lambda n, c, r: None, workers=2, processes=True,
+                         lane_key=lambda c: 0 if c["booklet"] == "a" else 1)
+            self.assertEqual(pipeline.LANES["count"], 2)
