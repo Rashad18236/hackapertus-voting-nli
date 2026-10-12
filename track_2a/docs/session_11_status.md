@@ -16,13 +16,17 @@ Updated after every step. If the session is restarted with "continue", work goes
 
 ## Running
 
-- Step 2, dev: forced fallback run, 300 dev task A cases, arms today-routed, today-fallback-nopart, VW-nopart,
-  BW-novote (`docs/runs/2026-10-12_rashad_fallbacks_devA300`).
+- Step 2, dev (from 20:31): forced fallback run, 300 dev task A cases, arms today-routed, today-fallback-nopart,
+  VW-nopart, BW-novote (`docs/runs/2026-10-12_rashad_fallbacks_devA300`); slow at first because today's fallback
+  and BW embed every booklet once.
+- Queued after it (`chain1`): step 2 on the balanced val sample (today's fallback, VW, BW), then step 3a
+  (AP-structure on the 93 booklets).
+- Code for steps 2–6 is written and committed (`4a4c14f`, all off by default; G1/G2 pass, tests pass).
 
 ## Next
 
-- Step 2 on val (balanced 300: today's fallback, VW, BW) and probe (today vs new defaults); then steps 3 to 6 and
-  FINISH.
+- Step 2 decision (FALLBACK RULE) and probe; step 3 runs 1–3 (and 4 if 3b allows), 3d image check; step 4 profile
+  and fixes; step 5 memory; step 6 selectors; FINISH.
 
 ## Numbers so far
 
