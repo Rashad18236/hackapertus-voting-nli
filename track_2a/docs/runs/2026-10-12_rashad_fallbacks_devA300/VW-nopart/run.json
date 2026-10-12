@@ -1,0 +1,40 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "20:31",
+ "kind": "model run",
+ "code": "44983b2 working tree, committed unchanged as 6903fab (scripts/paired_run.py with the arm field force, in-process)",
+ "cases": "dev, all 300 task A cases, forced into a fallback situation per arm",
+ "format": "official scorer; interleaved, 4 arms, 1 request per second (session 11 step 2, forced fallback test)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_fallbacks_devA300/today-routed",
+  "2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart",
+  "2026-10-12_rashad_fallbacks_devA300/BW-novote"
+ ],
+ "setup": "forced 'no part': VW, the vote's valid parts' paragraphs with their part names, the 8 most similar (A-v4-vote-wide-L1)",
+ "results": {
+  "macro_f1": 0.927,
+  "f1": {
+   "entailment": 0.959,
+   "neutral": 0.904,
+   "contradiction": 0.919
+  },
+  "evidence": {
+   "score": 0.766,
+   "found": 154,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1078,
+  "mean_time_ms": 2558,
+  "p95_time_ms": 6970,
+  "mean_output_tokens": 14.4
+ }
+}

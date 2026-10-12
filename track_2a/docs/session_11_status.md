@@ -14,13 +14,16 @@ Updated after every step. If the session is restarted with "continue", work goes
   249 with a usable part, cross-language disagreements 2 → 0; probe routed 83 → 90 of 94. G1/G2 pass; adopted
   (`docs/runs/2026-10-12_rashad_parser-coverage_booklets93`).
 
+- (21:22) Step 2, dev: forced fallback run on 300 dev task A cases (`docs/runs/2026-10-12_rashad_fallbacks_devA300`,
+  one backend). Macro-F1 / evidence / input + output tokens: today-routed 0.977 / 0.980 / 1,238 + 14.5;
+  today's fallback ("no part") 0.900 / 0.672 / 1,868 + 15.8; VW ("no part") 0.927 / 0.766 / 1,078 + 14.4;
+  BW ("no vote") 0.857 / 0.647 / 939 + 14.3. BW is lower on dev: fails the FALLBACK RULE (off). VW goes to val.
+
 ## Running
 
-- Step 2, dev (from 20:31): forced fallback run, 300 dev task A cases, arms today-routed, today-fallback-nopart,
-  VW-nopart, BW-novote (`docs/runs/2026-10-12_rashad_fallbacks_devA300`); slow at first because today's fallback
-  and BW embed every booklet once.
-- Queued after it (`chain1`): step 2 on the balanced val sample (today's fallback, VW, BW), then step 3a
-  (AP-structure on the 93 booklets).
+- Step 2, val (from 21:22): balanced val sample, today's fallback, VW ("no part"), BW ("no vote", for the record)
+  (`docs/runs/2026-10-12_rashad_fallbacks_valA300`). Queued after it (`chain1`): step 3a (AP-structure on the 93
+  booklets).
 - Code for steps 2–6 is written and committed (`4a4c14f`, all off by default; G1/G2 pass, tests pass).
 
 ## Next
