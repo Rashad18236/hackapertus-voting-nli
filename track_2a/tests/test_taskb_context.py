@@ -94,6 +94,15 @@ class CliModes(unittest.TestCase):
             resp, status, raw = cli.predict(case, ".", cli.Settings(context_b=mode))
         return resp, status, raw, seen
 
+    def test_unified_uses_task_a_default_prompt_and_schema(self):  # session 10, step 9 (B-U)
+        text = reference(12, 900, "cli-unified")
+        resp, status, raw, seen = self.predict("unified", '{"paragraphs": [2], "label": 2}', text)
+        self.assertEqual((resp["label"], status, resp["evidence"]), (2, "ok", []))
+        self.assertEqual(raw["prompt_version"], "A-v4-section-route-L1")
+        self.assertEqual(seen["messages"][0]["content"], cli.nli.PROMPTS_A["A-v4-section-route-L1"])
+        self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A_PARAGRAPHS)
+        self.assertIn("[1] " + TITLE, seen["messages"][1]["content"])
+
     def test_default_is_the_whole_reference(self):
         self.assertEqual(cli.Settings().context_b, "full")  # session 10, step 2 (session 9, phase C: cut)
 

@@ -376,11 +376,13 @@ def prepare_b(case, start, raw, settings):
     if settings.context_b != "full":  # session 9, phase C: cut or numbered long passages
         raw["context_b"] = settings.context_b
         try:
-            if settings.context_b == "para":
+            if settings.context_b in ("para", "unified"):
+                # B-para (session 9): A-v4-section-route. B-U (session 10, step 9): task A's default routed prompt.
+                version = "A-v4-section-route" if settings.context_b == "para" else paragraph_prompt_version(settings)
                 texts = taskb_context.para_texts(reference_text, claim_text)
-                raw["prompt_version"], raw["paragraphs_sent"] = "A-v4-section-route", len(texts)
+                raw["prompt_version"], raw["paragraphs_sent"] = version, len(texts)
                 messages = nli.build_messages_a_paragraphs(taskb_context.PART_LINE, texts, case.get("vote", ""),
-                                                           claim_text)
+                                                           claim_text, version)
                 max_tokens, schema = settings.max_tokens_a, nli.ANSWER_SCHEMA_A_PARAGRAPHS
             else:
                 text = taskb_context.cut_text(reference_text, claim_text, settings.context_b)

@@ -9,6 +9,8 @@ time when the model is fast). The passage's words are never changed, only cut or
   part), in their order; the prompt is unchanged. Shorter references stay whole.
 - "cut4" (B-cut4, session 10, step 5): the same with CUT4_CHARS and CUT4_TOP_K: a reference over 3,000
   characters becomes its first line plus the 4 most similar paragraphs.
+- "unified" (B-U, session 10, step 9): B-para's numbered paragraphs (B-cut's text) with task A's default routed
+  prompt (A-v4-section-route-L1) and answer schema; the cited paragraphs are not used (task B evidence stays []).
 - "para" (B-para): the same text as numbered paragraphs ("[1] ..."), with task A's paragraph prompt and answer
   schema (A-v4-section-route); the answer's paragraph numbers are not used (task B evidence stays []).
 
@@ -20,12 +22,13 @@ used.
 from src import booklet
 from src.contexts import section_route
 
-MODES = ("full", "cut", "para", "cut4")
+MODES = ("full", "cut", "para", "cut4", "unified")
 CUT_CHARS = 8000
 TOP_K = 8
 CUT4_CHARS = 3000
 CUT4_TOP_K = 4
-LIMITS = {"cut": (CUT_CHARS, TOP_K), "para": (CUT_CHARS, TOP_K), "cut4": (CUT4_CHARS, CUT4_TOP_K)}
+LIMITS = {"cut": (CUT_CHARS, TOP_K), "para": (CUT_CHARS, TOP_K), "cut4": (CUT4_CHARS, CUT4_TOP_K),
+          "unified": (CUT_CHARS, TOP_K)}
 PART_LINE = ("a passage from the booklet's section on the ballot named in VOTE; its first paragraph is the "
              "ballot's title (voice: as stated in the passage)")
 
