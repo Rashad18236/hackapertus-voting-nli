@@ -5,6 +5,10 @@ Run from track_2a/ (key in .env or the environment; never printed):
 
     LLM_MIN_INTERVAL=1 python3 scripts/connection_time.py --cases output/devB/cases.jsonl --n 20 --out <folder>
 
+It measures src/llm.py as it was before session 10 (one requests.post per call), so run it from a checkout of
+that code (e.g. a worktree of main at 42b2a3c) with --env-file pointing at the developer's .env. Only task B
+cases whose reference is at most 8,000 characters are used (no embedding model is loaded).
+
 Every case runs src/cli.py's predict() twice, back to back, in an order that alternates from case to case:
 
 - "today": src/llm.py as it is (requests.post: a new connection for every call);
@@ -40,7 +44,7 @@ import urllib3.connection
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src import cli, llm  # noqa: E402
+from src import cli, env, llm  # noqa: E402
 
 _probe = {"connect_s": 0.0, "connects": 0, "first_send": None, "in_connect": False}
 
@@ -105,11 +109,13 @@ def main():
     ap.add_argument("--cases", required=True, help="task B cases (no booklets needed)")
     ap.add_argument("--n", type=int, default=20)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--env-file", default=str(ROOT / ".env"), help="the .env with the endpoint (never printed)")
     args = ap.parse_args()
+    env.load_env_file(args.env_file)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     cases = [json.loads(line) for line in Path(args.cases).read_text(encoding="utf-8").splitlines() if line.strip()]
-    cases = [c for c in cases if "reference" in c][:args.n]
+    cases = [c for c in cases if "reference" in c and len(c["reference"]["text"]) <= 8000][:args.n]
     _patch_sockets()
     plain_post = requests.post
     session = requests.Session()
