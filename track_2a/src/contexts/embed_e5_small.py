@@ -38,6 +38,7 @@ CHUNK_CHARS = 1000  # about 250 to 300 tokens, well under e5's 512-token limit
 TOP_K = 8
 MAX_TOKENS = 512  # e5's maximum input length; longer inputs are truncated
 BATCH_SIZE = 16  # session 8: 32 before; with length-sorted batches, 16 is faster and needs less memory
+BATCH_TOKENS = None  # session 11, step 5 (off): if set, a batch also holds at most this many tokens (texts x longest)
 MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-small"))
 
 
@@ -64,7 +65,8 @@ class E5Embedder:
 
     def __init__(self, model_dir=MODEL_DIR, model_file="model.onnx"):
         # Imported here so the other variants and the tests need neither package loaded.
-        from src import timing
+        from src import deferral, timing
+        deferral.check()  # session 11, step 4: in a lane's first pass the model is not loaded
         with timing.phase("e5_load"):
             self._load(model_dir, model_file)
 
@@ -94,15 +96,36 @@ class E5Embedder:
         vectors are the same (padding is masked out)."""
         import numpy as np
 
-        from src import timing
+        from src import deferral, timing
+        deferral.check()  # session 11, step 4: in a lane's first pass nothing is embedded
         with self._lock, timing.phase("embed"):
             return self._embed(np, texts)
+
+    def _batches(self, texts, order):
+        """The texts' indices in batches, in length order: BATCH_SIZE texts each, as since session 8; with
+        BATCH_TOKENS set (session 11, step 5), a batch also stops before its texts times its longest text's tokens
+        would exceed BATCH_TOKENS (a batch is padded to its longest text, so this bounds its memory)."""
+        if BATCH_TOKENS is None:
+            return [order[start:start + BATCH_SIZE] for start in range(0, len(order), BATCH_SIZE)]
+        encoded = self.tokenizer.encode_batch([texts[i] for i in order])  # padded: the real length is the mask's sum
+        lengths = {i: sum(e.attention_mask) for i, e in zip(order, encoded)}
+        batches, current, longest = [], [], 0
+        for i in order:
+            longer = max(longest, lengths[i])
+            if current and (len(current) == BATCH_SIZE or (len(current) + 1) * longer > BATCH_TOKENS):
+                batches.append(current)
+                current, longer = [], lengths[i]
+            current.append(i)
+            longest = longer
+        if current:
+            batches.append(current)
+        return batches
 
     def _embed(self, np, texts):
         order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
         vectors = []
-        for start in range(0, len(texts), BATCH_SIZE):
-            encoded = self.tokenizer.encode_batch([texts[i] for i in order[start:start + BATCH_SIZE]])
+        for batch in self._batches(texts, order):
+            encoded = self.tokenizer.encode_batch([texts[i] for i in batch])
             ids = np.array([e.ids for e in encoded], dtype=np.int64)
             mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
             inputs = {"input_ids": ids, "attention_mask": mask}

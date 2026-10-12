@@ -238,3 +238,44 @@ class WorkersInProcess(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def heavy_if_odd(case):
+    """A fake preparation: an odd case needs the embedding model (src/deferral.py), an even one does not. The result
+    carries when the case was prepared."""
+    from src import deferral
+    if case % 2:
+        deferral.check()
+    return case * 10, time.monotonic_ns()
+
+
+class LightFirst(unittest.TestCase):
+    """Session 11, step 4: a lane prepares the cases that need no embedding model first (pipeline.LIGHT_FIRST)."""
+
+    def run_lanes(self, light_first):
+        order = []
+        items = [(n, n) for n in range(8)]
+        with mock.patch.object(pipeline, "LIGHT_FIRST", light_first):
+            pipeline.run(items, heavy_if_odd, lambda p: p, lambda c: -1,
+                         lambda number, case, result: order.append((number, result)), workers=1)
+        return order
+
+    def prepared_order(self, results):
+        return [n for n, (value, when) in sorted(results, key=lambda r: r[1][1])]
+
+    def test_light_cases_are_prepared_first_and_every_case_answered_once(self):
+        results = self.run_lanes(True)
+        self.assertEqual(sorted((n, v) for n, (v, _) in results), [(n, n * 10) for n in range(8)])
+        self.assertEqual(self.prepared_order(results), [0, 2, 4, 6, 1, 3, 5, 7])
+
+    def test_off_keeps_the_list_order(self):
+        self.assertEqual(self.prepared_order(self.run_lanes(False)), list(range(8)))
+
+    def test_needs_model_is_not_an_ordinary_exception(self):
+        from src import deferral
+        self.assertFalse(issubclass(deferral.NeedsModel, Exception))
+        with mock.patch.dict(deferral.DEFER, {"on": True}), self.assertRaises(deferral.NeedsModel):
+            try:
+                deferral.check()
+            except Exception:  # what the fallbacks in src/ catch
+                self.fail("NeedsModel was caught as an ordinary exception")

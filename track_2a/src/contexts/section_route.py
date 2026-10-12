@@ -181,7 +181,10 @@ def wide_texts(paragraphs, names):
 
 def parsed_booklet(pages):
     """booklet.parse(pages), computed once per booklet text (the result is only read, never changed)."""
-    key = hashlib.sha256("\f".join(f"{n}\n{t}" for n, t in sorted(pages.items())).encode("utf-8")).hexdigest()
+    # Session 11, step 4: a booklet read page by page (parse.Pages) is named by its PDF file's SHA-256, so that naming it
+    # reads no page; every other booklet by the SHA-256 of its page texts, as before.
+    key = getattr(pages, "key", None) or \
+        hashlib.sha256("\f".join(f"{n}\n{t}" for n, t in sorted(pages.items())).encode("utf-8")).hexdigest()
     return memo.once(_booklets, key, lambda: _timed_parse(pages))
 
 

@@ -131,3 +131,21 @@ class UnreadablePages(unittest.TestCase):
 
         path = self.write([("Gleich", False)])
         self.assertEqual(parse.extract_pages(path), [PdfReader(str(path)).pages[0].extract_text()])
+
+
+class LazyPages(unittest.TestCase):
+    """Session 11, step 4 (off by default): pages read when first asked for, with the same text."""
+
+    def test_same_text_read_on_demand(self):
+        folder = Path(tempfile.mkdtemp())
+        path = folder / "synthetic.pdf"
+        path.write_bytes(synthetic_pdf([("Eins", False), ("Zwei", True), ("Drei", False)]))
+        with mock.patch.object(parse, "LAZY_PAGES", True):
+            pages = parse.load_pages(path, cache_dir=folder / "cache")
+        self.assertIsInstance(pages, parse.Pages)
+        self.assertEqual((len(pages), 2 in pages, 4 in pages, list(pages)), (3, True, False, [1, 2, 3]))
+        self.assertEqual(pages._texts, {})  # nothing read yet
+        self.assertEqual(pages[2], parse.extract_pages(path)[1])  # the same text, the font repair included
+        self.assertEqual(set(pages._texts), {2})
+        self.assertEqual(dict(pages), {n: t for n, t in enumerate(parse.extract_pages(path), start=1)})
+        self.assertEqual(pages.key, parse._sha256(path))

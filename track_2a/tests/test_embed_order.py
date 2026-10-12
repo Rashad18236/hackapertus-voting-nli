@@ -51,3 +51,31 @@ class EmbedOrder(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TokenBoundedBatches(unittest.TestCase):
+    """Session 11, step 5 (off by default): batches bounded by their total tokens."""
+
+    def test_off_keeps_batches_of_sixteen(self):
+        from src.contexts import embed_e5_small as e
+        emb = object.__new__(e.E5Embedder)
+        order = list(range(40))
+        self.assertEqual([len(b) for b in emb._batches(["x"] * 40, order)], [16, 16, 8])
+
+    def test_on_bounds_texts_times_longest(self):
+        from unittest import mock
+        from src.contexts import embed_e5_small as e
+
+        class Enc:
+            def __init__(self, n):
+                self.attention_mask = [1] * n + [0] * (100 - n)
+
+        emb = object.__new__(e.E5Embedder)
+        emb.tokenizer = mock.Mock()
+        lengths = [10] * 6 + [50] * 6
+        emb.tokenizer.encode_batch.return_value = [Enc(n) for n in lengths]
+        with mock.patch.object(e, "BATCH_TOKENS", 200):
+            batches = emb._batches(["t"] * 12, list(range(12)))
+        self.assertEqual(sum(len(b) for b in batches), 12)
+        self.assertTrue(all(len(b) * max(lengths[i] for i in b) <= 200 for b in batches))
+        self.assertEqual([i for b in batches for i in b], list(range(12)))  # order kept

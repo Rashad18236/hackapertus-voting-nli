@@ -12,6 +12,8 @@ content, never on which case asked first: predictions do not depend on order.
 import hashlib
 import json
 import os
+import threading
+from collections.abc import Mapping
 from pathlib import Path
 
 from src import memo
@@ -45,19 +47,20 @@ def extract_pages(pdf_path):
 
 def _extract(PdfReader, pdf_path):
     reader = PdfReader(str(pdf_path))
-    texts = []
-    for page in reader.pages:
-        try:
-            texts.append(page.extract_text() or "")
-            continue
-        except Exception:
-            pass
-        try:
-            _repair_fonts(page.get("/Resources"), set())
-            texts.append(page.extract_text() or "")
-        except Exception:
-            texts.append("")
-    return texts
+    return [_page_text(page) for page in reader.pages]
+
+
+def _page_text(page):
+    """One page's text: as pypdf extracts it; after _repair_fonts if pypdf refuses the page; else empty text."""
+    try:
+        return page.extract_text() or ""
+    except Exception:
+        pass
+    try:
+        _repair_fonts(page.get("/Resources"), set())
+        return page.extract_text() or ""
+    except Exception:
+        return ""
 
 
 _FONT_FILES = ("/FontFile", "/FontFile2", "/FontFile3")
@@ -97,11 +100,54 @@ def _repair_fonts(resources, seen):
 _pages = {}  # (cache folder, booklet SHA-256) -> {page: text}; session 10: also kept in memory
 
 
+LAZY_PAGES = False  # session 11, step 4 (off): read a page only when it is first asked for (Pages)
+
+
 def load_pages(pdf_path, cache_dir=CACHE_DIR):
     """Return {page number (1-based): text}, using the cache when possible. A booklet is parsed once per run,
-    also when two threads ask for it at the same time (src/memo.py); every caller gets its own dict."""
+    also when two threads ask for it at the same time (src/memo.py); every caller gets its own dict.
+    With LAZY_PAGES and no cache file: a Pages mapping that reads each page when it is first asked for (shared
+    by the callers of this process; nothing in src/ changes a booklet's pages)."""
     key = _sha256(pdf_path)
+    if LAZY_PAGES and not (Path(cache_dir) / f"{key}.json").exists():
+        return memo.once(_pages, (str(cache_dir), key, "lazy"), lambda: Pages(pdf_path, key))
     return dict(memo.once(_pages, (str(cache_dir), key), lambda: _load_pages(pdf_path, key, cache_dir)))
+
+
+class Pages(Mapping):
+    """{page number: text} of a booklet, each page read from the PDF when first asked for (session 11, step 4).
+
+    The text of a page is exactly what extract_pages gives for it (the same reading and repair, page by page).
+    key: the PDF file's SHA-256, so that caches of parsed booklets need not read every page to name the booklet.
+    Asking whether a page exists, or how many pages there are, reads no page."""
+
+    def __init__(self, pdf_path, key):
+        from pypdf import PdfReader
+
+        self.key = key
+        self._reader = PdfReader(str(pdf_path))
+        self._count = len(self._reader.pages)
+        self._texts = {}
+        self._lock = threading.Lock()
+
+    def __getitem__(self, number):
+        if not (isinstance(number, int) and 1 <= number <= self._count):
+            raise KeyError(number)
+        with self._lock:
+            if number not in self._texts:
+                from src import timing
+                with timing.phase("pdf_read"):
+                    self._texts[number] = _page_text(self._reader.pages[number - 1])
+            return self._texts[number]
+
+    def __contains__(self, number):
+        return isinstance(number, int) and 1 <= number <= self._count
+
+    def __iter__(self):
+        return iter(range(1, self._count + 1))
+
+    def __len__(self):
+        return self._count
 
 
 def _load_pages(pdf_path, key, cache_dir):

@@ -73,10 +73,38 @@ def available_cpus():
     return max(1, cpus)
 
 
+def cgroup_memory():
+    """The container's memory limit in bytes (docker run --memory) from cgroup v2 or v1, or None if there is none."""
+    for path in ("/sys/fs/cgroup/memory.max", "/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        try:
+            value = Path(path).read_text().strip()
+        except OSError:
+            continue
+        if value != "max" and value.isdigit() and int(value) < 2**60:  # v1 reports a huge number for "no limit"
+            return int(value)
+    return None
+
+
+# Session 11, step 5: the lanes' number from the container's memory limit (each lane that embeds holds its own copy
+# of e5). None leaves the number to the CPUs alone, as in session 10.
+MEMORY_FOR_TWO_LANES = None  # bytes; below it one lane
+MEMORY_FOR_ONE_LANE = None   # bytes; below it no lane (every case in turn in the main process)
+
+
 def default_workers():
     """Worker processes: two on a machine with at least two CPUs, else one. Each worker owns whole booklets
-    (src/cli.py's lane_key), so no booklet is read twice; the main process needs little CPU."""
-    return 2 if available_cpus() >= 2 else 1
+    (src/cli.py's lane_key), so no booklet is read twice; the main process needs little CPU. Session 11, step 5:
+    fewer under a low memory limit (MEMORY_FOR_TWO_LANES, MEMORY_FOR_ONE_LANE)."""
+    workers = 2 if available_cpus() >= 2 else 1
+    memory = cgroup_memory()
+    if memory is not None and MEMORY_FOR_ONE_LANE is not None and memory < MEMORY_FOR_ONE_LANE:
+        return 0
+    if memory is not None and MEMORY_FOR_TWO_LANES is not None and memory < MEMORY_FOR_TWO_LANES:
+        return min(workers, 1)
+    return workers
+
+
+LIGHT_FIRST = False  # session 11, step 4: a lane prepares the cases that need no embedding model first (deferral.py)
 
 
 class Lanes:
@@ -121,17 +149,27 @@ class Lanes:
 
 
 def _lane(group, prepare, send):
-    """A worker process: prepare each case of its list in turn and send (number, ok, result or error text)."""
-    from src import timing
-    for number, case in group:
-        try:
-            message = (number, True, prepare(case))
-        except Exception as e:
-            message = (number, False, f"{type(e).__name__}: {e}")
-        try:
-            send.send(message)
-        except Exception as e:  # e.g. a result that cannot be sent
-            send.send((number, False, f"{type(e).__name__}: {e}"))
+    """A worker process: prepare each case of its list and send (number, ok, result or error text).
+
+    Session 11, step 4 (src/deferral.py): first every case that needs no embedding model, in list order; a case that
+    would need the model is put aside and prepared in a second pass, in list order."""
+    from src import deferral, timing
+    deferred = []
+    for passes, cases in (("first", group), ("second", deferred)):
+        deferral.DEFER["on"] = passes == "first" and LIGHT_FIRST
+        for number, case in list(cases):
+            try:
+                message = (number, True, prepare(case))
+            except deferral.NeedsModel:
+                deferred.append((number, case))
+                continue
+            except Exception as e:
+                message = (number, False, f"{type(e).__name__}: {e}")
+            try:
+                send.send(message)
+            except Exception as e:  # e.g. a result that cannot be sent
+                send.send((number, False, f"{type(e).__name__}: {e}"))
+    deferral.DEFER["on"] = False
     timing.report("lane")
     send.close()
 
