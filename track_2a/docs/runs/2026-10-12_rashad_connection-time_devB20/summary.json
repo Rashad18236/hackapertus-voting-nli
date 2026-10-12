@@ -1,0 +1,46 @@
+{
+ "cases": 20,
+ "measured_at": "2026-10-12T12:12:00Z",
+ "arms": {
+  "today": {
+   "calls": 20,
+   "connections_opened": 20,
+   "setup_ms": {
+    "mean": 486.0,
+    "median": 465.3,
+    "max": 716.9
+   },
+   "connect_ms": {
+    "mean": 484.4,
+    "median": 463.8,
+    "max": 714.9
+   },
+   "total_ms": {
+    "mean": 1339.9,
+    "median": 1403.7,
+    "max": 2044.4
+   },
+   "setup_ms_after_first_call_mean": 484.2
+  },
+  "reused": {
+   "calls": 20,
+   "connections_opened": 1,
+   "setup_ms": {
+    "mean": 24.3,
+    "median": 1.2,
+    "max": 462.4
+   },
+   "connect_ms": {
+    "mean": 23.0,
+    "median": 0.0,
+    "max": 460.5
+   },
+   "total_ms": {
+    "mean": 623.1,
+    "median": 742.1,
+    "max": 1913.1
+   },
+   "setup_ms_after_first_call_mean": 1.2
+  }
+ }
+}

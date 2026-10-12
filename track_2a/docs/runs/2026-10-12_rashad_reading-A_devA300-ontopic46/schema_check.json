@@ -1,0 +1,122 @@
+{
+ "case": "v1.1-row-2-A",
+ "accepted": true,
+ "enforced": true,
+ "requests": [
+  {
+   "kind": "ordinary",
+   "answer": "{\"paragraphs\": [3], \"label\": 0}",
+   "branch": "cited",
+   "fallbacks": [],
+   "endpoint": {
+    "model": "swiss-ai/apertus-v1.5-8b",
+    "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840",
+    "cf_ray_datacentre": "DFW",
+    "headers": {
+     "cf-placement": "local-DFW",
+     "llm_provider-server": "openresty/1.27.1.2",
+     "server": "cloudflare",
+     "x-litellm-attempted-fallbacks": "0",
+     "x-litellm-attempted-retries": "0",
+     "x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "x-litellm-model-name": "openai/alias-apertus",
+     "x-litellm-version": "1.98.0"
+    }
+   }
+  },
+  {
+   "kind": "ordinary",
+   "answer": "{\"paragraphs\": [3], \"label\": 0}",
+   "branch": "cited",
+   "fallbacks": [],
+   "endpoint": {
+    "model": "swiss-ai/apertus-v1.5-8b",
+    "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840",
+    "gateway_cache_hit": true,
+    "cf_ray_datacentre": "DFW",
+    "headers": {
+     "cf-placement": "local-DFW",
+     "server": "cloudflare",
+     "x-litellm-attempted-fallbacks": "0",
+     "x-litellm-attempted-retries": "0",
+     "x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "x-litellm-model-name": "openai/alias-apertus",
+     "x-litellm-version": "1.98.0"
+    }
+   }
+  },
+  {
+   "kind": "adversarial",
+   "answer": "{\"paragraphs\": [3], \"label\": 2}",
+   "branch": "cited",
+   "fallbacks": [],
+   "endpoint": {
+    "model": "swiss-ai/apertus-v1.5-8b",
+    "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840",
+    "cf_ray_datacentre": "DFW",
+    "headers": {
+     "cf-placement": "local-DFW",
+     "llm_provider-server": "openresty/1.27.1.2",
+     "server": "cloudflare",
+     "x-litellm-attempted-fallbacks": "0",
+     "x-litellm-attempted-retries": "0",
+     "x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "x-litellm-model-name": "openai/alias-apertus",
+     "x-litellm-version": "1.98.0"
+    }
+   }
+  },
+  {
+   "kind": "adversarial",
+   "answer": "{\"paragraphs\": [0], \"label\": 0}",
+   "branch": "cited",
+   "fallbacks": [],
+   "endpoint": {
+    "model": "swiss-ai/apertus-v1.5-8b",
+    "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840",
+    "cf_ray_datacentre": "DFW",
+    "headers": {
+     "cf-placement": "local-DFW",
+     "llm_provider-server": "openresty/1.27.1.2",
+     "server": "cloudflare",
+     "x-litellm-attempted-fallbacks": "0",
+     "x-litellm-attempted-retries": "0",
+     "x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "x-litellm-model-name": "openai/alias-apertus",
+     "x-litellm-version": "1.98.0"
+    }
+   }
+  },
+  {
+   "kind": "adversarial",
+   "answer": "{\"paragraphs\": [3], \"label\": 2}",
+   "branch": "cited",
+   "fallbacks": [],
+   "endpoint": {
+    "model": "swiss-ai/apertus-v1.5-8b",
+    "system_fingerprint": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840",
+    "cf_ray_datacentre": "DFW",
+    "headers": {
+     "cf-placement": "local-DFW",
+     "llm_provider-server": "openresty/1.27.1.2",
+     "server": "cloudflare",
+     "x-litellm-attempted-fallbacks": "0",
+     "x-litellm-attempted-retries": "0",
+     "x-litellm-model-api-base": "https://api.blablador.fz-juelich.de/v1",
+     "x-litellm-model-group": "swiss-ai/apertus-v1.5-8b",
+     "x-litellm-model-id": "8c4216b403b79005fdefac315cf65b2320c880e4b6822877ebc8a613af2962ca",
+     "x-litellm-model-name": "openai/alias-apertus",
+     "x-litellm-version": "1.98.0"
+    }
+   }
+  }
+ ]
+}

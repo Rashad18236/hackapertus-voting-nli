@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "15:04",
+ "kind": "model run",
+ "code": "d2e17d5 working tree (scripts/paired_run.py with --exclude-paragraphs, in-process)",
+ "cases": "dev, all 300 task A cases, plus the 46 cases of the on-topic neutral set (data/ontopic_neutral/; scored separately; mean tokens and times include them)",
+ "format": "official scorer on dev; interleaved, 3 arms, 1 request per second (session 10 step 6)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_reading-A_devA300-ontopic46/today",
+  "2026-10-12_rashad_reading-A_devA300-ontopic46/CS"
+ ],
+ "setup": "SL: after a neutral answer that cites paragraphs, one more call with only those paragraphs (A-v4-second-look-cited); 0/2 replaces",
+ "results": {
+  "macro_f1": 0.987,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 1.0,
+   "contradiction": 0.98
+  },
+  "evidence": {
+   "score": 0.99,
+   "found": 199,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1171,
+  "mean_time_ms": 852,
+  "p95_time_ms": 1336
+ }
+}

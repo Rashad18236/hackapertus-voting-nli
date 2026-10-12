@@ -1,0 +1,90 @@
+{
+ "cases": 580,
+ "same_backend_cases": 580,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 580
+ },
+ "arms": {
+  "today": {
+   "all": {
+    "cases": 580,
+    "macro_f1": 0.9589,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1205.8,
+    "output_tokens": 14.5,
+    "evidence": 0.9551
+   },
+   "same_backend": {
+    "cases": 580,
+    "macro_f1": 0.9589,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1205.8,
+    "output_tokens": 14.5,
+    "evidence": 0.9551
+   }
+  },
+  "K4": {
+   "all": {
+    "cases": 580,
+    "macro_f1": 0.9437,
+    "neutral_recall": 0.9944,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 804.2,
+    "output_tokens": 14.3,
+    "evidence": 0.9377
+   },
+   "same_backend": {
+    "cases": 580,
+    "macro_f1": 0.9437,
+    "neutral_recall": 0.9944,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 804.2,
+    "output_tokens": 14.3,
+    "evidence": 0.9377
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": false,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 6,
+    "breaks": 15,
+    "sign_test_p": 0.0784,
+    "fixed": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1162-A",
+     "v1.1-row-1174-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1259-A",
+     "v1.1-row-1287-A"
+    ],
+    "broken": [
+     "v1.1-row-1002-A",
+     "v1.1-row-1071-A",
+     "v1.1-row-1109-A",
+     "v1.1-row-1175-A",
+     "v1.1-row-1213-A",
+     "v1.1-row-1221-A",
+     "v1.1-row-1257-A",
+     "v1.1-row-1294-A",
+     "v1.1-row-13-A",
+     "v1.1-row-1405-A",
+     "v1.1-row-171-A",
+     "v1.1-row-175-A",
+     "v1.1-row-255-A",
+     "v1.1-row-346-A",
+     "v1.1-row-991-A"
+    ]
+   }
+  }
+ }
+}

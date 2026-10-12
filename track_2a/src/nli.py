@@ -84,6 +84,15 @@ PROMPTS_B["v5-min"] = """Compare the CLAIM with the REFERENCE TEXT from a Swiss 
 # reference text.": every task B passage starts with the title of its own ballot, and most v3 errors on dev were
 # claims about another ballot called a contradiction. The sentence adds 14 tokens (Apertus v1 tokenizer): 91
 # here plus 9 for the user message's labels = 100. Also for --schema-b only.
+# Session 10, step 5 (off by default). BP-short: v3-topic-first's rules in fewer words (fixed text at most 150
+# tokens with the Apertus v1 tokenizer), label names from the dataset README word for word (see A-v5-short).
+PROMPTS_B["v6-short"] = """Check a CLAIM against a REFERENCE TEXT from a Swiss voting booklet. Languages may differ. Use only the reference text.
+
+1 (Unrelated / Neutral) if the reference text does not deal with the claim's subject. Otherwise 0 (Entailment) if it supports the claim; 2 (Contradiction) only if it states something that cannot be true together with the claim; else 1.
+Missing information is never a contradiction. "According to the text / committee / Federal Council, X" is 1 if the text does not deal with X.
+
+JSON only: {"label": <0, 1 or 2>}"""
+
 BALLOT_SENTENCE = "The first line of the reference text names the ballot it is about."
 PROMPTS_B["v5-ballot"] = PROMPTS_B["v5-min"].replace(
     "Use only the reference text.", "Use only the reference text. " + BALLOT_SENTENCE, 1)
@@ -173,6 +182,19 @@ PROMPTS_A["A-v4-section-route-L1"] = PROMPTS_A["A-v4-section-route"].replace(
     _RULE_B, _RULE_B + "\n" + L1_SENTENCE)
 assert PROMPTS_A["A-v4-section-route-L1"] != PROMPTS_A["A-v4-section-route"]
 
+# Session 10, step 5 (off by default). P-short: the routed prompt with the same rules in fewer words (fixed text at
+# most 200 tokens with the Apertus v1 tokenizer, user labels included); L1's sentence stays word for word. The label
+# names are the dataset README's, word for word ("Entailment (0), Unrelated / Neutral (1) or Contradiction (2)";
+# the README at commit fc2b2760 is the first with label definitions).
+PROMPTS_A["A-v5-short"] = f"""REFERENCE TEXT: numbered paragraphs, one PART of a Swiss voting booklet on the ballot in VOTE. Check the CLAIM against it alone; languages may differ.
+
+1 (Unrelated / Neutral) if it does not deal with the claim's subject; else 0 (Entailment) if it supports the claim, 2 (Contradiction) only if it states something that cannot be true together with the claim, otherwise 1.
+Missing information is never a contradiction. "According to the committee / Federal Council, X" is 1 if the text does not deal with X.
+{L1_SENTENCE}
+
+JSON only; justifying paragraphs first (up to three, none for 1):
+{{"paragraphs": [2, 5], "label": 0}}"""
+
 # L2: a second look at a neutral answer, with the three paragraphs most similar to the claim, asking 0, then 2,
 # then 1.
 PROMPTS_A["A-v4-second-look"] = """You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. The reference text is the three paragraphs ("[n] ...") closest to the claim from one part of the booklet's section on the ballot named in VOTE; the line PART says which part it is and whose voice it is. The reference text and the claim may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
@@ -207,6 +229,29 @@ ANSWER_SCHEMA_A_PARAGRAPHS = {
     "required": ["paragraphs", "label"],
     "additionalProperties": False,
 }
+
+
+# Session 10, step 6 (CS, off by default): the routed answer with its two parts coupled. A neutral answer cites no
+# paragraph; an entailment or a contradiction cites one to three. Needs an endpoint that enforces anyOf.
+ANSWER_SCHEMA_A_COUPLED = {
+    "anyOf": [
+        {"type": "object",
+         "properties": {"paragraphs": {"type": "array", "items": {"type": "integer"}, "maxItems": 0},
+                        "label": {"type": "integer", "enum": [1]}},
+         "required": ["paragraphs", "label"], "additionalProperties": False},
+        {"type": "object",
+         "properties": {"paragraphs": {"type": "array", "items": {"type": "integer"}, "minItems": 1, "maxItems": 3},
+                        "label": {"type": "integer", "enum": [0, 2]}},
+         "required": ["paragraphs", "label"], "additionalProperties": False},
+    ]
+}
+
+# Session 10, step 6 (SL, off by default): after a neutral answer that still cites paragraphs, one more call with
+# only the cited paragraphs. A-v4-second-look with its first sentence adapted; all three labels allowed.
+PROMPTS_A["A-v4-second-look-cited"] = PROMPTS_A["A-v4-second-look"].replace(
+    'The reference text is the three paragraphs ("[n] ...") closest to the claim from one part',
+    'The reference text is the paragraphs ("[n] ...") cited for the claim from one part')
+assert PROMPTS_A["A-v4-second-look-cited"] != PROMPTS_A["A-v4-second-look"]
 
 
 def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, version="A-v4-section-route"):

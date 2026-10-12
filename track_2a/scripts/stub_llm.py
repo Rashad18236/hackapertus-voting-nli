@@ -47,7 +47,8 @@ request's messages (independent of the order of the cases):
 
 GET /_stub/calls returns the log of all calls so far (number, path, model,
 whether an Authorization header and a User-Agent were sent, the answer kind,
-and request_sha256, the SHA-256 of the request body: see request_hash);
+request_sha256, the SHA-256 of the request body: see request_hash, and t_start
+and t_end, when the request had arrived and when its answer was written);
 POST /_stub/reset clears it. The API key's value is never stored or printed.
 
 Endpoint quirks (session 9, for src/llm.py's fallbacks; module use): Config(reject_response_format=400 or
@@ -201,6 +202,18 @@ def make_handler(config):
             self._send(404, {"error": {"message": "not found"}})
 
         def do_POST(self):
+            # Session 10 (scripts/local_time.py): each chat call's log entry gets t_start and t_end (time.time()),
+            # from the moment its request has arrived to the moment its answer has been written: the time the
+            # request is "in flight" for the organisers' local-time rule.
+            self._entry = None
+            t_start = time.time()
+            try:
+                self._post()
+            finally:
+                if self._entry is not None:
+                    self._entry["t_start"], self._entry["t_end"] = t_start, time.time()
+
+        def _post(self):
             length = int(self.headers.get("Content-Length") or 0)
             body = self.rfile.read(length)
             if self.path.rstrip("/") == "/_stub/reset":
@@ -224,6 +237,7 @@ def make_handler(config):
                 if config.keep_payloads:
                     entry["payload"] = payload
                 config.calls.append(entry)
+                self._entry = entry
             if config.delay:
                 time.sleep(config.delay)
             if config.models is not None and payload.get("model") not in config.models:

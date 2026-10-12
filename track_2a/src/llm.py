@@ -40,6 +40,7 @@ such an answer is marked `gateway_cache_hit`.
 import logging
 import os
 import re
+import threading
 import time
 from dataclasses import dataclass, field
 from email.utils import parsedate_to_datetime
@@ -134,6 +135,32 @@ _run = {"no_response_format": False, "model": None, "models_read": False, "extra
 def reset_run_state():
     """Forget the run's fallbacks (tests; a new process starts clean anyway)."""
     _run.update(no_response_format=False, model=None, models_read=False, extra_requests=0, last_start=0.0)
+    close_session()
+
+
+# One connection, kept open (session 10). Before, every call opened a new connection (DNS, TCP and TLS, and
+# reading the proxy settings) before its first byte went out: local time in the organisers' sense. Now each
+# thread that calls the endpoint keeps one requests.Session, whose connection is reused while the server keeps
+# it open. A kept connection the server has closed in the meantime shows up as a connection error: the request
+# is then sent once more on a new connection (CONNECTION_RETRIES); a second failure is an error as before.
+CONNECTION_RETRIES = 1
+_local = threading.local()
+_pace = threading.Lock()  # LLM_MIN_INTERVAL's pacing, when two requests may be in flight (src/pipeline.py)
+
+
+def session():
+    """This thread's requests.Session (created on first use)."""
+    if getattr(_local, "session", None) is None:
+        _local.session = requests.Session()
+    return _local.session
+
+
+def close_session():
+    """Close this thread's session and its connection; the next call opens a new one."""
+    current = getattr(_local, "session", None)
+    _local.session = None
+    if current is not None:
+        current.close()
 
 
 def min_interval():
@@ -225,15 +252,16 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
 def _post(base, payload, headers, counts):
     """POST one chat request, with the retries for timeouts, HTTP 5xx and HTTP 429 (module docstring); add every
     attempt's tokens and the attempt and 429 counts to counts. Returns the last response."""
-    server_retries = rate_retries = 0
+    server_retries = rate_retries = connection_retries = 0
     while True:
         counts["attempts"] += 1
-        wait = _run["last_start"] + min_interval() - time.monotonic()
-        if wait > 0:
-            time.sleep(wait)
-        _run["last_start"] = time.monotonic()
+        with _pace:
+            wait = _run["last_start"] + min_interval() - time.monotonic()
+            if wait > 0:
+                time.sleep(wait)
+            _run["last_start"] = time.monotonic()
         try:
-            response = requests.post(
+            response = session().post(
                 f"{base}/chat/completions", json=payload, headers=headers, timeout=TIMEOUT_SECONDS
             )
         except requests.Timeout:
@@ -245,6 +273,12 @@ def _post(base, payload, headers, counts):
             raise LLMError(f"LLM call timed out after {TIMEOUT_SECONDS} s ({counts['attempts']} attempts)",
                            counts["attempts"], counts["http_429"]) from None
         except requests.ConnectionError as e:
+            close_session()  # the kept connection is not usable any more
+            if connection_retries < CONNECTION_RETRIES:
+                connection_retries += 1
+                logging.warning("Connection to the LLM endpoint lost (%s); sending the request again on a new "
+                                "connection", type(e).__name__)
+                continue
             # `from None` drops the original exception, whose text includes the URL.
             raise LLMError(f"Could not connect to the LLM endpoint ({type(e).__name__})", counts["attempts"],
                            counts["http_429"]) from None
@@ -272,7 +306,7 @@ def _post(base, payload, headers, counts):
 def list_models(base, headers):
     """The model ids BASE_URL/models lists, or [] if it cannot be read."""
     try:
-        response = requests.get(f"{base}/models", headers=headers, timeout=TIMEOUT_SECONDS)
+        response = session().get(f"{base}/models", headers=headers, timeout=TIMEOUT_SECONDS)
         return [str(m.get("id")) for m in response.json().get("data", []) if isinstance(m, dict) and m.get("id")]
     except (requests.RequestException, ValueError, AttributeError):
         return []

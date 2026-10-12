@@ -30,7 +30,7 @@ def messages_for(case, mode, settings):
     if mode == "para":
         return nli.build_messages_a_paragraphs(taskb_context.PART_LINE, taskb_context.para_texts(reference, claim),
                                                case.get("vote", ""), claim)
-    text = taskb_context.cut_text(reference, claim) if mode == "cut" else reference
+    text = taskb_context.cut_text(reference, claim, mode) if mode in ("cut", "cut4") else reference
     return nli.build_messages_b(text, claim, settings.prompt_b)
 
 

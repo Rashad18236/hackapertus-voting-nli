@@ -36,7 +36,9 @@ class Route(unittest.TestCase):
         pages = booklet_pages()
         for claim, vote in [("Die Schweiz hat 26 Kantone.", VOTE),  # no route
                             (COUNCIL_CLAIM, "Bundesgesetz über die Raumfahrt")]:  # vote not in the booklet
-            with self.subTest(claim=claim, vote=vote):
+            # Session 10, step 8: a name the title match cannot place may be placed by meaning (e5); here the lead is
+            # set out of reach, so a vote found neither way falls back.
+            with self.subTest(claim=claim, vote=vote), mock.patch.object(section_route, "VOTE_MARGIN", 2.0):
                 self.assertIsNone(section_route.route(pages, vote, claim))
                 with mock.patch.object(embed_e5_small, "select", return_value=("EMBED", {1: "x"})) as embed:
                     self.assertEqual(section_route.select(pages, vote, claim), ("EMBED", {1: "x"}))

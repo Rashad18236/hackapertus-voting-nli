@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "14:24",
+ "kind": "model run",
+ "code": "9f40793 working tree (scripts/paired_run.py, in-process)",
+ "cases": "val, all 580 task A cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-12_rashad_fewer-tokens-A_valA580/today",
+ "setup": "K4: --section-top-k-a 4 (the 4 paragraphs most similar to the claim, e5)",
+ "results": {
+  "macro_f1": 0.944,
+  "f1": {
+   "entailment": 0.971,
+   "neutral": 0.937,
+   "contradiction": 0.924
+  },
+  "evidence": {
+   "score": 0.938,
+   "found": 376,
+   "cases": 401
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 804,
+  "mean_time_ms": 2113,
+  "p95_time_ms": 4442
+ }
+}

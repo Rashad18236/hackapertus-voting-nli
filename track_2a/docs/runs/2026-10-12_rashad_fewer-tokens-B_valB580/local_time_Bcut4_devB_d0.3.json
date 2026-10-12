@@ -1,0 +1,39 @@
+{
+ "cases": 300,
+ "requests": 300,
+ "wall_s": 309.242,
+ "in_flight_s": 90.265,
+ "local_s": 218.976,
+ "local_per_case_s": 0.7299,
+ "to_first_request_s": 1.422,
+ "tail_s": 0.113,
+ "gaps_s": 217.442,
+ "gap_count": 299,
+ "gap_median_s": 0.0047,
+ "gap_p95_s": 3.1651,
+ "gap_max_s": 4.56,
+ "max_in_flight": 1,
+ "exit_code": 0,
+ "image": "hackapertus-voting-nli:s10-lanes",
+ "image_id": "sha256:6173a76bc05d5c6c547d66e6ad087874fe6ca50a995bd37d5ac9e4158b615218",
+ "cases_file": "output/devB/cases.jsonl",
+ "delay_s": 0.3,
+ "cpus": "2",
+ "memory": "4g",
+ "cli_args": [
+  "--context-b",
+  "cut4"
+ ],
+ "src_mounted": false,
+ "responses": 300,
+ "unique_ids": 300,
+ "answer_kinds": {
+  "replay": 84,
+  "ok": 216
+ },
+ "replay_misses": 216,
+ "input_tokens_per_case": 100.0,
+ "output_tokens_per_case": 10.0,
+ "measured_at": "2026-10-12T16:54:42Z",
+ "peak_memory_mib": 2328
+}

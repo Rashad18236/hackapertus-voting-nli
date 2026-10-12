@@ -52,7 +52,10 @@ and `evaluate.py` unchanged.
 ## Constraints set by the organisers
 
 - `track_2a/` is the project root. Do not rename it or move the files the
-  template put there. Judges run the Docker image; `make run` is our wrapper.
+  template put there. The organisers pull our published image from the
+  repository's container registry (ghcr.io) and run it with the documented
+  command; `make run` is our local wrapper. Task A and task B are run in
+  separate containers.
 - Docker entrypoint: `<entrypoint> --input /data/cases.jsonl --output
   /output/predictions.jsonl`. One JSON line per input id, any order, exit 0.
   Missing or invalid responses count as wrong.
@@ -74,8 +77,10 @@ and `evaluate.py` unchanged.
   `LLM_BASE_URL` / `LLM_API_KEY`. The model name comes from `MODEL`, else
   `LLM_NAME`, else `swiss-ai/Apertus-v1.5-8B`. Never hardcode, print, log or
   commit their values. `.env` is git-ignored; keep `.env.example` current.
-- **Minimum Macro-F1 for a valid submission: 0.75 on task B and 0.60 on
-  task A** (starter's `evaluate.py`).
+- **Minimum Macro-F1 for a valid submission: 0.60 on task A and 0.75 on
+  task B** (Q&A slides of 8 October; the starter repository, commit
+  `5e695772`, later says 0.70 for task B). Below either, the whole submission
+  is invalid. Our bar stays 0.75.
 - `track_2a/data/` must stay under 100 MB.
 - The repository is public. Treat everything committed as published.
 
@@ -119,14 +124,31 @@ Response:
 
 ## How submissions are scored
 
+Official formula (organisers' Q&A slides, 8 October; details in
+`track_2a/docs/official_scoring.md`):
+
+- **Score = 0.4 × S_B + 0.6 × S_A**, with
+  S_A = 0.50 Macro-F1 + 0.20 evidence + 0.15 T + 0.15 K and
+  S_B = 0.70 Macro-F1 + 0.15 T + 0.15 K.
 - Macro-F1 per task (A and B separately), from labels only. Missing, duplicated
   or invalid responses count as wrong. Thresholds above.
-- Task A evidence score: share of gold entailment/contradiction cases where
-  one of the first five evidence items fuzzy-matches the gold passage
-  (`reference_string`; rapidfuzz partial ratio >= 90 after normalising case,
-  whitespace and line-break hyphenation). Pages are not checked locally yet.
-- Tokens and time: measured by the organisers' proxy, scored relative to other
-  teams. Every model call counts, retries included.
+- Task A evidence: share of gold entailment/contradiction cases with a hit in
+  the first five items. An item is a hit if it lies inside the gold passage or
+  contains it (`reference_string`; rapidfuzz partial ratio >= 90 after
+  normalising case, whitespace and line-break hyphenation); its position
+  within the five does not matter. Pages are not checked by the scorer yet but
+  must be correct.
+- **K** = best tokens per case / our tokens per case, counted by the
+  organisers' proxy over all calls (retries and second calls included; whether
+  output tokens count is not said).
+- **T** = best local time per case / our local time per case. Local time =
+  wall-clock time of the container run minus the time during which at least
+  one model request is in flight: model latency does not count; start-up,
+  parsing, embedding and every gap between requests do. No floor (ten times
+  the best time gives 0.1).
+- "Best" = the lowest value among teams with Macro-F1 >= 0.65 on that task.
+- Our own estimate with fixed reference "best" values is
+  `track_2a/scripts/official_score.py` (REF SCORE).
 - Final evaluation uses a held-out private set.
 
 ## Model endpoint (development)
@@ -174,8 +196,12 @@ cases). `expected-labels.jsonl` files never go into the prediction container.
 ```
 Makefile, Dockerfile, .dockerignore, .env.example, requirements.txt, requirements-dev.txt
 src/
-  cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case
-  llm.py        the only module that calls Apertus; records tokens and time per call
+  cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case; since session 10
+                each case is prepare() (local work) + complete() (model call); --workers 0 = sequential
+  pipeline.py   session 10: two forked worker processes ("lanes", each owning whole booklets) prepare cases
+                while the main process sends them, one request at a time
+  memo.py       session 10: compute-once caches safe with threads
+  llm.py        the only module that calls Apertus; records tokens and time per call; one kept connection
   nli.py        prompts and label parsing
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
@@ -194,7 +220,9 @@ src/
                 of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json; val/ (session 7: 580 task A cases from
-                rows in neither dev nor test, and a balanced 300-case sample)
+                rows in neither dev nor test, and a balanced 300-case sample); session 10: probe/ (the test
+                rows of 2021-03-07 and 2025-09-28, copies) and ontopic_neutral/ (46 dev cases, gold passage
+                removed, expected neutral)
 docs/           official contract, reports, reviews
   runs/         one folder per run: run.json, NOTES.md and the run's files (see runs/README.md)
   decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
@@ -207,12 +235,18 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 session 8: prompt_snapshot.py (request hashes and replay, gates G1/G2),
                 embed_equivalence.py, parse_equivalence.py, container_speed.sh; task B (PR #14):
                 taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py,
-                interleaved_analysis.py (task B arms of one run)
+                interleaved_analysis.py (task B arms of one run); session 10: official_score.py (REF SCORE),
+                local_time.py (local time the organisers' way), connection_time.py, make_probe.py,
+                make_ontopic.py, rule_check.py (TOKEN RULE, fixes/breaks), schema_check.py,
+                python_rule_offline.py, vote_language_check.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
 
-Outside `track_2a/`: `CLAUDE.md` and `.github/pull_request_template.md`. The
+Outside `track_2a/`: `CLAUDE.md`, `.github/pull_request_template.md` and `.github/workflows/`
+(`clean-machine.yml`; since session 10 `publish-image.yml`, which publishes the image to
+`ghcr.io/rashad18236/hackapertus-voting-nli`: `latest` from `main` only, `session-10` from the session 10
+branch, and the commit hash). The
 organisers' template layout of `track_2a/` (`README.md`, `technical_report.md`,
 `Makefile`, `src/`, `data/`, `docs/`) must stay as it is: never rename or move
 those; new files go inside `src/` and `docs/`.
@@ -260,9 +294,50 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+## Current stage: session 10 (2026-10-12 11:42 UTC to 2026-10-13 13:00 UTC)
 
-Branch `rashad/until-1600` from `main` at `418ebfa` (draft PR #16, never merged, no tag); report
+Branch `rashad/session-10` from `main` at `42b2a3c` (draft PR #17, never merged, no tag); status
+`track_2a/docs/session_10_status.md`, decisions `docs/decisions/2026-10-12-1142_rashad_session-10.md`,
+report at the end `track_2a/docs/session_10_report.md`. Goal: score what the organisers score
+(`track_2a/docs/official_scoring.md`): tokens and local time per case now count, not only Macro-F1.
+
+- **Sealed:** the test rows dated 2020-02-09, 2022-02-13 and 2022-05-15 are never run, parsed or opened.
+  The test rows dated 2021-03-07 and 2025-09-28 are copied to `data/probe/` and may be used like dev from
+  step 4 on. `data/test/`, the splits file and the scorer stay unchanged.
+- **Who sets the label:** every label comes from an answer of Apertus. Python never changes a label Apertus
+  gave and never decides one in its place; the only label Python writes is the neutral fallback when a call
+  fails or its answer cannot be read, counted in every run.
+- **Model:** only the 8B named in `.env` on Public AI (no 70B, no thinking variant); at most one request per
+  second; one model run at a time. Every comparison is one interleaved run with an arm "today" (the defaults
+  at that moment); dev for exploring, val only for confirming.
+- **REF SCORE** (`scripts/official_score.py`): fixed reference "best" values, tokens per case 600 (A) and
+  800 (B), local time per case 0.05 s (A) and 0.005 s (B); always reported with its parts.
+- **Defaults changed in session 10, each by its rule:** cases are prepared in two forked worker processes
+  ("lanes", `src/pipeline.py`; each owns whole booklets) while the main process sends requests over one kept
+  connection; each booklet parsed once; ONNX threads = the CPU limit; `src/` compiled in the image (same
+  answers, G1/G2; local time per case on dev, model at 1.0 / 0.3 s per request: task A 0.803 / 0.742 s → 0.017 / 0.154 s,
+  task B 0.985 / 0.939 s → 0.010 / 0.007 s). Task B sends the whole reference again (no B-cut: e5's local time costs
+  more REF SCORE than its tokens save). A vote name the title match cannot place is placed by meaning (e5,
+  lead ≥ 0.04; G1/G2 unchanged).
+- **Tried, not adopted:** P-short, P-short+K4, BP-short, BP-short+B-cut4 (fail on dev); K4 (fails on val);
+  B-cut4 (passes the TOKEN RULE, −55 % task B tokens, but lowers REF SCORE through e5 local time); CS, SL (step
+  6, fail their rules); B-U (adds output tokens). Without `response_format` 0 of 100 answers unreadable.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677`,
+  task A and B in separate containers; `docs/runs/2026-10-12_rashad_final-defaults_*`): dev task A 0.983
+  (evidence 0.980), task B 0.967; val 0.959 (0.955), 0.961; probe 0.960 (0.908), 0.971. Tokens per case (dev,
+  input + output): A 1,238 + 14.5, B 1,994 + 8.4. REF SCORE dev 0.870 / 0.824, val 0.873 / 0.888, probe 0.850 / 0.777 (1.0 / 0.3 s
+  per request). Python wrote 6 of 2,128 labels (neutral fallbacks for unreadable task B answers).
+- **Probe:** 5 of 6 booklets parse; `2025_09_28_fr`'s first vote is not found (8 fallbacks), reported, not fixed.
+- **The Python rule "neutral with a citation → contradiction"** was scored offline only (val +0.014, on-topic
+  neutral set 3 of 3 changes wrong); it is not in `src/`.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA` (the
+  final runs' 1,180 dev and val answers; also `scripts/local_time.py`'s default table).
+- **The published image:** `.github/workflows/publish-image.yml` (tags: commit, `session-10`, `latest` from
+  `main`); after a merge into `main`, check that `latest` pulls without logging in.
+
+## Previous stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+
+Branch `rashad/until-1600` from `main` at `418ebfa` (PR #16, merged into `main` on 2026-10-10 as `42b2a3c`); report
 `track_2a/docs/session_9_report.md`, status log `track_2a/docs/session_9_status.md`, decisions
 `docs/decisions/2026-10-09-1707_rashad_session-9.md`. Model runs on Public AI's `apertus-v1.5-8b`, at most
 one request per second (`LLM_MIN_INTERVAL=1` for `make run`), one run at a time; every comparison is one
@@ -292,7 +367,7 @@ session 9's answers came from one backend, blablador).
   17:28, 01:56 and 09:56 UTC): task A 0.966 / 0.966 / 0.966, task B 0.967 / 0.967 / 0.963; two of 600 labels
   ever changed; one backend throughout.
 
-## Previous stage: hardening without a model (session 8)
+## Earlier stage: hardening without a model (session 8)
 
 Session 8 (2026-10-09, branch `rashad/hardening` from `main` at `25ed5fa`,
 report `track_2a/docs/session_8_report.md`, decisions
@@ -500,11 +575,12 @@ Rules for this stage:
   output drifts. Scores from different runs are never compared.
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,
   selector recall for the vote section) before spending model calls.
-- Cases run one at a time; one retry for HTTP 5xx and timeouts, up to two for
-  HTTP 429.
+- Requests go out one at a time (cases are prepared in two worker processes
+  since session 10); one retry for HTTP 5xx, timeouts and a lost connection,
+  up to two for HTTP 429.
 - A change to `src/` that should not change answers is checked with G1 and G2
-  against the session 9 reference (`scripts/prompt_snapshot.py`,
-  `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`).
+  against the session 10 reference (`scripts/prompt_snapshot.py`,
+  `docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`).
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 
@@ -516,8 +592,6 @@ Earlier: session 2 (PR #3) set task B to 0.947 with `v3-topic-first`
 
 - Whether the evidence page is checked against the 1-based PDF page in the
   official run (the starter says pages are "not checked yet").
-- Formula combining Macro-F1, tokens and time in the final score (the starter
-  refers to "evaluation notes" we have not seen).
 - Whether booklet parsing must use Apertus or may be local. Working
   assumption: local parsing is allowed (contract wording), until told otherwise.
 - Where the dataset README's label definitions are (the README is still

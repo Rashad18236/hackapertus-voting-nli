@@ -1,4 +1,5 @@
-"""Tests for the retry rule in src/llm.py (no network: requests.post is faked)."""
+"""Tests for the retry rule in src/llm.py (no network: requests.Session.post is faked; session 10: one kept
+connection per thread)."""
 
 import unittest
 from unittest import mock
@@ -38,7 +39,7 @@ def run(responses, sleeps=None):
             raise item
         return item
     with mock.patch.dict("os.environ", ENV, clear=False), \
-         mock.patch.object(requests, "post", side_effect=post) as fake, \
+         mock.patch.object(requests.Session, "post", side_effect=post) as fake, \
          mock.patch.object(llm.time, "sleep", side_effect=(sleeps.append if sleeps is not None else None)):
         try:
             return llm.chat([{"role": "user", "content": "x"}]), fake.call_count
@@ -50,7 +51,7 @@ class JsonMode(unittest.TestCase):
     def test_response_format_only_when_asked(self):
         for flag, expected in ((False, None), (True, {"type": "json_object"})):
             with mock.patch.dict("os.environ", ENV, clear=False), \
-                 mock.patch.object(requests, "post", return_value=ok()) as fake:
+                 mock.patch.object(requests.Session, "post", return_value=ok()) as fake:
                 llm.chat([{"role": "user", "content": "x"}], json_mode=flag)
             self.assertEqual(fake.call_args.kwargs["json"].get("response_format"), expected)
 
@@ -59,7 +60,7 @@ class JsonSchema(unittest.TestCase):
     def test_schema_payload_and_precedence(self):
         schema = {"type": "object"}
         with mock.patch.dict("os.environ", ENV, clear=False), \
-             mock.patch.object(requests, "post", return_value=ok()) as fake:
+             mock.patch.object(requests.Session, "post", return_value=ok()) as fake:
             llm.chat([{"role": "user", "content": "x"}], json_mode=True, json_schema=schema)
         fmt = fake.call_args.kwargs["json"]["response_format"]
         self.assertEqual(fmt["type"], "json_schema")
@@ -85,14 +86,31 @@ class Retry(unittest.TestCase):
         self.assertIsInstance(result, llm.LLMError)
         self.assertEqual(calls, 2)
 
-    def test_4xx_and_connection_errors_are_not_retried(self):
+    def test_4xx_is_not_retried(self):
         result, calls = run([FakeResponse(401, {"error": "bad key"})])
         self.assertIsInstance(result, llm.LLMError)
         self.assertEqual(calls, 1)
-        result, calls = run([requests.ConnectionError("http://secret-url")])
+
+    def test_connection_error_is_sent_once_more_on_a_new_connection(self):  # session 10: kept connections
+        result, calls = run([requests.ConnectionError("http://secret-url")] * 2)
         self.assertIsInstance(result, llm.LLMError)
         self.assertNotIn("secret-url", str(result))
-        self.assertEqual(calls, 1)
+        self.assertEqual((calls, result.attempts), (2, 2))
+        result, calls = run([requests.ConnectionError("dropped"), ok()])
+        self.assertEqual((calls, result.attempts, result.input_tokens), (2, 2, 100))
+
+    def test_one_connection_is_kept_and_a_lost_one_replaced(self):  # session 10
+        llm.reset_run_state()
+        with mock.patch.dict("os.environ", ENV, clear=False), \
+             mock.patch.object(requests.Session, "post", return_value=ok()):
+            llm.chat([{"role": "user", "content": "x"}])
+            first = llm.session()
+            llm.chat([{"role": "user", "content": "y"}])
+            self.assertIs(llm.session(), first)  # the same session (and connection pool) for the next call
+        with mock.patch.dict("os.environ", ENV, clear=False), \
+             mock.patch.object(requests.Session, "post", side_effect=[requests.ConnectionError("x"), ok()]):
+            llm.chat([{"role": "user", "content": "z"}])
+        self.assertIsNot(llm.session(), first)  # replaced after the connection error
 
     def test_tokens_of_a_failed_attempt_are_counted(self):
         failed_with_usage = FakeResponse(500, {"usage": {"prompt_tokens": 70, "completion_tokens": 0}})

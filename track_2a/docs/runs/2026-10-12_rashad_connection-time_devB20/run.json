@@ -1,0 +1,37 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "12:11",
+ "kind": "model check",
+ "code": "42b2a3c (main) with scripts/connection_time.py",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, the first 20 task B cases whose reference has at most 8,000 characters",
+ "setup": "session 10 step 1: each case twice, back to back in alternating order: src/llm.py as on main (requests.post, a new connection per call) and the same with one kept requests.Session; default task B settings (v3-topic-first, B-cut)",
+ "format": "scripts/connection_time.py; time from post() to the request's first byte on the socket (DNS, TCP, the sandbox's proxy tunnel, TLS)",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (through the sandbox's egress proxy)",
+ "notes": "NOTES.md",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none (connection handling only)",
+  "n_cases": 20,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "summary": "Set-up before the first byte: new connection per call 486.0 ms mean (median 465.3), kept connection 24.3 ms mean (1.2 ms after the first call); 20 vs 1 connections opened for 20 calls each.",
+ "results": {
+  "setup_ms_new_connection_mean": 486.0,
+  "setup_ms_new_connection_median": 465.3,
+  "setup_ms_kept_connection_mean": 24.3,
+  "setup_ms_kept_connection_after_first": 1.2,
+  "connections_opened": {
+   "new_connection_per_call": 20,
+   "kept_connection": 1
+  },
+  "calls": 40,
+  "http_200": 40
+ }
+}

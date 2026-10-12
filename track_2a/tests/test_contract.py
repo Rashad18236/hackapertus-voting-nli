@@ -58,14 +58,27 @@ NAMES = {0: "entailment", 1: "neutral", 2: "contradiction"}
 # Runs src.cli.main() with an audit hook that records every file write, and without reading .env.
 RUNNER = r"""
 import json, os, sys
-writes, recording = [], [True]
+writes, recording, busy = [], [True], [False]
+LOG, MAIN = os.environ["CONTRACT_WRITE_LOG"], os.getpid()
 EVENTS = {"os.mkdir", "os.rename", "os.replace", "os.remove", "os.rmdir", "os.truncate", "os.symlink", "os.link",
           "os.chmod", "os.chown", "os.utime", "shutil.copyfile", "shutil.copymode", "shutil.copystat",
           "shutil.copytree", "shutil.rmtree", "shutil.move"}
 def path_of(p):
     return os.path.abspath(os.fsdecode(p)) if isinstance(p, (str, bytes, os.PathLike)) else None
+def note(entry):
+    if os.getpid() == MAIN:
+        writes.append(entry)
+        return
+    # A forked worker process (session 10) never runs the finally below: it appends to its own file at once.
+    busy[0] = True
+    try:
+        fd = os.open(f"{LOG}.{os.getpid()}", os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+        os.write(fd, (json.dumps(entry) + "\n").encode("utf-8"))
+        os.close(fd)
+    finally:
+        busy[0] = False
 def hook(event, args):
-    if not recording[0]:
+    if not recording[0] or busy[0]:
         return
     if event == "open":
         path, mode, flags = (list(args) + [None, None, None])[:3]
@@ -76,9 +89,9 @@ def hook(event, args):
         else:
             writing = bool((flags or 0) & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC))
         if writing:
-            writes.append(["open", path_of(path)])
+            note(["open", path_of(path)])
     elif event in EVENTS:
-        writes.append([event] + [p for p in map(path_of, args[:2]) if p])
+        note([event] + [p for p in map(path_of, args[:2]) if p])
 sys.addaudithook(hook)
 import src.env
 src.env.load_env_file = lambda *a, **k: None
@@ -88,7 +101,11 @@ try:
     code = cli.main()
 finally:
     recording[0] = False
-    with open(os.environ["CONTRACT_WRITE_LOG"], "w", encoding="utf-8") as f:
+    import glob
+    for name in glob.glob(LOG + ".*"):
+        with open(name, encoding="utf-8") as f:
+            writes.extend(json.loads(line) for line in f if line.strip())
+    with open(LOG, "w", encoding="utf-8") as f:
         json.dump(writes, f)
 sys.exit(code)
 """
@@ -464,8 +481,10 @@ class StoppedRun(ContractBase):
             environment.update({"BASE_URL": url, "API_KEY": "stub-key-must-not-appear",
                                 "CONTRACT_WRITE_LOG": str(root / "writes.json"), "TMPDIR": str(root),
                                 "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost"})
+            # --workers 0: the sequential path answers in input order (session 10; the pipelined path, which
+            # answers in the order the cases become ready, has its own test in tests/test_pipeline.py).
             proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
-                                     "--output", str(out)], cwd=ROOT, env=environment,
+                                     "--output", str(out), "--workers", "0"], cwd=ROOT, env=environment,
                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             deadline = time.time() + 60
             while time.time() < deadline and (not out.exists() or out.read_bytes().count(b"\n") < 5):
