@@ -118,9 +118,13 @@ def docker_command(args, base_url, out_dir):
         cmd += ["-v", f"{Path(args.booklets).resolve()}:/data/booklets:ro"]
     if args.src:
         cmd += ["-v", f"{Path(args.src).resolve()}:/app/src:ro"]
-    cmd += ["-v", f"{out_dir}:/output", args.image, "--input", "/data/cases.jsonl",
-            "--output", "/output/predictions.jsonl"]
-    return cmd + args.cli_args
+    cmd += ["-v", f"{out_dir}:/output"]
+    cli = ["--input", "/data/cases.jsonl", "--output", "/output/predictions.jsonl"] + args.cli_args
+    if args.peak_memory:  # the CLI under sh, which then copies the container's peak memory (cgroup v1) to /output
+        return cmd + ["--entrypoint", "sh", args.image, "-c",
+                      'python -m src.cli "$@"; code=$?; cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes '
+                      '> /output/peak_memory_bytes 2>/dev/null; exit $code', "sh"] + cli
+    return cmd + [args.image] + cli
 
 
 def main():
@@ -134,6 +138,8 @@ def main():
     ap.add_argument("--memory", default="4g")
     ap.add_argument("--src", help="mount this folder over the image's /app/src (measure working-tree code)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--peak-memory", action="store_true",
+                    help="also record the container's peak memory (cgroup v1; the CLI then runs under sh)")
     ap.add_argument("cli_args", nargs="*", help="extra arguments for the CLI, after --")
     args = ap.parse_args()
 
@@ -170,6 +176,8 @@ def main():
         "output_tokens_per_case": round(tokens_out / n_cases, 1) if n_cases else None,
         "measured_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(wall_start)),
     })
+    if args.peak_memory and (out_dir / "peak_memory_bytes").exists():
+        result["peak_memory_mib"] = round(int((out_dir / "peak_memory_bytes").read_text().strip()) / 2**20)
     with open(out_dir / "calls.jsonl", "w", encoding="utf-8") as f:
         for c in calls:
             f.write(json.dumps({k: v for k, v in c.items() if k != "payload"}) + "\n")

@@ -24,6 +24,10 @@ from tests.test_contract import (A_ARGS, ROOT, ROUTED, RUNNER, ContractBase, a_c
                                  stub_llm)
 
 
+def pid_of(case):
+    return os.getpid()
+
+
 def die(case):
     """A preparation that kills its worker process (module level, so that it can be sent to the process)."""
     os._exit(1)
@@ -91,10 +95,24 @@ class RunWithFakeSteps(unittest.TestCase):
         out = emitted_by([(1, {"id": 1}), (2, {"id": 2})], prepare, lambda p: p, lambda c: None, workers=2)
         self.assertEqual(out, [2, 1])
 
-    def test_default_is_one_worker_process(self):
-        self.assertEqual(pipeline.default_workers(), 1)
-        with pipeline.preparer_pool(1) as pool:
-            self.assertNotEqual(pool.submit(os.getpid).result(), os.getpid())  # it runs in another process
+    def test_default_workers(self):
+        with mock.patch.object(pipeline, "available_cpus", return_value=1):
+            self.assertEqual(pipeline.default_workers(), 1)
+        with mock.patch.object(pipeline, "available_cpus", return_value=4):
+            self.assertEqual(pipeline.default_workers(), 2)
+
+    def test_each_lane_is_its_own_process_and_gets_its_cases(self):
+        items = [(i, {"id": i, "booklet": i % 3}) for i in range(9)]
+        out = []
+        pipeline.run(items, pid_of, lambda p: p, lambda case: ("fallback", case["id"]),
+                     lambda number, case, result: out.append((case["booklet"], result)), workers=3,
+                     lane_key=lambda case: case["booklet"])
+        pids = {}
+        for book, pid in out:
+            pids.setdefault(book, set()).add(pid)
+        self.assertTrue(all(len(p) == 1 for p in pids.values()))  # one process per booklet
+        self.assertEqual(len(set().union(*pids.values())), 3)     # three different processes
+        self.assertNotIn(os.getpid(), set().union(*pids.values()))
 
     def test_a_worker_process_that_dies_leaves_every_case_to_the_fallback(self):
         items = [(i, {"id": i}) for i in range(4)]

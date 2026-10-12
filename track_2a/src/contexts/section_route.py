@@ -61,7 +61,8 @@ def route(pages, vote, claim_text):
     part = claim_router.route(claim_text)
     if part is None:
         return None
-    found = booklet.find_vote(parsed_booklet(pages), vote)
+    parsed = parsed_booklet(pages)
+    found = booklet.find_vote(parsed, vote) or vote_by_meaning(parsed, vote)
     if found is None or not found.ok:
         return None
     paragraphs = booklet.part_paragraphs(pages, found, part)
@@ -76,6 +77,46 @@ def parsed_booklet(pages):
     """booklet.parse(pages), computed once per booklet text (the result is only read, never changed)."""
     key = hashlib.sha256("\f".join(f"{n}\n{t}" for n, t in sorted(pages.items())).encode("utf-8")).hexdigest()
     return memo.once(_booklets, key, lambda: booklet.parse(pages))
+
+
+_title_vectors = {}  # SHA-256 of a booklet's vote titles -> their e5 vectors (session 10, step 8)
+# Session 10, step 8: a vote name the title match cannot place (e.g. in another language than the booklet) is placed
+# by meaning if the closest title leads the second closest by at least this much (e5 cosine). With the names of the
+# same votes in the other languages swapped in for all 880 dev and val cases, no lead of a wrong pick reached 0.0296;
+# 0.04 keeps a margin (182 of 264 swapped names placed right, none wrong; the rest fall back as before). A name of a
+# vote that is not in the booklet at all can be placed too (649 of 5,220 names of other dates' votes reached 0.04);
+# in the dataset the vote always belongs to the booklet. Booklets with a single vote are never placed by meaning.
+VOTE_MARGIN = 0.04
+
+
+def vote_by_meaning(parsed, vote):
+    """The vote whose title is closest in meaning to `vote` if it leads the next one by VOTE_MARGIN, else None.
+    Only asked when booklet.find_vote finds nothing; if e5 cannot run (e.g. no model files), None, as before."""
+    try:
+        position, lead = vote_scores(parsed, vote)
+    except Exception:
+        return None
+    if position is None or lead < VOTE_MARGIN:
+        return None
+    return parsed.votes[position]
+
+
+def vote_scores(parsed, vote):
+    """(position of the vote whose contents title is closest in meaning to `vote`, its lead over the second closest)
+    by e5 cosine ("query: " + vote name, "passage: " + title, whitespace collapsed); (None, 0.0) without votes and
+    (0, 0.0) for a booklet with a single vote: with nothing to lead, a name is never placed by meaning (any name,
+    also one of a vote not in the booklet, would be closest to the only title)."""
+    if parsed is None or not parsed.votes or not vote.strip():
+        return None, 0.0
+    if len(parsed.votes) == 1:
+        return 0, 0.0
+    titles = [" ".join(v.title.split()) for v in parsed.votes]
+    key = hashlib.sha256("\n".join(titles).encode("utf-8")).hexdigest()
+    vectors = memo.once(_title_vectors, key,
+                        lambda: retrieval.embedder("e5-small").embed([f"passage: {t}" for t in titles]))
+    scores = vectors @ retrieval.query_vector("e5-small", " ".join(vote.split()))
+    order = sorted(range(len(titles)), key=lambda i: -scores[i])
+    return order[0], float(scores[order[0]] - scores[order[1]])
 
 
 def similarities(paragraphs, claim_text):

@@ -29,13 +29,23 @@ Updated after every step. If the session is restarted with "continue", work goes
   offline (5 of 6 booklets parse, 83 of 94 routed), local time, and today's defaults through the image
   (`docs/runs/2026-10-12_rashad_probe-defaults_probe188`).
 
+- (14:25) Step 5, task A on dev (`docs/runs/2026-10-12_rashad_fewer-tokens-A_devA300`, all 300 answers from one
+  backend): today 0.980 / evidence 0.980 / 1,238 input tokens; P-short 0.670 (cites a paragraph, then answers
+  neutral) and P-short+K4 0.619 fail; K4 0.990 / 0.975 / 808 passes the TOKEN RULE on dev. Local time: K4 0.215 s
+  per case at 1.0 s per request (today 0.015), 0.837 s at 0.3 s (today 0.300); B-cut4 0.107 / 0.744 s (today 0.008 /
+  0.009).
+
 ## Running
 
-- Step 5, task A: interleaved dev run today / P-short / K4 / P-short+K4 (`docs/runs/2026-10-12_rashad_fewer-tokens-A_devA300`).
+- Step 5, task A on val: today vs K4 (`docs/runs/2026-10-12_rashad_fewer-tokens-A_valA580`).
+- G1/G2 for step 8 (vote names by meaning, `src/contexts/section_route.py` vote_by_meaning).
+- Code (not yet measured): two worker processes ("lanes"), each owning whole booklets (`src/pipeline.py`).
 
 ## Next
 
-- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4; then val for both tasks; TOKEN RULE; REF SCORE.
+- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4, then val; TOKEN RULE; REF SCORE.
+- Lanes: G1/G2, local time with 1 and 2 lanes; K4's local time with 2 lanes.
+- Step 6: anyOf check, then dev + on-topic set (today, CS, SL), then val.
 
 ## Numbers so far
 

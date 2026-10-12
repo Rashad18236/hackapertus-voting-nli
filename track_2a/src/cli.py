@@ -479,6 +479,16 @@ def preparation_key(todo, settings):
     return key
 
 
+def lane_key(todo):
+    """The worker process a case is prepared in (src/pipeline.py: lane_key % workers): task A cases by booklet, in
+    the order the booklets first appear, so each booklet is read by one process only; task B cases in lane 0."""
+    first_seen = {}
+    for _, case in todo:
+        if booklet_path(case):
+            first_seen.setdefault(booklet_path(case), len(first_seen))
+    return lambda case: first_seen.get(booklet_path(case), 0)
+
+
 def booklet_path(case):
     try:
         return str(case["booklet"]["path"])
@@ -544,7 +554,8 @@ def main():
                         help="development only: which task A evidence items to return")
     parser.add_argument("--workers", type=int, default=pipeline.default_workers(),
                         help="background processes that prepare cases while a request is in flight (session 10; "
-                             "default 1); 0 runs every case in turn, as before session 10")
+                             "default 2, or 1 on a single CPU; each owns whole booklets); 0 runs every case in "
+                             "turn, as before session 10")
     parser.add_argument("--in-flight", type=int, default=1, choices=(1, 2),
                         help="development only: model requests sent at the same time (with --workers > 0)")
     args = parser.parse_args()
@@ -620,7 +631,7 @@ def main():
             pipeline.run(todo, functools.partial(prepare, data_dir=data_dir, settings=settings),
                          guarded(lambda p: complete(p, settings)),
                          sequential, emit, workers=args.workers, in_flight=args.in_flight,
-                         order_key=preparation_key(todo, settings))
+                         order_key=preparation_key(todo, settings), lane_key=lane_key(todo))
     written, routing_failed = counts["written"], counts["routing_failed"]
 
     log.info("Wrote %d responses to %s", written, args.output)
