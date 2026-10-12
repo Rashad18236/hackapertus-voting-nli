@@ -78,6 +78,8 @@ class Settings:
                                  # neutral recall 1.000 on both. --no-label-rule-a sends A-v4-section-route
     section_top_k_a: int = 0     # E1 (session 9, information only): if > 0, a routed case keeps only its k paragraphs
                                  # most similar to the claim (e5), in their order; 0 keeps section-route as it is
+    short_prompt_a: bool = False  # P-short (session 10, step 5): routed cases get A-v5-short, the same rules in at most
+                                  # 200 fixed tokens (L1's sentence included)
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
@@ -236,6 +238,8 @@ def paragraph_messages(routed, vote, claim_text, settings):
 
 
 def paragraph_prompt_version(settings):
+    if settings.short_prompt_a:  # session 10, step 5: P-short (L1's sentence included)
+        return "A-v5-short"
     version = context.VARIANTS[settings.context_a].PROMPT_VERSION
     return version + "-L1" if settings.label_rule_a else version
 
@@ -331,7 +335,7 @@ def prepare_b(case, start, raw, settings):
                                                            claim_text)
                 max_tokens, schema = settings.max_tokens_a, nli.ANSWER_SCHEMA_A_PARAGRAPHS
             else:
-                text = taskb_context.cut_text(reference_text, claim_text)
+                text = taskb_context.cut_text(reference_text, claim_text, settings.context_b)
                 raw["chars_sent"] = len(text)
                 messages = nli.build_messages_b(text, claim_text, settings.prompt_b)
         except Exception as e:  # e.g. no e5 files: the whole reference, as by default
@@ -409,7 +413,7 @@ def needs_local_model(case, settings):
     if task_of(case) != "B" or settings.context_b == "full":
         return False
     try:
-        return taskb_context.is_long(case["reference"]["text"])
+        return taskb_context.is_long(case["reference"]["text"], settings.context_b)
     except (KeyError, TypeError):
         return False
 
@@ -477,6 +481,8 @@ def main():
                         help="development only: L1, the routed prompt plus a sentence on contradictions (session 9, D)")
     parser.add_argument("--section-top-k-a", type=int, default=defaults.section_top_k_a,
                         help="development only: E1, keep the k paragraphs most similar to the claim (0: all)")
+    parser.add_argument("--short-prompt-a", action=argparse.BooleanOptionalAction, default=defaults.short_prompt_a,
+                        help="development only: P-short, the routed prompt in fewer words (session 10, step 5)")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
                         help="development only: L2, a second call after a neutral answer (session 9, D)")
     parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
@@ -494,7 +500,8 @@ def main():
                         schema_a=args.schema_a, context_a=args.context_a,
                         evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
                         context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
-                        second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a)
+                        second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
+                        short_prompt_a=args.short_prompt_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

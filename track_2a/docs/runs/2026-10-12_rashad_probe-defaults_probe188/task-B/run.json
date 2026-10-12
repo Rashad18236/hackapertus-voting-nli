@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "13:51",
+ "kind": "model run",
+ "code": "83e7fab (Docker image hackapertus-voting-nli:s10-step2-c, built from it)",
+ "cases": "probe, all 94 task B cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/)",
+ "format": "official, Docker image via make run, task B in its own container (session 10 step 4)",
+ "paired_with": null,
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": null,
+ "setup": "today's defaults after step 2: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema; LLM_MIN_INTERVAL=1",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none (probe set)",
+  "n_cases": 94,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "notes": "../NOTES.md",
+ "task": "B",
+ "results": {
+  "macro_f1": 0.96,
+  "f1": {
+   "entailment": 1.0,
+   "neutral": 0.926,
+   "contradiction": 0.956
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1831,
+  "mean_output_tokens": 8.6,
+  "mean_time_ms": 1229,
+  "p95_time_ms": 2194
+ }
+}

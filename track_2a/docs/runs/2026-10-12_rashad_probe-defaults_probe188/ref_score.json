@@ -1,0 +1,52 @@
+{
+ "probe_d1.0": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9598,
+   "evidence": 0.9077,
+   "tokens_per_case": 1246.6000000000001,
+   "local_time_s": 0.0373,
+   "K": 0.4813,
+   "T": 1.0,
+   "S": 0.8836,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.9605,
+   "evidence": null,
+   "tokens_per_case": 1839.1,
+   "local_time_s": 0.0146,
+   "K": 0.435,
+   "T": 0.3425,
+   "S": 0.789,
+   "valid": true
+  },
+  "score": 0.8458
+ },
+ "probe_d0.3": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9598,
+   "evidence": 0.9077,
+   "tokens_per_case": 1246.6000000000001,
+   "local_time_s": 0.2362,
+   "K": 0.4813,
+   "T": 0.2117,
+   "S": 0.7654,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.9605,
+   "evidence": null,
+   "tokens_per_case": 1839.1,
+   "local_time_s": 0.0144,
+   "K": 0.435,
+   "T": 0.3472,
+   "S": 0.7897,
+   "valid": true
+  },
+  "score": 0.7751
+ }
+}

@@ -1,0 +1,231 @@
+{
+ "booklets": 6,
+ "booklets_complete": 5,
+ "votes": 15,
+ "votes_ok": 14,
+ "booklets_by_language_year": {
+  "de 2021": "1/1",
+  "de 2025": "1/1",
+  "fr 2021": "1/1",
+  "fr 2025": "0/1",
+  "it 2021": "1/1",
+  "it 2025": "1/1"
+ },
+ "booklet_problems": [
+  "2025_09_28_fr, vote 1: contents entry without arguments"
+ ],
+ "claims": 94,
+ "claims_routed": 94,
+ "routes": {
+  "detail": 10,
+  "council": 34,
+  "committee": 14,
+  "summary": 20,
+  "law": 16
+ },
+ "cases_routed": 83,
+ "fallback_reasons": {
+  "vote's structure not found": 8,
+  "part 'committee' empty for this vote": 3
+ },
+ "unrouted_claims": [],
+ "fallback_cases": [
+  {
+   "id": "v1.1-row-208-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Le résumé précise que, si le peuple et les cantons rejettent l’impôt immobilier spécial sur les résidences secondaires, la valeur locative continuera d’être imposée."
+  },
+  {
+   "id": "v1.1-row-437-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_it.pdf",
+   "vote": "Decreto federale concernente l’imposta immobiliare cantonale sulle abitazioni secondarie",
+   "claim": "Il comitato ritiene che i Cantoni dovrebbero poter applicare un’imposta immobiliare speciale alle abitazioni secondarie utilizzate prevalentemente dai proprietari, così da compensare le eventuali perdite di entrate dovute all’abolizione del valore locativo."
+  },
+  {
+   "id": "v1.1-row-485-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Il comitato afferma che i cantoni potranno introdurre un’imposta immobiliare speciale sulle seconde case utilizzate prevalentemente a scopo personale, per compensare le eventuali perdite di gettito fiscale causate dall’abolizione della rendita fittizia."
+  },
+  {
+   "id": "v1.1-row-584-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Der Bundesrat empfiehlt, die CO₂-Abgabe ab 2026 auf 210 Franken je Tonne anzuheben."
+  },
+  {
+   "id": "v1.1-row-697-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_de.pdf",
+   "vote": "Bundesbeschluss über die kantonalen Liegenschaftssteuern auf Zweitliegenschaften",
+   "claim": "Le comité estime qu’une hausse du budget fédéral consacré à la recherche en intelligence artificielle est essentielle pour préserver la compétitivité de la Suisse à l’échelle internationale."
+  },
+  {
+   "id": "v1.1-row-917-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_de.pdf",
+   "vote": "Bundesbeschluss über die kantonalen Liegenschaftssteuern auf Zweitliegenschaften",
+   "claim": "Il comitato ritiene che istituire per legge un salario minimo federale sarebbe un mezzo efficace per contrastare la povertà lavorativa e assicurare condizioni dignitose a tutti i lavoratori, a prescindere dal settore economico in cui operano."
+  },
+  {
+   "id": "v1.1-row-1058-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Laut der Zusammenfassung gilt die Abschaffung der Vermietungswertbesteuerung nur für Zweitwohnungen, nicht für Hauptwohnungen."
+  },
+  {
+   "id": "v1.1-row-1123-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Der Bundesrat spricht sich dafür aus, den Bundesbeschluss über die kantonale Immobiliensteuer auf Zweitwohnungen abzulehnen."
+  },
+  {
+   "id": "v1.1-row-1220-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Le Conseil fédéral recommande au peuple de rejeter l’arrêté fédéral concernant l’impôt immobilier cantonal sur les résidences secondaires."
+  },
+  {
+   "id": "v1.1-row-1247-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Le texte de vote affirme que, lorsqu’ils perçoivent l’impôt immobilier sur les résidences secondaires principalement destinées à un usage personnel, les cantons ne peuvent déroger aux principes énoncés à l’al. 2."
+  },
+  {
+   "id": "v1.1-row-1420-A",
+   "reason": "vote's structure not found",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Il Consiglio federale invita il popolo a respingere il decreto federale sull’imposta cantonale sugli immobili relativa alle seconde case."
+  }
+ ],
+ "routed_evidence_misses": [],
+ "evidence_cases": 65,
+ "evidence_cases_routed": 57,
+ "routed_evidence": {
+  "cases": 57,
+  "hit": 1.0,
+  "coverage_mean": 0.909,
+  "coverage_at_least_0.9": 0.754,
+  "pages_hold_gold": 0.912,
+  "inside_share": 0.83,
+  "mean_chars_sent": 2807,
+  "trimmed": 1
+ },
+ "by_part": {
+  "summary": {
+   "cases": 11,
+   "hit": 1.0,
+   "coverage_mean": 0.951,
+   "coverage_at_least_0.9": 0.636,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.418,
+   "mean_chars_sent": 2044,
+   "trimmed": 0
+  },
+  "council": {
+   "cases": 23,
+   "hit": 1.0,
+   "coverage_mean": 0.978,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 0.783,
+   "inside_share": 0.967,
+   "mean_chars_sent": 3148,
+   "trimmed": 0
+  },
+  "committee": {
+   "cases": 7,
+   "hit": 1.0,
+   "coverage_mean": 1.0,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.884,
+   "mean_chars_sent": 3186,
+   "trimmed": 0
+  },
+  "law": {
+   "cases": 11,
+   "hit": 1.0,
+   "coverage_mean": 0.643,
+   "coverage_at_least_0.9": 0.091,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.974,
+   "mean_chars_sent": 1267,
+   "trimmed": 1
+  },
+  "detail": {
+   "cases": 5,
+   "hit": 1.0,
+   "coverage_mean": 0.963,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.716,
+   "mean_chars_sent": 5776,
+   "trimmed": 0
+  }
+ },
+ "by_language": {
+  "same-language": {
+   "cases": 16,
+   "hit": 1.0,
+   "coverage_mean": 0.901,
+   "coverage_at_least_0.9": 0.75,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.811,
+   "mean_chars_sent": 2686,
+   "trimmed": 0
+  },
+  "cross-language": {
+   "cases": 41,
+   "hit": 1.0,
+   "coverage_mean": 0.913,
+   "coverage_at_least_0.9": 0.756,
+   "pages_hold_gold": 0.878,
+   "inside_share": 0.838,
+   "mean_chars_sent": 2855,
+   "trimmed": 1
+  }
+ },
+ "by_booklet_language": {
+  "de": {
+   "cases": 15,
+   "hit": 1.0,
+   "coverage_mean": 0.798,
+   "coverage_at_least_0.9": 0.6,
+   "pages_hold_gold": 0.933,
+   "inside_share": 0.798,
+   "mean_chars_sent": 2652,
+   "trimmed": 1
+  },
+  "fr": {
+   "cases": 21,
+   "hit": 1.0,
+   "coverage_mean": 0.969,
+   "coverage_at_least_0.9": 0.905,
+   "pages_hold_gold": 0.905,
+   "inside_share": 0.889,
+   "mean_chars_sent": 3028,
+   "trimmed": 0
+  },
+  "it": {
+   "cases": 21,
+   "hit": 1.0,
+   "coverage_mean": 0.929,
+   "coverage_at_least_0.9": 0.714,
+   "pages_hold_gold": 0.905,
+   "inside_share": 0.795,
+   "mean_chars_sent": 2698,
+   "trimmed": 0
+  }
+ },
+ "mean_chars_sent_all_routed": 2848
+}

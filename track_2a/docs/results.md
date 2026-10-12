@@ -85,6 +85,8 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-10 | 01:56 | rashad | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 2 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 4 | 0 | 1994 | 1812 | 3066 |
 | 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600`](runs/2026-10-10_rashad_stability-3_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (section-route, A-v4-section-route + json_schema, cited-pieces evidence without halves); LLM_MIN_INTERVAL=1 | 0.966 (E 0.985, N 0.966, C 0.947) | 0.930 (187/201) | 0 | 0 | 1210 | 2395 | 5139 |
 | 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.963 (E 0.985, N 0.958, C 0.946) | not scored for task B | 1 | 0 | 1994 | 1637 | 2595 |
+| 2026-10-12 | 13:49 | rashad | [`2026-10-12_rashad_probe-defaults_probe188`](runs/2026-10-12_rashad_probe-defaults_probe188/) | 83e7fab (Docker image hackapertus-voting-nli:s10-step2-c, built from it) | official, Docker image via make run, task A and task B in separate containers (session 10 step 4) | A | probe, all 94 task A cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults after step 2: section-route, A-v4-section-route-L1 + json_schema, evidence with halves; one worker process; LLM_MIN_INTERVAL=1 | **0.960** (E 0.978, N 0.949, C 0.952) | 0.908 (59/65) | 0 | 0 | 1232 | 1655 | 4288 |
+| 2026-10-12 | 13:51 | rashad | [`2026-10-12_rashad_probe-defaults_probe188/task-B`](runs/2026-10-12_rashad_probe-defaults_probe188/task-B/) | 83e7fab (Docker image hackapertus-voting-nli:s10-step2-c, built from it) | official, Docker image via make run, task B in its own container (session 10 step 4) | B | probe, all 94 task B cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults after step 2: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema; LLM_MIN_INTERVAL=1 | **0.960** (E 1.000, N 0.926, C 0.956) | not scored for task B | 0 | 0 | 1831 | 1229 | 2194 |
 
 ## Task B runs
 
@@ -116,6 +118,7 @@ Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour
 | 2026-10-10 | 01:56 | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | current | v3-topic-first | none: stability point 2 (point 1's image and settings) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1812 | 3066 | – |
 | 2026-10-10 | 09:56 | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | current | v3-topic-first | none: stability point 3 (point 1's image and settings) | 300 | no | 32 | 0.963 (E 0.985, N 0.958, C 0.946) | 0 | 1994 | 1637 | 2595 | – |
 | 2026-10-12 | 12:11 | [`2026-10-12_rashad_connection-time_devB20`](runs/2026-10-12_rashad_connection-time_devB20/) | current | v3-topic-first | none (connection handling only) | 20 | False | 32 | not recorded | not recorded | not recorded | not recorded | not recorded | – |
+| 2026-10-12 | 13:51 | [`2026-10-12_rashad_probe-defaults_probe188/task-B`](runs/2026-10-12_rashad_probe-defaults_probe188/task-B/) | current | v3-topic-first | none (probe set) | 94 | False | 32 | **0.960** (E 1.000, N 0.926, C 0.956) | 0 | 1831 | 1229 | 2194 | – |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -165,7 +168,7 @@ check, the best evidence score a model could reach by citing it.
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (89): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`, `2026-10-12_rashad_local-time-main_devA300-devB300`, `2026-10-12_rashad_connection-time_devB20`, `2026-10-12_rashad_pipelining_devA300-devB300`
+- **rashad** (91): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`, `2026-10-12_rashad_local-time-main_devA300-devB300`, `2026-10-12_rashad_connection-time_devB20`, `2026-10-12_rashad_pipelining_devA300-devB300`, `2026-10-12_rashad_probe-defaults_probe188`, `2026-10-12_rashad_probe-defaults_probe188/task-B`
 
 ## Notes per run
 
@@ -986,6 +989,67 @@ on this one backend, answered the same requests almost identically; no gateway c
 point's requests were last sent eight hours before).
 
 Task B's `run.json` is in `task-B/`.
+
+### Probe: two unseen voting dates with today's defaults (session 10, step 4)
+
+**The probe set** (`data/probe/`, `scripts/make_probe.py`): the 94 test rows dated 2021-03-07 and 2025-09-28,
+copied as 94 task A and 94 task B cases with their expected labels (`data/test/` unchanged). The other three test
+dates (2020-02-09, 2022-02-13, 2022-05-15) stay sealed: no line of theirs was parsed (lines were chosen by the
+booklet path and the row id before parsing). Six booklets (de, fr, it for both dates) in `output/booklets_probe/`.
+No pattern, rule or threshold in `src/` was written for these dates; from now on the probe may be used like dev.
+
+**Without the model** (`offline/route_check_summary.json`, `scripts/route_check.py`):
+
+- Booklets: 5 of 6 parse completely; `2025_09_28_fr`, vote 1: "contents entry without arguments" (14 of 15
+  votes pass the checks).
+- Router: all 94 claims get a part (council 34, summary 20, law 16, committee 14, detail 10).
+- Routed: 83 of 94 cases; 11 fall back to embed-e5-small (8: the vote's structure not found, all in
+  `2025_09_28_fr`; 3: the committee part empty for that vote).
+- Every routed case with a gold passage (57) has it among the sent paragraphs (hit 1.000); mean 2,848
+  characters sent.
+- Local time (`local_time_*.json`, image `s10-step2-c`, 2 CPUs): task A 0.037 s per case at 1.0 s per request,
+  0.236 s at 0.3 s; task B 0.015 / 0.014 s. Per case higher than dev for task B because the fixed start-up
+  (about 0.9 s) is shared by 94 cases instead of 300.
+
+**With the model** (image `s10-step2-c`, the organisers' command via `make run`, task A and task B in separate
+containers, Public AI `apertus-v1.5-8b`, one request per second; every answer from one backend, blablador; 0
+failed calls, 0 unreadable answers, so 0 neutral-fallback labels):
+
+| | Macro-F1 | F1 E / N / C | evidence | input + output tokens | probe | dev (session 9) | val (session 9) |
+|---|---|---|---|---|---|---|---|
+| task A | **0.960** | 0.978 / 0.949 / 0.952 | **0.908** (59 of 65) | 1,232 + 14.4 | | 0.980, ev. 0.980 | 0.961, ev. 0.958 |
+| task B | **0.961** | 1.000 / 0.926 / 0.956 | | 1,831 + 8.6 | | 0.967 (no cut) | 0.957 (no cut) |
+
+The probe lands on val's level for both tasks (task A a little below dev, as val was).
+
+**Every error, by mechanism** (`errors.json`):
+
+| task | case | gold → answer | path | mechanism |
+|---|---|---|---|---|
+| A | row-1058 | 2 → 0 | fallback (2025_09_28_fr) | entailment and contradiction mixed up |
+| A | row-763 | 1 → 2 | law | called contradiction, gold neutral (a claim about a 2019 Japan agreement) |
+| A | row-1453 | 2 → 1 | committee | neutral although a paragraph was cited ([6]) |
+| A | row-1176 | 2 → 1 | law | neutral, nothing cited |
+| B | row-536, 644, 763, 918 | 1 → 2 | task B | called contradiction, gold neutral (claims about another ballot or fact) |
+
+Task B's four errors are all session 9's main pattern (a neutral claim called a contradiction); row 763 is wrong
+in both tasks. Task A's errors are spread over the mechanisms; one comes from the fallback path.
+
+**Evidence misses** (`evidence_misses.json`): 6 of 65. Four are on the fallback path (rows 485, 1058, 1123, 1220;
+three in `2025_09_28_fr`, whose first vote the parser does not find), two are neutral answers to contradictions
+(rows 1176, 1453: no evidence). On the routed path every answered contradiction or entailment cites the gold
+passage. The parser gap in `2025_09_28_fr` costs 3 evidence hits and probably the 2 → 0 error.
+
+**REF SCORE on the probe** (`ref_score.json`; the probe's own local times):
+
+| | S_A | T_A | K_A | S_B | T_B | K_B | REF SCORE |
+|---|---|---|---|---|---|---|---|
+| 1.0 s per request | 0.884 | 1.000 | 0.481 | 0.789 | 0.343 | 0.435 | **0.846** |
+| 0.3 s per request | 0.765 | 0.212 | 0.481 | 0.790 | 0.347 | 0.435 | **0.775** |
+
+Files: `predictions.jsonl`, `raw_answers.jsonl`, `official_score.*` (both tasks; task A in `run.json`),
+`task-B/` (task B's own run), `cli.log`, `errors.json`, `evidence_misses.json`, `local_time_*.json`,
+`offline/route_check_summary.json`.
 
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 

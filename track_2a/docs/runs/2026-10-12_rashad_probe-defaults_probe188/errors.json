@@ -1,0 +1,113 @@
+[
+ {
+  "id": "v1.1-row-1058-A",
+  "task": "A",
+  "gold": 2,
+  "pred": 0,
+  "mechanism": "entailment and contradiction mixed up",
+  "path": "embed-e5-small",
+  "cited": [
+   5
+  ],
+  "claim": "Laut der Zusammenfassung gilt die Abschaffung der Vermietungswertbesteuerung nur für Zweitwohnungen, nicht für Hauptwohnungen.",
+  "claim_language": "de",
+  "source_language": "fr",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-763-A",
+  "task": "A",
+  "gold": 1,
+  "pred": 2,
+  "mechanism": "called entailment/contradiction, gold neutral",
+  "path": "law",
+  "cited": [
+   1,
+   3
+  ],
+  "claim": "D’après le texte de vote, la Suisse aurait signé un accord de libre-échange avec le Japon en 2019.",
+  "claim_language": "fr",
+  "source_language": "fr",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-1453-A",
+  "task": "A",
+  "gold": 2,
+  "pred": 1,
+  "mechanism": "neutral although a paragraph was cited",
+  "path": "committee",
+  "cited": [
+   6
+  ],
+  "claim": "Il comitato afferma che l’iniziativa è in contrasto con la libertà di religione e di opinione.",
+  "claim_language": "it",
+  "source_language": "fr",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-1176-A",
+  "task": "A",
+  "gold": 2,
+  "pred": 1,
+  "mechanism": "neutral, nothing cited",
+  "path": "law",
+  "cited": [],
+  "claim": "Le texte de vote affirme que les autorités et les autres organes chargés de tâches publiques ne sont pas obligés d’accepter l’E-ID lorsqu’ils procèdent à une identification dans le cadre de l’application du droit fédéral.",
+  "claim_language": "fr",
+  "source_language": "de",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-536-B",
+  "task": "B",
+  "gold": 1,
+  "pred": 2,
+  "mechanism": "called entailment/contradiction, gold neutral",
+  "path": "task B",
+  "cited": [],
+  "claim": "Laut der Zusammenfassung wurde die Mindestlohn-Initiative von der Bevölkerung abgelehnt.",
+  "claim_language": "de",
+  "source_language": "it",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-644-B",
+  "task": "B",
+  "gold": 1,
+  "pred": 2,
+  "mechanism": "called entailment/contradiction, gold neutral",
+  "path": "task B",
+  "cited": [],
+  "claim": "Das Komitee vertritt die Auffassung, dass ein Verhüllungsverbot die Lebenserwartung in der Schweiz um mindestens zwei Jahre steigern würde.",
+  "claim_language": "de",
+  "source_language": "de",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-763-B",
+  "task": "B",
+  "gold": 1,
+  "pred": 2,
+  "mechanism": "called entailment/contradiction, gold neutral",
+  "path": "task B",
+  "cited": [],
+  "claim": "D’après le texte de vote, la Suisse aurait signé un accord de libre-échange avec le Japon en 2019.",
+  "claim_language": "fr",
+  "source_language": "fr",
+  "error": null
+ },
+ {
+  "id": "v1.1-row-918-B",
+  "task": "B",
+  "gold": 1,
+  "pred": 2,
+  "mechanism": "called entailment/contradiction, gold neutral",
+  "path": "task B",
+  "cited": [],
+  "claim": "Il riassunto sostiene che la Svizzera ha varato una nuova legge per tassare le imprese multinazionali, fissando un’aliquota minima del 15% sui profitti realizzati a livello globale.",
+  "claim_language": "it",
+  "source_language": "it",
+  "error": null
+ }
+]

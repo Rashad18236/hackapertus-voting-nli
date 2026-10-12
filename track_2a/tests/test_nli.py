@@ -88,3 +88,22 @@ class V5Min(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ShortPrompts(unittest.TestCase):  # session 10, step 5
+    def test_short_prompts_keep_the_rules_and_the_readme_label_names(self):
+        from src import nli
+        a, b = nli.PROMPTS_A["A-v5-short"], nli.PROMPTS_B["v6-short"]
+        self.assertIn(nli.L1_SENTENCE, a)
+        for prompt in (a, b):
+            for name in ("0 (Entailment)", "1 (Unrelated / Neutral)", "2 (Contradiction)"):
+                self.assertIn(name, prompt)
+            self.assertIn("Missing information is never a contradiction.", prompt)
+        self.assertIn('{"paragraphs": [2, 5], "label": 0}', a)
+        self.assertLess(len(a), len(nli.PROMPTS_A["A-v4-section-route-L1"]))
+        self.assertLess(len(b), len(nli.PROMPTS_B["v3-topic-first"]))
+
+    def test_settings_pick_the_short_prompt_for_routed_cases(self):
+        from src import cli
+        self.assertEqual(cli.paragraph_prompt_version(cli.Settings()), "A-v4-section-route-L1")
+        self.assertEqual(cli.paragraph_prompt_version(cli.Settings(short_prompt_a=True)), "A-v5-short")

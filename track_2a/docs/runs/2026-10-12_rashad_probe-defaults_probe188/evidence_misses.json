@@ -1,0 +1,44 @@
+[
+ {
+  "id": "v1.1-row-485-A",
+  "gold": 0,
+  "pred": 0,
+  "path": "fallback:embed-e5-small",
+  "items": 3
+ },
+ {
+  "id": "v1.1-row-1058-A",
+  "gold": 2,
+  "pred": 0,
+  "path": "fallback:embed-e5-small",
+  "items": 2
+ },
+ {
+  "id": "v1.1-row-1123-A",
+  "gold": 2,
+  "pred": 2,
+  "path": "fallback:embed-e5-small",
+  "items": 3
+ },
+ {
+  "id": "v1.1-row-1176-A",
+  "gold": 2,
+  "pred": 1,
+  "path": "law",
+  "items": 0
+ },
+ {
+  "id": "v1.1-row-1220-A",
+  "gold": 2,
+  "pred": 2,
+  "path": "fallback:embed-e5-small",
+  "items": 1
+ },
+ {
+  "id": "v1.1-row-1453-A",
+  "gold": 2,
+  "pred": 1,
+  "path": "committee",
+  "items": 0
+ }
+]

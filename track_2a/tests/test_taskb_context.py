@@ -62,6 +62,19 @@ class CutAndPara(unittest.TestCase):
         self.assertEqual(numbered[0], TITLE)
         self.assertEqual(len(numbered), 1 + taskb_context.TOP_K)
 
+    def test_cut4_keeps_four_paragraphs_of_a_reference_over_3000_characters(self):  # session 10, step 5
+        text = reference(6, 600, "vier")
+        self.assertTrue(3000 < len(text) <= 8000)
+        self.assertFalse(taskb_context.is_long(text))  # B-cut leaves it whole
+        self.assertTrue(taskb_context.is_long(text, "cut4"))
+        emb, query = patched()
+        with emb, query:
+            first, kept = taskb_context.cut_paragraphs(text, "Die Steuer steigt.", "cut4")
+            cut = taskb_context.cut_text(text, "Die Steuer steigt.", "cut4")
+        self.assertEqual([int(p.split()[1]) for p in kept], [1, 2, 3, 4])  # "Steuer" (3) first, then ties in order
+        self.assertEqual(cut, "\n\n".join([first] + kept))
+        self.assertEqual(taskb_context.cut_text(text, "Die Steuer steigt.", "cut"), text)
+
     def test_text_without_paragraphs_is_sent_whole(self):
         self.assertEqual(taskb_context.para_texts("Nur ein Titel", "c"), ["Nur ein Titel"])
         self.assertEqual(taskb_context.split(""), ("", []))

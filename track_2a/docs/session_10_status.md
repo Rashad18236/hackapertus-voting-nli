@@ -25,15 +25,17 @@ Updated after every step. If the session is restarted with "continue", work goes
   pulled image answered both examples. **After a merge into `main`, Rashad: check that the workflow ran on `main`
   (Actions -> publish-image) and that `latest` is pullable without logging in.**
 
+- (14:00) Step 4: probe set `data/probe/` (94 task A + 94 task B cases, test rows dated 2021-03-07 and 2025-09-28);
+  offline (5 of 6 booklets parse, 83 of 94 routed), local time, and today's defaults through the image
+  (`docs/runs/2026-10-12_rashad_probe-defaults_probe188`).
+
 ## Running
 
-- Step 4: probe set built (`data/probe/`, 94 task A + 94 task B cases from the test rows dated 2021-03-07 and
-  2025-09-28; booklets in `output/booklets_probe/`).
+- Step 5, task A: interleaved dev run today / P-short / K4 / P-short+K4 (`docs/runs/2026-10-12_rashad_fewer-tokens-A_devA300`).
 
 ## Next
 
-- Step 4: probe without the model (parse, vote match, routing, local time), then with the model (today's defaults,
-  both tasks), errors by mechanism.
+- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4; then val for both tasks; TOKEN RULE; REF SCORE.
 
 ## Numbers so far
 
@@ -45,3 +47,6 @@ Updated after every step. If the session is restarted with "continue", work goes
 - **REF SCORE of `main`:** dev 0.770 (S_A 0.767, S_B 0.774), val 0.761; T_A 0.062, T_B 0.005.
 - **After step 2** (one worker process; task B no cut): local time per case A 0.015 s (1.0 s per request) /
   0.300 s (0.3 s), B 0.008 / 0.009 s. REF SCORE dev 0.877 / 0.799, val 0.868 / 0.789.
+- **Probe** (today's defaults): task A Macro-F1 0.960, evidence 0.908, 1,232 + 14 tokens; task B 0.961, 1,831 + 9
+  tokens; 0 fallback labels; REF SCORE 0.846 (1.0 s) / 0.775 (0.3 s). Errors: A 4 (spread over mechanisms), B 4 (all
+  neutral called contradiction).
