@@ -117,16 +117,8 @@ class Lanes:
             process.join(timeout=5)
 
 
-LANE_NICENESS = 10  # lanes yield the CPU to the main process, which sends the requests (local time between them)
-
-
 def _lane(group, prepare, send):
-    """A worker process: prepare each case of its list in turn and send (number, ok, result or error text). It
-    runs at a lower priority, so that the main process gets a CPU at once when an answer arrives."""
-    try:
-        os.nice(LANE_NICENESS)
-    except (AttributeError, OSError):
-        pass
+    """A worker process: prepare each case of its list in turn and send (number, ok, result or error text)."""
     for number, case in group:
         try:
             message = (number, True, prepare(case))

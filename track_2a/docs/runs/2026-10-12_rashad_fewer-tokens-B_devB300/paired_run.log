@@ -1,0 +1,40 @@
+300 cases, 0 booklets parsed; arms: ['today', 'BP-short', 'B-cut4', 'BP-short+B-cut4']
+[1/300] v1.1-row-2-B | today: entailment | BP-short: neutral | BP-short+B-cut4: entailment | B-cut4: entailment
+[2/300] v1.1-row-4-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[3/300] v1.1-row-5-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[4/300] v1.1-row-9-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: neutral
+[5/300] v1.1-row-18-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[6/300] v1.1-row-21-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[7/300] v1.1-row-22-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: neutral | today: entailment
+[8/300] v1.1-row-26-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[9/300] v1.1-row-27-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[10/300] v1.1-row-31-B | BP-short: neutral (unparseable answer) | B-cut4: entailment | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[11/300] v1.1-row-35-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[12/300] v1.1-row-36-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[13/300] v1.1-row-40-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[14/300] v1.1-row-48-B | BP-short: neutral (unparseable answer) | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[15/300] v1.1-row-49-B | B-cut4: entailment | BP-short+B-cut4: neutral (unparseable answer) | BP-short: neutral (unparseable answer) | today: entailment
+[16/300] v1.1-row-68-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[17/300] v1.1-row-75-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[18/300] v1.1-row-76-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[19/300] v1.1-row-80-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: neutral | today: entailment
+[20/300] v1.1-row-84-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[21/300] v1.1-row-85-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[22/300] v1.1-row-86-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[23/300] v1.1-row-93-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[24/300] v1.1-row-94-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[25/300] v1.1-row-95-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[26/300] v1.1-row-109-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[27/300] v1.1-row-116-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[28/300] v1.1-row-133-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[29/300] v1.1-row-134-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[30/300] v1.1-row-135-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[31/300] v1.1-row-146-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[32/300] v1.1-row-150-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[33/300] v1.1-row-154-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[34/300] v1.1-row-160-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[35/300] v1.1-row-161-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[36/300] v1.1-row-162-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[37/300] v1.1-row-166-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[38/300] v1.1-row-167-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[39/300] v1.1-row-168-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
