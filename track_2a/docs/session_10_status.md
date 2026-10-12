@@ -47,15 +47,21 @@ Updated after every step. If the session is restarted with "continue", work goes
 - (17:05) Step 5, task B: BP-short fails on dev; B-cut4 passes the TOKEN RULE on dev (0.987 vs 0.967) and val (0.961
   vs 0.957) with −55 % tokens, but lowers REF SCORE (local time 0.066 / 0.730 s per case vs 0.0075 / 0.0067 s):
   not adopted. Step 5 changes no default.
+- (17:15) Step 9 (optional): B-U on dev 0.976 vs 0.967 with −30 % input tokens but +5.6 output tokens and e5 local
+  time (REF SCORE 0.816 vs 0.843): not adopted, val skipped (`docs/runs/2026-10-12_rashad_unified-B_devB300`).
 
 ## Running
 
-- Step 9 (optional): B-U against today on dev (`docs/runs/2026-10-12_rashad_unified-B_devB300`).
+- FINISH (from 17:19 UTC): the final defaults through the published image
+  `ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677` (built from `421d8c8`, the final `src/`): dev 600,
+  val 1,160 (task A 580, task B 580), probe 188, task A and task B in separate containers, one request per second
+  (`docs/runs/2026-10-12_rashad_final-defaults_*`).
 
 ## Next
 
-- FINISH: publish, final runs through the published image (dev 600, val 1,160, probe 188), local time of the final
-  image, new replay reference, report, PDF, CLAUDE.md, session report.
+- FINISH: score the final runs; local time of the published image (dev, val, probe; 1.0 s and 0.3 s per request);
+  new replay reference from the final runs' answers; technical report and PDF, session report, CLAUDE.md; all tests;
+  clean-machine workflow green.
 
 ## Numbers so far
 

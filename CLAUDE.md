@@ -196,8 +196,12 @@ cases). `expected-labels.jsonl` files never go into the prediction container.
 ```
 Makefile, Dockerfile, .dockerignore, .env.example, requirements.txt, requirements-dev.txt
 src/
-  cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case
-  llm.py        the only module that calls Apertus; records tokens and time per call
+  cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case; since session 10
+                each case is prepare() (local work) + complete() (model call); --workers 0 = sequential
+  pipeline.py   session 10: two forked worker processes ("lanes", each owning whole booklets) prepare cases
+                while the main process sends them, one request at a time
+  memo.py       session 10: compute-once caches safe with threads
+  llm.py        the only module that calls Apertus; records tokens and time per call; one kept connection
   nli.py        prompts and label parsing
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
@@ -216,7 +220,9 @@ src/
                 of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json; val/ (session 7: 580 task A cases from
-                rows in neither dev nor test, and a balanced 300-case sample)
+                rows in neither dev nor test, and a balanced 300-case sample); session 10: probe/ (the test
+                rows of 2021-03-07 and 2025-09-28, copies) and ontopic_neutral/ (46 dev cases, gold passage
+                removed, expected neutral)
 docs/           official contract, reports, reviews
   runs/         one folder per run: run.json, NOTES.md and the run's files (see runs/README.md)
   decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
@@ -229,12 +235,18 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 session 8: prompt_snapshot.py (request hashes and replay, gates G1/G2),
                 embed_equivalence.py, parse_equivalence.py, container_speed.sh; task B (PR #14):
                 taskb_tokens.py, taskb_analysis.py (task B confirmation), canary_taskb.py,
-                interleaved_analysis.py (task B arms of one run)
+                interleaved_analysis.py (task B arms of one run); session 10: official_score.py (REF SCORE),
+                local_time.py (local time the organisers' way), connection_time.py, make_probe.py,
+                make_ontopic.py, rule_check.py (TOKEN RULE, fixes/breaks), schema_check.py,
+                python_rule_offline.py, vote_language_check.py
 models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
 
-Outside `track_2a/`: `CLAUDE.md` and `.github/pull_request_template.md`. The
+Outside `track_2a/`: `CLAUDE.md`, `.github/pull_request_template.md` and `.github/workflows/`
+(`clean-machine.yml`; since session 10 `publish-image.yml`, which publishes the image to
+`ghcr.io/rashad18236/hackapertus-voting-nli`: `latest` from `main` only, `session-10` from the session 10
+branch, and the commit hash). The
 organisers' template layout of `track_2a/` (`README.md`, `technical_report.md`,
 `Makefile`, `src/`, `data/`, `docs/`) must stay as it is: never rename or move
 those; new files go inside `src/` and `docs/`.
