@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "22:33",
+ "kind": "model run",
+ "code": "34587d1 (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task A cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-12_rashad_ap-all_devA300/today",
+ "setup": "AP-all: Apertus names every claim's part (AP-claim, one call per case) and reads every booklet's contents (AP-structure, one call per booklet); entries that pass the heading checks are used, else VW/BW; part 'none' goes to VW. Tokens include every parsing call",
+ "results": {
+  "macro_f1": 0.96,
+  "f1": {
+   "entailment": 0.955,
+   "neutral": 0.961,
+   "contradiction": 0.964
+  },
+  "evidence": {
+   "score": 0.891,
+   "found": 179,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1655,
+  "mean_time_ms": 5234,
+  "p95_time_ms": 13571,
+  "mean_output_tokens": 90.9
+ }
+}

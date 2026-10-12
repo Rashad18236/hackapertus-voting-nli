@@ -27,6 +27,7 @@ class EvidenceItems(unittest.TestCase):
         self.assertEqual(text, "=== PAGE 1 ===\na\n\n=== PAGE 2 ===\nb")
 
 
+@mock.patch.object(parse, "LAZY_PAGES", False)  # the cache is the eager path's (session 11: lazy reading is the default)
 class Cache(unittest.TestCase):
     def test_cache_is_keyed_by_content_not_path(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -149,3 +150,18 @@ class LazyPages(unittest.TestCase):
         self.assertEqual(set(pages._texts), {2})
         self.assertEqual(dict(pages), {n: t for n, t in enumerate(parse.extract_pages(path), start=1)})
         self.assertEqual(pages.key, parse._sha256(path))
+
+    def test_one_reader_open_per_process(self):
+        folder = Path(tempfile.mkdtemp())
+        first, second = folder / "a.pdf", folder / "b.pdf"
+        first.write_bytes(synthetic_pdf([("Eins", False), ("Zwei", False)]))
+        second.write_bytes(synthetic_pdf([("Drei", False), ("Vier", False)]))
+        a, b = parse.Pages(first, "a"), parse.Pages(second, "b")
+        self.assertIsNone(a._reader)  # opening b's reader closed a's
+        self.assertIsNotNone(b._reader)
+        text = a[2]  # reopens a, closes b
+        self.assertEqual(text, parse.extract_pages(first)[1])
+        self.assertIsNone(b._reader)
+        self.assertEqual(b[1], parse.extract_pages(second)[0])
+        self.assertEqual(a[2], text)  # read once: no reopening for a page already read
+        self.assertIsNone(a._reader)

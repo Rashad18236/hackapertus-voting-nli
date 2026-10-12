@@ -1,0 +1,94 @@
+{
+ "cases": 300,
+ "requests": 300,
+ "wall_s": 126.22,
+ "in_flight_s": 90.248,
+ "local_s": 35.972,
+ "local_per_case_s": 0.1199,
+ "to_first_request_s": 3.045,
+ "tail_s": 0.111,
+ "gaps_s": 32.816,
+ "gap_count": 299,
+ "gap_median_s": 0.0072,
+ "gap_p95_s": 0.0115,
+ "gap_max_s": 12.955,
+ "max_in_flight": 1,
+ "exit_code": 0,
+ "image": "ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677",
+ "image_id": "sha256:b101f52d4df6c370acfbe5a2dc3983bd4302da417c44f45121ac2be996c361f5",
+ "cases_file": "output/devA/cases.jsonl",
+ "delay_s": 0.3,
+ "cpus": "2",
+ "memory": "4g",
+ "cli_args": [],
+ "src_mounted": true,
+ "responses": 300,
+ "unique_ids": 300,
+ "answer_kinds": {
+  "replay": 300
+ },
+ "replay_misses": 0,
+ "input_tokens_per_case": 100.0,
+ "output_tokens_per_case": 10.0,
+ "measured_at": "2026-10-12T22:59:46Z",
+ "peak_memory_mib": 2308,
+ "phases": [
+  {
+   "pid": 9,
+   "role": "lane",
+   "max_rss_mib": 1185.5,
+   "seconds": {
+    "pdf_read": 39.732,
+    "booklet_parse": 0.468,
+    "prepare": 107.053,
+    "e5_load": 1.989,
+    "embed": 63.629
+   },
+   "counts": {
+    "pdf_read": 22,
+    "booklet_parse": 22,
+    "prepare": 158,
+    "e5_load": 1,
+    "embed": 25
+   }
+  },
+  {
+   "pid": 10,
+   "role": "lane",
+   "max_rss_mib": 1198.7,
+   "seconds": {
+    "pdf_read": 38.46,
+    "booklet_parse": 0.423,
+    "prepare": 124.008,
+    "e5_load": 1.943,
+    "embed": 82.016
+   },
+   "counts": {
+    "pdf_read": 22,
+    "booklet_parse": 22,
+    "prepare": 142,
+    "e5_load": 1,
+    "embed": 22
+   }
+  },
+  {
+   "pid": 8,
+   "role": "main",
+   "max_rss_mib": 48.1,
+   "seconds": {
+    "main_wait_no_case": 32.922
+   },
+   "counts": {
+    "main_wait_no_case": 14
+   }
+  }
+ ],
+ "phase_totals_s": {
+  "pdf_read": 78.192,
+  "booklet_parse": 0.891,
+  "prepare": 231.061,
+  "e5_load": 3.932,
+  "embed": 145.645,
+  "main_wait_no_case": 32.922
+ }
+}

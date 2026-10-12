@@ -44,6 +44,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import stub_llm  # noqa: E402
+from src import parse  # noqa: E402
 
 EXAMPLE_BOOKLET = ROOT / "examples" / "booklets" / "2020_09_27_fr.pdf"
 MODEL_DIR = ROOT / "models" / "multilingual-e5-small"
@@ -661,11 +662,14 @@ class OrderIndependence(ContractBase):
 
 class WritesOnlyToOutputAndTmp(ContractBase):
     def test_the_write_record_is_not_empty(self):
-        """The audit hook sees the pipeline's writes (output file, booklet cache), so its silence elsewhere counts."""
+        """The audit hook sees the pipeline's writes (output file; the booklet cache when pages are read at once),
+        so its silence elsewhere counts. Session 11: with LAZY_PAGES (the default) a booklet is read page by page
+        and no cache file is written."""
         run = self.run_cli([a_case("a"), b_case("b")], *A_ARGS)
         written = {p for w in run.writes for p in w[1:]}
         self.assertIn(str(run.root / "output" / "predictions.jsonl"), written)
-        self.assertTrue(any(p.startswith(str(run.root / "tmp" / "booklet-cache")) for p in written), written)
+        if not parse.LAZY_PAGES:
+            self.assertTrue(any(p.startswith(str(run.root / "tmp" / "booklet-cache")) for p in written), written)
 
     def test_unwritable_cache_folder_is_not_an_error(self):
         cases = [a_case("a")]

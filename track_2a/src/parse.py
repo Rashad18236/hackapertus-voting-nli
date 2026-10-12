@@ -100,7 +100,7 @@ def _repair_fonts(resources, seen):
 _pages = {}  # (cache folder, booklet SHA-256) -> {page: text}; session 10: also kept in memory
 
 
-LAZY_PAGES = False  # session 11, step 4 (off): read a page only when it is first asked for (Pages)
+LAZY_PAGES = True  # session 11, step 4 (adopted): read a page only when it is first asked for (Pages)
 
 
 def load_pages(pdf_path, cache_dir=CACHE_DIR):
@@ -114,30 +114,47 @@ def load_pages(pdf_path, cache_dir=CACHE_DIR):
     return dict(memo.once(_pages, (str(cache_dir), key), lambda: _load_pages(pdf_path, key, cache_dir)))
 
 
+_reader_lock = threading.Lock()  # every lazy page read of this process, and the opening and closing of readers
+_open_reader = {"pages": None}  # the one Pages whose PdfReader is open in this process
+
+
 class Pages(Mapping):
     """{page number: text} of a booklet, each page read from the PDF when first asked for (session 11, step 4).
 
     The text of a page is exactly what extract_pages gives for it (the same reading and repair, page by page).
     key: the PDF file's SHA-256, so that caches of parsed booklets need not read every page to name the booklet.
-    Asking whether a page exists, or how many pages there are, reads no page."""
+    Asking whether a page exists, or how many pages there are, reads no page. A process keeps one PDF open: opening
+    another booklet's reader closes the previous one (its pages already read keep their text; a page read later
+    reopens the file), so the parsed PDFs do not pile up in memory."""
 
     def __init__(self, pdf_path, key):
-        from pypdf import PdfReader
-
         self.key = key
-        self._reader = PdfReader(str(pdf_path))
-        self._count = len(self._reader.pages)
+        self._path = str(pdf_path)
+        self._reader = None
         self._texts = {}
-        self._lock = threading.Lock()
+        with _reader_lock:
+            self._count = len(self._open().pages)
+
+    def _open(self):
+        """This booklet's PdfReader, opened if needed (the caller holds _reader_lock)."""
+        if self._reader is None:
+            from pypdf import PdfReader
+
+            previous = _open_reader["pages"]
+            if previous is not None and previous is not self:
+                previous._reader = None
+            self._reader = PdfReader(self._path)
+            _open_reader["pages"] = self
+        return self._reader
 
     def __getitem__(self, number):
         if not (isinstance(number, int) and 1 <= number <= self._count):
             raise KeyError(number)
-        with self._lock:
+        with _reader_lock:
             if number not in self._texts:
                 from src import timing
                 with timing.phase("pdf_read"):
-                    self._texts[number] = _page_text(self._reader.pages[number - 1])
+                    self._texts[number] = _page_text(self._open().pages[number - 1])
             return self._texts[number]
 
     def __contains__(self, number):

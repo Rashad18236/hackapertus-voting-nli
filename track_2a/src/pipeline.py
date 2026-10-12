@@ -104,8 +104,8 @@ def default_workers():
     return workers
 
 
-LIGHT_FIRST = False  # session 11, step 4: a lane prepares the cases that need no embedding model first (deferral.py)
-SHARE_CPUS = False  # session 11, step 4: the lanes share the CPUs for onnxruntime's threads (embedding_threads)
+LIGHT_FIRST = True  # session 11, step 4 (adopted): a lane prepares the cases that need no embedding model first (deferral.py)
+SHARE_CPUS = True  # session 11, step 4 (adopted): the lanes share the CPUs for onnxruntime's threads (embedding_threads)
 LANES = {"count": 0}  # lanes of this run, set before they are forked (each lane inherits it)
 
 

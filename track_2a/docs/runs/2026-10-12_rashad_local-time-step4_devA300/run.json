@@ -1,0 +1,23 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "21:31",
+ "kind": "local time check",
+ "code": "f0c8ca2 working tree copies, one per variant (constants switched); image sha-421d8c804677 with src mounted",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases",
+ "setup": "scripts/local_time.py: the image with 2 CPUs (pinned to CPUs 2-3), 4 GB, fake model replaying the session 10 reference's answers after 0.3 s (also 1.0 and 0.1 s for the first four variants); PROFILE_PHASES=1",
+ "format": "local time per case the organisers' way (wall clock minus time in flight); variants in alternating rounds",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Local time per case at 0.3 s per request (mean of rounds): today 0.202 s; light-first 0.177; lazy pages 0.184; both 0.156; one onnxruntime thread per lane (SHARE_CPUS) 0.124; light-first + SHARE_CPUS 0.120; all three 0.101. G1/G2 pass with all three on: adopted.",
+ "results": {
+  "local_per_case_s_at_0.3": {"today": 0.202, "light": 0.177, "lazy": 0.184, "light+lazy": 0.156, "share": 0.124,
+                             "light+share": 0.120, "light+lazy+share": 0.101, "no-spin": 0.129},
+  "rounds": {"today": 4, "share": 4, "others": 2}
+ }
+}
