@@ -7,11 +7,13 @@ Updated after every step. If the session is restarted with "continue", work goes
 
 ## Done
 
-- (11:45 UTC, Mon) Branch created; status and decisions files.
+- (11:45 UTC, Mon) Branch created; status and decisions files; draft PR #17.
+- (12:05) Step 0: `docs/official_scoring.md`, CLAUDE.md corrected (formula, minimums, published image,
+  separate containers, session 10 stage), `scripts/official_score.py` with `tests/test_official_score.py`.
 
 ## Running
 
-- Step 0: official scoring notes, CLAUDE.md, `scripts/official_score.py`.
+- nothing yet.
 
 ## Next
 
