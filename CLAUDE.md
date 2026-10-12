@@ -312,6 +312,28 @@ report at the end `track_2a/docs/session_10_report.md`. Goal: score what the org
   at that moment); dev for exploring, val only for confirming.
 - **REF SCORE** (`scripts/official_score.py`): fixed reference "best" values, tokens per case 600 (A) and
   800 (B), local time per case 0.05 s (A) and 0.005 s (B); always reported with its parts.
+- **Defaults changed in session 10, each by its rule:** cases are prepared in two forked worker processes
+  ("lanes", `src/pipeline.py`; each owns whole booklets) while the main process sends requests over one kept
+  connection; each booklet parsed once; ONNX threads = the CPU limit; `src/` compiled in the image (same
+  answers, G1/G2; local time per case on dev, model at 1.0 / 0.3 s per request: task A 0.803 / 0.742 s → 0.017 / 0.154 s,
+  task B 0.985 / 0.939 s → 0.010 / 0.007 s). Task B sends the whole reference again (no B-cut: e5's local time costs
+  more REF SCORE than its tokens save). A vote name the title match cannot place is placed by meaning (e5,
+  lead ≥ 0.04; G1/G2 unchanged).
+- **Tried, not adopted:** P-short, P-short+K4, BP-short, BP-short+B-cut4 (fail on dev); K4 (fails on val);
+  B-cut4 (passes the TOKEN RULE, −55 % task B tokens, but lowers REF SCORE through e5 local time); CS, SL (step
+  6, fail their rules); B-U (adds output tokens). Without `response_format` 0 of 100 answers unreadable.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677`,
+  task A and B in separate containers; `docs/runs/2026-10-12_rashad_final-defaults_*`): dev task A 0.983
+  (evidence 0.980), task B 0.967; val 0.959 (0.955), 0.961; probe 0.960 (0.908), 0.971. Tokens per case (dev,
+  input + output): A 1,238 + 14.5, B 1,994 + 8.4. REF SCORE dev 0.870 / 0.824, val 0.873 / 0.888, probe 0.850 / 0.777 (1.0 / 0.3 s
+  per request). Python wrote 6 of 2,128 labels (neutral fallbacks for unreadable task B answers).
+- **Probe:** 5 of 6 booklets parse; `2025_09_28_fr`'s first vote is not found (8 fallbacks), reported, not fixed.
+- **The Python rule "neutral with a citation → contradiction"** was scored offline only (val +0.014, on-topic
+  neutral set 3 of 3 changes wrong); it is not in `src/`.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA` (the
+  final runs' 1,180 dev and val answers; also `scripts/local_time.py`'s default table).
+- **The published image:** `.github/workflows/publish-image.yml` (tags: commit, `session-10`, `latest` from
+  `main`); after a merge into `main`, check that `latest` pulls without logging in.
 
 ## Previous stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
 
@@ -553,11 +575,12 @@ Rules for this stage:
   output drifts. Scores from different runs are never compared.
 - Measure offline first (`scripts/retrieval_check.py` for the embedding,
   selector recall for the vote section) before spending model calls.
-- Cases run one at a time; one retry for HTTP 5xx and timeouts, up to two for
-  HTTP 429.
+- Requests go out one at a time (cases are prepared in two worker processes
+  since session 10); one retry for HTTP 5xx, timeouts and a lost connection,
+  up to two for HTTP 429.
 - A change to `src/` that should not change answers is checked with G1 and G2
-  against the session 9 reference (`scripts/prompt_snapshot.py`,
-  `docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA`).
+  against the session 10 reference (`scripts/prompt_snapshot.py`,
+  `docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`).
 - Local models only under the model rule above. Ask before adding another one
   (each is a heavy dependency).
 

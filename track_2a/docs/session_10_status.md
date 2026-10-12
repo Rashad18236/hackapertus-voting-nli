@@ -50,18 +50,26 @@ Updated after every step. If the session is restarted with "continue", work goes
 - (17:15) Step 9 (optional): B-U on dev 0.976 vs 0.967 with −30 % input tokens but +5.6 output tokens and e5 local
   time (REF SCORE 0.816 vs 0.843): not adopted, val skipped (`docs/runs/2026-10-12_rashad_unified-B_devB300`).
 
+- (17:19–17:57) FINISH: the final defaults through the published image `sha-421d8c804677` (task A and task B in
+  separate containers, one request per second, every answer from one backend): dev task A 0.983 / evidence 0.980,
+  task B 0.967; val 0.959 / 0.955, 0.961; probe 0.960 / 0.908, 0.971; 6 neutral-fallback labels of 2,128 (task B,
+  unreadable), 0 failed calls (`docs/runs/2026-10-12_rashad_final-defaults_{dev600,val1160,probe188}`).
+- (18:06) New replay reference `docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`: the replay
+  reproduces the final runs exactly (0 label and 0 evidence differences in 1,180 cases).
+- (18:53) Local time of the published image (2 CPUs, 4 GB, after a warm-up): dev task A 0.017 / 0.154 s per case
+  (1.0 / 0.3 s per request), task B 0.010 / 0.007 s; REF SCORE dev 0.870 / 0.824 (`main`: 0.770 / 0.770).
+- (19:05) Technical report filled (6 pages as PDF; only TODOs: project name, team name, full names, sealed test
+  results), session report, CLAUDE.md; 222 tests pass (1 skipped); `build_docs.py --check` passes.
+
 ## Running
 
-- FINISH (from 17:19 UTC): the final defaults through the published image
-  `ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677` (built from `421d8c8`, the final `src/`): dev 600,
-  val 1,160 (task A 580, task B 580), probe 188, task A and task B in separate containers, one request per second
-  (`docs/runs/2026-10-12_rashad_final-defaults_*`).
+- Nothing. Clean-machine workflow on the final push: see below.
 
 ## Next
 
-- FINISH: score the final runs; local time of the published image (dev, val, probe; 1.0 s and 0.3 s per request);
-  new replay reference from the final runs' answers; technical report and PDF, session report, CLAUDE.md; all tests;
-  clean-machine workflow green.
+- Session 10 is finished. For Rashad: after a merge into `main`, check that `publish-image` ran on `main` and that
+  `ghcr.io/rashad18236/hackapertus-voting-nli:latest` pulls without logging in; fill the report's TODOs (project
+  name, team name, full names) and make the licence in the report and `LICENSE` agree.
 
 ## Numbers so far
 
@@ -76,3 +84,5 @@ Updated after every step. If the session is restarted with "continue", work goes
 - **Probe** (today's defaults): task A Macro-F1 0.960, evidence 0.908, 1,232 + 14 tokens; task B 0.961, 1,831 + 9
   tokens; 0 fallback labels; REF SCORE 0.846 (1.0 s) / 0.775 (0.3 s). Errors: A 4 (spread over mechanisms), B 4 (all
   neutral called contradiction).
+- **Final (published image):** see the first lines of `docs/session_10_report.md`. REF SCORE dev 0.870 / 0.824, val
+  0.873 / 0.888 (with dev's local times 0.860 / 0.813), probe 0.850 / 0.777 (1.0 / 0.3 s per request).

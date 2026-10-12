@@ -4,7 +4,7 @@ Run from track_2a/ (Docker running, image built):
 
     python3 scripts/local_time.py --image hackapertus-voting-nli --cases output/devA/cases.jsonl \\
         --booklets output/booklets_dev --delay 1.0 --out <folder> \\
-        [--replay docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/replay_table.json]
+        [--replay docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA/replay_table.json]
 
 The organisers' rule (docs/official_scoring.md): local time = the wall-clock time of the container run minus
 the time during which at least one model request is in flight. This script measures exactly that against
@@ -47,7 +47,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import stub_llm  # noqa: E402
 
-REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/replay_table.json"
+REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA/replay_table.json"
 
 
 def union_length(intervals, lo, hi):
