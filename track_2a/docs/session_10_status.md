@@ -63,7 +63,9 @@ Updated after every step. If the session is restarted with "continue", work goes
 
 ## Running
 
-- Nothing. Clean-machine workflow on the final push: see below.
+- Nothing. On `3a18dec` (the FINISH commit) both workflows are green: clean-machine run 71, publish-image run 17.
+  Self-checks against the starter: 0 failures; `scripts/check_format.py` finds no error in the six final prediction
+  files. PR #17's description has the final numbers.
 
 ## Next
 
