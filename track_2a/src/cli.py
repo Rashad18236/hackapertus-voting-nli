@@ -78,6 +78,10 @@ class Settings:
                                  # neutral recall 1.000 on both. --no-label-rule-a sends A-v4-section-route
     section_top_k_a: int = 0     # E1 (session 9, information only): if > 0, a routed case keeps only its k paragraphs
                                  # most similar to the claim (e5), in their order; 0 keeps section-route as it is
+    coupled_schema_a: bool = False  # CS (session 10, step 6): routed answers with the coupled schema (neutral cites nothing,
+                                    # entailment and contradiction cite 1 to 3 paragraphs); needs anyOf at the endpoint
+    second_look_cited_a: bool = False  # SL (session 10, step 6): a neutral answer that cites paragraphs gets one more call
+                                       # with only those paragraphs; an entailment or contradiction there replaces it
     short_prompt_a: bool = False  # P-short (session 10, step 5): routed cases get A-v5-short, the same rules in at most
                                   # 200 fixed tokens (L1's sentence included)
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
@@ -187,8 +191,8 @@ def prepare_a(case, data_dir, start, raw, settings):
         raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
         raw["pages_total"], raw["context_pages"] = len(pages), sorted({page for page, _ in paragraphs})
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
-                        routed=routed, chat_args={"max_tokens": settings.max_tokens_a, "json_schema":
-                                                  nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None})
+                        routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
+                                                  "json_schema": paragraph_schema(settings)})
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
         mode = context.fallback(settings.context_a)
@@ -237,6 +241,13 @@ def paragraph_messages(routed, vote, claim_text, settings):
                                            vote, claim_text, paragraph_prompt_version(settings))
 
 
+def paragraph_schema(settings):
+    """The answer schema of a routed case: the coupled one with CS (session 10, step 6), else the plain one."""
+    if not settings.schema_a:
+        return None
+    return nli.ANSWER_SCHEMA_A_COUPLED if settings.coupled_schema_a else nli.ANSWER_SCHEMA_A_PARAGRAPHS
+
+
 def paragraph_prompt_version(settings):
     if settings.short_prompt_a:  # session 10, step 5: P-short (L1's sentence included)
         return "A-v5-short"
@@ -263,6 +274,13 @@ def complete_a_paragraphs(p, start, settings):
         p.raw["parse_reason"] = reason
         return response(p.case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
     input_tokens, output_tokens = result.input_tokens, result.output_tokens
+    if label == 1 and numbers and settings.second_look_cited_a:
+        second = second_look_cited(p, numbers, settings)
+        if second is not None:
+            result2, label2, numbers2, shown2 = second
+            input_tokens, output_tokens = input_tokens + result2.input_tokens, output_tokens + result2.output_tokens
+            if label2 in (0, 2):  # Apertus's second answer replaces the neutral one only if it is 0 or 2
+                label, numbers, paragraphs = label2, numbers2, shown2
     if label == 1 and settings.second_look_a:
         second = second_look(p.routed, p.vote, p.claim_text, p.raw, settings)
         if second is not None:
@@ -273,6 +291,36 @@ def complete_a_paragraphs(p, start, settings):
     items = variant.evidence_items(paragraphs, numbers, halves=settings.evidence_halves_a) if label in (0, 2) else []
     status = "ok" if label == 1 or items else "no valid paragraphs for label 0/2"
     return response(p.case_id, label, input_tokens, output_tokens, start, items), status
+
+
+def second_look_cited(p, numbers, settings):
+    """SL (session 10, step 6; off by default): the first answer was neutral but cited paragraphs. Ask once more with
+    only the cited paragraphs (in their order, numbered from 1) and the claim, prompt A-v4-second-look-cited (all
+    three labels allowed). Returns (result, label, paragraph numbers, the cited paragraphs) or None when there is
+    nothing valid to send or the call fails (the first answer stays). Recorded in raw["second_look_cited"]."""
+    variant = context.VARIANTS[settings.context_a]
+    part, paragraphs = p.routed
+    cited = sorted({n for n in numbers if isinstance(n, int) and 1 <= n <= len(paragraphs)})
+    if not cited:
+        return None
+    shown = [paragraphs[n - 1] for n in cited]
+    messages = nli.build_messages_a_paragraphs(variant.PART_LINES[part], [variant.display(t) for _, t in shown],
+                                               p.vote, p.claim_text, "A-v4-second-look-cited")
+    p.raw["second_look_cited"] = {"cited": cited}
+    try:
+        result = llm.chat(messages, max_tokens=settings.max_tokens_a,
+                          json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
+    except llm.LLMError as e:
+        p.raw["second_look_cited"].update(error=str(e), attempts=e.attempts)
+        return None
+    label, numbers2, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
+    p.raw["second_look_cited"].update(answer=result.text, input_tokens=result.input_tokens,
+                                      output_tokens=result.output_tokens, attempts=result.attempts,
+                                      endpoint=result.endpoint)
+    if label is None:
+        p.raw["second_look_cited"]["parse_reason"] = reason
+        return result, None, [], shown
+    return result, label, numbers2, shown
 
 
 def second_look(routed, vote, claim_text, raw, settings):
@@ -481,6 +529,11 @@ def main():
                         help="development only: L1, the routed prompt plus a sentence on contradictions (session 9, D)")
     parser.add_argument("--section-top-k-a", type=int, default=defaults.section_top_k_a,
                         help="development only: E1, keep the k paragraphs most similar to the claim (0: all)")
+    parser.add_argument("--coupled-schema-a", action=argparse.BooleanOptionalAction, default=defaults.coupled_schema_a,
+                        help="development only: CS, the coupled answer schema for routed cases (session 10, step 6)")
+    parser.add_argument("--second-look-cited-a", action=argparse.BooleanOptionalAction,
+                        default=defaults.second_look_cited_a,
+                        help="development only: SL, a second call after a neutral answer that cites paragraphs (step 6)")
     parser.add_argument("--short-prompt-a", action=argparse.BooleanOptionalAction, default=defaults.short_prompt_a,
                         help="development only: P-short, the routed prompt in fewer words (session 10, step 5)")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
@@ -501,7 +554,8 @@ def main():
                         evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
                         context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
                         second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
-                        short_prompt_a=args.short_prompt_a)
+                        short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
+                        second_look_cited_a=args.second_look_cited_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

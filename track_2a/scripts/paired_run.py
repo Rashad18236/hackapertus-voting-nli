@@ -29,6 +29,10 @@ records its position in the case's order and the UTC time it was sent.
 --resume continues a stopped run: cases already present in an arm's output
 are skipped for that arm (the order rule stays the same), nothing is re-run.
 Calls the same code as the official entrypoint (src.cli.predict).
+
+--exclude-paragraphs FILE (test only, session 10 step 6: the on-topic neutral set, scripts/make_ontopic.py): a JSON
+object {case id: [paragraph texts]}. For these cases the routed part is built without these paragraphs (before
+section-route's length cut), by wrapping src/booklet.py's part_paragraphs in this process only; src/ is unchanged.
 """
 
 import argparse
@@ -43,7 +47,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src import cli, env, parse  # noqa: E402
+from src import booklet, cli, env, parse  # noqa: E402
+
+_current = {"id": None}  # the case being answered (for --exclude-paragraphs)
+
+
+def exclude_paragraphs(exclusions):
+    """Test only: part_paragraphs without the paragraphs listed for the current case (see the module docstring)."""
+    original = booklet.part_paragraphs
+
+    def part_paragraphs(pages, vote, part):
+        found = original(pages, vote, part)
+        drop = set(exclusions.get(_current["id"], ()))
+        return [(page, text) for page, text in found if text not in drop] if drop else found
+    booklet.part_paragraphs = part_paragraphs
 
 
 def arm_order(i, n):
@@ -70,7 +87,10 @@ def main():
     p.add_argument("--min-interval", type=float, default=0.0,
                    help="seconds between the starts of two requests (default 0: no pause)")
     p.add_argument("--resume", action="store_true", help="continue a stopped run in the same --out-dir")
+    p.add_argument("--exclude-paragraphs", type=Path, help="test only: JSON {case id: [paragraph texts]} (step 6)")
     args = p.parse_args()
+    if args.exclude_paragraphs:
+        exclude_paragraphs(json.loads(args.exclude_paragraphs.read_text(encoding="utf-8")))
     if len(args.arm) < 2:
         p.error("give at least two --arm options")
     arms = [json.loads(a) for a in args.arm]
@@ -118,6 +138,7 @@ def main():
             time.sleep(max(0.0, last_start + args.min_interval - time.monotonic()))  # pacing, outside the timed case
             last_start = time.monotonic()
             sent = f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M:%S}"
+            _current["id"] = case["id"]
             try:
                 resp, status, raw = cli.predict(case, args.data_dir, s)
             except Exception as e:  # same guarantee as the CLI: never drop a case

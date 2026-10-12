@@ -231,6 +231,29 @@ ANSWER_SCHEMA_A_PARAGRAPHS = {
 }
 
 
+# Session 10, step 6 (CS, off by default): the routed answer with its two parts coupled. A neutral answer cites no
+# paragraph; an entailment or a contradiction cites one to three. Needs an endpoint that enforces anyOf.
+ANSWER_SCHEMA_A_COUPLED = {
+    "anyOf": [
+        {"type": "object",
+         "properties": {"paragraphs": {"type": "array", "items": {"type": "integer"}, "maxItems": 0},
+                        "label": {"type": "integer", "enum": [1]}},
+         "required": ["paragraphs", "label"], "additionalProperties": False},
+        {"type": "object",
+         "properties": {"paragraphs": {"type": "array", "items": {"type": "integer"}, "minItems": 1, "maxItems": 3},
+                        "label": {"type": "integer", "enum": [0, 2]}},
+         "required": ["paragraphs", "label"], "additionalProperties": False},
+    ]
+}
+
+# Session 10, step 6 (SL, off by default): after a neutral answer that still cites paragraphs, one more call with
+# only the cited paragraphs. A-v4-second-look with its first sentence adapted; all three labels allowed.
+PROMPTS_A["A-v4-second-look-cited"] = PROMPTS_A["A-v4-second-look"].replace(
+    'The reference text is the three paragraphs ("[n] ...") closest to the claim from one part',
+    'The reference text is the paragraphs ("[n] ...") cited for the claim from one part')
+assert PROMPTS_A["A-v4-second-look-cited"] != PROMPTS_A["A-v4-second-look"]
+
+
 def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, version="A-v4-section-route"):
     """Messages for a routed part: PART line, numbered paragraphs (as shown), VOTE and CLAIM."""
     numbered = "\n".join(f"[{i}] {text}" for i, text in enumerate(paragraph_texts, start=1))
