@@ -24,20 +24,25 @@ Updated after every step. If the session is restarted with "continue", work goes
   (Macro-F1 −0.002, needs +0.02), BW fails; both off; no default changed; probe run not needed.**
 - (22:08) Q (8-bit e5) for task A: changes the 8 paragraphs of 50 of 75 cut cases, so G1 cannot hold; off.
 
+- (22:33) Step 3a: AP-structure on 93 booklets: 78.7 % of current-layout votes equal to the parser's (needs 95 %);
+  1,796 + 176 tokens per booklet (`docs/runs/2026-10-12_rashad_ap-structure_booklets93`).
+- (23:07, 23:19) Step 3 run 1: AP-all vs today, dev 0.960 / 0.891 vs 0.977 / 0.980 (1,655 + 91 vs 1,238 + 14.5 tokens);
+  probe 0.951 / 0.877 vs 0.971 / 0.954. Apertus's part = rules' part 89 %. Step 3b: net gain 0 → run 4 not run.
+- (23:20) Step 4 adopted (SAME-ANSWER RULE): light-first, lazy pages (one open reader), SHARE_CPUS; G1/G2 pass;
+  task A local time at 0.3 s 0.202 → 0.101 s per case (`docs/runs/2026-10-12_rashad_local-time-step4_devA300`).
+- Step 2 local work per fallback case: routed 0.29 s, today's fallback 1.74 s, VW 1.31 s, BW 1.61 s.
+
 ## Running
 
-- Step 3a (from 22:18): AP-structure on the 93 booklets (`docs/runs/2026-10-12_rashad_ap-structure_booklets93`).
-  Then (`chain2`) step 3 runs 1–3: AP-all on dev 300 and the probe 94; AP-part on 150 reworded dev cases (today, VW,
-  AP-part); AP-structure with the parser off on dev 300 (today, VW, AP-structure). Model runs on CPUs 0–1.
-- Step 4 (CPUs 2–3): local time of today, light-first, lazy pages, both, one ONNX thread per lane, in alternating
-  rounds at 0.3 s per request. First single measurements at 0.3 s: today 0.225, light 0.185, lazy 0.181,
-  light+lazy 0.131 s per case (beside a model run; noisy).
-- Code for steps 2–6 is written and committed (`4a4c14f`, all off by default; G1/G2 pass, tests pass).
+- Step 3 run 2 (from 23:19): 150 reworded dev cases, today / VW / AP-part; then run 3 (parser off: today's fallback,
+  VW, AP-structure). Model runs on CPUs 0–1.
+- CPUs 2–3: step 6a local time (full, L, H), then step 5 memory sweep, then step 6a (E, T, Q), then AP-all's local
+  time (replay of run 1).
 
 ## Next
 
-- Step 2 decision (FALLBACK RULE) and probe; step 3 runs 1–3 (and 4 if 3b allows), 3d image check; step 4 profile
-  and fixes; step 5 memory; step 6 selectors; FINISH.
+- Step 3: runs 2–3, image check (3d), HYBRID RULE decisions; step 5 memory fixes; step 6 dev run (today, E, the
+  selectors within +0.005 s local time) and val; FINISH.
 
 ## Numbers so far
 

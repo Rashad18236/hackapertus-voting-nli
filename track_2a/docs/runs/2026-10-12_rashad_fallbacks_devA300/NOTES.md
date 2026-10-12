@@ -42,3 +42,19 @@ Files: one folder per arm (`predictions.jsonl`, `raw_answers.jsonl` with the bac
 `official_score.*`, `settings.json`, `run.json`), `rule_check.json` (`scripts/rule_check.py` with
 today-fallback-nopart as the reference: per-arm numbers on all cases and on same-backend cases, fixes and breaks),
 `paired_run.log`.
+
+**Local work and tokens per fallback case** (`fallback_local_time.json`, `scripts/fallback_local_time.py`, no model:
+each level in a fresh process on 2 pinned CPUs, every dev case forced into the level's situation as in the run,
+`prepare()` timed per case; the booklets' pages were read beforehand, so PDF reading is not included; e5 loading and
+every embedding are):
+
+| Level | Seconds of preparation per case | … for later cases of a booklet | Input + output tokens per case (run) |
+|---|---|---|---|
+| routed today (no force) | 0.29 | 0.30 | 1,238 + 14.5 |
+| today's fallback (embed-e5-small) | 1.74 | 0.02 | 1,868 + 15.8 |
+| VW | 1.31 | 1.02 | 1,078 + 14.4 |
+| BW | 1.61 | 0.05 | 939 + 14.3 |
+
+Today's fallback and BW embed the whole booklet once (about 12 s and 11 s for its first case, then almost nothing);
+VW embeds the paragraphs of the case's vote, so its cost repeats for each vote. In a container run these seconds
+hide behind the requests only when the model is slow.
