@@ -58,6 +58,9 @@ def chunk_pages(pages, max_chars=CHUNK_CHARS):
     return chunks
 
 
+MEMORY_ARENA = True
+
+
 class E5Embedder:
     """multilingual-e5-small in ONNX format: tokenize, run the model, mean-pool, L2-normalise."""
 
@@ -83,6 +86,9 @@ class E5Embedder:
         # machine, which under a CPU limit (docker run --cpus 2 on 4 cores) is throttled: 2 threads embedded 124
         # paragraphs in 9.5-10.1 s against 11.3-12.5 s. The vectors are the same for 1, 2 and 4 threads.
         options.intra_op_num_threads = pipeline.available_cpus()
+        # Session 11, step 5 (off by default): onnxruntime's memory arena keeps the largest batch's buffers for the
+        # rest of the run; without it they are freed after each batch (the same arithmetic, so the same vectors).
+        options.enable_cpu_mem_arena = MEMORY_ARENA
         self.session = onnxruntime.InferenceSession(str(Path(model_dir) / model_file), options,
                                                     providers=["CPUExecutionProvider"])
         self.input_names = {i.name for i in self.session.get_inputs()}

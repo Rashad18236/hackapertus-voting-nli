@@ -234,12 +234,15 @@ def vote_scores(parsed, vote):
     return order[0], float(scores[order[0]] - scores[order[1]])
 
 
+SEARCH_MODEL = "e5-small"  # session 11, step 6: "e5-small-q8" (e5's own 8-bit export) is tried, off by default
+
+
 def similarities(paragraphs, claim_text):
     """Cosine similarity (e5-small) between the claim and each paragraph as shown, in the paragraphs' order."""
     texts = [display(t) for _, t in paragraphs]
     key = hashlib.sha256("\n\n".join(texts).encode("utf-8")).hexdigest()
-    vectors = memo.once(_vectors, key, lambda: retrieval.embedder("e5-small").embed([f"passage: {t}" for t in texts]))
-    return vectors @ retrieval.query_vector("e5-small", claim_text)
+    vectors = memo.once(_vectors, key, lambda: retrieval.embedder(SEARCH_MODEL).embed([f"passage: {t}" for t in texts]))
+    return vectors @ retrieval.query_vector(SEARCH_MODEL, claim_text)
 
 
 def most_similar(paragraphs, claim_text, top_k=TOP_K):

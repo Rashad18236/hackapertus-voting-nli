@@ -114,6 +114,8 @@ def docker_command(args, base_url, out_dir):
            "--read-only", "--tmpfs", "/tmp", "--user", f"{os.getuid()}:{os.getgid()}",
            "-e", f"BASE_URL={base_url}", "-e", "API_KEY=stub",
            "-v", f"{cases}:/data/cases.jsonl:ro"]
+    if args.cpuset:  # session 11: keep the container off the CPUs a model run beside it uses
+        cmd += ["--cpuset-cpus", args.cpuset]
     if args.booklets:
         cmd += ["-v", f"{Path(args.booklets).resolve()}:/data/booklets:ro"]
     if args.src:
@@ -140,6 +142,8 @@ def main():
     ap.add_argument("--delay", type=float, default=1.0, help="seconds the fake model takes per answer")
     ap.add_argument("--cpus", default="2")
     ap.add_argument("--memory", default="4g")
+    ap.add_argument("--cpuset", help="docker --cpuset-cpus, e.g. 2,3 (session 11: measure beside a model run "
+                                     "pinned to the other CPUs)")
     ap.add_argument("--src", help="mount this folder over the image's /app/src (measure working-tree code)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--models", help="mount this folder over the image's e5 folder (session 11)")

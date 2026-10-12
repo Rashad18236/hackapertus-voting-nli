@@ -19,11 +19,19 @@ Updated after every step. If the session is restarted with "continue", work goes
   today's fallback ("no part") 0.900 / 0.672 / 1,868 + 15.8; VW ("no part") 0.927 / 0.766 / 1,078 + 14.4;
   BW ("no vote") 0.857 / 0.647 / 939 + 14.3. BW is lower on dev: fails the FALLBACK RULE (off). VW goes to val.
 
+- (22:18) Step 2, val (`docs/runs/2026-10-12_rashad_fallbacks_valA300`, one backend): today's fallback 0.875 /
+  0.593 / 1,827 + 15.8; VW 0.873 / 0.716 / 1,079 + 14.4; BW 0.856 / 0.627 / 951 + 14.5. **FALLBACK RULE: VW fails
+  (Macro-F1 −0.002, needs +0.02), BW fails; both off; no default changed; probe run not needed.**
+- (22:08) Q (8-bit e5) for task A: changes the 8 paragraphs of 50 of 75 cut cases, so G1 cannot hold; off.
+
 ## Running
 
-- Step 2, val (from 21:22): balanced val sample, today's fallback, VW ("no part"), BW ("no vote", for the record)
-  (`docs/runs/2026-10-12_rashad_fallbacks_valA300`). Queued after it (`chain1`): step 3a (AP-structure on the 93
-  booklets).
+- Step 3a (from 22:18): AP-structure on the 93 booklets (`docs/runs/2026-10-12_rashad_ap-structure_booklets93`).
+  Then (`chain2`) step 3 runs 1–3: AP-all on dev 300 and the probe 94; AP-part on 150 reworded dev cases (today, VW,
+  AP-part); AP-structure with the parser off on dev 300 (today, VW, AP-structure). Model runs on CPUs 0–1.
+- Step 4 (CPUs 2–3): local time of today, light-first, lazy pages, both, one ONNX thread per lane, in alternating
+  rounds at 0.3 s per request. First single measurements at 0.3 s: today 0.225, light 0.185, lazy 0.181,
+  light+lazy 0.131 s per case (beside a model run; noisy).
 - Code for steps 2–6 is written and committed (`4a4c14f`, all off by default; G1/G2 pass, tests pass).
 
 ## Next
