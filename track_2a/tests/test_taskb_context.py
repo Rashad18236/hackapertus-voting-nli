@@ -81,8 +81,8 @@ class CliModes(unittest.TestCase):
             resp, status, raw = cli.predict(case, ".", cli.Settings(context_b=mode))
         return resp, status, raw, seen
 
-    def test_default_is_cut(self):
-        self.assertEqual(cli.Settings().context_b, "cut")  # session 9, phase C
+    def test_default_is_the_whole_reference(self):
+        self.assertEqual(cli.Settings().context_b, "full")  # session 10, step 2 (session 9, phase C: cut)
 
     def test_cut_uses_task_b_prompt_and_schema(self):
         text = reference(12, 900, "cli-cut")

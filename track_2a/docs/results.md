@@ -160,11 +160,12 @@ check, the best evidence score a model could reach by citing it.
 - [`2026-10-09_rashad_prompt-snapshot-final_devAB-valA`](runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/): 2026-10-09 21:46 UTC, rashad; session 9 reference for the final defaults (B-cut, L1, evidence halves): the real CLI against the fake model; SHA-256 of every request body and every task A path; the final dev run's 600 answers and the val L1 arm's 580 answers replayed by request hash. Replay of the final code reproduces the saved answers exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.980 / evidence 0.980, task B 0.967; val task A (all 580) 0.961 / 0.958. Replaces the session 8 reference as the anchor of G1 and G2.
 - [`2026-10-12_rashad_local-time-main_devA300-devB300`](runs/2026-10-12_rashad_local-time-main_devA300-devB300/): 2026-10-12 11:57 UTC, rashad; session 10 step 1: main's image with the organisers' command, 2 CPUs, 4 GB, read-only root, /tmp tmpfs; fake model in replay mode (session 9's saved answers) answering after 1.0 s and after 0.3 s. Local time per case of main: task A 0.803 s (delay 1.0 s) / 0.742 s (0.3 s), task B 0.985 / 0.939 s; REF SCORE dev 0.7700, val 0.7612 (delay 1.0 s), T_A 0.062, T_B 0.005.
 - [`2026-10-12_rashad_connection-time_devB20`](runs/2026-10-12_rashad_connection-time_devB20/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-12 12:11 UTC, rashad; session 10 step 1: each case twice, back to back in alternating order: src/llm.py as on main (requests.post, a new connection per call) and the same with one kept requests.Session; default task B settings (v3-topic-first, B-cut). Set-up before the first byte: new connection per call 486.0 ms mean (median 465.3), kept connection 24.3 ms mean (1.2 ms after the first call); 20 vs 1 connections opened for 20 calls each.
+- [`2026-10-12_rashad_pipelining_devA300-devB300`](runs/2026-10-12_rashad_pipelining_devA300-devB300/): 2026-10-12 12:46 UTC, rashad; session 10 step 2: cases prepared in the background (threads, then one forked worker process), one kept connection, booklet parsed once, ONNX threads = CPU limit, src/ compiled; task B with B-cut and without (--context-b full); same measurement as step 1 (2 CPUs, 4 GB, fake model replaying session 9's answers after 1.0 s and 0.3 s). Local time per case, one worker process: task A 0.015 s (1.0 s per request) / 0.300 s (0.3 s), was 0.803 / 0.742; task B without the cut 0.008 / 0.009 s, with B-cut 0.008 / 0.470 s, was 0.985 / 0.939. REF SCORE dev 0.877 / 0.799, val 0.868 / 0.789 (was 0.770 / 0.761 at 1.0 s).
 
 ## Runs by person
 
 - **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
-- **rashad** (88): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`, `2026-10-12_rashad_local-time-main_devA300-devB300`, `2026-10-12_rashad_connection-time_devB20`
+- **rashad** (89): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`, `2026-10-12_rashad_local-time-main_devA300-devB300`, `2026-10-12_rashad_connection-time_devB20`, `2026-10-12_rashad_pipelining_devA300-devB300`
 
 ## Notes per run
 
@@ -1428,3 +1429,76 @@ not compared.
 
 Files: `calls.jsonl` (one line per call: case, arm, set-up, connect and total time, connections opened,
 HTTP status), `summary.json`.
+
+### Background preparation: local time before and after, B-cut against no cut (session 10, step 2)
+
+**What changed (same requests and answers).** `src/cli.py`'s `predict()` was split into `prepare()` (the local
+work of a case: booklet, routing, embedding, messages) and `complete()` (the model call and the response).
+`src/pipeline.py` prepares the cases in the background while the main process sends the prepared ones, one
+request at a time, in the order they become ready. Also: one kept connection per thread (`requests.Session`;
+a connection error is sent once more on a new connection), each booklet parsed once (`booklet.parse` was run
+on every case), pages kept in memory per booklet, pypdf imported on first use, ONNX threads = the
+container's CPU limit (2 instead of 4: about 20 % faster under `--cpus 2`, vectors bit-identical), `src/`
+compiled when the image is built. `--workers 0` keeps the sequential path.
+
+**Gates.** G1 and G2 against the session 9 reference (`2026-10-09_rashad_prompt-snapshot-final_devAB-valA`):
+pass for the thread version and for the process version (all 1,180 dev and val requests, paths, labels and
+evidence equal). With task B's new default (no cut, below), the requests of exactly the 105 long dev task B
+references differ, as expected; every other request, label and evidence is unchanged. Unit, contract and
+pipeline tests pass (164 unit; 43 contract and pipeline, one slow test skipped).
+
+**Local time per case** (same measurement as step 1: 2 CPUs, 4 GB, fake model replaying session 9's answers):
+
+| | task A, 1.0 s | task A, 0.3 s | task B, 1.0 s | task B, 0.3 s |
+|---|---|---|---|---|
+| `main` (step 1) | 0.803 s | 0.742 s | 0.985 s | 0.939 s |
+| two worker threads | 0.105 s | 0.373 s | 0.037 s | 0.664 s |
+| **one worker process** | **0.015 s** | **0.300 s** | 0.008 s | 0.470 s |
+| one worker process, task B without the cut | | | **0.008 s** | **0.009 s** |
+
+One worker process, task A at 1.0 s: 4.5 s of local time in a 305 s run: 3.1 s to the first request (start-up
+and the first booklet), 1.2 s of gaps (median 3.8 ms per request), 0.24 s after the last answer.
+
+**Why a process.** With threads, the PDF reader (pure Python) and the creation of the ONNX session (it holds
+Python's lock for up to 2.45 s, measured in the container) kept the thread that sends the requests waiting:
+task B's second request left 7.6 s late, and two threads reading two booklets at once doubled the time to
+task A's first request (3.4 to 6.3 s). In input order, the first 25 task A cases each needed a new booklet;
+the cases are now prepared grouped by booklet (first appearance), task B's light cases first.
+
+**When the model is fast, the preparation is the limit.** At 0.3 s per request the 300 requests are in flight
+for 90 s, while the worker needs about 180 s for task A (reading 44 booklets, a few e5 embeddings) and about
+225 s for task B with the cut (embedding every paragraph of the 105 long references). Without the cut, task B
+has no local model work.
+
+**B-cut against no cut under REF SCORE** (S_B = 0.70 Macro-F1 + 0.15 T + 0.15 K; Macro-F1 and tokens from
+session 9's interleaved runs, `2026-10-09_rashad_taskb-context_devB300` and `taskb-cut-confirm_valB580`):
+
+| | Macro-F1 | tokens per case | K | T at 1.0 s | S_B at 1.0 s | T at 0.3 s | S_B at 0.3 s | mean S_B |
+|---|---|---|---|---|---|---|---|---|
+| dev, B-cut | 0.967 | 1,239.6 | 0.645 | 0.625 | 0.868 | 0.011 | 0.775 | 0.821 |
+| dev, no cut | 0.967 | 2,002.7 | 0.400 | 0.633 | 0.832 | 0.568 | 0.822 | **0.827** |
+| val, B-cut | 0.961 | 1,239.2 | 0.646 | 0.625 | 0.863 | 0.011 | 0.771 | 0.817 |
+| val, no cut | 0.957 | 1,966.1 | 0.407 | 0.633 | 0.826 | 0.568 | 0.816 | **0.821** |
+
+The two delays disagree: B-cut wins when the model takes 1.0 s per request (its embedding hides behind the
+requests), no cut wins at 0.3 s. B-cut is hidden only if a request takes at least about 0.75 s (225 s of
+embedding over 300 requests); Public AI's server time per task B call was about 0.6 to 0.85 s in step 1's
+connection check, right at that edge. **Decision: no cut**, by the mean S_B over both delays (dev +0.006, val
++0.004); it also does not depend on the model's speed, and task B no longer reads the 470 MB e5 file, which in
+a freshly pulled image is read from disk on first use (54 s on this sandbox's disk in step 1).
+
+**REF SCORE after step 2** (task A: one worker process; task B: no cut; local time measured on dev, used for
+both sets):
+
+| | S_A | T_A | S_B | T_B | K_B | **REF SCORE** | `main` |
+|---|---|---|---|---|---|---|---|
+| dev, 1.0 s per request | 0.908 | 1.000 | 0.832 | 0.633 | 0.400 | **0.877** | 0.770 |
+| dev, 0.3 s | 0.783 | 0.167 | 0.822 | 0.568 | 0.400 | **0.799** | 0.770 |
+| val, 1.0 s | 0.896 | 1.000 | 0.826 | 0.633 | 0.407 | **0.868** | 0.761 |
+| val, 0.3 s | 0.771 | 0.167 | 0.816 | 0.568 | 0.407 | **0.789** | 0.762 |
+
+Tokens are not changed by step 2 (G1: the same requests), except task B's long references, now sent whole.
+The fake model reports fixed token counts, so the `input_tokens_per_case` in the `local_time_*.json` files
+(100 and 10) are not real; the real counts are session 9's.
+
+Files: `local_time_<version>_<task>_d<delay>.json`, `ref_score.json`.

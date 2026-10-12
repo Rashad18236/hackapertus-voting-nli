@@ -16,16 +16,24 @@ Updated after every step. If the session is restarted with "continue", work goes
   (`docs/runs/2026-10-12_rashad_local-time-main_devA300-devB300`) and connection set-up on the real endpoint
   (`docs/runs/2026-10-12_rashad_connection-time_devB20`).
 
+- (13:50) Step 2: cases prepared in one forked worker process (`src/pipeline.py`), one kept connection, booklet
+  parsed once, ONNX threads = CPU limit, `src/` compiled in the image; G1/G2 pass; adopted (same-answer rule).
+  Task B default back to the whole reference (no cut) by REF SCORE (`docs/runs/2026-10-12_rashad_pipelining_devA300-devB300`).
+- (13:50) Step 3: `.github/workflows/publish-image.yml` publishes `ghcr.io/rashad18236/hackapertus-voting-nli`
+  (`session-10` and the commit hash from this branch; `latest` only from `main`) and runs the pulled image with the
+  organisers' command; both runs green. An anonymous pull from the sandbox works (the package is public) and the
+  pulled image answered both examples. **After a merge into `main`, Rashad: check that the workflow ran on `main`
+  (Actions -> publish-image) and that `latest` is pullable without logging in.**
+
 ## Running
 
-- Step 2 (pipelining): code written (`src/pipeline.py`, `src/memo.py`, `cli.prepare/complete`, keep-alive in
-  `src/llm.py`, lazy pypdf, booklet parse cached, ONNX threads = CPU limit, compiled `src/` in the image);
-  contract tests and G1/G2 running.
+- Step 4: probe set built (`data/probe/`, 94 task A + 94 task B cases from the test rows dated 2021-03-07 and
+  2025-09-28; booklets in `output/booklets_probe/`).
 
 ## Next
 
-- Step 2: G1/G2 for `--workers 2` and `--workers 0`, image build, local time again (1.0 s and 0.3 s), REF SCORE,
-  B-cut against no cut under REF SCORE.
+- Step 4: probe without the model (parse, vote match, routing, local time), then with the model (today's defaults,
+  both tasks), errors by mechanism.
 
 ## Numbers so far
 
@@ -35,3 +43,5 @@ Updated after every step. If the session is restarted with "continue", work goes
 - **Connection set-up per call** (real endpoint, through the sandbox's proxy): a new connection per call
   486 ms mean; one kept connection 1.2 ms after the first call.
 - **REF SCORE of `main`:** dev 0.770 (S_A 0.767, S_B 0.774), val 0.761; T_A 0.062, T_B 0.005.
+- **After step 2** (one worker process; task B no cut): local time per case A 0.015 s (1.0 s per request) /
+  0.300 s (0.3 s), B 0.008 / 0.009 s. REF SCORE dev 0.877 / 0.799, val 0.868 / 0.789.

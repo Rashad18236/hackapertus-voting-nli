@@ -80,7 +80,7 @@ class RunWithFakeSteps(unittest.TestCase):
         long_ref = "Titel\n\n" + "\n\n".join("Absatz " * 300 for _ in range(10))
         todo = [(1, a_case("a1", path="booklets/x.pdf")), (2, b_case("b-long", reference=long_ref)),
                 (3, a_case("a2", path="booklets/y.pdf")), (4, a_case("a3", path="booklets/x.pdf")), (5, b_case("b1"))]
-        key = cli.preparation_key(todo, cli.Settings())
+        key = cli.preparation_key(todo, cli.Settings(context_b="cut"))  # with B-cut, a long reference needs e5
         self.assertEqual([c["id"] for _, c in sorted(todo, key=lambda item: key(item[1]))],
                          ["a1", "a3", "b1", "a2", "b-long"])
 

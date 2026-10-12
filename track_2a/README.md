@@ -40,14 +40,15 @@ Requirements: `runtime, hardware, API keys, model weights`
   `examples/cases.jsonl`; predictions go to `output/predictions.jsonl`.
 - **Hardware:** CPU only, no GPU. Measured with 2 CPUs and 4 GB: the 300 dev task A cases take about 4 minutes
   of local work with the default context, peak memory about 2.2 GB (`docs/runs/2026-10-09_rashad_container-speed_devA300`).
+  Since session 10 a worker process prepares the next cases while a request is in flight, so most of that work
+  overlaps with the model's latency (`docs/session_10_report.md`).
 - **API keys:** the model is called through `BASE_URL` with `API_KEY` (an OpenAI-compatible endpoint serving
   Apertus v1.5; the model name comes from `MODEL`, default `swiss-ai/Apertus-v1.5-8B`). Export them, or put
   them in a local `.env` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`; see `.env.example`). No key is in the
   image or the repository.
 - **Model weights:** the only local model, `intfloat/multilingual-e5-small` (MIT), is downloaded when the
   image is built and baked into it; nothing is downloaded at run time. It only chooses which booklet text
-  Apertus reads (task A), and which paragraphs of a task B reference over 8,000 characters it reads (since
-  session 9); Apertus makes every entailment decision.
+  Apertus reads (task A); task B sends the whole reference (session 10). Apertus makes every entailment decision.
 
 **Your own cases and booklets.** Write one JSON request per line, as in `examples/cases.jsonl`: `id`, `vote`,
 `claim` (`text`, `language`), and either `booklet` (`path` relative to the cases file's folder, e.g.

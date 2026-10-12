@@ -13,7 +13,7 @@ opened. So nothing here parses a line of data/test/ before knowing it belongs to
 2. Their ids give the probe rows (`v1.1-row-<n>-A`); the task B lines and expected labels of exactly these rows
    are then picked by their id text (`"id": "v1.1-row-<n>-B"`), again before any parsing.
 3. The booklet URLs come from the dataset's booklet_url column (data/raw/v1.1.parquet), reading only the three
-   booklet columns (date, language, URL) and only the two probe dates; claims and references are not read.
+   booklet columns (date, language, URL) and keeping only the two probe dates; claims and references are not read.
 """
 
 import argparse
@@ -60,10 +60,9 @@ def fetch(cases):
 
     names = {Path(json.loads(line)["booklet"]["path"]).name for line in cases if '"booklet"' in line}
     df = pd.read_parquet(ROOT / "data" / "raw" / "v1.1.parquet",
-                         columns=["booklet_publish_date", "reference_language", "booklet_url"],
-                         filters=[("booklet_publish_date", "in", [pd.Timestamp(d) for d in PROBE_DATES])])
+                         columns=["booklet_publish_date", "reference_language", "booklet_url"]).drop_duplicates()
     urls = {f"{str(date)[:10].replace('-', '_')}_{lang}.pdf": url
-            for date, lang, url in df.drop_duplicates().itertuples(index=False)}
+            for date, lang, url in df.itertuples(index=False) if str(date)[:10] in PROBE_DATES}
     BOOKLETS.mkdir(parents=True, exist_ok=True)
     for name in sorted(names):
         if any(name.startswith(d.replace("-", "_")) for d in SEALED_DATES):
