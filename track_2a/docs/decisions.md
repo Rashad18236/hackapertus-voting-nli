@@ -846,3 +846,10 @@ parsed or opened; `data/test/`, the splits file and the scorer stay unchanged.
 - **FINISH: val task B uses `output/valB/cases.jsonl` (the task B cases of the 580 val rows, as in session 9 and step 5); "580 val both tasks" reads as these 580 plus `data/val/`'s 580 task A cases.** `data/val/` holds task A cases only.
 - **FINISH: new replay reference `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA` from the final runs' answers (dev 600, val task A 580); it replaces session 9's as the anchor of G1/G2 and as `scripts/local_time.py`'s default table.** The session 9 table has B-cut's task B requests, which the final defaults no longer send (105 of 300 dev task B requests differ); the replay reproduces the final runs exactly.
 - **FINISH: the final local time is measured on the published image against the new table, with one warm-up run first and nothing else running.** As in steps 1 and 2: the first run after an image pull reads the files from a cold disk.
+
+# Session 11: unseen booklets, Apertus as parser, a fast server, memory, task B tokens
+
+Started 2026-10-12 20:10 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-11` from `main` at
+`014f691`. One line per decision with its reason; where the instruction was unclear, the reading taken.
+
+- **The session's replay reference for G1/G2 is `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`.** Rashad's instruction.
