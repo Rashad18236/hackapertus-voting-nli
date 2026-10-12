@@ -43,15 +43,19 @@ Updated after every step. If the session is restarted with "continue", work goes
 - Lanes (two worker processes owning whole booklets): G1/G2 pass; task A at 0.3 s per request 0.316 → 0.206 s per
   case; at 1.0 s 0.015 → 0.018 (the busy lanes slow the request loop); peak memory 2.3 GB.
 
+- (16:00) Lanes default: two (one on a single CPU); lower priority did not help and was taken out.
+- (17:05) Step 5, task B: BP-short fails on dev; B-cut4 passes the TOKEN RULE on dev (0.987 vs 0.967) and val (0.961
+  vs 0.957) with −55 % tokens, but lowers REF SCORE (local time 0.066 / 0.730 s per case vs 0.0075 / 0.0067 s):
+  not adopted. Step 5 changes no default.
+
 ## Running
 
-- Lanes with lower CPU priority (`os.nice`), measured against one lane at 1.0 s (twice) and 0.3 s.
+- Step 9 (optional): B-U against today on dev (`docs/runs/2026-10-12_rashad_unified-B_devB300`).
 
 ## Next
 
-- Step 5, task B: dev run today / BP-short / B-cut4 / BP-short+B-cut4 (after the measurement); val only if one passes.
-- Lanes default by the measurement; then FINISH (publish, final runs through the published image, replay
-  reference, report, PDF).
+- FINISH: publish, final runs through the published image (dev 600, val 1,160, probe 188), local time of the final
+  image, new replay reference, report, PDF, CLAUDE.md, session report.
 
 ## Numbers so far
 

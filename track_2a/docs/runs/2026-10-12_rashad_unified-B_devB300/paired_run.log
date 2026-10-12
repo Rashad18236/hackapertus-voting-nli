@@ -1,0 +1,10 @@
+300 cases, 0 booklets parsed; arms: ['today', 'B-U']
+[1/300] v1.1-row-2-B | today: entailment | B-U: entailment
+[2/300] v1.1-row-4-B | B-U: entailment | today: entailment
+[3/300] v1.1-row-5-B | today: entailment | B-U: entailment
+[4/300] v1.1-row-9-B | B-U: entailment | today: entailment
+[5/300] v1.1-row-18-B | today: entailment | B-U: entailment
+[6/300] v1.1-row-21-B | B-U: entailment | today: entailment
+[7/300] v1.1-row-22-B | today: entailment | B-U: entailment
+[8/300] v1.1-row-26-B | B-U: entailment | today: entailment
+[9/300] v1.1-row-27-B | today: entailment | B-U: entailment
