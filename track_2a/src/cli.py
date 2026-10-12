@@ -36,6 +36,7 @@ Input and output (session 8):
 import argparse
 import codecs
 import contextlib
+import functools
 import json
 import logging
 import sys
@@ -409,6 +410,26 @@ def needs_local_model(case, settings):
         return False
 
 
+def preparation_key(todo, settings):
+    """The order in which src/pipeline.py prepares the cases (session 10): first the cases that need no local
+    model before their request (all but long task B references), then by booklet in the order the booklets first
+    appear, then in input order. Only the order of the work changes, never a request."""
+    first_seen = {}
+    for _, case in todo:
+        first_seen.setdefault(booklet_path(case), len(first_seen))
+
+    def key(case):
+        return needs_local_model(case, settings), first_seen.get(booklet_path(case), 0)
+    return key
+
+
+def booklet_path(case):
+    try:
+        return str(case["booklet"]["path"])
+    except (KeyError, TypeError):
+        return ""
+
+
 def read_lines(path):
     """The input file's lines as text: read as bytes, a UTF-8 byte order mark at the start dropped, split at
     \\n, \\r\\n or \\r, and each line decoded on its own with errors="replace"."""
@@ -459,8 +480,8 @@ def main():
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
     parser.add_argument("--workers", type=int, default=pipeline.default_workers(),
-                        help="background threads that prepare cases while a request is in flight (session 10; "
-                             "default 2, or 1 on a single CPU); 0 runs every case in turn, as before session 10")
+                        help="background processes that prepare cases while a request is in flight (session 10; "
+                             "default 1); 0 runs every case in turn, as before session 10")
     parser.add_argument("--in-flight", type=int, default=1, choices=(1, 2),
                         help="development only: model requests sent at the same time (with --workers > 0)")
     args = parser.parse_args()
@@ -531,9 +552,10 @@ def main():
             for number, case in todo:
                 emit(number, case, sequential(case))
         else:
-            pipeline.run(todo, lambda case: prepare(case, data_dir, settings), guarded(lambda p: complete(p, settings)),
+            pipeline.run(todo, functools.partial(prepare, data_dir=data_dir, settings=settings),
+                         guarded(lambda p: complete(p, settings)),
                          sequential, emit, workers=args.workers, in_flight=args.in_flight,
-                         light_first=lambda case: not needs_local_model(case, settings))
+                         order_key=preparation_key(todo, settings))
     written, routing_failed = counts["written"], counts["routing_failed"]
 
     log.info("Wrote %d responses to %s", written, args.output)

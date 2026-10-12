@@ -5,28 +5,32 @@ The organisers count as local time everything the container does while no model 
 route the claim, embed if needed, build the messages, then send the request and wait. The local work of
 every case therefore lay between two requests and counted in full.
 
-Here up to `workers` background threads prepare the cases (src/cli.py's prepare()) while the main loop sends
+Here a background worker process prepares the cases (src/cli.py's prepare()) while the main process sends
 the prepared ones (complete()), one request at a time by default:
 
-- The main loop sends the prepared cases in the order they become ready; a case is sent as soon as it is
+- The main process sends the prepared cases in the order they become ready; a case is sent as soon as it is
   ready and no other request is in flight (in_flight=2 allows two at once; off by default).
-- Cases whose preparation needs no local model come first (light_first), so the first request goes out
-  while the embedding model is still loading.
+- The cases are prepared in an order chosen by the caller (order_key; src/cli.py's preparation_key): task B
+  cases whose preparation needs no local model first, so the first requests go out while the embedding model
+  is still loading; task A cases grouped by booklet, so each booklet's later cases are ready as soon as it has
+  been read.
 - Results do not depend on the order or the timing: a case's request depends only on the case and the
   booklet (all caches are keyed by content, src/memo.py), and the model answers each request on its own.
-- If a case's preparation raises in a worker, the case runs on the sequential path (prepare and complete in
-  the call thread), so a worker error never costs a case its answer.
+- If a case's preparation raises in the worker (or the worker dies), the case runs on the sequential path
+  (prepare and complete in the main process), so a worker error never costs a case its answer.
 
-Threads, not processes: the PDF parser, the parsed booklets and the embedding model are then shared, the
-embedding model is loaded once (onnxruntime and the tokenizer release the GIL while they compute), and the
-main loop mostly waits for the network.
+A process, not threads (measured in session 10): Python runs one thread at a time, and the PDF reader (pure
+Python) and the creation of the ONNX session (up to 2.5 s in one piece) kept the thread that sends the requests
+waiting; in a 300-case task B run the second request left 7.6 s late. The worker process is forked, so it starts
+with the modules already imported. processes=False runs the workers as threads (tests with fake steps).
 """
 
 import collections
 import logging
 import math
+import multiprocessing
 import os
-from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, ThreadPoolExecutor, wait
 from pathlib import Path
 
 log = logging.getLogger("pipeline")
@@ -63,22 +67,34 @@ def available_cpus():
 
 
 def default_workers():
-    """Two background workers, one on a machine with a single CPU (the main loop needs little CPU)."""
-    return 2 if available_cpus() >= 2 else 1
+    """One background worker process. A second one would read every booklet a second time (each process has its
+    own caches), and the main process needs little CPU, so one worker also suits a single CPU."""
+    return 1
 
 
-def run(items, prepare, complete, fallback, emit, workers, in_flight=1, light_first=None):
+def preparer_pool(workers, processes=True):
+    """The executor that prepares cases: worker processes (forked where the platform allows), or threads."""
+    if not processes:
+        return ThreadPoolExecutor(max_workers=workers, thread_name_prefix="prepare")
+    methods = multiprocessing.get_all_start_methods()
+    context = multiprocessing.get_context("fork" if "fork" in methods else None)
+    return ProcessPoolExecutor(max_workers=workers, mp_context=context)
+
+
+def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_key=None, processes=True):
     """Answer every item.
 
-    items: [(number, case)] in input order. prepare(case) -> prepared (in a worker); complete(prepared) ->
+    items: [(number, case)] in input order. prepare(case) -> prepared (in a worker; with processes=True it must
+    be picklable, e.g. a module-level function or a functools.partial of one); complete(prepared) ->
     result (in the call thread; makes the model call); fallback(case) -> result (the sequential path, used
     when prepare raised); emit(number, case, result) (in this thread, as each case finishes).
-    light_first(case) -> True for cases whose preparation needs no local model; they are prepared first."""
+    order_key(case) -> a sort key: the cases are prepared in this order (stable: input order for equal keys)."""
     order = list(items)
-    if light_first is not None:
-        order.sort(key=lambda item: not light_first(item[1]))  # stable: input order within each group
+    if order_key is not None:
+        order.sort(key=lambda item: order_key(item[1]))
     ready = collections.deque()  # (number, case, finished preparation future), in the order they became ready
-    with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="prepare") as preparers, \
+    # The worker processes are forked at the first submit, before the call thread exists.
+    with preparer_pool(workers, processes) as preparers, \
             ThreadPoolExecutor(max_workers=in_flight, thread_name_prefix="call") as callers:
         preparing = {preparers.submit(prepare, case): (number, case) for number, case in order}
         calling = {}
@@ -99,7 +115,7 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, light_fi
 def _complete(future, case, complete, fallback):
     try:
         prepared = future.result()
-    except Exception as e:  # the worker failed: run the case on the sequential path
+    except Exception as e:  # the worker failed (or died): run the case on the sequential path
         log.warning("%s: preparation failed in the background (%s); running it on the sequential path",
                     case.get("id") if isinstance(case, dict) else "?", type(e).__name__)
         return fallback(case)

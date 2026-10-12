@@ -1,7 +1,7 @@
 """Background preparation (session 10, src/pipeline.py): every case is answered exactly once, whatever fails where,
 and the requests are the same as on the sequential path (--workers 0).
 
-Unit tests drive pipeline.run() with fake steps. The end-to-end tests run the real CLI with --workers 2 against
+Unit tests drive pipeline.run() with fake steps. The end-to-end tests run the real CLI with --workers 1 (a worker process) against
 the fake model (scripts/stub_llm.py): in a subprocess (tests/test_contract.py's runner) for failures of the
 model and the booklet and for a killed run, and in this process where a step must be made to fail on purpose
 (a preparation that raises in a worker, a model call that times out).
@@ -24,9 +24,16 @@ from tests.test_contract import (A_ARGS, ROOT, ROUTED, RUNNER, ContractBase, a_c
                                  stub_llm)
 
 
+def die(case):
+    """A preparation that kills its worker process (module level, so that it can be sent to the process)."""
+    os._exit(1)
+
+
 def emitted_by(items, prepare, complete, fallback, **kwargs):
+    """pipeline.run with threads as workers (the fake steps are local functions, which a process cannot receive)."""
     out = []
-    pipeline.run(items, prepare, complete, fallback, lambda number, case, result: out.append(result), **kwargs)
+    pipeline.run(items, prepare, complete, fallback, lambda number, case, result: out.append(result),
+                 processes=False, **kwargs)
     return out
 
 
@@ -62,12 +69,20 @@ class RunWithFakeSteps(unittest.TestCase):
             if in_flight == 1:
                 self.assertEqual(most[0], 1)
 
-    def test_light_cases_are_prepared_first_in_input_order(self):
+    def test_cases_are_prepared_in_the_order_of_the_key_then_input_order(self):
         order = []
         items = [(i, {"id": i, "light": i % 3 != 0}) for i in range(1, 10)]
         emitted_by(items, lambda c: order.append(c["id"]) or c, lambda p: p, lambda c: c, workers=1,
-                   light_first=lambda c: c["light"])
+                   order_key=lambda c: not c["light"])
         self.assertEqual(order, [1, 2, 4, 5, 7, 8, 3, 6, 9])
+
+    def test_preparation_key_light_task_b_first_then_by_booklet(self):
+        long_ref = "Titel\n\n" + "\n\n".join("Absatz " * 300 for _ in range(10))
+        todo = [(1, a_case("a1", path="booklets/x.pdf")), (2, b_case("b-long", reference=long_ref)),
+                (3, a_case("a2", path="booklets/y.pdf")), (4, a_case("a3", path="booklets/x.pdf")), (5, b_case("b1"))]
+        key = cli.preparation_key(todo, cli.Settings())
+        self.assertEqual([c["id"] for _, c in sorted(todo, key=lambda item: key(item[1]))],
+                         ["a1", "a3", "b1", "a2", "b-long"])
 
     def test_a_case_is_sent_as_soon_as_it_is_ready(self):
         def prepare(case):
@@ -76,15 +91,21 @@ class RunWithFakeSteps(unittest.TestCase):
         out = emitted_by([(1, {"id": 1}), (2, {"id": 2})], prepare, lambda p: p, lambda c: None, workers=2)
         self.assertEqual(out, [2, 1])
 
-    def test_default_workers(self):
-        with mock.patch.object(pipeline, "available_cpus", return_value=1):
-            self.assertEqual(pipeline.default_workers(), 1)
-        with mock.patch.object(pipeline, "available_cpus", return_value=4):
-            self.assertEqual(pipeline.default_workers(), 2)
+    def test_default_is_one_worker_process(self):
+        self.assertEqual(pipeline.default_workers(), 1)
+        with pipeline.preparer_pool(1) as pool:
+            self.assertNotEqual(pool.submit(os.getpid).result(), os.getpid())  # it runs in another process
+
+    def test_a_worker_process_that_dies_leaves_every_case_to_the_fallback(self):
+        items = [(i, {"id": i}) for i in range(4)]
+        out = []
+        pipeline.run(items, die, lambda p: ("done", p), lambda case: ("fallback", case["id"]),
+                     lambda number, case, result: out.append(result), workers=1)
+        self.assertEqual(sorted(out), [("fallback", i) for i in range(4)])
 
 
 class WorkersEndToEnd(ContractBase):
-    """The real CLI with --workers 2 in a subprocess, against the fake model."""
+    """The real CLI with --workers 1 (a worker process) in a subprocess, against the fake model."""
 
     def test_failures_of_the_model_and_the_booklet_during_background_work(self):
         cases = [a_case("a-ok"), b_case("b-ok"),
@@ -93,7 +114,7 @@ class WorkersEndToEnd(ContractBase):
                  b_case("b-fail", claim="STUB_FAIL"), a_case("a-garbage", claim="STUB_GARBAGE"),
                  a_case("a-broken", path="booklets/broken.pdf"), a_case("a-empty", path="booklets/empty.pdf"),
                  a_case("a-missing", path="booklets/nope.pdf"), a_case("a-ok-2", claim="Deux semaines de congé.")]
-        run = self.run_cli(cases, "--workers", "2", *A_ARGS)
+        run = self.run_cli(cases, "--workers", "1", *A_ARGS)
         self.assertContract(run, cases)
         for case_id in ("a-ok", "b-ok", "b-500-once", "a-500-once", "b-429-once", "a-429-once", "a-ok-2"):
             self.assertEqual(run.by_id[case_id]["label"], 0, case_id)  # the fake model's answer, not the fallback
@@ -106,14 +127,14 @@ class WorkersEndToEnd(ContractBase):
                           b_case("b-long", reference="Titre\n\n" + "\n\n".join(f"Paragraphe {i}. " + "mot " * 200
                                                                            for i in range(12)))]
         results = {}
-        for workers in ("0", "2"):
+        for workers in ("0", "1"):
             run = self.run_cli(cases, "--workers", workers)
             self.assertContract(run, cases)
             with self.server.config.lock:
                 hashes = Counter(c["request_sha256"] for c in self.server.config.calls)
             results[workers] = (hashes, {p["id"]: (p["label"], p["evidence"]) for p in run.preds})
-        self.assertEqual(results["0"][0], results["2"][0])  # the same requests
-        self.assertEqual(results["0"][1], results["2"][1])  # the same labels and evidence
+        self.assertEqual(results["0"][0], results["1"][0])  # the same requests
+        self.assertEqual(results["0"][1], results["1"][1])  # the same labels and evidence
 
     def test_killed_run_keeps_one_valid_line_per_finished_case(self):
         server, url = stub_llm.start(delay=0.25)
@@ -127,7 +148,7 @@ class WorkersEndToEnd(ContractBase):
             environment.update({"BASE_URL": url, "API_KEY": "stub", "CONTRACT_WRITE_LOG": str(root / "writes.json"),
                                 "TMPDIR": str(root), "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost"})
             proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
-                                     "--output", str(out), "--workers", "2"], cwd=ROOT, env=environment,
+                                     "--output", str(out), "--workers", "1"], cwd=ROOT, env=environment,
                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             deadline = time.time() + 60
             while time.time() < deadline and (not out.exists() or out.read_bytes().count(b"\n") < 5):
@@ -144,6 +165,16 @@ class WorkersEndToEnd(ContractBase):
             self.assertEqual(contract_problems(preds, {c["id"]: c for c in cases if c["id"] in ids}), [])
         finally:
             server.shutdown()
+
+
+def raise_in_worker(original, parent_pid):
+    """prepare_b that raises for a RAISE_IN_WORKER claim in the worker process only (the forked worker inherits
+    the patched module)."""
+    def prepare_b(case, *args, **kwargs):
+        if "RAISE_IN_WORKER" in case["claim"]["text"] and os.getpid() != parent_pid:
+            raise RuntimeError("worker failed")
+        return original(case, *args, **kwargs)
+    return prepare_b
 
 
 class WorkersInProcess(unittest.TestCase):
@@ -172,23 +203,17 @@ class WorkersInProcess(unittest.TestCase):
         self.assertEqual(contract_problems(preds, {c["id"]: c for c in cases}), [])
         return {p["id"]: p for p in preds}, server.config.calls
 
-    def test_a_preparation_that_raises_in_a_worker_runs_on_the_sequential_path(self):
-        original = cli.prepare
-
-        def prepare(case, *args, **kwargs):
-            if "RAISE_IN_WORKER" in case["claim"]["text"] and threading.current_thread().name.startswith("prepare"):
-                raise RuntimeError("worker failed")
-            return original(case, *args, **kwargs)
+    def test_a_preparation_that_raises_in_the_worker_runs_on_the_sequential_path(self):
         cases = [b_case("b-ok"), b_case("b-raise", claim="RAISE_IN_WORKER Der Bund zahlt."), b_case("b-ok-2")]
-        with mock.patch.object(cli, "prepare", prepare):
-            preds, calls = self.run_main(cases, "--workers", "2")
+        with mock.patch.object(cli, "prepare_b", raise_in_worker(cli.prepare_b, os.getpid())):
+            preds, calls = self.run_main(cases, "--workers", "1")
         self.assertEqual({k: p["label"] for k, p in preds.items()}, {"b-ok": 0, "b-raise": 0, "b-ok-2": 0})
         self.assertEqual(len(calls), 3)
 
     def test_a_model_call_that_times_out_gets_the_fallback_and_the_rest_are_answered(self):
         cases = [b_case("b-ok"), b_case("b-slow", claim="STUB_SLOW Der Bund zahlt."), b_case("b-ok-2")]
         with mock.patch.object(llm, "TIMEOUT_SECONDS", 0.5), mock.patch.object(llm, "RETRY_PAUSE_SECONDS", 0):
-            preds, calls = self.run_main(cases, "--workers", "2", slow_seconds=1.5)
+            preds, calls = self.run_main(cases, "--workers", "1", slow_seconds=1.5)
         self.assertEqual({k: p["label"] for k, p in preds.items()}, {"b-ok": 0, "b-slow": 1, "b-ok-2": 0})
         self.assertEqual(len(calls), 4)  # b-slow: the first attempt and one retry after the timeout
 
