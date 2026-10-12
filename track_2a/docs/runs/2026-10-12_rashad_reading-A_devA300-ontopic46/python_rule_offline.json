@@ -1,0 +1,60 @@
+[
+ {
+  "arm": "docs/runs/2026-10-12_rashad_reading-A_devA300-ontopic46/today",
+  "cases": 300,
+  "changed": 2,
+  "changed_now_right": 1,
+  "changed_now_wrong": 1,
+  "macro_f1": 0.9833,
+  "macro_f1_rule": 0.9834,
+  "neutral_recall": 1.0,
+  "neutral_recall_rule": 0.9899,
+  "changed_ids": [
+   "v1.1-row-1016-A",
+   "v1.1-row-844-A"
+  ]
+ },
+ {
+  "arm": "docs/runs/2026-10-12_rashad_reading-A_devA300-ontopic46/today",
+  "cases": 46,
+  "changed": 3,
+  "changed_now_right": 0,
+  "changed_now_wrong": 3,
+  "macro_f1": 0.2684,
+  "macro_f1_rule": 0.2523,
+  "neutral_recall": 0.6739,
+  "neutral_recall_rule": 0.6087,
+  "changed_ids": [
+   "v1.1-row-1026-ot-A",
+   "v1.1-row-232-ot-A",
+   "v1.1-row-85-ot-A"
+  ]
+ },
+ {
+  "arm": "docs/runs/2026-10-12_rashad_fewer-tokens-A_valA580/today",
+  "cases": 580,
+  "changed": 14,
+  "changed_now_right": 10,
+  "changed_now_wrong": 3,
+  "macro_f1": 0.9589,
+  "macro_f1_rule": 0.9711,
+  "neutral_recall": 1.0,
+  "neutral_recall_rule": 0.9832,
+  "changed_ids": [
+   "v1.1-row-1036-A",
+   "v1.1-row-1053-A",
+   "v1.1-row-1151-A",
+   "v1.1-row-1162-A",
+   "v1.1-row-1210-A",
+   "v1.1-row-1226-A",
+   "v1.1-row-1309-A",
+   "v1.1-row-1318-A",
+   "v1.1-row-1404-A",
+   "v1.1-row-1467-A",
+   "v1.1-row-341-A",
+   "v1.1-row-646-A",
+   "v1.1-row-950-A",
+   "v1.1-row-991-A"
+  ]
+ }
+]
