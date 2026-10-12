@@ -34,8 +34,11 @@ import math
 import multiprocessing
 import os
 import threading
+import time
 from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from pathlib import Path
+
+from src import timing
 
 log = logging.getLogger("pipeline")
 
@@ -119,6 +122,7 @@ class Lanes:
 
 def _lane(group, prepare, send):
     """A worker process: prepare each case of its list in turn and send (number, ok, result or error text)."""
+    from src import timing
     for number, case in group:
         try:
             message = (number, True, prepare(case))
@@ -128,6 +132,7 @@ def _lane(group, prepare, send):
             send.send(message)
         except Exception as e:  # e.g. a result that cannot be sent
             send.send((number, False, f"{type(e).__name__}: {e}"))
+    timing.report("lane")
     send.close()
 
 
@@ -163,7 +168,11 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
                 while ready and len(calling) < in_flight:
                     number, case, future = ready.popleft()
                     calling[callers.submit(_complete, future, case, complete, fallback)] = (number, case)
+                idle = not calling and not ready  # session 11, step 4a: nothing to send, waiting for a lane
+                started = time.perf_counter()
                 done, _ = wait(set(preparing) | set(calling), return_when=FIRST_COMPLETED)
+                if idle:
+                    timing.add("main_wait_no_case", time.perf_counter() - started)
                 for future in sorted(done, key=lambda f: (preparing.get(f) or calling.get(f))[0]):
                     if future in preparing:
                         number, case = preparing.pop(future)
@@ -172,6 +181,7 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
                         number, case = calling.pop(future)
                         emit(number, case, future.result())
     finally:
+        timing.report("main")
         if preparers is not None:
             preparers.shutdown()
         if lanes is not None:

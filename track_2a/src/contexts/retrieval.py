@@ -82,6 +82,7 @@ class GraniteEmbedder:
 # name -> (embedder factory, query prefix, passage prefix)
 MODELS = {
     "e5-small": (lambda: embed_e5_small._get_embedder(), "query: ", "passage: "),  # one instance per run
+    "e5-small-q8": (lambda: embed_e5_small._get_quantised_embedder(), "query: ", "passage: "),  # session 11, step 6
     "granite-97m-r2": (lambda: GraniteEmbedder(), "", ""),
 }
 

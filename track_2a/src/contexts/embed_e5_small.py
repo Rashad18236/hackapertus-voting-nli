@@ -62,8 +62,13 @@ class E5Embedder:
 
     _lock = threading.Lock()  # session 10: one embedding at a time, also across threads (onnxruntime uses every core)
 
-    def __init__(self, model_dir=MODEL_DIR):
+    def __init__(self, model_dir=MODEL_DIR, model_file="model.onnx"):
         # Imported here so the other variants and the tests need neither package loaded.
+        from src import timing
+        with timing.phase("e5_load"):
+            self._load(model_dir, model_file)
+
+    def _load(self, model_dir, model_file):
         import onnxruntime
         from tokenizers import Tokenizer
 
@@ -76,7 +81,7 @@ class E5Embedder:
         # machine, which under a CPU limit (docker run --cpus 2 on 4 cores) is throttled: 2 threads embedded 124
         # paragraphs in 9.5-10.1 s against 11.3-12.5 s. The vectors are the same for 1, 2 and 4 threads.
         options.intra_op_num_threads = pipeline.available_cpus()
-        self.session = onnxruntime.InferenceSession(str(Path(model_dir) / "model.onnx"), options,
+        self.session = onnxruntime.InferenceSession(str(Path(model_dir) / model_file), options,
                                                     providers=["CPUExecutionProvider"])
         self.input_names = {i.name for i in self.session.get_inputs()}
 
@@ -89,7 +94,8 @@ class E5Embedder:
         vectors are the same (padding is masked out)."""
         import numpy as np
 
-        with self._lock:
+        from src import timing
+        with self._lock, timing.phase("embed"):
             return self._embed(np, texts)
 
     def _embed(self, np, texts):
@@ -120,6 +126,15 @@ _chunk_cache = {}  # booklet text SHA-256 -> (chunks, chunk vectors)
 def _get_embedder():
     """The run's E5Embedder, loaded on first use (once, also when several threads ask at the same time)."""
     return memo.once(_embedders, MODEL_DIR, E5Embedder)
+
+
+QUANTISED_FILE = "model_qint8_avx512_vnni.onnx"  # session 11, step 6: the 8-bit export in the model's own repository
+
+
+def _get_quantised_embedder():
+    """Session 11, step 6 (task B selector Q, off by default): the same model quantised to 8-bit integers, from the
+    model's own repository at the same commit (MIT). Loaded on first use."""
+    return memo.once(_embedders, (MODEL_DIR, QUANTISED_FILE), lambda: E5Embedder(MODEL_DIR, QUANTISED_FILE))
 
 
 def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):

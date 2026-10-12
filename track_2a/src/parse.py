@@ -37,6 +37,13 @@ def extract_pages(pdf_path):
     """
     from pypdf import PdfReader  # imported on first use (session 10): the first task B request need not wait for it
 
+    from src import timing
+
+    with timing.phase("pdf_read"):
+        return _extract(PdfReader, pdf_path)
+
+
+def _extract(PdfReader, pdf_path):
     reader = PdfReader(str(pdf_path))
     texts = []
     for page in reader.pages:

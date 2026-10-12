@@ -118,6 +118,10 @@ def docker_command(args, base_url, out_dir):
         cmd += ["-v", f"{Path(args.booklets).resolve()}:/data/booklets:ro"]
     if args.src:
         cmd += ["-v", f"{Path(args.src).resolve()}:/app/src:ro"]
+    if args.models:  # session 11: e.g. the folder with e5's 8-bit export next to model.onnx
+        cmd += ["-v", f"{Path(args.models).resolve()}:/app/models/multilingual-e5-small:ro"]
+    for item in args.env:  # session 11: e.g. PROFILE_PHASES=1 (src/timing.py)
+        cmd += ["-e", item]
     cmd += ["-v", f"{out_dir}:/output"]
     cli = ["--input", "/data/cases.jsonl", "--output", "/output/predictions.jsonl"] + args.cli_args
     if args.peak_memory:  # the CLI under sh, which then copies the container's peak memory (cgroup v1) to /output
@@ -138,6 +142,8 @@ def main():
     ap.add_argument("--memory", default="4g")
     ap.add_argument("--src", help="mount this folder over the image's /app/src (measure working-tree code)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--models", help="mount this folder over the image's e5 folder (session 11)")
+    ap.add_argument("--env", action="append", default=[], help="KEY=VALUE for the container (session 11)")
     ap.add_argument("--peak-memory", action="store_true",
                     help="also record the container's peak memory (cgroup v1; the CLI then runs under sh)")
     ap.add_argument("cli_args", nargs="*", help="extra arguments for the CLI, after --")
@@ -178,6 +184,15 @@ def main():
     })
     if args.peak_memory and (out_dir / "peak_memory_bytes").exists():
         result["peak_memory_mib"] = round(int((out_dir / "peak_memory_bytes").read_text().strip()) / 2**20)
+    phases = [json.loads(line[7:]) for line in (out_dir / "stderr.log").read_text(encoding="utf-8").splitlines()
+              if line.startswith("PHASES ")] if (out_dir / "stderr.log").exists() else []
+    if phases:  # session 11, step 4a: src/timing.py's per-process totals (PROFILE_PHASES=1)
+        result["phases"] = phases
+        totals = {}
+        for ph in phases:
+            for k, v in ph["seconds"].items():
+                totals[k] = round(totals.get(k, 0) + v, 3)
+        result["phase_totals_s"] = totals
     with open(out_dir / "calls.jsonl", "w", encoding="utf-8") as f:
         for c in calls:
             f.write(json.dumps({k: v for k, v in c.items() if k != "payload"}) + "\n")

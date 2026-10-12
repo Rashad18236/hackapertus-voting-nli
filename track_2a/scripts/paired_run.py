@@ -36,8 +36,10 @@ section-route's length cut), by wrapping src/booklet.py's part_paragraphs in thi
 
 An arm's "force" field (test only, session 11 step 2: the forced fallback test) puts a case into a fallback situation
 for that arm only: "no part" makes the claim router return nothing (src/claim_router.py route), "no vote" makes the
-vote match fail (src/booklet.py find_vote and section-route's vote_by_meaning). The wrappers live in this process
-only; src/ is unchanged, and an arm without "force" runs exactly as the CLI.
+vote match fail (src/booklet.py find_vote and section-route's vote_by_meaning), "no parser" (step 3, run 3) switches
+the Python parser off for the case's vote: the vote is still found in the contents, but none of its parts passes (as
+if every check had failed). The wrappers live in this process only; src/ is unchanged, and an arm without "force"
+runs exactly as the CLI.
 """
 
 import argparse
@@ -54,7 +56,7 @@ sys.path.insert(0, str(ROOT))
 
 from src import booklet, cli, env, parse  # noqa: E402
 
-_current = {"id": None}  # the case being answered (for --exclude-paragraphs)
+_current = {"id": None, "vote": None}  # the case being answered (for --exclude-paragraphs and "no parser")
 
 
 def exclude_paragraphs(exclusions):
@@ -69,7 +71,7 @@ def exclude_paragraphs(exclusions):
 
 
 _force = {"mode": None}  # the current arm's forced situation (None, "no part", "no vote")
-FORCES = (None, "no part", "no vote")
+FORCES = (None, "no part", "no vote", "no parser")
 
 
 def install_forces():
@@ -78,9 +80,24 @@ def install_forces():
     from src.contexts import section_route
 
     route, find_vote, by_meaning = claim_router.route, booklet.find_vote, section_route.vote_by_meaning
+    parsed_booklet = section_route.parsed_booklet
     claim_router.route = lambda text: None if _force["mode"] == "no part" else route(text)
     booklet.find_vote = lambda *a, **k: None if _force["mode"] == "no vote" else find_vote(*a, **k)
     section_route.vote_by_meaning = lambda *a, **k: None if _force["mode"] == "no vote" else by_meaning(*a, **k)
+
+    def without_the_vote_s_parts(pages):
+        parsed = parsed_booklet(pages)
+        if _force["mode"] != "no parser" or parsed is None:
+            return parsed
+        target = find_vote(parsed, _current["vote"]) or by_meaning(parsed, _current["vote"])
+        votes = []
+        for v in parsed.votes:
+            if v is target:  # a copy: the cached booklet itself must stay as the parser built it
+                v = booklet.Vote(title=v.title, entry=dict(v.entry), parts={}, boxes={}, ok=False,
+                                 problems=["parser switched off (test)"], valid=set())
+            votes.append(v)
+        return booklet.Booklet(votes=votes)
+    section_route.parsed_booklet = without_the_vote_s_parts
 
 
 def arm_order(i, n):
@@ -165,7 +182,7 @@ def main():
             time.sleep(max(0.0, last_start + args.min_interval - time.monotonic()))  # pacing, outside the timed case
             last_start = time.monotonic()
             sent = f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M:%S}"
-            _current["id"] = case["id"]
+            _current["id"], _current["vote"] = case["id"], case.get("vote", "")
             try:
                 resp, status, raw = cli.predict(case, args.data_dir, s)
             except Exception as e:  # same guarantee as the CLI: never drop a case

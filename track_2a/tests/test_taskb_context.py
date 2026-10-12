@@ -137,3 +137,47 @@ class CliModes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Selectors(unittest.TestCase):
+    """Session 11, step 6 (off by default): other ways to pick B-cut4's 4 paragraphs."""
+
+    PARAGRAPHS = [f"Absatz {i}: " + "Die Gemeinden verwalten ihre Strassen und Plätze selbst. " * 3 for i in range(8)]
+
+    def reference(self):
+        paragraphs = list(self.PARAGRAPHS)
+        paragraphs[5] = "Der Bund zahlt 1,2 Milliarden Franken pro Jahr an die Kantone für die Velowege im Land."
+        return "Titel der Vorlage\n" + "\n\n".join(p + "\n" + "x" * 400 + "." for p in paragraphs)
+
+    def test_lexical_score_counts_shared_4_grams_and_numbers(self):
+        claim = "Der Bund zahlt 1,2 Milliarden Franken."
+        self.assertGreater(taskb_context.lexical_score(claim, "Der Bund zahlt 1,2 Milliarden Franken pro Jahr."),
+                           taskb_context.lexical_score(claim, "Die Gemeinden verwalten ihre Strassen selbst."))
+        self.assertGreaterEqual(taskb_context.lexical_score("Es sind 26 Kantone.", "Die 26 Kantone"), 1.0)
+
+    def test_selector_l_keeps_the_matching_paragraph_without_a_model(self):
+        text = self.reference()
+        self.assertTrue(taskb_context.is_long(text, "cut4-l"))
+        with mock.patch.object(taskb_context.retrieval, "embedder", side_effect=AssertionError("no model")):
+            first, kept = taskb_context.cut_paragraphs(text, "Der Bund zahlt 1,2 Milliarden Franken.", "cut4-l")
+        self.assertEqual(first, "Titel der Vorlage")
+        self.assertEqual(len(kept), taskb_context.CUT4_TOP_K)
+        self.assertTrue(any("1,2 Milliarden" in p for p in kept))
+
+    def test_selector_h_uses_l_for_one_language_and_e5_across_languages(self):
+        text = self.reference()
+        with mock.patch.object(taskb_context, "selector_scores", wraps=taskb_context.selector_scores) as scores, \
+             mock.patch.object(taskb_context.retrieval, "embedder", return_value=_Ones()), \
+             mock.patch.object(taskb_context.retrieval, "query_vector", return_value=__import__("numpy").ones(4) / 2):
+            taskb_context.cut_paragraphs(text, "Der Bund zahlt 1,2 Milliarden.", "cut4-h", same_language=True)
+            taskb_context.cut_paragraphs(text, "La Confédération paie 1,2 milliard.", "cut4-h", same_language=False)
+        self.assertEqual([c.args[0] for c in scores.call_args_list], ["L", "T"])
+
+    def test_the_default_is_unchanged(self):
+        self.assertEqual(cli.Settings().context_b, "full")
+
+
+class _Ones:
+    def embed(self, texts):
+        import numpy as np
+        return np.ones((len(texts), 4)) / 2.0

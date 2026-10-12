@@ -61,17 +61,25 @@ def route(pages, vote, claim_text):
     part = claim_router.route(claim_text)
     if part is None:
         return None
-    parsed = parsed_booklet(pages)
-    found = booklet.find_vote(parsed, vote) or vote_by_meaning(parsed, vote)
-    # Session 11: a part that passed its own checks is used even when another part of the vote failed
-    # (Vote.valid; for a vote that passes every check, all parts are valid, as before).
+    return route_part(pages, find(parsed_booklet(pages), vote), part, claim_text)
+
+
+def find(parsed, vote):
+    """The case's vote in a parsed booklet: by its title, else by meaning (session 10, step 8); or None."""
+    return booklet.find_vote(parsed, vote) or vote_by_meaning(parsed, vote)
+
+
+def route_part(pages, found, part, claim_text, search_text=None):
+    """(part, [(page, verbatim text)]) of a found vote's part, or None. Session 11: a part that passed its own checks
+    is used even when another part of the vote failed (Vote.valid; for a vote that passes every check, all parts are
+    valid, as before). search_text (session 11, step 3, off): another text to rank paragraphs by in a long part."""
     if found is None or part not in found.valid:
         return None
     paragraphs = booklet.part_paragraphs(pages, found, part)
     if not paragraphs:
         return None
     if sum(len(display(t)) for _, t in paragraphs) > MAX_CHARS:
-        paragraphs = most_similar(paragraphs, claim_text)
+        paragraphs = most_similar(paragraphs, search_text or claim_text)
     return part, paragraphs
 
 
@@ -89,7 +97,10 @@ PART_NAMES = {"summary": "summary", "detail": "detailed explanation", "committee
 WIDE_PROMPT_VERSIONS = {"vote-wide": "A-v4-vote-wide", "booklet-wide": "A-v4-booklet-wide"}
 
 
-def wide_route(pages, vote, claim_text, levels):
+_PYTHON = object()  # wide_route's default: find the vote with the Python parser
+
+
+def wide_route(pages, vote, claim_text, levels, found=_PYTHON):
     """A better fallback for a case that cannot be routed (session 11, step 2): (level, [(page, text)], [part name or
     None]) or None (then embed-e5-small, as before).
 
@@ -100,8 +111,8 @@ def wide_route(pages, vote, claim_text, levels):
       part names.
     - BW, booklet-wide: the vote is not found. The paragraphs of the whole booklet; the WIDE_TOP_K most similar.
     """
-    parsed = parsed_booklet(pages)
-    found = booklet.find_vote(parsed, vote) or vote_by_meaning(parsed, vote)
+    if found is _PYTHON:  # session 11, step 3: AP-structure may pass the vote it found instead (None: not found)
+        found = find(parsed_booklet(pages), vote)
     if found is not None:
         if "vw" not in levels:
             return None
@@ -171,7 +182,13 @@ def wide_texts(paragraphs, names):
 def parsed_booklet(pages):
     """booklet.parse(pages), computed once per booklet text (the result is only read, never changed)."""
     key = hashlib.sha256("\f".join(f"{n}\n{t}" for n, t in sorted(pages.items())).encode("utf-8")).hexdigest()
-    return memo.once(_booklets, key, lambda: booklet.parse(pages))
+    return memo.once(_booklets, key, lambda: _timed_parse(pages))
+
+
+def _timed_parse(pages):
+    from src import timing
+    with timing.phase("booklet_parse"):
+        return booklet.parse(pages)
 
 
 _title_vectors = {}  # SHA-256 of a booklet's vote titles -> their e5 vectors (session 10, step 8)
