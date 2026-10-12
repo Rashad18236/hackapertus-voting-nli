@@ -3,11 +3,18 @@
 Run from track_2a/:  python3 scripts/fetch_unseen_booklets.py
 
 Writes output/booklets_unseen/<date>_<lang>.pdf (git-ignored); files already there are skipped.
+
+Session 11, parser coverage: `--since 2016 --out <folder outside the repository>` reads the archive page and
+downloads every booklet from that year on in de, fr and it, plus 2026-09-27 (not yet in the archive). The
+sealed test dates (SEALED below) are dropped from the list before any request is made, so they are never
+downloaded.
 URLs from the Federal Chancellery's archive (https://www.bk.admin.ch/de/sammlung-der-abstimmungsbuechlein-seit-1978)
 and, for 2026-09-27 (after the dataset), from https://www.admin.ch/de/volksabstimmung-vom-27-september-2026.
 Checked 2026-10-09. Every 2020-2026 date in the archive is already in the dataset.
 """
 
+import argparse
+import re
 from pathlib import Path
 
 import requests
@@ -30,6 +37,26 @@ ADMIN_2026_09_27 = {
 }
 
 
+SEALED = {"2020-02-09", "2022-02-13", "2022-05-15"}  # session 11: never run, parsed, downloaded or opened
+ARCHIVE_PAGE = "https://www.bk.admin.ch/de/sammlung-der-abstimmungsbuechlein-seit-1978"
+_DE_LINK = re.compile(r'href="(https://www\.bk\.admin\.ch/dam/de/sd-web/[^"/]+/(\d{4}-\d{2}-\d{2})_erlaeuterungen_des_bundesrates\.pdf)"')
+
+
+def archive_urls(since):
+    """(file name, url) for every archive date from `since` on, sealed dates left out, in de, fr and it."""
+    page = requests.get(ARCHIVE_PAGE, timeout=120)
+    page.raise_for_status()
+    dates = {}
+    for url, date in _DE_LINK.findall(page.text):
+        if int(date[:4]) >= since and date not in SEALED:
+            dates[date] = url
+    for date, url in sorted(dates.items()):
+        for lang, name in NAMES.items():
+            yield f"{date.replace('-', '_')}_{lang}.pdf", url.replace("/dam/de/", f"/dam/{lang}/").replace(NAMES["de"], name)
+    for lang, url in ADMIN_2026_09_27.items():
+        yield f"2026_09_27_{lang}.pdf", url
+
+
 def urls():
     for date, key in ARCHIVE.items():
         for lang, name in NAMES.items():
@@ -39,9 +66,15 @@ def urls():
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    for name, url in urls():
-        target = OUT / name
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--since", type=int, help="every archive booklet from this year on (session 11)")
+    ap.add_argument("--out", type=Path, default=OUT)
+    args = ap.parse_args()
+    out = args.out
+    out.mkdir(parents=True, exist_ok=True)
+    for name, url in (archive_urls(args.since) if args.since else urls()):
+        assert name[:10].replace("_", "-") not in SEALED
+        target = out / name
         if target.exists():
             continue
         response = requests.get(url, timeout=120)
@@ -50,7 +83,7 @@ def main():
             raise SystemExit(f"{name}: not a PDF ({url})")
         target.write_bytes(response.content)
         print(f"{name}: {len(response.content) // 1024} KB")
-    print(f"{len(list(OUT.glob('*.pdf')))} booklets in {OUT.relative_to(ROOT)}")
+    print(f"{len(list(out.glob('*.pdf')))} booklets in {out}")
 
 
 if __name__ == "__main__":

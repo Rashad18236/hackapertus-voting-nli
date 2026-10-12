@@ -85,6 +85,9 @@ class Settings:
     short_prompt_a: bool = False  # P-short (session 10, step 5): routed cases get A-v5-short, the same rules in at most
                                   # 200 fixed tokens (L1's sentence included)
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
+    fallback_a: str = "embed"    # session 11, step 2: what a case that section-route cannot route gets: "embed"
+                                 # (embed-e5-small, as before), or the levels "vw" (vote-wide), "bw" (booklet-wide),
+                                 # "vw+bw"; a level that does not apply leaves the case to embed-e5-small
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
                                           # ones and 11 of the 99 right ones; the best difference of the two shares)
@@ -193,6 +196,9 @@ def prepare_a(case, data_dir, start, raw, settings):
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
                         routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
                                                   "json_schema": paragraph_schema(settings)})
+    wide = wide_fallback(pages, vote, claim_text, raw, settings)
+    if wide is not None:
+        return wide_prepared(case_id, raw, wide, pages, vote, claim_text, settings)
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
         mode = context.fallback(settings.context_a)
@@ -209,6 +215,39 @@ def prepare_a(case, data_dir, start, raw, settings):
                     messages=nli.build_messages_a(booklet_text, vote, claim_text, prompt_version),
                     chat_args={"max_tokens": settings.max_tokens_a, "json_mode": settings.json_mode_a,
                                "json_schema": nli.ANSWER_SCHEMA_A if settings.schema_a else None})
+
+
+FALLBACK_LEVELS = ("embed", "vw", "bw", "vw+bw")
+
+
+def wide_fallback(pages, vote, claim_text, raw, settings):
+    """Session 11, step 2 (off by default): the vote-wide or booklet-wide paragraphs for a case section-route could not
+    route, or None (then the case runs as embed-e5-small, as before). An error here also leaves it to embed-e5-small."""
+    if settings.fallback_a == "embed" or settings.context_a != "section-route":
+        return None
+    try:
+        return context.VARIANTS[settings.context_a].wide_route(pages, vote, claim_text,
+                                                              set(settings.fallback_a.split("+")))
+    except Exception as e:
+        raw["wide_error"] = f"{type(e).__name__}: {e}"
+        log.warning("%s: fallback level failed (%s)", raw.get("id"), raw["wide_error"])
+        return None
+
+
+def wide_prepared(case_id, raw, wide, pages, vote, claim_text, settings):
+    """The Prepared case of a fallback level: numbered paragraphs with the routed prompt (L1) under the level's own
+    version name; the answer and the evidence are handled exactly as for a routed case."""
+    variant = context.VARIANTS[settings.context_a]
+    level, paragraphs, names = wide
+    version = variant.WIDE_PROMPT_VERSIONS[level] + ("-L1" if settings.label_rule_a else "")
+    messages = nli.build_messages_a_paragraphs(variant.PART_LINES[level], variant.wide_texts(paragraphs, names),
+                                               vote, claim_text, version)
+    raw["prompt_version"], raw["route"] = version, level
+    raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
+    raw["pages_total"], raw["context_pages"] = len(pages), sorted({page for page, _ in paragraphs})
+    return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
+                    routed=(level, paragraphs), chat_args={"max_tokens": settings.max_tokens_a,
+                                                           "json_schema": paragraph_schema(settings)})
 
 
 def complete_a_pages(p, start, settings):
@@ -554,6 +593,8 @@ def main():
                         help="development only: L2's similarity threshold")
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
+    parser.add_argument("--fallback-a", default=defaults.fallback_a, choices=FALLBACK_LEVELS,
+                        help="development only: what a case section-route cannot route gets (session 11, step 2)")
     parser.add_argument("--workers", type=int, default=pipeline.default_workers(),
                         help="background processes that prepare cases while a request is in flight (session 10; "
                              "default 2, or 1 on a single CPU; each owns whole booklets); 0 runs every case in "
@@ -568,7 +609,7 @@ def main():
                         context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
                         second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
                         short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
-                        second_look_cited_a=args.second_look_cited_a)
+                        second_look_cited_a=args.second_look_cited_a, fallback_a=args.fallback_a)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

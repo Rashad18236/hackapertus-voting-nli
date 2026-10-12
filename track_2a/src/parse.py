@@ -29,11 +29,62 @@ def _sha256(path):
 
 
 def extract_pages(pdf_path):
-    """Return a list of page texts; element i is PDF page i + 1. No caching."""
+    """Return a list of page texts; element i is PDF page i + 1. No caching.
+
+    Session 11: a page whose text pypdf refuses to extract no longer fails the whole booklet. First the page's
+    font descriptors are repaired (_repair_fonts) and the page is read again; if it still fails, the page gets
+    empty text, like a page without a text layer. Pages that pypdf reads are read exactly as before.
+    """
     from pypdf import PdfReader  # imported on first use (session 10): the first task B request need not wait for it
 
     reader = PdfReader(str(pdf_path))
-    return [(page.extract_text() or "") for page in reader.pages]
+    texts = []
+    for page in reader.pages:
+        try:
+            texts.append(page.extract_text() or "")
+            continue
+        except Exception:
+            pass
+        try:
+            _repair_fonts(page.get("/Resources"), set())
+            texts.append(page.extract_text() or "")
+        except Exception:
+            texts.append("")
+    return texts
+
+
+_FONT_FILES = ("/FontFile", "/FontFile2", "/FontFile3")
+
+
+def _repair_fonts(resources, seen):
+    """Keep one embedded font program per font descriptor (session 11, parser coverage).
+
+    General cause: some booklets (2016-2018) have font descriptors that name two embedded programs of the same
+    font (/FontFile and /FontFile3). pypdf 6 refuses such a page ("More than one /FontFile found"), which made
+    every page and so the whole booklet unreadable. The text does not depend on which program is kept (both
+    tried on such a booklet: identical text); the first one present is kept. Only the reader's copy in memory
+    changes, never the file. Fonts inside form XObjects are repaired too.
+    """
+    from pypdf.generic import NameObject
+
+    if resources is None:
+        return
+    resources = resources.get_object()
+    for font in (resources.get("/Font") or {}).values():
+        font = font.get_object()
+        for item in [font] + [d.get_object() for d in (font.get("/DescendantFonts") or [])]:
+            descriptor = item.get("/FontDescriptor")
+            if descriptor is None:
+                continue
+            descriptor = descriptor.get_object()
+            present = [k for k in _FONT_FILES if k in descriptor]
+            for extra in present[1:]:
+                del descriptor[NameObject(extra)]
+    for xobject in (resources.get("/XObject") or {}).values():
+        xobject = xobject.get_object()
+        if id(xobject) not in seen:
+            seen.add(id(xobject))
+            _repair_fonts(xobject.get("/Resources"), seen)
 
 
 _pages = {}  # (cache folder, booklet SHA-256) -> {page: text}; session 10: also kept in memory

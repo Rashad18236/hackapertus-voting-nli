@@ -8,16 +8,22 @@ Updated after every step. If the session is restarted with "continue", work goes
 
 ## Done
 
-- (20:10 UTC, Mon) Branch, status and decisions files, draft pull request.
+- (20:10 UTC, Mon) Branch, status and decisions files, draft pull request #18; publish workflow builds `session-11`.
+- (20:40) Step 1: 93 booklets (2016–2026, sealed dates never downloaded); parser fixes (older layout, unreadable fonts,
+  lost arguments heading, per-part validity). Booklets complete 64 → 88 of 93, votes passing 178 → 244 of 249, all
+  249 with a usable part, cross-language disagreements 2 → 0; probe routed 83 → 90 of 94. G1/G2 pass; adopted
+  (`docs/runs/2026-10-12_rashad_parser-coverage_booklets93`).
 
 ## Running
 
-- Step 1: collecting the 2016–2026 booklets (sealed dates excluded) and the parser coverage script.
+- Step 2, dev: forced fallback run, 300 dev task A cases, arms today-routed, today-fallback-nopart, VW-nopart,
+  BW-novote (`docs/runs/2026-10-12_rashad_fallbacks_devA300`).
 
 ## Next
 
-- Step 1 c–f, then steps 2 to 6 and FINISH, in that order.
+- Step 2 on val (balanced 300: today's fallback, VW, BW) and probe (today vs new defaults); then steps 3 to 6 and
+  FINISH.
 
 ## Numbers so far
 
-- (none yet)
+- Parser coverage: 88 of 93 booklets complete (64 before); probe routed 90 of 94 (83 before).

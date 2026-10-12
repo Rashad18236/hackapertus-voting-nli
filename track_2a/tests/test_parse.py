@@ -53,3 +53,81 @@ class Cache(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def synthetic_pdf(pages):
+    """A small PDF built in memory: one page per (text, two_font_programs) pair, each set in Helvetica with a font
+    descriptor that names one embedded font program, or two (/FontFile and /FontFile3) when asked."""
+    import io
+
+    from pypdf import PdfWriter
+    from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject, NumberObject
+
+    writer = PdfWriter()
+
+    def stream(data):
+        obj = DecodedStreamObject()
+        obj.set_data(data)
+        return writer._add_object(obj)
+
+    for text, two_programs in pages:
+        page = writer.add_blank_page(width=300, height=200)
+        descriptor = DictionaryObject({
+            NameObject("/Type"): NameObject("/FontDescriptor"), NameObject("/FontName"): NameObject("/Helvetica"),
+            NameObject("/Flags"): NumberObject(32), NameObject("/FontBBox"): ArrayObject([NumberObject(0)] * 4),
+            NameObject("/ItalicAngle"): NumberObject(0), NameObject("/Ascent"): NumberObject(718),
+            NameObject("/Descent"): NumberObject(-207), NameObject("/CapHeight"): NumberObject(718),
+            NameObject("/StemV"): NumberObject(88), NameObject("/FontFile"): stream(b"program")})
+        if two_programs:
+            descriptor[NameObject("/FontFile3")] = stream(b"program")
+        font = DictionaryObject({
+            NameObject("/Type"): NameObject("/Font"), NameObject("/Subtype"): NameObject("/Type1"),
+            NameObject("/BaseFont"): NameObject("/Helvetica"), NameObject("/Encoding"): NameObject("/WinAnsiEncoding"),
+            NameObject("/FontDescriptor"): writer._add_object(descriptor)})
+        page[NameObject("/Resources")] = DictionaryObject(
+            {NameObject("/Font"): DictionaryObject({NameObject("/F1"): writer._add_object(font)})})
+        page[NameObject("/Contents")] = stream(f"BT /F1 12 Tf 20 100 Td ({text}) Tj ET".encode())
+    buffer = io.BytesIO()
+    writer.write(buffer)
+    return buffer.getvalue()
+
+
+class UnreadablePages(unittest.TestCase):
+    """Session 11, parser coverage: a page pypdf refuses no longer makes the whole booklet unreadable."""
+
+    def write(self, pages):
+        folder = Path(tempfile.mkdtemp())
+        path = folder / "synthetic.pdf"
+        path.write_bytes(synthetic_pdf(pages))
+        return path
+
+    def test_two_font_programs_in_one_descriptor_are_read(self):
+        # General cause: a font descriptor naming /FontFile and /FontFile3 (seen in 2016-2018 booklets).
+        from pypdf import PdfReader
+        from pypdf.errors import PdfReadError
+
+        path = self.write([("Erste Seite", False), ("Zweite Seite", True)])
+        with self.assertRaises(PdfReadError):  # pypdf alone refuses the second page
+            PdfReader(str(path)).pages[1].extract_text()
+        self.assertEqual([t.strip() for t in parse.extract_pages(path)], ["Erste Seite", "Zweite Seite"])
+
+    def test_a_page_that_still_fails_gets_empty_text(self):
+        path = self.write([("Eins", False), ("Zwei", False), ("Drei", False)])
+        from pypdf import PageObject
+
+        original = PageObject.extract_text
+
+        def flaky(page, *args, **kwargs):
+            if "Zwei" in page.get_contents().get_data().decode():
+                raise ValueError("broken page")
+            return original(page, *args, **kwargs)
+
+        with mock.patch.object(PageObject, "extract_text", flaky):
+            texts = parse.extract_pages(path)
+        self.assertEqual([t.strip() for t in texts], ["Eins", "", "Drei"])
+
+    def test_readable_pages_are_read_as_before(self):
+        from pypdf import PdfReader
+
+        path = self.write([("Gleich", False)])
+        self.assertEqual(parse.extract_pages(path), [PdfReader(str(path)).pages[0].extract_text()])
