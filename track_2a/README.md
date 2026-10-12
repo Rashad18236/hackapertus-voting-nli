@@ -64,6 +64,20 @@ to also keep the model's raw answers. Each input id gets exactly one line in `pr
 (`label`, `label_name`, `evidence`, `metrics`); a request that cannot be answered gets label 1 (neutral).
 Behind a proxy: `make run DOCKER_RUN_FLAGS="--network host -e HTTPS_PROXY"`.
 
+**The published image.** The image is published to the GitHub container registry by
+`.github/workflows/publish-image.yml`: `latest` is built from `main` only, each build also gets its commit hash
+(`sha-` and 12 characters). Pull it and run it with the organisers' command, without building anything:
+
+```bash
+docker pull ghcr.io/rashad18236/hackapertus-voting-nli:latest
+docker run --rm --read-only --tmpfs /tmp -e BASE_URL -e API_KEY \
+  -v "$PWD/cases.jsonl:/data/cases.jsonl:ro" -v "$PWD/booklets:/data/booklets:ro" -v "$PWD/output:/output" \
+  ghcr.io/rashad18236/hackapertus-voting-nli:latest --input /data/cases.jsonl --output /output/predictions.jsonl
+```
+
+`BASE_URL` and `API_KEY` are taken from the shell (export them first); `MODEL` may be passed the same way.
+`/output` must be writable for the container's user.
+
 **Not political advice.** The system only checks whether a claim agrees with the text of an official voting
 booklet. Its answers are not voting recommendations and must not be presented as such. Every task A answer
 of entailment or contradiction quotes the booklet text it rests on, with its page, so it can be traced to

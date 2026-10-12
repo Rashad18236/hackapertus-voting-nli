@@ -464,8 +464,10 @@ class StoppedRun(ContractBase):
             environment.update({"BASE_URL": url, "API_KEY": "stub-key-must-not-appear",
                                 "CONTRACT_WRITE_LOG": str(root / "writes.json"), "TMPDIR": str(root),
                                 "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost"})
+            # --workers 0: the sequential path answers in input order (session 10; the pipelined path, which
+            # answers in the order the cases become ready, has its own test in tests/test_pipeline.py).
             proc = subprocess.Popen([sys.executable, "-c", RUNNER, "--input", str(root / "cases.jsonl"),
-                                     "--output", str(out)], cwd=ROOT, env=environment,
+                                     "--output", str(out), "--workers", "0"], cwd=ROOT, env=environment,
                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             deadline = time.time() + 60
             while time.time() < deadline and (not out.exists() or out.read_bytes().count(b"\n") < 5):

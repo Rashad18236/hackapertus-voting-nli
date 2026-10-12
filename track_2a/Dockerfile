@@ -17,6 +17,10 @@ RUN chmod -R a+rX /app/models
 ENV EMBED_MODEL_DIR=/app/models/multilingual-e5-small
 
 COPY src/ src/
+# Session 10: compile src/ now, so no run spends local time compiling it (the root file system is read-only at
+# run time, and PYTHONDONTWRITEBYTECODE stops Python from writing the files). unchecked-hash: the files are used
+# as they are; a src/ mounted over /app/src (scripts/local_time.py --src) brings no __pycache__ and is compiled.
+RUN python -m compileall -q --invalidation-mode unchecked-hash src
 
 # Official contract: <entrypoint> --input /data/cases.jsonl --output /output/predictions.jsonl
 ENTRYPOINT ["python", "-m", "src.cli"]

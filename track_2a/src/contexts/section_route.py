@@ -25,7 +25,7 @@ Apertus alone decides the label; this variant only chooses what it reads.
 import hashlib
 import re
 
-from src import booklet, claim_router, parse
+from src import booklet, claim_router, memo, parse
 from src.contexts import embed_e5_small, retrieval
 
 NAME = "section-route"
@@ -47,6 +47,7 @@ PART_LINES = {
 }
 
 _vectors = {}  # SHA-256 of a part's paragraphs -> their e5 vectors
+_booklets = {}  # SHA-256 of a booklet's pages -> booklet.parse(pages); session 10: parsed once per booklet, not per case
 
 
 def display(text):
@@ -60,7 +61,7 @@ def route(pages, vote, claim_text):
     part = claim_router.route(claim_text)
     if part is None:
         return None
-    found = booklet.find_vote(booklet.parse(pages), vote)
+    found = booklet.find_vote(parsed_booklet(pages), vote)
     if found is None or not found.ok:
         return None
     paragraphs = booklet.part_paragraphs(pages, found, part)
@@ -71,13 +72,18 @@ def route(pages, vote, claim_text):
     return part, paragraphs
 
 
+def parsed_booklet(pages):
+    """booklet.parse(pages), computed once per booklet text (the result is only read, never changed)."""
+    key = hashlib.sha256("\f".join(f"{n}\n{t}" for n, t in sorted(pages.items())).encode("utf-8")).hexdigest()
+    return memo.once(_booklets, key, lambda: booklet.parse(pages))
+
+
 def similarities(paragraphs, claim_text):
     """Cosine similarity (e5-small) between the claim and each paragraph as shown, in the paragraphs' order."""
     texts = [display(t) for _, t in paragraphs]
     key = hashlib.sha256("\n\n".join(texts).encode("utf-8")).hexdigest()
-    if key not in _vectors:
-        _vectors[key] = retrieval.embedder("e5-small").embed([f"passage: {t}" for t in texts])
-    return _vectors[key] @ retrieval.query_vector("e5-small", claim_text)
+    vectors = memo.once(_vectors, key, lambda: retrieval.embedder("e5-small").embed([f"passage: {t}" for t in texts]))
+    return vectors @ retrieval.query_vector("e5-small", claim_text)
 
 
 def most_similar(paragraphs, claim_text, top_k=TOP_K):

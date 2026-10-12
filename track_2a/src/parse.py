@@ -14,7 +14,7 @@ import json
 import os
 from pathlib import Path
 
-from pypdf import PdfReader
+from src import memo
 
 CACHE_DIR = Path(os.environ.get("BOOKLET_CACHE_DIR", "/tmp/booklet-cache"))
 MAX_ITEM_CHARS = 5000  # official limit for one evidence item (about one page)
@@ -30,13 +30,23 @@ def _sha256(path):
 
 def extract_pages(pdf_path):
     """Return a list of page texts; element i is PDF page i + 1. No caching."""
+    from pypdf import PdfReader  # imported on first use (session 10): the first task B request need not wait for it
+
     reader = PdfReader(str(pdf_path))
     return [(page.extract_text() or "") for page in reader.pages]
 
 
+_pages = {}  # (cache folder, booklet SHA-256) -> {page: text}; session 10: also kept in memory
+
+
 def load_pages(pdf_path, cache_dir=CACHE_DIR):
-    """Return {page number (1-based): text}, using the cache when possible."""
+    """Return {page number (1-based): text}, using the cache when possible. A booklet is parsed once per run,
+    also when two threads ask for it at the same time (src/memo.py); every caller gets its own dict."""
     key = _sha256(pdf_path)
+    return dict(memo.once(_pages, (str(cache_dir), key), lambda: _load_pages(pdf_path, key, cache_dir)))
+
+
+def _load_pages(pdf_path, key, cache_dir):
     cache_file = Path(cache_dir) / f"{key}.json"
     if cache_file.exists():
         stored = json.loads(cache_file.read_text(encoding="utf-8"))

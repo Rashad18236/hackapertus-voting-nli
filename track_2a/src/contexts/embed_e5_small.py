@@ -26,9 +26,10 @@ text, never on case order. The first case of each booklet pays for embedding it.
 
 import hashlib
 import os
+import threading
 from pathlib import Path
 
-from src import parse
+from src import memo, parse, pipeline
 
 NAME = "embed-e5-small"
 PROMPT_VERSION = "A-v3-excerpts"
@@ -59,6 +60,8 @@ def chunk_pages(pages, max_chars=CHUNK_CHARS):
 class E5Embedder:
     """multilingual-e5-small in ONNX format: tokenize, run the model, mean-pool, L2-normalise."""
 
+    _lock = threading.Lock()  # session 10: one embedding at a time, also across threads (onnxruntime uses every core)
+
     def __init__(self, model_dir=MODEL_DIR):
         # Imported here so the other variants and the tests need neither package loaded.
         import onnxruntime
@@ -69,6 +72,10 @@ class E5Embedder:
         self.tokenizer.enable_padding()
         options = onnxruntime.SessionOptions()
         options.log_severity_level = 3  # errors only
+        # Session 10: as many threads as the container may use. By default onnxruntime starts one per core of the
+        # machine, which under a CPU limit (docker run --cpus 2 on 4 cores) is throttled: 2 threads embedded 124
+        # paragraphs in 9.5-10.1 s against 11.3-12.5 s. The vectors are the same for 1, 2 and 4 threads.
+        options.intra_op_num_threads = pipeline.available_cpus()
         self.session = onnxruntime.InferenceSession(str(Path(model_dir) / "model.onnx"), options,
                                                     providers=["CPUExecutionProvider"])
         self.input_names = {i.name for i in self.session.get_inputs()}
@@ -82,6 +89,10 @@ class E5Embedder:
         vectors are the same (padding is masked out)."""
         import numpy as np
 
+        with self._lock:
+            return self._embed(np, texts)
+
+    def _embed(self, np, texts):
         order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
         vectors = []
         for start in range(0, len(texts), BATCH_SIZE):
@@ -102,25 +113,24 @@ class E5Embedder:
         return result
 
 
-_embedder = None
+_embedders = {}    # session 10: the one E5Embedder of the run, shared with src/contexts/retrieval.py
 _chunk_cache = {}  # booklet text SHA-256 -> (chunks, chunk vectors)
 
 
 def _get_embedder():
-    global _embedder
-    if _embedder is None:
-        _embedder = E5Embedder()
-    return _embedder
+    """The run's E5Embedder, loaded on first use (once, also when several threads ask at the same time)."""
+    return memo.once(_embedders, MODEL_DIR, E5Embedder)
 
 
 def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
     """Return the top_k chunks most similar to the claim, as [(page, text)] in page order."""
     embedder = embedder or _get_embedder()
     key = hashlib.sha256(parse.booklet_prompt_text(pages).encode("utf-8")).hexdigest()
-    if key not in _chunk_cache:
+
+    def embed_booklet():
         chunks = chunk_pages(pages)
-        _chunk_cache[key] = (chunks, embedder.embed([f"passage: {text}" for _, text in chunks]))
-    chunks, vectors = _chunk_cache[key]
+        return chunks, embedder.embed([f"passage: {text}" for _, text in chunks])
+    chunks, vectors = memo.once(_chunk_cache, key, embed_booklet)
     if not chunks:
         return []
     query = embedder.embed([f"query: {claim_text}"])[0]
