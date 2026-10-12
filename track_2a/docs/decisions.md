@@ -795,3 +795,13 @@ Public AI, at most one request per second, one model run at a time.
 - **New replay reference `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`: answers from the final dev run (600) and the val L1 arm (580, same task A settings as the final defaults); the replay reproduces both exactly. It replaces the session 8 reference as the anchor of G1/G2.** Rashad's FINISH instruction; the val L1 arm is the only saved real run of the final task A settings on val.
 - **Stability point 2 ran at 01:56–02:18 UTC on the `:stability` image with point 1's settings: task A 0.966, task B 0.967, the same Macro-F1 as point 1; labels agree 299/300 (A) and 300/300 (B); one backend. The sandbox had restarted in between: the Docker daemon was started again and the images were unchanged.**
 - **Stability point 3 ran at 09:56–10:16 UTC on the `:stability` image with point 1's settings: task A 0.966 (labels equal to point 1 in all 300), task B 0.963 (299/300; row 640 turned from neutral to contradiction); one backend, no cache hits. Across the three points two of 600 labels ever changed. The sandbox had restarted again; the Docker daemon was started again, the image was unchanged.**
+
+## Session 10: score what the organisers score (2026-10-12 11:42 UTC to 2026-10-13 13:00 UTC)
+
+Rashad's instructions, run unattended by Claude Code; status in `docs/session_10_status.md`, report in
+`docs/session_10_report.md`. Branch `rashad/session-10` from `main` at `42b2a3c` (PR #16 merged); a draft pull
+request, never merged, no tag. Model: the 8B named in `.env` on Public AI only, at most one request per second,
+one model run at a time. Sealed: the test rows dated 2020-02-09, 2022-02-13 and 2022-05-15 are never run,
+parsed or opened; `data/test/`, the splits file and the scorer stay unchanged.
+
+- **Branch from `main` at `42b2a3c`.** Rashad's instruction ("from a fresh main").
