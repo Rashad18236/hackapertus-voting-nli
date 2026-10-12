@@ -5,8 +5,9 @@
 # Tags (session 10, step 3):
 #   - a push to main:                "latest" and the commit hash ("sha-" + 12 characters);
 #   - a push to rashad/session-10:   "session-10" and the commit hash;
+#   - a push to rashad/session-11:   "session-11" and the commit hash (session 11);
 #   - started by hand (Actions -> publish-image -> Run workflow): the commit hash, plus "latest" on main
-#     and "session-10" on rashad/session-10. "latest" is only ever built from main.
+#     and the session tag on a session branch. "latest" is only ever built from main.
 #
 # Job 1 builds the image for linux/amd64 from track_2a/ (the same Dockerfile as `make build`) and pushes it.
 # Job 2 pulls the pushed image by its commit-hash tag on a fresh runner and runs it with the organisers' command
@@ -22,7 +23,7 @@ name: publish-image
 
 on:
   push:
-    branches: [main, rashad/session-10]
+    branches: [main, rashad/session-10, rashad/session-11]
     paths: ["track_2a/**", ".github/workflows/publish-image.yml"]
   workflow_dispatch:
 
@@ -49,6 +50,7 @@ jobs:
           tags="$REGISTRY_IMAGE:$sha_tag"
           if [ "$GITHUB_REF_NAME" = "main" ]; then tags="$tags,$REGISTRY_IMAGE:latest"; fi
           if [ "$GITHUB_REF_NAME" = "rashad/session-10" ]; then tags="$tags,$REGISTRY_IMAGE:session-10"; fi
+          if [ "$GITHUB_REF_NAME" = "rashad/session-11" ]; then tags="$tags,$REGISTRY_IMAGE:session-11"; fi
           echo "sha_tag=$sha_tag" >> "$GITHUB_OUTPUT"
           echo "tags=$tags" >> "$GITHUB_OUTPUT"
           echo "Tags: $tags"

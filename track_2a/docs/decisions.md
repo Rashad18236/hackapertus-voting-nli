@@ -853,3 +853,4 @@ Started 2026-10-12 20:10 UTC by Claude Code for Rashad, unattended, on branch `r
 `014f691`. One line per decision with its reason; where the instruction was unclear, the reading taken.
 
 - **The session's replay reference for G1/G2 is `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`.** Rashad's instruction.
+- **The publish workflow also builds from `rashad/session-11` and tags `session-11`.** FINISH asks for the final runs through the image tagged session-11 from this branch; `latest` stays `main`-only.
