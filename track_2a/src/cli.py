@@ -90,9 +90,11 @@ class Settings:
     ap_structure_a: str = "off"  # session 11, step 3 (off): Apertus reads the contents pages (one call per booklet):
                                  # "after-parser" (only when the parser gives no valid part for the vote) or "all";
                                  # its entries are used only where they pass the parser's heading checks
-    fallback_a: str = "embed"    # session 11, step 2: what a case that section-route cannot route gets: "embed"
-                                 # (embed-e5-small, as before), or the levels "vw" (vote-wide), "bw" (booklet-wide),
-                                 # "vw+bw"; a level that does not apply leaves the case to embed-e5-small
+    fallback_a: str = "bm25-ap"  # what a case that section-route cannot route gets. Session 12, step 5 (adopted, FALLBACK
+                                 # RULE: forced fallback dev 0.956 vs 0.900, val 0.957 vs 0.875): "bm25-ap", BM25 on the
+                                 # claim (translated by Apertus when it is in another language than the booklet), an
+                                 # error going on to embed-e5-small; "embed" (embed-e5-small, before session 12); session
+                                 # 11's levels "vw" (vote-wide), "bw" (booklet-wide), "vw+bw" (off)
     ranker: str = "e5"           # session 12, step 1: which local ranker keeps a long part's, the fallback's and (cut4-r) a
                                  # long task B reference's most similar pieces: see src/rankers.py ("e5" is today's code)
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
