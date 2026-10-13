@@ -25,10 +25,12 @@ Fixes / breaks of AP-all against today: 1 / 6. 0 failed calls, 0 unreadable answ
   in all. The rules route all 300 dev claims, so on dev Apertus can only lose here.
 - **Structure (AP-structure):** the case's vote placed and checked for 279 of 300 cases (93.0 %); the other 21 went
   booklet-wide. Paths: council 103, summary 65, committee 46, law 27, detail 17, vote-wide 21, booklet-wide 21
-  (today: every case routed).
+  (today: 299 routed, 1 to embed-e5-small).
 - **Tokens:** 502 input + 76.5 output tokens of parsing per case (one claim call per case, ~1,800 + 180 per booklet
   for the contents), +34 % input tokens and +527 % output tokens in all.
 
-AP-all never becomes the default (the step's rule); it is reported with its local time, measured through the image
-with a replay of these answers (`scripts/ap_replay_table.py`; see the session report). The probe run is
-`2026-10-12_rashad_ap-all_probeA94`.
+AP-all never becomes the default (the step's rule). **Its local time** (`AP-all/local_time_d0.3.json`): the image
+with the step 4 defaults, 2 CPUs, a fake model replaying these very answers after 0.3 s (`scripts/ap_replay_table.py`
+builds the table; 644 requests, 0 replay misses): **0.822 s per case**, against 0.101 s for today's defaults in the
+same setting. With Apertus asked while a case is prepared, the CLI prepares and completes each case in turn, so no
+local work hides behind a request. The probe run is `2026-10-12_rashad_ap-all_probeA94`.

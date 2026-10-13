@@ -60,7 +60,7 @@ counts in the case's tokens (a booklet's contents call in its first case).
 | AP-all, dev 300 (run 1) | part = rules' part for 89.0 %; vote placed for 93.0 % | 0.960 / 0.891 (today 0.977 / 0.980) | 1,655 + 90.9 (502 + 76.5) | never (the step's rule) |
 | AP-all, probe 94 (run 1) | part = rules' 89.4 %; vote placed 91.5 % | 0.951 / 0.877 (today 0.971 / 0.954) | 1,383 + 71.6 (346 + 57.4) | never |
 
-AP-all's local time: PENDING-APALL-LT. Step 3b (no model): with Apertus's restated statement (the claim without its
+AP-all's local time (replay of run 1's answers through the image, 0.3 s per request): 0.822 s per case against 0.101 s for today, since its calls during preparation force the sequential path. Step 3b (no model): with Apertus's restated statement (the claim without its
 opening, in the booklet's language) as the search text of cut parts, the 9 gold cases among the 18 cut
 cross-language dev and probe cases keep their gold paragraph among the 8 (net gain 0, needs ≥ 5), so run 4 was not
 run. Step 3d: the endpoint accepts an image part, but Apertus's answer does not name the page's printed heading.
