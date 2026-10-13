@@ -44,8 +44,21 @@ MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-
 
 def select(pages, vote, claim_text, cross_language=False):
     """Return (prompt_text, shown): the selected chunks, and the full pages they come from
-    (evidence is the full text of the pages the model cites). Languages play no role."""
-    chunks = select_chunks(pages, claim_text)
+    (evidence is the full text of the pages the model cites). Languages play no role. Session 12: when src/rankers.py's
+    ACTIVE names another ranker, the same chunks are ranked by it ("none": BM25 alone, the word overlap)."""
+    from src import rankers
+    name = rankers.effective(rankers.ACTIVE["name"])
+    if name == "e5":
+        try:
+            chunks = select_chunks(pages, claim_text)
+            return excerpts_prompt_text(chunks), {n: pages[n] for n, _ in chunks}
+        except Exception as e:  # session 12, step 2: e5 cannot run here; BM25 alone
+            rankers.failed("e5-small", e)
+            name = "none"
+    every = chunk_pages(pages)
+    keep = rankers.best_or_without("BM25" if name == "none" else name, [t for _, t in every], claim_text, TOP_K,
+                                   without="BM25") if every else []
+    chunks = [every[i] for i in keep]
     return excerpts_prompt_text(chunks), {n: pages[n] for n, _ in chunks}
 
 
@@ -166,8 +179,9 @@ def _get_quantised_embedder():
     return memo.once(_embedders, (MODEL_DIR, QUANTISED_FILE), lambda: E5Embedder(MODEL_DIR, QUANTISED_FILE))
 
 
-def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
-    """Return the top_k chunks most similar to the claim, as [(page, text)] in page order."""
+def chunk_scores(pages, claim_text, embedder=None):
+    """(chunks, scores): every chunk of the pages as [(page, text)] in page order, and its cosine similarity to
+    the claim. Shared by select_chunks and the hybrid variants (src/contexts/bm25.py)."""
     embedder = embedder or _get_embedder()
     key = hashlib.sha256(parse.booklet_prompt_text(pages).encode("utf-8")).hexdigest()
 
@@ -176,9 +190,16 @@ def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
         return chunks, embedder.embed([f"passage: {text}" for _, text in chunks])
     chunks, vectors = memo.once(_chunk_cache, key, embed_booklet)
     if not chunks:
-        return []
+        return [], []
     query = embedder.embed([f"query: {claim_text}"])[0]
-    scores = vectors @ query  # cosine similarity, since all vectors have length 1
+    return chunks, vectors @ query  # cosine similarity, since all vectors have length 1
+
+
+def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
+    """Return the top_k chunks most similar to the claim, as [(page, text)] in page order."""
+    chunks, scores = chunk_scores(pages, claim_text, embedder)
+    if not chunks:
+        return []
     best = sorted(range(len(chunks)), key=lambda i: -scores[i])[:top_k]
     return [chunks[i] for i in sorted(best)]  # chunk order = page order
 

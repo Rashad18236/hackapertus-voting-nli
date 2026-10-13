@@ -1,0 +1,152 @@
+{
+ "cases": 300,
+ "same_backend_cases": 300,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 300
+ },
+ "arms": {
+  "today": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9867,
+    "neutral_recall": 0.9899,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 815.3,
+    "output_tokens": 8.6
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9867,
+    "neutral_recall": 0.9899,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 815.3,
+    "output_tokens": 8.6
+   }
+  },
+  "B-R": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9731,
+    "neutral_recall": 0.9394,
+    "unreadable": 1,
+    "failed_calls": 0,
+    "input_tokens": 923.1,
+    "output_tokens": 8.7
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9731,
+    "neutral_recall": 0.9394,
+    "unreadable": 1,
+    "failed_calls": 0,
+    "input_tokens": 923.1,
+    "output_tokens": 8.7
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": false,
+    "input tokens at least 10 % lower": false
+   },
+   "fixes_breaks": {
+    "fixes": 3,
+    "breaks": 7,
+    "sign_test_p": 0.3438,
+    "fixed": [
+     "v1.1-row-1167-B",
+     "v1.1-row-232-B",
+     "v1.1-row-688-B"
+    ],
+    "broken": [
+     "v1.1-row-1052-B",
+     "v1.1-row-500-B",
+     "v1.1-row-608-B",
+     "v1.1-row-633-B",
+     "v1.1-row-797-B",
+     "v1.1-row-854-B",
+     "v1.1-row-980-B"
+    ]
+   }
+  },
+  "H": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9934,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 922.6,
+    "output_tokens": 8.6
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9934,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 922.6,
+    "output_tokens": 8.6
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": false
+   },
+   "fixes_breaks": {
+    "fixes": 2,
+    "breaks": 0,
+    "sign_test_p": 0.5,
+    "fixed": [
+     "v1.1-row-232-B",
+     "v1.1-row-688-B"
+    ],
+    "broken": []
+   }
+  },
+  "B-BM25": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9666,
+    "neutral_recall": 0.9394,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1039.0,
+    "output_tokens": 26.2
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9666,
+    "neutral_recall": 0.9394,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1039.0,
+    "output_tokens": 26.2
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": false
+   },
+   "fixes_breaks": {
+    "fixes": 2,
+    "breaks": 8,
+    "sign_test_p": 0.1094,
+    "fixed": [
+     "v1.1-row-1167-B",
+     "v1.1-row-688-B"
+    ],
+    "broken": [
+     "v1.1-row-1052-B",
+     "v1.1-row-31-B",
+     "v1.1-row-500-B",
+     "v1.1-row-515-B",
+     "v1.1-row-608-B",
+     "v1.1-row-666-B",
+     "v1.1-row-797-B",
+     "v1.1-row-854-B"
+    ]
+   }
+  }
+ }
+}

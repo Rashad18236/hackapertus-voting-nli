@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "13:17",
+ "kind": "model run",
+ "code": "dfb0697 (scripts/paired_run.py, in-process)",
+ "cases": "val sample, 300 balanced task A cases, forced 'no part' (AP-part off)",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 12 step 5, val)",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and translation from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-13_rashad_bm25ap-fallback_valA300/today-nopart",
+ "setup": "forced fallback, bm25-ap: BM25 on the claim, translated by Apertus when claim and booklet differ in language (its tokens included)",
+ "results": {
+  "macro_f1": 0.957,
+  "f1": {
+   "entailment": 0.95,
+   "neutral": 0.984,
+   "contradiction": 0.936
+  },
+  "evidence": {
+   "score": 0.755,
+   "found": 154,
+   "cases": 204
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 2609,
+  "mean_time_ms": 3488,
+  "p95_time_ms": 5481,
+  "mean_output_tokens": 45.4
+ }
+}

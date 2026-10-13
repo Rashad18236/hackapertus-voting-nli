@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "13:56",
+ "kind": "model run",
+ "code": "dfb0697 (scripts/paired_run.py, in-process)",
+ "cases": "val sample, 300 balanced task A cases, forced 'no parser'",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 12 step 6, val)",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and contents call from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-13_rashad_ap-structure-ask_valA300/today-noparser",
+ "setup": "the same force with --ap-structure-a ask-after-parser (Apertus reads the contents, one call per booklet; parts that pass the parser's checks are routed)",
+ "results": {
+  "macro_f1": 0.939,
+  "f1": {
+   "entailment": 0.953,
+   "neutral": 0.95,
+   "contradiction": 0.914
+  },
+  "evidence": {
+   "score": 0.917,
+   "found": 187,
+   "cases": 204
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1621,
+  "mean_time_ms": 4227,
+  "p95_time_ms": 16185,
+  "mean_output_tokens": 43.4
+ }
+}

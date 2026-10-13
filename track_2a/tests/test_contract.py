@@ -646,12 +646,10 @@ class OrderIndependence(ContractBase):
         cases = ROUTED + [c for c in self.mixed_cases() if c["id"] in ("a1", "b1", "b2", "b3", "b4")]
         result = self.check_orders(cases, "--context-a", "section-route")
         for case in ROUTED:
-            # The hunting law's text has more than 8,000 characters, so section-route ranks its paragraphs with e5;
-            # without the model files that case gets the fallback answer (still a valid response).
-            if case["id"] == "r-law" and not HAVE_E5:
-                self.assertEqual(result[case["id"]], (1, []))
-            else:
-                self.assertTrue(result[case["id"]][1], case["id"])  # routed: the cited paragraph is the evidence
+            # The hunting law's text has more than 8,000 characters, so section-route ranks its paragraphs with e5.
+            # Session 12, step 2: without the model files the memory guard sends the part's first 8 paragraphs, so
+            # this case is answered by the model too; the cited paragraph is the evidence either way.
+            self.assertTrue(result[case["id"]][1], case["id"])  # routed: the cited paragraph is the evidence
 
     @unittest.skipUnless(SLOW, "set CONTRACT_SLOW=1 (embeds the whole example booklet in each of three runs)")
     def test_default_settings_on_the_full_booklet(self):

@@ -1,0 +1,41 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "11:47",
+ "kind": "model run",
+ "code": "b344bb3 (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task A cases",
+ "format": "official scorer; interleaved, 5 arms, 1 request per second (session 12 steps 4 and 5)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and translation from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_S-and-fallbacks_devA300/today",
+  "2026-10-13_rashad_S-and-fallbacks_devA300/S",
+  "2026-10-13_rashad_S-and-fallbacks_devA300/S-nopart",
+  "2026-10-13_rashad_S-and-fallbacks_devA300/bm25ap-nopart"
+ ],
+ "setup": "forced fallback (test force 'no part', AP-part off): today's fallback, embed-e5-small",
+ "results": {
+  "macro_f1": 0.9,
+  "f1": {
+   "entailment": 0.941,
+   "neutral": 0.873,
+   "contradiction": 0.884
+  },
+  "evidence": {
+   "score": 0.672,
+   "found": 135,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1868,
+  "mean_time_ms": 4043,
+  "p95_time_ms": 20037,
+  "mean_output_tokens": 15.8
+ }
+}

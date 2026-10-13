@@ -1,0 +1,64 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "11:26",
+ "kind": "offline check",
+ "code": "c3cbaac (image sha-c3cbaac54b15)",
+ "task": "A+B",
+ "variant": "section-route / task B cut4-t; S: --ranker S (A), --context-b cut4-r --ranker S (B)",
+ "cases": "dev, all 300 task A and all 300 task B cases",
+ "setup": "scripts/local_time.py through the image, fake model replaying the s11 reference, 1.0 / 0.3 / 0.1 s per request, 2 CPUs pinned, 4 GB, peak memory",
+ "format": "local time per case the organisers' way; no model calls",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Task A local time per case today / S: 1.0 s 0.0174 / 0.0159, 0.3 s 0.144 / 0.018 (two rounds), 0.1 s 0.365 / 0.043; peak memory 2,286 / 200 MiB (task B 1,164 / 82).",
+ "results": {
+  "A_d1.0": {
+   "today": 0.0174,
+   "S": 0.0159,
+   "peak_mib_today": 2283,
+   "peak_mib_S": 201
+  },
+  "A_d0.3": {
+   "today": 0.1621,
+   "S": 0.0178,
+   "peak_mib_today": 2287,
+   "peak_mib_S": 203
+  },
+  "A_d0.1": {
+   "today": 0.3645,
+   "S": 0.043,
+   "peak_mib_today": 2286,
+   "peak_mib_S": 200
+  },
+  "A_d0.3_r2": {
+   "today": 0.1267,
+   "S": 0.0183
+  },
+  "B_d1.0": {
+   "today": 0.0077,
+   "S": 0.0085,
+   "peak_mib_today": 1164,
+   "peak_mib_S": 82
+  },
+  "B_d0.3": {
+   "today": 0.0104,
+   "S": 0.0069,
+   "peak_mib_today": 1168,
+   "peak_mib_S": 82
+  },
+  "B_d0.1": {
+   "today": 0.1632,
+   "S": 0.0082,
+   "peak_mib_today": 1164,
+   "peak_mib_S": 82
+  },
+  "B_d0.3_r2": {
+   "today": 0.0106,
+   "S": 0.0068
+  }
+ }
+}

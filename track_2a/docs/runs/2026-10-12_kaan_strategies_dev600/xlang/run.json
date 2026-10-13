@@ -1,0 +1,39 @@
+{
+ "person": "kaan",
+ "date": "2026-10-12",
+ "start_utc": "13:13",
+ "kind": "model run",
+ "code": "kaan/robustness-experiments working tree (parent 42b2a3c)",
+ "variant": "xlang",
+ "format": "official, interleaved (four arms, rotating order, 2 s between requests)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "setup": "--strategy-a/-b xlang: cross-language tournament (local MT m2m100_418M; both sides must agree, else a tie-break call with today's request)",
+ "task": "A",
+ "cases": "dev, all 300 task A cases (600-case run: data/dev/cases.jsonl)",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_kaan_strategies_dev600/base",
+  "2026-10-12_kaan_strategies_dev600/negation",
+  "2026-10-12_kaan_strategies_dev600/decompose"
+ ],
+ "results": {
+  "macro_f1": 0.98,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.99,
+   "contradiction": 0.969
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 2060,
+  "mean_time_ms": 4908,
+  "p95_time_ms": 9377,
+  "evidence": {
+   "score": 0.98,
+   "found": 197,
+   "cases": 201
+  }
+ }
+}

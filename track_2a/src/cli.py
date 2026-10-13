@@ -45,7 +45,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from src import context, env, evidence, llm, nli, parse, pipeline, taskb_context
+from src import context, env, evidence, llm, nli, parse, pipeline, rankers, taskb_context
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 
@@ -87,12 +87,19 @@ class Settings:
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
-    ap_structure_a: str = "off"  # session 11, step 3 (off): Apertus reads the contents pages (one call per booklet):
-                                 # "after-parser" (only when the parser gives no valid part for the vote) or "all";
-                                 # its entries are used only where they pass the parser's heading checks
-    fallback_a: str = "embed"    # session 11, step 2: what a case that section-route cannot route gets: "embed"
-                                 # (embed-e5-small, as before), or the levels "vw" (vote-wide), "bw" (booklet-wide),
-                                 # "vw+bw"; a level that does not apply leaves the case to embed-e5-small
+    ap_structure_a: str = "ask-after-parser"  # Apertus reads the contents pages (one call per booklet); its entries are
+                                 # used only where they pass the parser's heading checks. Session 12, step 6 (adopted,
+                                 # STRUCTURE RULE: parser forced off, dev 0.946 vs 0.896, val 0.939 vs 0.872):
+                                 # "ask-after-parser", asked from the main process only when the rules name a part and
+                                 # the parser gives no valid part for the vote. Session 11 (off): "after-parser" and
+                                 # "all" (both prepare every case in turn); "off"
+    fallback_a: str = "bm25-ap"  # what a case that section-route cannot route gets. Session 12, step 5 (adopted, FALLBACK
+                                 # RULE: forced fallback dev 0.956 vs 0.900, val 0.957 vs 0.875): "bm25-ap", BM25 on the
+                                 # claim (translated by Apertus when it is in another language than the booklet), an
+                                 # error going on to embed-e5-small; "embed" (embed-e5-small, before session 12); session
+                                 # 11's levels "vw" (vote-wide), "bw" (booklet-wide), "vw+bw" (off)
+    ranker: str = "e5"           # session 12, step 1: which local ranker keeps a long part's, the fallback's and (cut4-r) a
+                                 # long task B reference's most similar pieces: see src/rankers.py ("e5" is today's code)
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
                                           # ones and 11 of the 99 right ones; the best difference of the two shares)
@@ -206,6 +213,10 @@ def prepare_a(case, data_dir, start, raw, settings):
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
                         routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
                                                   "json_schema": paragraph_schema(settings)})
+    if settings.ap_structure_a == "ask-after-parser" and "route_error" not in raw:
+        asked = ask_structure_prepared(case, pages, vote, claim_text, start, raw, settings)
+        if asked is not None:
+            return asked
     if ask_part_after_rules(settings) and "route_error" not in raw:
         candidates = part_candidates(pages, vote, claim_text, raw, settings)
         if candidates:
@@ -220,6 +231,16 @@ def fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found
     """A case section-route could not route: a fallback level if one is set (step 2, off), else the variant's
     fallback (embed-e5-small)."""
     case_id = case["id"]
+    if settings.fallback_a == "bm25-ap" and settings.context_a == "section-route":
+        try:
+            prepared = bm25_fallback(case, pages, vote, claim_text, raw, settings)
+        except Exception as e:  # e.g. a page without text: the case goes on to embed-e5-small, as before
+            raw["bm25_error"] = f"{type(e).__name__}: {e}"
+            for key in ("fallback", "prompt_version", "pages_total"):
+                raw.pop(key, None)
+            prepared = None
+        if prepared is not None:
+            return prepared
     wide = wide_fallback(pages, vote, claim_text, raw, settings, found if ap_in_prepare(settings) else None)
     if wide is not None:
         return wide_prepared(case_id, raw, wide, pages, vote, claim_text, settings)
@@ -241,9 +262,56 @@ def fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found
                                "json_schema": nli.ANSWER_SCHEMA_A if settings.schema_a else None})
 
 
-FALLBACK_LEVELS = ("embed", "vw", "bw", "vw+bw")
+def bm25_fallback(case, pages, vote, claim_text, raw, settings):
+    """Session 12, step 5 (off by default; --fallback-a bm25-ap): a case section-route cannot route gets the 8 chunks
+    of the booklet (embed-e5-small's chunks and prompt) with the best BM25 score (Kaan's bm25, src/contexts/bm25.py)
+    for the claim. When the claim is in another language than the booklet, Apertus first translates it into the
+    booklet's language (one call in complete_a_translate, its tokens in the case's metrics); BM25 then ranks with the
+    translation, and the reading call gets the claim as it is. None (embed-e5-small as before) if the booklet has no
+    text."""
+    from src.contexts import embed_e5_small
+    chunks = embed_e5_small.chunk_pages(pages)
+    if not chunks:
+        return None
+    raw["fallback"], raw["prompt_version"], raw["pages_total"] = "bm25-ap", embed_e5_small.PROMPT_VERSION, len(pages)
+    page_texts = {n: pages[n] for n in sorted({n for n, _ in chunks})}
+    p = Prepared(case["id"], raw, kind="A-translate", vote=vote, claim_text=claim_text,
+                 ask=(case["booklet"].get("language") or "", chunks, page_texts),
+                 chat_args={"max_tokens": settings.max_tokens_a, "json_mode": settings.json_mode_a,
+                            "json_schema": nli.ANSWER_SCHEMA_A if settings.schema_a else None})
+    if case["claim"].get("language") == case["booklet"].get("language"):
+        return bm25_pages(p, claim_text)  # one language: no translation needed
+    return p
+
+
+def bm25_pages(p, search_text):
+    """The A-pages request of a bm25-ap fallback: the 8 chunks with the best BM25 score for search_text."""
+    from src.contexts import embed_e5_small
+    _, chunks, page_texts = p.ask
+    keep = rankers.best("BM25", [t for _, t in chunks], search_text, embed_e5_small.TOP_K)
+    chosen = [chunks[i] for i in keep]
+    shown = {n: page_texts[n] for n, _ in chosen}
+    p.raw["pages_sent"], p.raw["context_pages"] = len(shown), sorted(shown)
+    return Prepared(p.case_id, p.raw, kind="A-pages", vote=p.vote, claim_text=p.claim_text, shown=shown,
+                    messages=nli.build_messages_a(embed_e5_small.excerpts_prompt_text(chosen), p.vote, p.claim_text,
+                                                  embed_e5_small.PROMPT_VERSION),
+                    chat_args=p.chat_args)
+
+
+def complete_a_translate(p, start, settings):
+    """Session 12, step 5: Apertus translates the claim into the booklet's language; BM25 chooses the chunks with it."""
+    from src import ap_parse
+    translated, call = ap_parse.translate(p.claim_text, p.ask[0])
+    tokens = p.raw.setdefault("ap_tokens", [0, 0])
+    tokens[0] += call.get("input_tokens", 0)
+    tokens[1] += call.get("output_tokens", 0)
+    p.raw.setdefault("ap_calls", []).append(call)
+    return complete_a_pages(bm25_pages(p, translated or p.claim_text), start, settings)
+
+
+FALLBACK_LEVELS = ("embed", "vw", "bw", "vw+bw", "bm25-ap")
 AP_PART_MODES = ("off", "after-rules", "all")
-AP_STRUCTURE_MODES = ("off", "after-parser", "all")
+AP_STRUCTURE_MODES = ("off", "after-parser", "all", "ask-after-parser")
 
 
 def ap_on(settings):
@@ -253,15 +321,15 @@ def ap_on(settings):
 def ap_in_prepare(settings):
     """Apertus called while a case is prepared (ap_route; the sequential path): AP-structure, or AP-part for every
     claim. AP-part after the rules alone is asked when the case is completed (ask_part_after_rules)."""
-    return settings.ap_structure_a != "off" or settings.ap_part_a == "all"
+    return settings.ap_structure_a in ("after-parser", "all") or settings.ap_part_a == "all"
 
 
 def ask_part_after_rules(settings):
     """Session 11, step 3: AP-part after the rules, without AP-structure. The worker process prepares, for a claim
     whose opening the rules do not know, every valid part of its vote and the usual fallback; the main process then
     asks Apertus which part the opening names (one request, src/ap_parse.claim) and sends that part's request."""
-    return (settings.ap_part_a == "after-rules" and settings.ap_structure_a == "off"
-            and settings.context_a == "section-route")
+    return (settings.ap_part_a == "after-rules" and settings.ap_structure_a in ("off", "ask-after-parser")
+            and settings.context_a == "section-route")  # session 12: AP-structure asked after the parser keeps AP-part
 
 
 def part_candidates(pages, vote, claim_text, raw, settings):
@@ -306,6 +374,68 @@ def complete_a_ask_part(p, start, settings):
         p.raw["prompt_version"], p.raw["route"] = paragraph_prompt_version(settings), part
         p.raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
         p.raw["context_pages"] = sorted({page for page, _ in paragraphs})
+        q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
+                     messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
+                     chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
+    else:
+        p.raw.update(fallback.raw)
+        q = Prepared(**{**fallback.__dict__, "raw": p.raw})
+    if q.kind == "done":
+        return q.done
+    return COMPLETE[q.kind](q, start, settings)
+
+
+def ask_structure_prepared(case, pages, vote, claim_text, start, raw, settings):
+    """Session 12, step 6 (off by default; --ap-structure-a ask-after-parser): the rules name the claim's part, but the
+    parser gives no valid part for the vote (vote not found, or none of its parts passed its checks). The lane
+    prepares the fallback as usual and hands the booklet's page texts to the main process, which asks Apertus to
+    read the contents (AP-structure, one call per booklet; its tokens count in that booklet's first such case) and
+    routes to the named part if Apertus's entries pass the parser's heading checks (complete_a_ask_structure).
+    Unlike session 11's after-parser mode, no case is moved to the sequential path. None when it does not apply."""
+    from src import claim_router
+    variant = context.VARIANTS[settings.context_a] if settings.context_a == "section-route" else None
+    if variant is None:
+        return None
+    part = claim_router.route(claim_text)
+    if part is None:
+        return None
+    found = variant.find(variant.parsed_booklet(pages), vote)
+    if found is not None and found.valid:
+        return None
+    fallback_raw = {}
+    fallback = fallback_prepared(case, pages, vote, claim_text, start, fallback_raw, settings, found)
+    page_texts = {n: pages[n] for n in sorted(pages)}
+    return Prepared(case["id"], raw, kind="A-ask-structure", vote=vote, claim_text=claim_text,
+                    ask=(page_texts, part, fallback))
+
+
+def complete_a_ask_structure(p, start, settings):
+    """Step 6: Apertus reads the contents; the case is routed to its part if that part passes the parser's checks in
+    Apertus's reading, else completed as its fallback."""
+    from src import ap_parse
+    page_texts, part, fallback = p.ask
+    variant = context.VARIANTS["section-route"]
+    entries, call = ap_parse.structure(page_texts)
+    if call.get("first"):  # the booklet's one call: its tokens count in this case (later cases reuse the reading)
+        tokens = p.raw.setdefault("ap_tokens", [0, 0])
+        tokens[0] += call.get("input_tokens", 0)
+        tokens[1] += call.get("output_tokens", 0)
+        p.raw.setdefault("ap_calls", []).append(call)
+    routed = None
+    try:
+        ap_booklet = ap_parse.booklet_from_entries(page_texts, entries) if entries else None
+        ap_found = variant.find(ap_booklet, p.vote) if ap_booklet is not None else None
+        p.raw["ap_structure"] = {"entries": len(entries or []), "vote_found": ap_found is not None,
+                                 "valid": sorted(ap_found.valid) if ap_found is not None else [],
+                                 "booklet_call": "this case" if call.get("first") else "an earlier case"}
+        routed = variant.route_part(page_texts, ap_found, part, p.claim_text) if ap_found is not None else None
+    except Exception as e:  # Apertus's reading must never cost the case its call
+        p.raw["ap_structure_error"] = f"{type(e).__name__}: {e}"
+    if routed is not None:
+        _, paragraphs = routed
+        p.raw["prompt_version"], p.raw["route"] = paragraph_prompt_version(settings), part
+        p.raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
+        p.raw["pages_total"], p.raw["context_pages"] = len(page_texts), sorted({page for page, _ in paragraphs})
         q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
                      messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
                      chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
@@ -365,7 +495,7 @@ def wide_fallback(pages, vote, claim_text, raw, settings, ap_found=None):
     """Session 11, step 2 (off by default): the vote-wide or booklet-wide paragraphs for a case section-route could not
     route, or None (then the case runs as embed-e5-small, as before). An error here also leaves it to embed-e5-small.
     ap_found: with AP-structure on, the vote as ap_route found it (a ("found", vote or None) pair)."""
-    if settings.fallback_a == "embed" or settings.context_a != "section-route":
+    if settings.fallback_a in ("embed", "bm25-ap") or settings.context_a != "section-route":
         return None
     try:
         variant = context.VARIANTS[settings.context_a]
@@ -570,11 +700,19 @@ def prepare_b(case, start, raw, settings):
                 max_tokens, schema = settings.max_tokens_a, nli.ANSWER_SCHEMA_A_PARAGRAPHS
             else:
                 same_language = case["claim"].get("language") == case["reference"].get("language")
+                if taskb_context.needs_translation(reference_text, settings.context_b, same_language):
+                    # Session 12, step 3 (B-BM25, off): Apertus translates the claim first, in complete_b_translate
+                    return Prepared(case_id, raw, kind="B-translate", claim_text=claim_text,
+                                    ask=(case["reference"].get("language") or "", reference_text),
+                                    chat_args={"max_tokens": max_tokens, "json_schema": schema})
                 text = taskb_context.cut_text(reference_text, claim_text, settings.context_b, same_language)
                 raw["chars_sent"] = len(text)
                 messages = nli.build_messages_b(text, claim_text, settings.prompt_b)
         except Exception as e:  # e.g. no e5 files: the whole reference, as by default
             raw["context_b_error"] = f"{type(e).__name__}: {e}"
+            model = taskb_context.ranking_model(settings.context_b, same_language_b(case))
+            if model:  # session 12, step 2: later cases skip the model at once
+                rankers.failed(model, e)
             messages, max_tokens = None, settings.max_tokens_b
             schema = nli.ANSWER_SCHEMA_B if settings.schema_b else None
             raw["prompt_version"] = settings.prompt_b
@@ -602,8 +740,35 @@ def complete_b(p, start, settings):
     return response(p.case_id, label, result.input_tokens, result.output_tokens, start), status
 
 
+def same_language_b(case):
+    try:
+        return case["claim"].get("language") == case["reference"].get("language")
+    except (AttributeError, KeyError, TypeError):
+        return True
+
+
+def complete_b_translate(p, start, settings):
+    """Session 12, step 3 (B-BM25, off by default): a long reference in another language than the claim. Apertus
+    translates the claim into the reference's language (one call, its tokens count in the case's metrics); BM25 ranks
+    the paragraphs with that translation (with the claim itself if the call fails); the reading call then gets the
+    cut reference and the claim as it is."""
+    from src import ap_parse
+    language, reference_text = p.ask
+    translated, call = ap_parse.translate(p.claim_text, language)
+    tokens = p.raw.setdefault("ap_tokens", [0, 0])
+    tokens[0] += call.get("input_tokens", 0)
+    tokens[1] += call.get("output_tokens", 0)
+    p.raw.setdefault("ap_calls", []).append(call)
+    text = taskb_context.cut_text(reference_text, translated or p.claim_text, settings.context_b, False)
+    p.raw["chars_sent"] = len(text)
+    q = Prepared(p.case_id, p.raw, kind="B", claim_text=p.claim_text, chat_args=p.chat_args,
+                 messages=nli.build_messages_b(text, p.claim_text, settings.prompt_b))
+    return complete_b(q, start, settings)
+
+
 COMPLETE = {"B": complete_b, "A-pages": complete_a_pages, "A-paragraphs": complete_a_paragraphs,
-            "A-ask-part": complete_a_ask_part}
+            "A-ask-part": complete_a_ask_part, "B-translate": complete_b_translate, "A-translate": complete_a_translate,
+            "A-ask-structure": complete_a_ask_structure}
 
 
 def prepare(case, data_dir=".", settings=None):
@@ -619,6 +784,9 @@ def _prepare(case, data_dir=".", settings=None):
     case_id = case["id"]
     task = task_of(case)
     raw = {"id": case_id, "task": task}
+    rankers.ACTIVE["name"], rankers.CASE["guard"] = settings.ranker, None
+    if settings.ranker != "e5":
+        raw["ranker"] = settings.ranker
     if task is None:
         prepared = finished(case_id, raw, response(case_id, FALLBACK_LABEL, start=start),
                             "invalid request (needs exactly one of booklet/reference)")
@@ -626,6 +794,8 @@ def _prepare(case, data_dir=".", settings=None):
         prepared = prepare_a(case, data_dir, start, raw, settings)
     else:
         prepared = prepare_b(case, start, raw, settings)
+    if rankers.CASE["guard"]:  # session 12, step 2: this case went on without its embedding model
+        prepared.raw["ranker_guard"] = rankers.CASE["guard"]
     prepared.seconds = time.perf_counter() - start
     return prepared
 
@@ -662,7 +832,7 @@ def predict(case, data_dir=".", settings=None):
 def needs_local_model(case, settings):
     """True for a case whose preparation loads or runs the embedding model before its request: a task B case
     whose reference is cut (B-cut or B-para, long references only). src/pipeline.py prepares the others first."""
-    if task_of(case) != "B" or settings.context_b in ("full", "cut4-l"):  # session 11: selector L needs no model
+    if task_of(case) != "B" or settings.context_b in ("full", "cut4-l", "cut4-bm25"):  # L and BM25 need no model
         return False
     try:
         if settings.context_b == "cut4-h" and case["claim"].get("language") == case["reference"].get("language"):
@@ -764,6 +934,8 @@ def main():
                         help="development only: Apertus reads the contents pages (session 11, step 3)")
     parser.add_argument("--fallback-a", default=defaults.fallback_a, choices=FALLBACK_LEVELS,
                         help="development only: what a case section-route cannot route gets (session 11, step 2)")
+    parser.add_argument("--ranker", default=defaults.ranker, choices=rankers.NAMES,
+                        help="development only: the local ranker of long parts, the fallback and cut4-r (session 12)")
     parser.add_argument("--workers", type=int, default=pipeline.default_workers(),
                         help="background processes that prepare cases while a request is in flight (session 10; "
                              "default 2, or 1 on a single CPU; each owns whole booklets); 0 runs every case in "
@@ -779,11 +951,24 @@ def main():
                         second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
                         short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
                         second_look_cited_a=args.second_look_cited_a, fallback_a=args.fallback_a,
-                        ap_part_a=args.ap_part_a, ap_structure_a=args.ap_structure_a)
+                        ap_part_a=args.ap_part_a, ap_structure_a=args.ap_structure_a, ranker=args.ranker)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)
     logging.getLogger("pypdf").setLevel(logging.ERROR)  # font warnings are noise here
+    # Session 12, step 2: the memory guard. Below the memory a model needs, or without its files, the whole run does
+    # without that model (src/rankers.py), so that no case is lost to an out-of-memory kill.
+    rankers.reset()
+    for model, reason in rankers.run_guard(pipeline.cgroup_memory()).items():
+        log.warning("Memory guard: %s; this run does without %s", reason, model)
+    try:
+        return _run(args, settings)
+    finally:
+        rankers.reset()  # nothing of this run's state stays in the process (tests run several in one process)
+
+
+def _run(args, settings):
+    """main() after the arguments: read the cases, answer each, write the responses."""
 
     env.load_env_file()
     lines = read_lines(args.input)
@@ -810,7 +995,8 @@ def main():
         todo.append((number, case))
 
     data_dir = args.input.resolve().parent
-    counts = {"written": 0, "routing_failed": 0}  # routing_failed: routing raised, the case ran as the fallback
+    counts = {"written": 0, "routing_failed": 0, "no_model": 0}  # routing_failed: routing raised, the case ran as the
+    # fallback; no_model (session 12, step 2): the case was prepared without an embedding model (memory guard)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.raw:
         args.raw.parent.mkdir(parents=True, exist_ok=True)
@@ -820,6 +1006,7 @@ def main():
             if status != "ok":
                 failures[status] += 1
             counts["routing_failed"] += "route_error" in raw
+            counts["no_model"] += "ranker_guard" in raw
             log.info("[%d/%d] %s -> %s%s", number, len(lines), case["id"], resp["label_name"],
                      "" if status == "ok" else f" (fallback: {status})")
             write_line(out, resp)
@@ -852,6 +1039,8 @@ def main():
     log.info("Wrote %d responses to %s", written, args.output)
     if routing_failed:
         log.warning("Routing failed and the case ran as the fallback variant: %d", routing_failed)
+    if counts["no_model"]:
+        log.warning("Cases prepared without an embedding model (memory guard): %d", counts["no_model"])
     if failures:
         log.warning("Fallback or skipped cases: %s", ", ".join(f"{k}: {v}" for k, v in failures.most_common()))
     else:

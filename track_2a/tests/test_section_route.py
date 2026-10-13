@@ -84,14 +84,14 @@ class Cli(unittest.TestCase):
 
     def test_unrouted_case_runs_as_embed_e5_small(self):
         out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}',
-                                      ["--ap-part-a", "off"])
+                                      ["--ap-part-a", "off", "--fallback-a", "embed"])
         self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])  # embed-e5-small's prompt
         self.assertEqual(out["evidence"][0]["page"], 14)
 
     def test_unrouted_case_asks_apertus_first(self):
         """Session 11 (default): the rules name no part, so Apertus is asked; "none" leaves it to embed-e5-small."""
         out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"part": "none", "statement": "x"}',
-                                      more_answers=['{"pages": [14], "label": 0}'])
+                                      ["--fallback-a", "embed"], more_answers=['{"pages": [14], "label": 0}'])
         self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])
         self.assertEqual(out["evidence"][0]["page"], 14)
 
@@ -121,7 +121,8 @@ class RoutingErrors(unittest.TestCase):
                      mock.patch.object(cli.llm, "chat", fake_chat(['{"pages": [14], "label": 2}'], seen)), \
                      mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]), \
                      self.assertLogs("cli", level="WARNING") as logs:
-                    resp, status, raw = cli.predict(case(COUNCIL_CLAIM), ".", cli.Settings(context_a="section-route"))
+                    resp, status, raw = cli.predict(case(COUNCIL_CLAIM), ".", cli.Settings(context_a="section-route",
+                                                                                          fallback_a="embed"))
                 self.assertEqual(len(seen), 1)  # the model was called: no neutral answer without a call
                 self.assertIn("=== PAGE 14 ===\nchunk", seen[0][1]["content"])  # embed-e5-small's prompt
                 self.assertEqual((resp["label"], status, raw["fallback"]), (2, "ok", "embed-e5-small"))

@@ -118,6 +118,7 @@ class NeverDropACase(unittest.TestCase):
                      mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
                      mock.patch.object(cli.Path, "is_file", return_value=True), \
                      mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]), \
+                     mock.patch.object(embed_e5_small, "chunk_scores", return_value=([(1, "page one")], [1.0])), \
                      mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()):
                     resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a=mode))
                 self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)  # the default for every mode
@@ -141,12 +142,15 @@ class NeverDropACase(unittest.TestCase):
         self.assertEqual(out[0]["evidence"], [{"page": 2, "text": "details on the tax"}])  # whole page text
 
     def test_context_selection_failure_falls_back(self):
+        """Session 12, step 2: without its embedding model the case still gets a model call, on chunks chosen by
+        word overlap (BM25), instead of a neutral answer without a call."""
         with mock.patch.object(cli.parse, "load_pages", return_value={1: "text"}), \
              mock.patch.object(cli.Path, "is_file", return_value=True), \
              mock.patch.object(embed_e5_small, "select_chunks", side_effect=FileNotFoundError("model.onnx")):
-            code, out = run_cli([json.dumps(a_case("a"))], [], ["--context-a", "embed-e5-small"])
+            code, out = run_cli([json.dumps(a_case("a"))], ['{"pages": [1], "label": 0}'],
+                                ["--context-a", "embed-e5-small"])
         self.assertEqual(code, 0)
-        self.assertEqual((out[0]["label"], out[0]["evidence"]), (1, []))
+        self.assertEqual((out[0]["label"], out[0]["evidence"]), (0, [{"page": 1, "text": "text"}]))
 
     def test_input_equals_output_is_refused(self):
         with mock.patch("sys.argv", ["cli", "--input", "same.jsonl", "--output", "same.jsonl"]):

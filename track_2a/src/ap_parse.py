@@ -154,3 +154,38 @@ def claim(claim_text, language, max_tokens=200):
         call["parse_reason"] = f"unknown part {part!r}"
         return None, None, call
     return (None if part == "none" else part), (statement or None), call
+
+
+# ---------------------------------------------------------------- session 12, step 3: Apertus translates a claim
+
+TRANSLATE_VERSION = "AP-translate-v1"
+LANGUAGE_NAMES = {"de": "German", "fr": "French", "it": "Italian"}
+TRANSLATE_PROMPT = """You translate a CLAIM about a Swiss federal vote into the language named in TARGET (German, French or Italian). Translate faithfully: keep every name, number, date and amount, add nothing and leave nothing out. Answer with one JSON object and nothing else, for example: {"translation": "..."}"""
+TRANSLATE_SCHEMA = {"type": "object", "properties": {"translation": {"type": "string"}}, "required": ["translation"],
+                    "additionalProperties": False}
+
+
+def translate_messages(claim_text, target_language):
+    return [{"role": "system", "content": TRANSLATE_PROMPT},
+            {"role": "user", "content": f"TARGET: {LANGUAGE_NAMES.get(target_language, target_language)}\n\n"
+                                        f"CLAIM:\n{claim_text}"}]
+
+
+def translate(claim_text, target_language, max_tokens=256):
+    """(the claim in the target language, or None, call record) from one call. Apertus's text is used only to choose
+    which paragraphs the reading call shows; the reading call itself gets the claim as it is."""
+    call = {"version": TRANSLATE_VERSION, "input_tokens": 0, "output_tokens": 0}
+    try:
+        result = llm.chat(translate_messages(claim_text, target_language), max_tokens=max_tokens,
+                          json_schema=TRANSLATE_SCHEMA)
+    except llm.LLMError as e:
+        call["error"] = str(e)[:200]
+        return None, call
+    call.update(input_tokens=result.input_tokens, output_tokens=result.output_tokens, answer=result.text,
+                endpoint=result.endpoint)
+    try:
+        text = str(json.loads(result.text)["translation"]).strip()
+    except (ValueError, KeyError, TypeError):
+        call["parse_reason"] = "unreadable translation answer"
+        return None, call
+    return (text or None), call

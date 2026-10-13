@@ -1,0 +1,40 @@
+{
+ "person": "kaan",
+ "date": "2026-10-12",
+ "start_utc": "16:23",
+ "kind": "model run",
+ "code": "kaan/robustness-experiments working tree (parent 42b2a3c)",
+ "variant": "vote-section-hybrid",
+ "task": "A",
+ "cases": "dev, all 300 task A cases",
+ "format": "official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "setup": "--context-a vote-section-hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces)",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_kaan_retrievers_devA300/embed-e5-small",
+  "2026-10-12_kaan_retrievers_devA300/bm25",
+  "2026-10-12_kaan_retrievers_devA300/bm25-mt",
+  "2026-10-12_kaan_retrievers_devA300/hybrid"
+ ],
+ "results": {
+  "macro_f1": 0.92,
+  "f1": {
+   "entailment": 0.966,
+   "neutral": 0.899,
+   "contradiction": 0.893
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 2362,
+  "mean_time_ms": 2281,
+  "p95_time_ms": 3920,
+  "evidence": {
+   "score": 0.741,
+   "found": 149,
+   "cases": 201
+  }
+ }
+}

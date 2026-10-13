@@ -1,0 +1,350 @@
+{
+ "arms": {
+  "base": {
+   "tables": {
+    "A": {
+     "cases": 300,
+     "right": 295,
+     "macro_f1": 0.9833,
+     "f1": [
+      0.9804,
+      0.995,
+      0.9746
+     ],
+     "evidence": 0.9851,
+     "input_tokens": 1238,
+     "output_tokens": 14.5,
+     "time_ms": 1320,
+     "model_ms": 1281,
+     "local_ms": 39,
+     "calls": 1.0
+    },
+    "B": {
+     "cases": 300,
+     "right": 290,
+     "macro_f1": 0.9666,
+     "f1": [
+      0.9854,
+      0.9634,
+      0.951
+     ],
+     "input_tokens": 1231,
+     "output_tokens": 8.4,
+     "time_ms": 936,
+     "model_ms": 934,
+     "local_ms": 2,
+     "calls": 1.0
+    }
+   },
+   "offline": {
+    "A": {},
+    "B": {}
+   },
+   "ref_score": {
+    "A": 0.9887,
+    "B": 0.9766,
+    "total": 0.9839
+   }
+  },
+  "decompose": {
+   "tables": {
+    "A": {
+     "cases": 300,
+     "right": 289,
+     "macro_f1": 0.9632,
+     "f1": [
+      0.9495,
+      0.9754,
+      0.9648
+     ],
+     "evidence": 0.9652,
+     "input_tokens": 1861,
+     "output_tokens": 44.5,
+     "time_ms": 3206,
+     "model_ms": 3180,
+     "local_ms": 25,
+     "calls": 1.72
+    },
+    "B": {
+     "cases": 300,
+     "right": 281,
+     "macro_f1": 0.937,
+     "f1": [
+      0.9436,
+      0.9436,
+      0.9238
+     ],
+     "input_tokens": 1842,
+     "output_tokens": 36.5,
+     "time_ms": 2257,
+     "model_ms": 2207,
+     "local_ms": 51,
+     "calls": 1.73
+    }
+   },
+   "offline": {
+    "A": {
+     "strategy": "decompose",
+     "rules": {
+      "parts combined (ran)": 0.9631,
+      "majority of parts": 0.9799
+     },
+     "stats": {
+      "3 parts": 22,
+      "split and right": 64,
+      "not split": 227,
+      "2 parts": 27,
+      "split and wrong": 8,
+      "4 parts": 23
+     }
+    },
+    "B": {
+     "strategy": "decompose",
+     "rules": {
+      "parts combined (ran)": 0.937,
+      "majority of parts": 0.96
+     },
+     "stats": {
+      "3 parts": 23,
+      "split and right": 63,
+      "not split": 227,
+      "2 parts": 27,
+      "4 parts": 23,
+      "split and wrong": 10
+     }
+    }
+   },
+   "flips": {
+    "A": {
+     "wrong_to_right": [],
+     "right_to_wrong": [
+      "v1.1-row-109-A",
+      "v1.1-row-188-A",
+      "v1.1-row-237-A",
+      "v1.1-row-345-A",
+      "v1.1-row-76-A",
+      "v1.1-row-94-A"
+     ]
+    },
+    "B": {
+     "wrong_to_right": [],
+     "right_to_wrong": [
+      "v1.1-row-188-B",
+      "v1.1-row-232-B",
+      "v1.1-row-237-B",
+      "v1.1-row-260-B",
+      "v1.1-row-269-B",
+      "v1.1-row-76-B",
+      "v1.1-row-84-B",
+      "v1.1-row-85-B",
+      "v1.1-row-94-B"
+     ]
+    }
+   },
+   "ref_score": {
+    "A": 0.9232,
+    "B": 0.7607,
+    "total": 0.8582
+   }
+  },
+  "negation": {
+   "tables": {
+    "A": {
+     "cases": 300,
+     "right": 296,
+     "macro_f1": 0.9867,
+     "f1": [
+      0.9804,
+      1.0,
+      0.9798
+     ],
+     "evidence": 0.99,
+     "input_tokens": 2642,
+     "output_tokens": 71.2,
+     "time_ms": 6037,
+     "model_ms": 5980,
+     "local_ms": 58,
+     "calls": 2.99
+    },
+    "B": {
+     "cases": 300,
+     "right": 288,
+     "macro_f1": 0.9597,
+     "f1": [
+      0.9758,
+      0.9524,
+      0.951
+     ],
+     "input_tokens": 2636,
+     "output_tokens": 60.0,
+     "time_ms": 3424,
+     "model_ms": 3418,
+     "local_ms": 6,
+     "calls": 3.0
+    }
+   },
+   "offline": {
+    "A": {
+     "strategy": "negation",
+     "rules": {
+      "neutral-replaced (ran)": 0.9867,
+      "base only": 0.9832,
+      "consistent-else-neutral": 0.9322
+     },
+     "stats": {
+      "consistent and base right": 279,
+      "pair base=2 negated=0": 80,
+      "inconsistent and base wrong": 4,
+      "pair base=1 negated=0": 1,
+      "inconsistent and base right": 15,
+      "pair base=2 negated=2": 17,
+      "pair base=0 negated=2": 101,
+      "consistent and base wrong": 1,
+      "pair base=0 negated=0": 1,
+      "pair base=1 negated=1": 99
+     }
+    },
+    "B": {
+     "strategy": "negation",
+     "rules": {
+      "neutral-replaced (ran)": 0.9597,
+      "base only": 0.9666,
+      "consistent-else-neutral": 0.9464
+     },
+     "stats": {
+      "consistent and base right": 275,
+      "pair base=2 negated=0": 85,
+      "inconsistent and base right": 13,
+      "pair base=2 negated=2": 12,
+      "pair base=0 negated=2": 100,
+      "inconsistent and base wrong": 10,
+      "pair base=0 negated=0": 2,
+      "no negation": 2,
+      "pair base=2 negated=1": 7,
+      "pair base=1 negated=1": 90,
+      "pair base=1 negated=2": 2
+     }
+    }
+   },
+   "flips": {
+    "A": {
+     "wrong_to_right": [
+      "v1.1-row-1016-A"
+     ],
+     "right_to_wrong": []
+    },
+    "B": {
+     "wrong_to_right": [],
+     "right_to_wrong": [
+      "v1.1-row-515-B",
+      "v1.1-row-623-B"
+     ]
+    }
+   },
+   "ref_score": {
+    "A": 0.8615,
+    "B": 0.7907,
+    "total": 0.8332
+   }
+  },
+  "xlang": {
+   "tables": {
+    "A": {
+     "cases": 300,
+     "right": 294,
+     "macro_f1": 0.9799,
+     "f1": [
+      0.9804,
+      0.99,
+      0.9694
+     ],
+     "evidence": 0.9801,
+     "input_tokens": 2060,
+     "output_tokens": 24.5,
+     "time_ms": 4908,
+     "model_ms": 2703,
+     "local_ms": 2205,
+     "calls": 1.7
+    },
+    "B": {
+     "cases": 300,
+     "right": 291,
+     "macro_f1": 0.9699,
+     "f1": [
+      0.9854,
+      0.9688,
+      0.9557
+     ],
+     "input_tokens": 2106,
+     "output_tokens": 14.7,
+     "time_ms": 5081,
+     "model_ms": 3001,
+     "local_ms": 2080,
+     "calls": 1.76
+    }
+   },
+   "offline": {
+    "A": {
+     "strategy": "xlang",
+     "rules": {
+      "agree-else-tiebreak (ran)": 0.9798,
+      "agree-else-neutral": 0.9365,
+      "side S only": 0.9598,
+      "side C only": 0.9561
+     },
+     "stats": {
+      "strategy failed, answered as today (left out of the rules)": 1,
+      "sides agree": 185,
+      "agree and right": 182,
+      "one call (same language or no translation)": 100,
+      "agree and wrong": 3,
+      "sides disagree": 13,
+      "disagree and right": 13,
+      "mean MT ms (translated cases)": 3192
+     }
+    },
+    "B": {
+     "strategy": "xlang",
+     "rules": {
+      "agree-else-tiebreak (ran)": 0.9699,
+      "agree-else-neutral": 0.9146,
+      "side S only": 0.9535,
+      "side C only": 0.9265
+     },
+     "stats": {
+      "sides agree": 173,
+      "agree and right": 169,
+      "one call (same language or no translation)": 100,
+      "sides disagree": 27,
+      "disagree and right": 22,
+      "agree and wrong": 4,
+      "disagree and wrong": 5,
+      "mean MT ms (translated cases)": 3039
+     }
+    }
+   },
+   "flips": {
+    "A": {
+     "wrong_to_right": [],
+     "right_to_wrong": [
+      "v1.1-row-1468-A"
+     ]
+    },
+    "B": {
+     "wrong_to_right": [
+      "v1.1-row-580-B",
+      "v1.1-row-875-B"
+     ],
+     "right_to_wrong": [
+      "v1.1-row-946-B"
+     ]
+    }
+   },
+   "ref_score": {
+    "A": 0.7788,
+    "B": 0.7667,
+    "total": 0.774
+   }
+  }
+ }
+}

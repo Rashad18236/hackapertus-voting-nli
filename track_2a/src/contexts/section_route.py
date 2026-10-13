@@ -202,6 +202,10 @@ _title_vectors = {}  # SHA-256 of a booklet's vote titles -> their e5 vectors (s
 # vote that is not in the booklet at all can be placed too (649 of 5,220 names of other dates' votes reached 0.04);
 # in the dataset the vote always belongs to the booklet. Booklets with a single vote are never placed by meaning.
 VOTE_MARGIN = 0.04
+# Session 12: the same rule with model S (src/rankers.py); its cosines have another scale, so its margin is set by the
+# same test (scripts/vote_language_check.py --ranker S): its largest margin of a wrong pick is 0.4988 (264 swapped names of
+# dev and val booklets), so 0.50: 71 placed right, none wrong (e5 at 0.04: 182 right); the rest fall back.
+VOTE_MARGIN_S = 0.50
 
 
 def vote_by_meaning(parsed, vote):
@@ -211,7 +215,8 @@ def vote_by_meaning(parsed, vote):
         position, lead = vote_scores(parsed, vote)
     except Exception:
         return None
-    if position is None or lead < VOTE_MARGIN:
+    from src import rankers
+    if position is None or lead < (VOTE_MARGIN_S if rankers.uses_model(rankers.ACTIVE["name"]) == "static-s" else VOTE_MARGIN):
         return None
     return parsed.votes[position]
 
@@ -226,6 +231,14 @@ def vote_scores(parsed, vote):
     if len(parsed.votes) == 1:
         return 0, 0.0
     titles = [" ".join(v.title.split()) for v in parsed.votes]
+    from src import rankers
+    model = rankers.uses_model(rankers.effective(rankers.ACTIVE["name"]))  # session 12: S when the ranker uses it
+    if model == "static-s":
+        scores = rankers.model_scores(model, titles, " ".join(vote.split()))
+        order = sorted(range(len(titles)), key=lambda i: -scores[i])
+        return order[0], float(scores[order[0]] - scores[order[1]])
+    if rankers.ACTIVE["name"] in ("none", "BM25"):
+        return None, 0.0  # no embedding model: a vote name the title match cannot place is not placed by meaning
     key = hashlib.sha256("\n".join(titles).encode("utf-8")).hexdigest()
     vectors = memo.once(_title_vectors, key,
                         lambda: retrieval.embedder("e5-small").embed([f"passage: {t}" for t in titles]))
@@ -246,8 +259,18 @@ def similarities(paragraphs, claim_text):
 
 
 def most_similar(paragraphs, claim_text, top_k=TOP_K):
-    """The top_k paragraphs by cosine similarity to the claim (e5-small), in their original order."""
-    scores = similarities(paragraphs, claim_text)
+    """The top_k paragraphs by cosine similarity to the claim (e5-small), in their original order. Session 12: another
+    ranker when src/rankers.py's ACTIVE says so (model S, BM25, a fusion, or "none": the first top_k)."""
+    from src import rankers
+    name = rankers.effective(rankers.ACTIVE["name"])
+    if name != "e5":
+        keep = rankers.best_or_without(name, [display(t) for _, t in paragraphs], claim_text, top_k)
+        return [paragraphs[i] for i in keep]
+    try:
+        scores = similarities(paragraphs, claim_text)
+    except Exception as e:  # session 12, step 2: e5 cannot run here; the first top_k paragraphs
+        rankers.failed("e5-small", e)
+        return paragraphs[:top_k]
     best = sorted(range(len(paragraphs)), key=lambda i: -scores[i])[:top_k]
     return [paragraphs[i] for i in sorted(best)]
 

@@ -1,0 +1,32 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "15:19",
+ "kind": "offline check",
+ "code": "f41fcdb (src/ as in 828429c: the final defaults of session 12, the published image's code)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 600 cases (300 task A, 300 task B); val, all 580 task A cases",
+ "setup": "session 12 reference for the final defaults (memory guard, bm25-ap fallback with Apertus translation, AP-structure asked after the parser): the real CLI against the fake model; SHA-256 of every request body, of every parsing or translation call (ap_request_sha256) and every task A path; the final dev run's 600 answers, the final val task A run's 580 answers and their 3 translation answers replayed by request hash (built in two passes, scratchpad make_ref.sh, because a translation's answer shapes the reading request)",
+ "format": "official (starter's evaluate.py on the replayed predictions); no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model scripts/stub_llm.py, replay of saved answers)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Replay of the final code reproduces the saved answers of the final runs exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.977 / evidence 0.980, task B 0.987; val task A 0.961 / 0.960. Replaces the session 11 reference as the anchor of G1 and G2.",
+ "results": {
+  "requests_hashed": 1180,
+  "translation_calls_hashed": 3,
+  "task_a_paths": {
+   "route": 876,
+   "fallback:bm25-ap": 4
+  },
+  "replayed_answers": 1183,
+  "dev_A_macro_f1": 0.977,
+  "dev_A_evidence": 0.98,
+  "dev_B_macro_f1": 0.987,
+  "val_A_macro_f1": 0.961,
+  "val_A_evidence": 0.96
+ }
+}

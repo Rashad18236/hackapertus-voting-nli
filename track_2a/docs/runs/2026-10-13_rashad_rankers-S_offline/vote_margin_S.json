@@ -1,0 +1,47 @@
+{
+ "swapped_names_in_booklets_with_several_votes": 264,
+ "largest_margin_of_a_wrong_pick": 0.4988,
+ "by_margin": {
+  "0.00": {
+   "right": 254,
+   "wrong": 10
+  },
+  "0.02": {
+   "right": 248,
+   "wrong": 7
+  },
+  "0.04": {
+   "right": 241,
+   "wrong": 6
+  },
+  "0.06": {
+   "right": 230,
+   "wrong": 6
+  },
+  "0.08": {
+   "right": 221,
+   "wrong": 5
+  },
+  "0.10": {
+   "right": 211,
+   "wrong": 4
+  },
+  "0.20": {
+   "right": 169,
+   "wrong": 2
+  },
+  "0.30": {
+   "right": 130,
+   "wrong": 2
+  },
+  "0.40": {
+   "right": 97,
+   "wrong": 1
+  },
+  "0.50": {
+   "right": 71,
+   "wrong": 0
+  }
+ },
+ "note": "scripts/vote_language_check.py --ranker S; vote names themselves are not written here"
+}
