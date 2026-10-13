@@ -1,0 +1,73 @@
+{
+ "cases": 300,
+ "requests": 300,
+ "wall_s": 302.388,
+ "in_flight_s": 300.229,
+ "local_s": 2.16,
+ "local_per_case_s": 0.0072,
+ "to_first_request_s": 0.879,
+ "tail_s": 0.109,
+ "gaps_s": 1.171,
+ "gap_count": 299,
+ "gap_median_s": 0.0032,
+ "gap_p95_s": 0.0079,
+ "gap_max_s": 0.015,
+ "max_in_flight": 1,
+ "exit_code": 0,
+ "image": "ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677",
+ "image_id": "sha256:b101f52d4df6c370acfbe5a2dc3983bd4302da417c44f45121ac2be996c361f5",
+ "cases_file": "output/devB/cases.jsonl",
+ "delay_s": 1.0,
+ "cpus": "2",
+ "memory": "4g",
+ "cli_args": [
+  "--context-b",
+  "cut4-h"
+ ],
+ "src_mounted": true,
+ "responses": 300,
+ "unique_ids": 300,
+ "answer_kinds": {
+  "replay": 82,
+  "ok": 218
+ },
+ "replay_misses": 218,
+ "input_tokens_per_case": 100.0,
+ "output_tokens_per_case": 10.0,
+ "measured_at": "2026-10-12T23:49:06Z",
+ "peak_memory_mib": 1165,
+ "phases": [
+  {
+   "pid": 8,
+   "role": "lane",
+   "max_rss_mib": 1175.6,
+   "seconds": {
+    "prepare": 45.75,
+    "e5_load": 2.074,
+    "embed": 42.678
+   },
+   "counts": {
+    "prepare": 425,
+    "e5_load": 1,
+    "embed": 232
+   }
+  },
+  {
+   "pid": 7,
+   "role": "main",
+   "max_rss_mib": 52.7,
+   "seconds": {
+    "main_wait_no_case": 0.003
+   },
+   "counts": {
+    "main_wait_no_case": 1
+   }
+  }
+ ],
+ "phase_totals_s": {
+  "prepare": 45.75,
+  "e5_load": 2.074,
+  "embed": 42.678,
+  "main_wait_no_case": 0.003
+ }
+}

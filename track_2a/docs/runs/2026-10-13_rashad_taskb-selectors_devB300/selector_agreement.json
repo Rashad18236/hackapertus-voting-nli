@@ -1,0 +1,33 @@
+{
+ "cases_cut": 218,
+ "cut4": {
+  "mean_overlap_with_E": 3.812,
+  "all_4_equal": 1.0,
+  "cpu_seconds_per_cut_case": 1.3858,
+  "cpu_seconds_total": 302.12
+ },
+ "cut4-q": {
+  "mean_overlap_with_E": 3.362,
+  "all_4_equal": 0.601,
+  "cpu_seconds_per_cut_case": 1.0986,
+  "cpu_seconds_total": 239.49
+ },
+ "cut4-t": {
+  "mean_overlap_with_E": 3.06,
+  "all_4_equal": 0.417,
+  "cpu_seconds_per_cut_case": 0.3088,
+  "cpu_seconds_total": 67.32
+ },
+ "cut4-l": {
+  "mean_overlap_with_E": 2.032,
+  "all_4_equal": 0.225,
+  "cpu_seconds_per_cut_case": 0.0028,
+  "cpu_seconds_total": 0.62
+ },
+ "cut4-h": {
+  "mean_overlap_with_E": 2.775,
+  "all_4_equal": 0.367,
+  "cpu_seconds_per_cut_case": 0.2382,
+  "cpu_seconds_total": 51.93
+ }
+}
