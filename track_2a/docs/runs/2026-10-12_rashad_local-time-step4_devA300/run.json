@@ -2,7 +2,7 @@
  "person": "rashad",
  "date": "2026-10-12",
  "start_utc": "21:31",
- "kind": "local time check",
+ "kind": "offline check",
  "code": "f0c8ca2 working tree copies, one per variant (constants switched); image sha-421d8c804677 with src mounted",
  "task": "A",
  "variant": "section-route",

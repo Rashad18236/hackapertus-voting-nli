@@ -151,6 +151,7 @@ class Prepared:
     shown: dict = None           # A-pages: {page: text} of the pages sent
     routed: tuple = None         # A-paragraphs: (part, [(page, verbatim text)]) as sent
     seconds: float = 0.0
+    ask: tuple = None            # A-ask-part (session 11): (language, {part: routed}, fallback Prepared)
 
 
 def finished(case_id, raw, resp, status):
@@ -182,7 +183,7 @@ def prepare_a(case, data_dir, start, raw, settings):
     routed = messages = None
     found = None
     try:
-        if ap_on(settings):  # session 11, step 3 (off by default): Apertus in the parsing roles
+        if ap_in_prepare(settings):  # session 11, step 3 (off by default): Apertus in the parsing roles
             routed, found = ap_route(pages, vote, claim_text, case["booklet"].get("language"), raw, settings)
         else:
             routed = context.route(pages, vote, claim_text, settings.context_a)
@@ -205,7 +206,21 @@ def prepare_a(case, data_dir, start, raw, settings):
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
                         routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
                                                   "json_schema": paragraph_schema(settings)})
-    wide = wide_fallback(pages, vote, claim_text, raw, settings, found if ap_on(settings) else None)
+    if ask_part_after_rules(settings) and "route_error" not in raw:
+        candidates = part_candidates(pages, vote, claim_text, raw, settings)
+        if candidates:
+            fallback_raw = {}
+            fallback = fallback_prepared(case, pages, vote, claim_text, start, fallback_raw, settings, found)
+            return Prepared(case_id, raw, kind="A-ask-part", vote=vote, claim_text=claim_text,
+                            ask=(case["booklet"].get("language") or "", candidates, fallback))
+    return fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found)
+
+
+def fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found=None):
+    """A case section-route could not route: a fallback level if one is set (step 2, off), else the variant's
+    fallback (embed-e5-small)."""
+    case_id = case["id"]
+    wide = wide_fallback(pages, vote, claim_text, raw, settings, found if ap_in_prepare(settings) else None)
     if wide is not None:
         return wide_prepared(case_id, raw, wide, pages, vote, claim_text, settings)
     try:
@@ -233,6 +248,73 @@ AP_STRUCTURE_MODES = ("off", "after-parser", "all")
 
 def ap_on(settings):
     return settings.ap_part_a != "off" or settings.ap_structure_a != "off"
+
+
+def ap_in_prepare(settings):
+    """Apertus called while a case is prepared (ap_route; the sequential path): AP-structure, or AP-part for every
+    claim. AP-part after the rules alone is asked when the case is completed (ask_part_after_rules)."""
+    return settings.ap_structure_a != "off" or settings.ap_part_a == "all"
+
+
+def ask_part_after_rules(settings):
+    """Session 11, step 3: AP-part after the rules, without AP-structure. The worker process prepares, for a claim
+    whose opening the rules do not know, every valid part of its vote and the usual fallback; the main process then
+    asks Apertus which part the opening names (one request, src/ap_parse.claim) and sends that part's request."""
+    return (settings.ap_part_a == "after-rules" and settings.ap_structure_a == "off"
+            and settings.context_a == "section-route")
+
+
+def part_candidates(pages, vote, claim_text, raw, settings):
+    """{part: routed} for every part of the case's vote that passed the parser's checks, when the rules name no
+    part and the vote is found; {} otherwise (then nothing is asked). An error leaves the case to the fallback."""
+    from src import ap_parse, claim_router
+    try:
+        if claim_router.route(claim_text) is not None:
+            return {}
+        variant = context.VARIANTS["section-route"]
+        found = variant.find(variant.parsed_booklet(pages), vote)
+        if found is None:
+            return {}
+        candidates = {}
+        for part in ap_parse.PARTS:
+            if part in found.valid:
+                routed = variant.route_part(pages, found, part, claim_text)
+                if routed is not None:
+                    candidates[part] = routed
+        return candidates
+    except Exception as e:
+        raw["ask_part_error"] = f"{type(e).__name__}: {e}"
+        log.warning("%s: preparing the parts failed (%s); running the fallback", raw.get("id"), raw["ask_part_error"])
+        return {}
+
+
+def complete_a_ask_part(p, start, settings):
+    """A case whose opening the rules do not know: Apertus names the part (one call, its tokens count in the
+    case's metrics); the case is then completed as routed to that part, or as its fallback when Apertus names no
+    part or one the parser did not validate (or the call fails)."""
+    from src import ap_parse
+    language, candidates, fallback = p.ask
+    part, statement, call = ap_parse.claim(p.claim_text, language)
+    tokens = p.raw.setdefault("ap_tokens", [0, 0])
+    tokens[0] += call.get("input_tokens", 0)
+    tokens[1] += call.get("output_tokens", 0)
+    p.raw.setdefault("ap_calls", []).append(call)
+    p.raw["ap_part"] = {"rules": None, "apertus": part, "statement": statement}
+    if part in candidates:
+        routed = candidates[part]
+        _, paragraphs = routed
+        p.raw["prompt_version"], p.raw["route"] = paragraph_prompt_version(settings), part
+        p.raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
+        p.raw["context_pages"] = sorted({page for page, _ in paragraphs})
+        q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
+                     messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
+                     chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
+    else:
+        p.raw.update(fallback.raw)
+        q = Prepared(**{**fallback.__dict__, "raw": p.raw})
+    if q.kind == "done":
+        return q.done
+    return COMPLETE[q.kind](q, start, settings)
 
 
 def ap_route(pages, vote, claim_text, language, raw, settings):
@@ -520,7 +602,8 @@ def complete_b(p, start, settings):
     return response(p.case_id, label, result.input_tokens, result.output_tokens, start), status
 
 
-COMPLETE = {"B": complete_b, "A-pages": complete_a_pages, "A-paragraphs": complete_a_paragraphs}
+COMPLETE = {"B": complete_b, "A-pages": complete_a_pages, "A-paragraphs": complete_a_paragraphs,
+            "A-ask-part": complete_a_ask_part}
 
 
 def prepare(case, data_dir=".", settings=None):
@@ -756,7 +839,7 @@ def main():
         sequential = guarded(lambda case: predict(case, data_dir, settings))
         # Session 11, step 3: Apertus's parsing calls are made while a case is prepared, so with them on every case
         # is prepared and completed in turn (requests stay one at a time).
-        if args.workers == 0 or ap_on(settings):  # the sequential path: each case prepared and completed in turn
+        if args.workers == 0 or ap_in_prepare(settings):  # the sequential path: each case prepared and completed in turn
             for number, case in todo:
                 emit(number, case, sequential(case))
         else:

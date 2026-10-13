@@ -122,3 +122,58 @@ class ApRoute(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AskPartAfterRules(unittest.TestCase):
+    """Session 11, step 3: AP-part after the rules on the worker-process path (asked in complete())."""
+
+    settings = cli.Settings(ap_part_a="after-rules")
+
+    def test_the_mode_keeps_the_worker_processes(self):
+        self.assertTrue(cli.ask_part_after_rules(self.settings))
+        self.assertFalse(cli.ap_in_prepare(self.settings))
+        self.assertTrue(cli.ap_in_prepare(cli.Settings(ap_part_a="all")))
+        self.assertTrue(cli.ap_in_prepare(cli.Settings(ap_part_a="after-rules", ap_structure_a="after-parser")))
+
+    def test_candidates_only_when_the_rules_name_no_part(self):
+        raw = {}
+        candidates = cli.part_candidates(booklet_pages(), VOTE, REWORDED, raw, self.settings)
+        self.assertIn("council", candidates)
+        self.assertEqual(candidates["council"][0], "council")
+        self.assertEqual(cli.part_candidates(booklet_pages(), VOTE, "Der Bundesrat meint, x.", {}, self.settings), {})
+        self.assertEqual(cli.part_candidates(booklet_pages(), "Eine Vorlage, die es nicht gibt", REWORDED, {},
+                                             self.settings), {})
+
+    def ask(self, answers):
+        candidates = cli.part_candidates(booklet_pages(), VOTE, REWORDED, {}, self.settings)
+        fallback = cli.finished("a", {"fallback": "embed-e5-small"}, cli.response("a", 1), "fallback")
+        p = cli.Prepared("a", {"id": "a"}, kind="A-ask-part", vote=VOTE, claim_text=REWORDED,
+                         ask=("de", candidates, fallback))
+        with mock.patch.object(llm, "chat", side_effect=[result(a) for a in answers]) as chat:
+            resp, status, raw = cli.complete(p, self.settings)
+        return resp, status, raw, chat
+
+    def test_apertus_names_a_valid_part(self):
+        resp, status, raw, chat = self.ask([json.dumps({"part": "council", "statement": "s"}),
+                                            json.dumps({"paragraphs": [1], "label": 0})])
+        self.assertEqual(chat.call_count, 2)
+        self.assertIn("Federal Council", chat.call_args_list[1][0][0][1]["content"])  # the council's PART line
+        self.assertEqual((raw["route"], raw["ap_part"]["apertus"], resp["label"]), ("council", "council", 0))
+        self.assertEqual((resp["metrics"]["input_tokens"], resp["metrics"]["output_tokens"]), (200, 40))
+        self.assertTrue(resp["evidence"])
+
+    def test_none_goes_to_the_fallback_with_the_call_counted(self):
+        resp, status, raw, chat = self.ask([json.dumps({"part": "none", "statement": "s"})])
+        self.assertEqual(chat.call_count, 1)
+        self.assertEqual((status, raw["fallback"], resp["label"]), ("fallback", "embed-e5-small", 1))
+        self.assertEqual(resp["metrics"]["input_tokens"], 100)
+
+    def test_a_failed_call_goes_to_the_fallback(self):
+        candidates = {"council": ("council", [(14, "x")])}
+        fallback = cli.finished("a", {}, cli.response("a", 1), "fallback")
+        p = cli.Prepared("a", {"id": "a"}, kind="A-ask-part", vote=VOTE, claim_text=REWORDED,
+                         ask=("de", candidates, fallback))
+        with mock.patch.object(llm, "chat", side_effect=llm.LLMError("down")):
+            resp, status, raw = cli.complete(p, self.settings)
+        self.assertEqual((status, resp["label"]), ("fallback", 1))
+        self.assertIn("down", raw["ap_calls"][0]["error"])
