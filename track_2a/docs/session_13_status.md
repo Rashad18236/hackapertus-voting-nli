@@ -42,11 +42,24 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   runs on val task A only (decisions file). `scripts/prompt_snapshot.py` replays A6's second look (for G1/G2 if A6 is
   adopted).
 
+- (21:38) Step 1 dev run done (`docs/runs/2026-10-13_rashad_prompts-A_devA300-ontopic46`, one backend): dev Macro-F1
+  today 0.983, A1 0.902, A2 0.973, A3 0.980, A4 0.964, A5 0.983, today+A6 0.987; on-topic neutral 32 / 13 / 27 / 19 / 28
+  / 25 / 30 of 46. **No arm passes its dev conditions** (A5 and A6 fail (g), the others (b), (d) or (e)).
+- (21:39) Offline error typing (`docs/runs/2026-10-13_rashad_error-types_valAB`, 31 calls): task A reading errors
+  direction/negation 6, scope 5, number/date 2; task B number/date 6, other ballot/topic 6, scope 4, direction 1, other 1.
+- (21:40) Step 1 val run started (`docs/runs/2026-10-13_rashad_prompts-A_valA580`: today, A5, A3, today+A6), for the
+  report only (which of the 15 val errors each arm fixes).
+
+- (22:34) Step 1 val run done (report only): today 0.959, A5 0.971, A3 0.970, today+A6 0.973 (9 fixes, 1 break); of
+  session 12's 15 val errors answered neutral they fix 7, 9 and 8. **Step 1 adopts nothing** (dev conditions).
+- (22:35) Step 2 format check (`docs/runs/2026-10-13_rashad_format-check-B_devB5`): **B1 void** (one answer cut at
+  `passage_ballot`'s 80 characters, then whitespace until the budget ran out: unreadable); today, B2, B3, B4 readable.
+- (22:35) Step 2 dev run started (`docs/runs/2026-10-13_rashad_prompts-B_devB300`: today, B2, B3, B4).
+
 ## Running
 
-- Step 1 dev run (until about 21:42); local time, today against `--ranker S` (step 6), three alternating rounds on
-  CPUs 2–3.
+- Step 2 dev run (until about 23:20); val local time for step 6 (today and S, task A; today, task B) on CPUs 2–3.
 
 ## Next
 
-- Step 1 dev analysis, val run; step 2 format check and dev run.
+- Step 2 val run; step 6.

@@ -1,0 +1,11 @@
+300 cases, 0 booklets parsed; arms: ['today', 'B2-unrelated', 'B3-title', 'B4-claim-first']
+[1/300] v1.1-row-2-B | today: entailment | B2-unrelated: entailment | B4-claim-first: entailment | B3-title: entailment
+[2/300] v1.1-row-4-B | B2-unrelated: entailment | B3-title: entailment | today: entailment | B4-claim-first: entailment
+[3/300] v1.1-row-5-B | B3-title: neutral | B4-claim-first: entailment | B2-unrelated: entailment | today: entailment
+[4/300] v1.1-row-9-B | B4-claim-first: entailment | today: entailment | B3-title: entailment | B2-unrelated: entailment
+[5/300] v1.1-row-18-B | today: entailment | B2-unrelated: entailment | B4-claim-first: entailment | B3-title: entailment
+[6/300] v1.1-row-21-B | B2-unrelated: entailment | B3-title: entailment | today: entailment | B4-claim-first: entailment
+[7/300] v1.1-row-22-B | B3-title: entailment | B4-claim-first: entailment | B2-unrelated: entailment | today: entailment
+[8/300] v1.1-row-26-B | B4-claim-first: entailment | today: entailment | B3-title: entailment | B2-unrelated: entailment
+[9/300] v1.1-row-27-B | today: entailment | B2-unrelated: entailment | B4-claim-first: entailment | B3-title: entailment
+[10/300] v1.1-row-31-B | B2-unrelated: entailment | B3-title: entailment | today: entailment | B4-claim-first: entailment

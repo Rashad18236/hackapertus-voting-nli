@@ -1,0 +1,10 @@
+{"id": "v1.1-row-2-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 731, "output_tokens": 42, "inference_time_ms": 491}}
+{"id": "v1.1-row-4-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1028, "output_tokens": 42, "inference_time_ms": 561}}
+{"id": "v1.1-row-5-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 888, "output_tokens": 43, "inference_time_ms": 2727}}
+{"id": "v1.1-row-9-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 654, "output_tokens": 48, "inference_time_ms": 2878}}
+{"id": "v1.1-row-18-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1081, "output_tokens": 39, "inference_time_ms": 2302}}
+{"id": "v1.1-row-21-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1557, "output_tokens": 51, "inference_time_ms": 3002}}
+{"id": "v1.1-row-22-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 600, "output_tokens": 40, "inference_time_ms": 2317}}
+{"id": "v1.1-row-26-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 592, "output_tokens": 26, "inference_time_ms": 1782}}
+{"id": "v1.1-row-27-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 856, "output_tokens": 38, "inference_time_ms": 2377}}
+{"id": "v1.1-row-31-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 805, "output_tokens": 42, "inference_time_ms": 2309}}

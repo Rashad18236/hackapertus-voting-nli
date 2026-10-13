@@ -1,0 +1,258 @@
+{
+ "run": "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-13_rashad_prompts-A_valA580",
+ "task": "A",
+ "expected": "data/val/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 580,
+   "macro_f1": 0.9589,
+   "f1": {
+    "entailment": 0.9738,
+    "neutral": 0.9572,
+    "contradiction": 0.9455
+   },
+   "evidence": {
+    "score": 0.9601,
+    "found": 385,
+    "cases": 401
+   },
+   "input_tokens": 1210.7,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 14
+   },
+   "focus": {
+    "session_12": 15,
+    "fixed": [],
+    "still_wrong": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1053-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1309-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A",
+     "v1.1-row-235-A",
+     "v1.1-row-341-A"
+    ],
+    "new": [
+     "v1.1-row-1162-A"
+    ]
+   }
+  },
+  "A5-words": {
+   "cases": 580,
+   "macro_f1": 0.9712,
+   "f1": {
+    "entailment": 0.9714,
+    "neutral": 0.9834,
+    "contradiction": 0.9588
+   },
+   "evidence": {
+    "score": 0.9776,
+    "found": 392,
+    "cases": 401
+   },
+   "input_tokens": 1221.6,
+   "output_tokens": 16.4,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 5
+   },
+   "fixes": 10,
+   "breaks": 3,
+   "sign_test_p": 0.0461,
+   "sign_test_p_two_sided": 0.0923,
+   "fix_ids": [
+    "v1.1-row-17-A",
+    "v1.1-row-341-A",
+    "v1.1-row-1053-A",
+    "v1.1-row-1162-A",
+    "v1.1-row-1174-A",
+    "v1.1-row-1210-A",
+    "v1.1-row-1226-A",
+    "v1.1-row-1318-A",
+    "v1.1-row-1404-A",
+    "v1.1-row-1467-A"
+   ],
+   "break_ids": [
+    "v1.1-row-13-A",
+    "v1.1-row-991-A",
+    "v1.1-row-1410-A"
+   ],
+   "focus": {
+    "session_12": 15,
+    "fixed": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A",
+     "v1.1-row-341-A"
+    ],
+    "still_wrong": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A"
+    ],
+    "new": []
+   }
+  },
+  "A3-mismatch": {
+   "cases": 580,
+   "macro_f1": 0.9696,
+   "f1": {
+    "entailment": 0.9737,
+    "neutral": 0.9774,
+    "contradiction": 0.9577
+   },
+   "evidence": {
+    "score": 0.9875,
+    "found": 396,
+    "cases": 401
+   },
+   "input_tokens": 1307.2,
+   "output_tokens": 25.9,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 2
+   },
+   "fixes": 13,
+   "breaks": 7,
+   "sign_test_p": 0.1316,
+   "sign_test_p_two_sided": 0.2632,
+   "fix_ids": [
+    "v1.1-row-1053-A",
+    "v1.1-row-1162-A",
+    "v1.1-row-1174-A",
+    "v1.1-row-1200-A",
+    "v1.1-row-1210-A",
+    "v1.1-row-1226-A",
+    "v1.1-row-1259-A",
+    "v1.1-row-1287-A",
+    "v1.1-row-1318-A",
+    "v1.1-row-1347-A",
+    "v1.1-row-1351-A",
+    "v1.1-row-1404-A",
+    "v1.1-row-1467-A"
+   ],
+   "break_ids": [
+    "v1.1-row-13-A",
+    "v1.1-row-576-A",
+    "v1.1-row-591-A",
+    "v1.1-row-663-A",
+    "v1.1-row-773-A",
+    "v1.1-row-816-A",
+    "v1.1-row-859-A"
+   ],
+   "focus": {
+    "session_12": 15,
+    "fixed": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A"
+    ],
+    "still_wrong": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1159-A"
+    ],
+    "new": []
+   }
+  },
+  "today+A6": {
+   "cases": 580,
+   "macro_f1": 0.9728,
+   "f1": {
+    "entailment": 0.9738,
+    "neutral": 0.9807,
+    "contradiction": 0.9639
+   },
+   "evidence": {
+    "score": 0.9825,
+    "found": 394,
+    "cases": 401
+   },
+   "input_tokens": 1219.9,
+   "output_tokens": 14.9,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 5
+   },
+   "fixes": 9,
+   "breaks": 1,
+   "sign_test_p": 0.0107,
+   "sign_test_p_two_sided": 0.0215,
+   "fix_ids": [
+    "v1.1-row-1053-A",
+    "v1.1-row-1151-A",
+    "v1.1-row-1162-A",
+    "v1.1-row-1210-A",
+    "v1.1-row-1226-A",
+    "v1.1-row-1309-A",
+    "v1.1-row-1318-A",
+    "v1.1-row-1404-A",
+    "v1.1-row-1467-A"
+   ],
+   "break_ids": [
+    "v1.1-row-950-A"
+   ],
+   "second_look_a6": {
+    "calls": 12,
+    "calls_on_scored_cases": 12,
+    "per_100_cases": 2.07,
+    "unreadable": 0,
+    "failed": 0,
+    "changed": 11,
+    "fixes": 9,
+    "breaks": 1
+   },
+   "focus": {
+    "session_12": 15,
+    "fixed": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1309-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A"
+    ],
+    "still_wrong": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A",
+     "v1.1-row-235-A"
+    ],
+    "new": []
+   }
+  }
+ }
+}
