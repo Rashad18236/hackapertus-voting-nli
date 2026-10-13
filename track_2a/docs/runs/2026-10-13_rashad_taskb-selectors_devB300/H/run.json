@@ -1,0 +1,42 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "01:10",
+ "kind": "model run",
+ "code": "ac9fe5f (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task B cases",
+ "format": "official scorer; interleaved, 4 arms, 1 request per second (session 11 step 6b)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "v3-topic-first",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_taskb-selectors_devB300/today",
+  "2026-10-13_rashad_taskb-selectors_devB300/E",
+  "2026-10-13_rashad_taskb-selectors_devB300/T"
+ ],
+ "setup": "B-cut4 with selector H: L (shared character 4-grams and numbers, no model) for a claim in the reference's language, else T",
+ "results": {
+  "macro_f1": 0.993,
+  "f1": {
+   "entailment": 0.99,
+   "neutral": 1.0,
+   "contradiction": 0.99
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 923,
+  "mean_time_ms": 728,
+  "p95_time_ms": 1843,
+  "mean_output_tokens": 8.5
+ },
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "B-cut4 with selector H (4-grams and numbers in the reference's language, else T)",
+  "n_cases": 300,
+  "strict_json": false,
+  "max_tokens": 32
+ }
+}

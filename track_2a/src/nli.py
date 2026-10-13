@@ -181,6 +181,11 @@ L1_SENTENCE = ("A claim that gives a different number, share, date, actor or dir
 PROMPTS_A["A-v4-section-route-L1"] = PROMPTS_A["A-v4-section-route"].replace(
     _RULE_B, _RULE_B + "\n" + L1_SENTENCE)
 assert PROMPTS_A["A-v4-section-route-L1"] != PROMPTS_A["A-v4-section-route"]
+# Session 11, step 2: the two fallback levels send the routed prompt with L1's sentence under their own version names
+# (their PART line says what the paragraphs are: src/contexts/section_route.py).
+for _level in ("vote-wide", "booklet-wide"):
+    PROMPTS_A[f"A-v4-{_level}"] = PROMPTS_A["A-v4-section-route"]
+    PROMPTS_A[f"A-v4-{_level}-L1"] = PROMPTS_A["A-v4-section-route-L1"]
 
 # Session 10, step 5 (off by default). P-short: the routed prompt with the same rules in fewer words (fixed text at
 # most 200 tokens with the Apertus v1 tokenizer, user labels included); L1's sentence stays word for word. The label

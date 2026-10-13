@@ -1,0 +1,181 @@
+{
+ "booklets": 6,
+ "booklets_complete": 5,
+ "votes": 15,
+ "votes_ok": 14,
+ "booklets_by_language_year": {
+  "de 2021": "1/1",
+  "de 2025": "1/1",
+  "fr 2021": "1/1",
+  "fr 2025": "0/1",
+  "it 2021": "1/1",
+  "it 2025": "1/1"
+ },
+ "booklet_problems": [
+  "2025_09_28_fr, vote 1: contents entry without arguments"
+ ],
+ "claims": 94,
+ "claims_routed": 94,
+ "routes": {
+  "detail": 10,
+  "council": 34,
+  "committee": 14,
+  "summary": 20,
+  "law": 16
+ },
+ "cases_routed": 90,
+ "fallback_reasons": {
+  "part 'committee' empty for this vote": 4
+ },
+ "unrouted_claims": [],
+ "fallback_cases": [
+  {
+   "id": "v1.1-row-437-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_it.pdf",
+   "vote": "Decreto federale concernente l’imposta immobiliare cantonale sulle abitazioni secondarie",
+   "claim": "Il comitato ritiene che i Cantoni dovrebbero poter applicare un’imposta immobiliare speciale alle abitazioni secondarie utilizzate prevalentemente dai proprietari, così da compensare le eventuali perdite di entrate dovute all’abolizione del valore locativo."
+  },
+  {
+   "id": "v1.1-row-485-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_fr.pdf",
+   "vote": "Arrêté fédéral relatif à l’impôt immobilier cantonal sur les résidences secondaires",
+   "claim": "Il comitato afferma che i cantoni potranno introdurre un’imposta immobiliare speciale sulle seconde case utilizzate prevalentemente a scopo personale, per compensare le eventuali perdite di gettito fiscale causate dall’abolizione della rendita fittizia."
+  },
+  {
+   "id": "v1.1-row-697-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_de.pdf",
+   "vote": "Bundesbeschluss über die kantonalen Liegenschaftssteuern auf Zweitliegenschaften",
+   "claim": "Le comité estime qu’une hausse du budget fédéral consacré à la recherche en intelligence artificielle est essentielle pour préserver la compétitivité de la Suisse à l’échelle internationale."
+  },
+  {
+   "id": "v1.1-row-917-A",
+   "reason": "part 'committee' empty for this vote",
+   "booklet": "booklets/2025_09_28_de.pdf",
+   "vote": "Bundesbeschluss über die kantonalen Liegenschaftssteuern auf Zweitliegenschaften",
+   "claim": "Il comitato ritiene che istituire per legge un salario minimo federale sarebbe un mezzo efficace per contrastare la povertà lavorativa e assicurare condizioni dignitose a tutti i lavoratori, a prescindere dal settore economico in cui operano."
+  }
+ ],
+ "routed_evidence_misses": [],
+ "evidence_cases": 65,
+ "evidence_cases_routed": 63,
+ "routed_evidence": {
+  "cases": 63,
+  "hit": 1.0,
+  "coverage_mean": 0.906,
+  "coverage_at_least_0.9": 0.73,
+  "pages_hold_gold": 0.921,
+  "inside_share": 0.828,
+  "mean_chars_sent": 2802,
+  "trimmed": 1
+ },
+ "by_part": {
+  "summary": {
+   "cases": 13,
+   "hit": 1.0,
+   "coverage_mean": 0.94,
+   "coverage_at_least_0.9": 0.538,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.415,
+   "mean_chars_sent": 2060,
+   "trimmed": 0
+  },
+  "council": {
+   "cases": 26,
+   "hit": 1.0,
+   "coverage_mean": 0.98,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 0.808,
+   "inside_share": 0.971,
+   "mean_chars_sent": 3136,
+   "trimmed": 0
+  },
+  "committee": {
+   "cases": 7,
+   "hit": 1.0,
+   "coverage_mean": 1.0,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.884,
+   "mean_chars_sent": 3186,
+   "trimmed": 0
+  },
+  "law": {
+   "cases": 12,
+   "hit": 1.0,
+   "coverage_mean": 0.631,
+   "coverage_at_least_0.9": 0.083,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.977,
+   "mean_chars_sent": 1422,
+   "trimmed": 1
+  },
+  "detail": {
+   "cases": 5,
+   "hit": 1.0,
+   "coverage_mean": 0.963,
+   "coverage_at_least_0.9": 1.0,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.716,
+   "mean_chars_sent": 5776,
+   "trimmed": 0
+  }
+ },
+ "by_language": {
+  "same-language": {
+   "cases": 19,
+   "hit": 1.0,
+   "coverage_mean": 0.884,
+   "coverage_at_least_0.9": 0.684,
+   "pages_hold_gold": 1.0,
+   "inside_share": 0.809,
+   "mean_chars_sent": 2699,
+   "trimmed": 0
+  },
+  "cross-language": {
+   "cases": 44,
+   "hit": 1.0,
+   "coverage_mean": 0.916,
+   "coverage_at_least_0.9": 0.75,
+   "pages_hold_gold": 0.886,
+   "inside_share": 0.836,
+   "mean_chars_sent": 2847,
+   "trimmed": 1
+  }
+ },
+ "by_booklet_language": {
+  "de": {
+   "cases": 15,
+   "hit": 1.0,
+   "coverage_mean": 0.798,
+   "coverage_at_least_0.9": 0.6,
+   "pages_hold_gold": 0.933,
+   "inside_share": 0.798,
+   "mean_chars_sent": 2652,
+   "trimmed": 1
+  },
+  "fr": {
+   "cases": 27,
+   "hit": 1.0,
+   "coverage_mean": 0.948,
+   "coverage_at_least_0.9": 0.815,
+   "pages_hold_gold": 0.926,
+   "inside_share": 0.869,
+   "mean_chars_sent": 2967,
+   "trimmed": 0
+  },
+  "it": {
+   "cases": 21,
+   "hit": 1.0,
+   "coverage_mean": 0.929,
+   "coverage_at_least_0.9": 0.714,
+   "pages_hold_gold": 0.905,
+   "inside_share": 0.795,
+   "mean_chars_sent": 2698,
+   "trimmed": 0
+  }
+ },
+ "mean_chars_sent_all_routed": 2844
+}

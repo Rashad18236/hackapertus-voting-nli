@@ -1,0 +1,39 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "23:52",
+ "kind": "model run",
+ "code": "e9b592f (scripts/paired_run.py with the arm field force 'no parser', in-process)",
+ "cases": "dev, all 300 task A cases, the Python parser switched off for the case's vote (test only)",
+ "format": "official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 3)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_ap-structure-noparser_devA300/VW",
+  "2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure"
+ ],
+ "setup": "today's defaults with no valid part for the vote: the fallback embed-e5-small",
+ "results": {
+  "macro_f1": 0.9,
+  "f1": {
+   "entailment": 0.941,
+   "neutral": 0.873,
+   "contradiction": 0.884
+  },
+  "evidence": {
+   "score": 0.672,
+   "found": 135,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1868,
+  "mean_time_ms": 3929,
+  "p95_time_ms": 21267,
+  "mean_output_tokens": 15.8
+ }
+}

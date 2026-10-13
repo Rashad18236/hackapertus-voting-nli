@@ -1,0 +1,190 @@
+{
+ "2026-10-12_rashad_ap-all_devA300": {
+  "cut_cross_language_cases": 17,
+  "with_statement": 17,
+  "as_written": {
+   "correct_answers_with_a_cited_paragraph": 7,
+   "first_cited_among_claim_8": 7,
+   "first_cited_among_statement_8": 7
+  },
+  "gold": {
+   "cases": 8,
+   "gold_among_claim_8": 8,
+   "gold_among_statement_8": 8,
+   "gained": [],
+   "lost": [],
+   "net_gain": 0
+  },
+  "rows": [
+   {
+    "id": "v1.1-row-9-A",
+    "part": "detail",
+    "label": 0,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-31-A",
+    "part": "detail",
+    "label": 0,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-188-A",
+    "part": "law",
+    "label": 0,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-345-A",
+    "part": "detail",
+    "label": 0,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-500-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-564-A",
+    "part": "detail",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-580-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-629-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-782-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-793-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-830-A",
+    "part": "detail",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-904-A",
+    "part": "law",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-935-A",
+    "part": "detail",
+    "label": 1,
+    "statement": true
+   },
+   {
+    "id": "v1.1-row-1052-A",
+    "part": "detail",
+    "label": 2,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-1208-A",
+    "part": "law",
+    "label": 2,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-1326-A",
+    "part": "detail",
+    "label": 2,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true,
+    "first_cited_in_statement_8": true
+   },
+   {
+    "id": "v1.1-row-1468-A",
+    "part": "law",
+    "label": 2,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true
+   }
+  ]
+ },
+ "2026-10-12_rashad_ap-all_probeA94": {
+  "cut_cross_language_cases": 1,
+  "with_statement": 1,
+  "as_written": {
+   "correct_answers_with_a_cited_paragraph": 0,
+   "first_cited_among_claim_8": 0,
+   "first_cited_among_statement_8": 0
+  },
+  "gold": {
+   "cases": 1,
+   "gold_among_claim_8": 1,
+   "gold_among_statement_8": 1,
+   "gained": [],
+   "lost": [],
+   "net_gain": 0
+  },
+  "rows": [
+   {
+    "id": "v1.1-row-1176-A",
+    "part": "law",
+    "label": 2,
+    "statement": true,
+    "gold_in_claim_8": true,
+    "gold_in_statement_8": true
+   }
+  ]
+ },
+ "all": {
+  "cut_cross_language_cases": 18,
+  "with_statement": 18,
+  "as_written": {
+   "correct_answers_with_a_cited_paragraph": 7,
+   "first_cited_among_claim_8": 7,
+   "first_cited_among_statement_8": 7
+  },
+  "gold": {
+   "cases": 9,
+   "gold_among_claim_8": 9,
+   "gold_among_statement_8": 9,
+   "gained": [],
+   "lost": [],
+   "net_gain": 0
+  }
+ }
+}

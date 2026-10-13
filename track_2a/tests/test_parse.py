@@ -27,6 +27,7 @@ class EvidenceItems(unittest.TestCase):
         self.assertEqual(text, "=== PAGE 1 ===\na\n\n=== PAGE 2 ===\nb")
 
 
+@mock.patch.object(parse, "LAZY_PAGES", False)  # the cache is the eager path's (session 11: lazy reading is the default)
 class Cache(unittest.TestCase):
     def test_cache_is_keyed_by_content_not_path(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -53,3 +54,114 @@ class Cache(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def synthetic_pdf(pages):
+    """A small PDF built in memory: one page per (text, two_font_programs) pair, each set in Helvetica with a font
+    descriptor that names one embedded font program, or two (/FontFile and /FontFile3) when asked."""
+    import io
+
+    from pypdf import PdfWriter
+    from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject, NumberObject
+
+    writer = PdfWriter()
+
+    def stream(data):
+        obj = DecodedStreamObject()
+        obj.set_data(data)
+        return writer._add_object(obj)
+
+    for text, two_programs in pages:
+        page = writer.add_blank_page(width=300, height=200)
+        descriptor = DictionaryObject({
+            NameObject("/Type"): NameObject("/FontDescriptor"), NameObject("/FontName"): NameObject("/Helvetica"),
+            NameObject("/Flags"): NumberObject(32), NameObject("/FontBBox"): ArrayObject([NumberObject(0)] * 4),
+            NameObject("/ItalicAngle"): NumberObject(0), NameObject("/Ascent"): NumberObject(718),
+            NameObject("/Descent"): NumberObject(-207), NameObject("/CapHeight"): NumberObject(718),
+            NameObject("/StemV"): NumberObject(88), NameObject("/FontFile"): stream(b"program")})
+        if two_programs:
+            descriptor[NameObject("/FontFile3")] = stream(b"program")
+        font = DictionaryObject({
+            NameObject("/Type"): NameObject("/Font"), NameObject("/Subtype"): NameObject("/Type1"),
+            NameObject("/BaseFont"): NameObject("/Helvetica"), NameObject("/Encoding"): NameObject("/WinAnsiEncoding"),
+            NameObject("/FontDescriptor"): writer._add_object(descriptor)})
+        page[NameObject("/Resources")] = DictionaryObject(
+            {NameObject("/Font"): DictionaryObject({NameObject("/F1"): writer._add_object(font)})})
+        page[NameObject("/Contents")] = stream(f"BT /F1 12 Tf 20 100 Td ({text}) Tj ET".encode())
+    buffer = io.BytesIO()
+    writer.write(buffer)
+    return buffer.getvalue()
+
+
+class UnreadablePages(unittest.TestCase):
+    """Session 11, parser coverage: a page pypdf refuses no longer makes the whole booklet unreadable."""
+
+    def write(self, pages):
+        folder = Path(tempfile.mkdtemp())
+        path = folder / "synthetic.pdf"
+        path.write_bytes(synthetic_pdf(pages))
+        return path
+
+    def test_two_font_programs_in_one_descriptor_are_read(self):
+        # General cause: a font descriptor naming /FontFile and /FontFile3 (seen in 2016-2018 booklets).
+        from pypdf import PdfReader
+        from pypdf.errors import PdfReadError
+
+        path = self.write([("Erste Seite", False), ("Zweite Seite", True)])
+        with self.assertRaises(PdfReadError):  # pypdf alone refuses the second page
+            PdfReader(str(path)).pages[1].extract_text()
+        self.assertEqual([t.strip() for t in parse.extract_pages(path)], ["Erste Seite", "Zweite Seite"])
+
+    def test_a_page_that_still_fails_gets_empty_text(self):
+        path = self.write([("Eins", False), ("Zwei", False), ("Drei", False)])
+        from pypdf import PageObject
+
+        original = PageObject.extract_text
+
+        def flaky(page, *args, **kwargs):
+            if "Zwei" in page.get_contents().get_data().decode():
+                raise ValueError("broken page")
+            return original(page, *args, **kwargs)
+
+        with mock.patch.object(PageObject, "extract_text", flaky):
+            texts = parse.extract_pages(path)
+        self.assertEqual([t.strip() for t in texts], ["Eins", "", "Drei"])
+
+    def test_readable_pages_are_read_as_before(self):
+        from pypdf import PdfReader
+
+        path = self.write([("Gleich", False)])
+        self.assertEqual(parse.extract_pages(path), [PdfReader(str(path)).pages[0].extract_text()])
+
+
+class LazyPages(unittest.TestCase):
+    """Session 11, step 4 (off by default): pages read when first asked for, with the same text."""
+
+    def test_same_text_read_on_demand(self):
+        folder = Path(tempfile.mkdtemp())
+        path = folder / "synthetic.pdf"
+        path.write_bytes(synthetic_pdf([("Eins", False), ("Zwei", True), ("Drei", False)]))
+        with mock.patch.object(parse, "LAZY_PAGES", True):
+            pages = parse.load_pages(path, cache_dir=folder / "cache")
+        self.assertIsInstance(pages, parse.Pages)
+        self.assertEqual((len(pages), 2 in pages, 4 in pages, list(pages)), (3, True, False, [1, 2, 3]))
+        self.assertEqual(pages._texts, {})  # nothing read yet
+        self.assertEqual(pages[2], parse.extract_pages(path)[1])  # the same text, the font repair included
+        self.assertEqual(set(pages._texts), {2})
+        self.assertEqual(dict(pages), {n: t for n, t in enumerate(parse.extract_pages(path), start=1)})
+        self.assertEqual(pages.key, parse._sha256(path))
+
+    def test_one_reader_open_per_process(self):
+        folder = Path(tempfile.mkdtemp())
+        first, second = folder / "a.pdf", folder / "b.pdf"
+        first.write_bytes(synthetic_pdf([("Eins", False), ("Zwei", False)]))
+        second.write_bytes(synthetic_pdf([("Drei", False), ("Vier", False)]))
+        a, b = parse.Pages(first, "a"), parse.Pages(second, "b")
+        self.assertIsNone(a._reader)  # opening b's reader closed a's
+        self.assertIsNotNone(b._reader)
+        text = a[2]  # reopens a, closes b
+        self.assertEqual(text, parse.extract_pages(first)[1])
+        self.assertIsNone(b._reader)
+        self.assertEqual(b[1], parse.extract_pages(second)[0])
+        self.assertEqual(a[2], text)  # read once: no reopening for a page already read
+        self.assertIsNone(a._reader)

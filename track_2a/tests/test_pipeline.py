@@ -96,10 +96,19 @@ class RunWithFakeSteps(unittest.TestCase):
         self.assertEqual(out, [2, 1])
 
     def test_default_workers(self):
-        with mock.patch.object(pipeline, "available_cpus", return_value=1):
+        with mock.patch.object(pipeline, "available_cpus", return_value=1), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=None):
             self.assertEqual(pipeline.default_workers(), 1)
-        with mock.patch.object(pipeline, "available_cpus", return_value=4):
+        with mock.patch.object(pipeline, "available_cpus", return_value=4), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=None):
             self.assertEqual(pipeline.default_workers(), 2)
+
+    def test_one_lane_under_the_memory_threshold(self):
+        """Session 11, step 5: two lanes each load e5 (1.2 GiB at its peak); under 2.5 GiB one lane."""
+        with mock.patch.object(pipeline, "available_cpus", return_value=2):
+            for memory, lanes in ((2 * 2**30, 1), (int(1.5 * 2**30), 1), (3 * 2**30, 2), (None, 2)):
+                with self.subTest(memory=memory), mock.patch.object(pipeline, "cgroup_memory", return_value=memory):
+                    self.assertEqual(pipeline.default_workers(), lanes)
 
     def test_each_lane_is_its_own_process_and_gets_its_cases(self):
         items = [(i, {"id": i, "booklet": i % 3}) for i in range(9)]
@@ -238,3 +247,74 @@ class WorkersInProcess(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def heavy_if_odd(case):
+    """A fake preparation: an odd case needs the embedding model (src/deferral.py), an even one does not. The result
+    carries when the case was prepared."""
+    from src import deferral
+    if case % 2:
+        deferral.check()
+    return case * 10, time.monotonic_ns()
+
+
+class LightFirst(unittest.TestCase):
+    """Session 11, step 4: a lane prepares the cases that need no embedding model first (pipeline.LIGHT_FIRST)."""
+
+    def run_lanes(self, light_first):
+        order = []
+        items = [(n, n) for n in range(8)]
+        with mock.patch.object(pipeline, "LIGHT_FIRST", light_first):
+            pipeline.run(items, heavy_if_odd, lambda p: p, lambda c: -1,
+                         lambda number, case, result: order.append((number, result)), workers=1)
+        return order
+
+    def prepared_order(self, results):
+        return [n for n, (value, when) in sorted(results, key=lambda r: r[1][1])]
+
+    def test_light_cases_are_prepared_first_and_every_case_answered_once(self):
+        results = self.run_lanes(True)
+        self.assertEqual(sorted((n, v) for n, (v, _) in results), [(n, n * 10) for n in range(8)])
+        self.assertEqual(self.prepared_order(results), [0, 2, 4, 6, 1, 3, 5, 7])
+
+    def test_off_keeps_the_list_order(self):
+        self.assertEqual(self.prepared_order(self.run_lanes(False)), list(range(8)))
+
+    def test_needs_model_is_not_an_ordinary_exception(self):
+        from src import deferral
+        self.assertFalse(issubclass(deferral.NeedsModel, Exception))
+        with mock.patch.dict(deferral.DEFER, {"on": True}), self.assertRaises(deferral.NeedsModel):
+            try:
+                deferral.check()
+            except Exception:  # what the fallbacks in src/ catch
+                self.fail("NeedsModel was caught as an ordinary exception")
+
+
+class EmbeddingThreads(unittest.TestCase):
+    """Session 11, step 4: with SHARE_CPUS the lanes split the CPUs for onnxruntime's threads."""
+
+    def threads(self, share, lanes, cpus):
+        with mock.patch.object(pipeline, "SHARE_CPUS", share), mock.patch.dict(pipeline.LANES, {"count": lanes}), \
+                mock.patch.object(pipeline, "available_cpus", return_value=cpus):
+            return pipeline.embedding_threads()
+
+    def test_every_cpu_without_sharing(self):
+        self.assertEqual(self.threads(False, 2, 2), 2)
+
+    def test_each_lane_its_share(self):
+        self.assertEqual(self.threads(True, 2, 2), 1)
+        self.assertEqual(self.threads(True, 2, 4), 2)
+        self.assertEqual(self.threads(True, 2, 1), 1)  # never fewer than one
+
+    def test_one_lane_or_none_keeps_every_cpu(self):
+        self.assertEqual(self.threads(True, 1, 2), 2)
+        self.assertEqual(self.threads(True, 0, 2), 2)
+
+    def test_run_sets_the_lane_count_before_forking(self):
+        seen = []
+        items = [(0, {"booklet": "a"}), (1, {"booklet": "b"})]
+        with mock.patch.dict(pipeline.LANES, {"count": 0}):
+            pipeline.run(items, prepare=lambda c: seen.append(pipeline.LANES["count"]) or c, complete=lambda p: p,
+                         fallback=lambda c: c, emit=lambda n, c, r: None, workers=2, processes=True,
+                         lane_key=lambda c: 0 if c["booklet"] == "a" else 1)
+            self.assertEqual(pipeline.LANES["count"], 2)

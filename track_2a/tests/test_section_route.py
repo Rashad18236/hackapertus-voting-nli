@@ -44,6 +44,19 @@ class Route(unittest.TestCase):
                     self.assertEqual(section_route.select(pages, vote, claim), ("EMBED", {1: "x"}))
                 embed.assert_called_once()
 
+    def test_a_valid_part_of_a_vote_with_a_failed_part_is_routed(self):
+        # Session 11, per-part validity: the detailed section's heading is missing, so the vote is not ok, but the
+        # council's arguments pass their own checks and a council claim is routed there; a detail claim falls back.
+        pages = booklet_pages()
+        pages[8] = ("8\nArgumente Initiativkomitee 1 2\nArgumente Bundesrat und Parlament 14\n"
+                    "Abstimmungstext 16\nDiese Zeile ist eine volle Zeile im Fliesstext des Heftes.")
+        detail_claim = "Gemäss der detaillierten Erläuterung baut der Bund heute keine Velowege."
+        part, paragraphs = section_route.route(pages, VOTE, COUNCIL_CLAIM)
+        self.assertEqual(part, "council")
+        self.assertEqual([p for p, _ in paragraphs], [5, 14, 15])
+        with mock.patch.object(section_route.claim_router, "route", return_value="detail"):
+            self.assertIsNone(section_route.route(pages, VOTE, detail_claim))
+
     def test_evidence_is_the_cited_paragraphs_verbatim(self):
         paragraphs = [(5, "Box\ntext"), (14, "Erster\nAbsatz"), (15, "Zweiter")]
         self.assertEqual(section_route.evidence_items(paragraphs, [2, 9, 2, 1]),
@@ -51,14 +64,15 @@ class Route(unittest.TestCase):
 
 
 class Cli(unittest.TestCase):
-    def run_case(self, claim, answer):
+    def run_case(self, claim, answer, extra_args=(), more_answers=()):
         seen = []
         with mock.patch.object(cli.parse, "load_pages", return_value=booklet_pages()), \
              mock.patch.object(cli.Path, "is_file", return_value=True), \
              mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]):
-            code, out = run_cli([json.dumps(case(claim))], [answer], ["--context-a", "section-route"], seen)
+            code, out = run_cli([json.dumps(case(claim))], [answer, *more_answers],
+                                ["--context-a", "section-route", *extra_args], seen)
         self.assertEqual(code, 0)
-        return out[0], seen[0]
+        return out[0], seen[-1]
 
     def test_routed_case_cites_paragraphs(self):
         out, messages = self.run_case(COUNCIL_CLAIM, '{"paragraphs": [1], "label": 0}')
@@ -69,8 +83,16 @@ class Cli(unittest.TestCase):
         self.assertIn("zuständig sind.", out["evidence"][0]["text"])
 
     def test_unrouted_case_runs_as_embed_e5_small(self):
-        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}')
+        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}',
+                                      ["--ap-part-a", "off"])
         self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])  # embed-e5-small's prompt
+        self.assertEqual(out["evidence"][0]["page"], 14)
+
+    def test_unrouted_case_asks_apertus_first(self):
+        """Session 11 (default): the rules name no part, so Apertus is asked; "none" leaves it to embed-e5-small."""
+        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"part": "none", "statement": "x"}',
+                                      more_answers=['{"pages": [14], "label": 0}'])
+        self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])
         self.assertEqual(out["evidence"][0]["page"], 14)
 
 
@@ -162,3 +184,46 @@ class EvidenceHalves(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WideFallbacks(unittest.TestCase):
+    """Session 11, step 2 (off by default): VW (vote-wide) and BW (booklet-wide) for cases section-route cannot route."""
+
+    def wide(self, vote, claim, levels):
+        with mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()), \
+             mock.patch.object(retrieval, "query_vector", return_value=__import__("numpy").ones(4) / 2.0), \
+             mock.patch.object(section_route, "VOTE_MARGIN", 2.0):
+            return section_route.wide_route(booklet_pages(), vote, claim, levels)
+
+    def test_vote_wide_takes_paragraphs_from_the_vote_s_valid_parts_with_their_names(self):
+        level, paragraphs, names = self.wide(VOTE, "Die Schweiz hat 26 Kantone.", {"vw", "bw"})
+        self.assertEqual(level, "vote-wide")
+        self.assertEqual(len(paragraphs), section_route.WIDE_TOP_K)
+        self.assertEqual([p for p, _ in paragraphs], sorted(p for p, _ in paragraphs))  # booklet order
+        self.assertTrue(all(4 <= p <= 17 for p, _ in paragraphs))  # the first vote's pages only
+        self.assertTrue(set(names) <= set(section_route.PART_NAMES.values()))
+        shown = section_route.wide_texts(paragraphs, names)
+        self.assertTrue(all(t.startswith("(") for t in shown))
+
+    def test_booklet_wide_when_the_vote_is_not_found(self):
+        level, paragraphs, names = self.wide("Bundesgesetz über die Raumfahrt", COUNCIL_CLAIM, {"vw", "bw"})
+        self.assertEqual(level, "booklet-wide")
+        self.assertEqual(names, [None] * len(paragraphs))
+        self.assertEqual(section_route.wide_texts(paragraphs[:1], names[:1]), [section_route.display(paragraphs[0][1])])
+
+    def test_a_level_that_is_off_leaves_the_case_to_embed(self):
+        self.assertIsNone(self.wide(VOTE, "Die Schweiz hat 26 Kantone.", {"bw"}))
+        self.assertIsNone(self.wide("Bundesgesetz über die Raumfahrt", COUNCIL_CLAIM, {"vw"}))
+
+    def test_the_cli_sends_the_level_with_its_own_prompt_version(self):
+        from src import nli
+        self.assertEqual(nli.PROMPTS_A["A-v4-vote-wide-L1"], nli.PROMPTS_A["A-v4-section-route-L1"])
+        settings = cli.Settings(fallback_a="vw+bw")
+        raw = {"id": "a"}
+        with mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()), \
+             mock.patch.object(retrieval, "query_vector", return_value=__import__("numpy").ones(4) / 2.0):
+            wide = cli.wide_fallback(booklet_pages(), VOTE, "Die Schweiz hat 26 Kantone.", raw, settings)
+            p = cli.wide_prepared("a", raw, wide, booklet_pages(), VOTE, "Die Schweiz hat 26 Kantone.", settings)
+        self.assertEqual((p.kind, raw["route"], raw["prompt_version"]), ("A-paragraphs", "vote-wide", "A-v4-vote-wide-L1"))
+        self.assertIn("all parts of the vote", p.messages[-1]["content"])
+        self.assertIsNone(cli.wide_fallback(booklet_pages(), VOTE, "x", {}, cli.Settings()))  # default: embed, as before

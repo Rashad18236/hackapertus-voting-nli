@@ -12,6 +12,8 @@ content, never on which case asked first: predictions do not depend on order.
 import hashlib
 import json
 import os
+import threading
+from collections.abc import Mapping
 from pathlib import Path
 
 from src import memo
@@ -29,21 +31,140 @@ def _sha256(path):
 
 
 def extract_pages(pdf_path):
-    """Return a list of page texts; element i is PDF page i + 1. No caching."""
+    """Return a list of page texts; element i is PDF page i + 1. No caching.
+
+    Session 11: a page whose text pypdf refuses to extract no longer fails the whole booklet. First the page's
+    font descriptors are repaired (_repair_fonts) and the page is read again; if it still fails, the page gets
+    empty text, like a page without a text layer. Pages that pypdf reads are read exactly as before.
+    """
     from pypdf import PdfReader  # imported on first use (session 10): the first task B request need not wait for it
 
+    from src import timing
+
+    with timing.phase("pdf_read"):
+        return _extract(PdfReader, pdf_path)
+
+
+def _extract(PdfReader, pdf_path):
     reader = PdfReader(str(pdf_path))
-    return [(page.extract_text() or "") for page in reader.pages]
+    return [_page_text(page) for page in reader.pages]
+
+
+def _page_text(page):
+    """One page's text: as pypdf extracts it; after _repair_fonts if pypdf refuses the page; else empty text."""
+    try:
+        return page.extract_text() or ""
+    except Exception:
+        pass
+    try:
+        _repair_fonts(page.get("/Resources"), set())
+        return page.extract_text() or ""
+    except Exception:
+        return ""
+
+
+_FONT_FILES = ("/FontFile", "/FontFile2", "/FontFile3")
+
+
+def _repair_fonts(resources, seen):
+    """Keep one embedded font program per font descriptor (session 11, parser coverage).
+
+    General cause: some booklets (2016-2018) have font descriptors that name two embedded programs of the same
+    font (/FontFile and /FontFile3). pypdf 6 refuses such a page ("More than one /FontFile found"), which made
+    every page and so the whole booklet unreadable. The text does not depend on which program is kept (both
+    tried on such a booklet: identical text); the first one present is kept. Only the reader's copy in memory
+    changes, never the file. Fonts inside form XObjects are repaired too.
+    """
+    from pypdf.generic import NameObject
+
+    if resources is None:
+        return
+    resources = resources.get_object()
+    for font in (resources.get("/Font") or {}).values():
+        font = font.get_object()
+        for item in [font] + [d.get_object() for d in (font.get("/DescendantFonts") or [])]:
+            descriptor = item.get("/FontDescriptor")
+            if descriptor is None:
+                continue
+            descriptor = descriptor.get_object()
+            present = [k for k in _FONT_FILES if k in descriptor]
+            for extra in present[1:]:
+                del descriptor[NameObject(extra)]
+    for xobject in (resources.get("/XObject") or {}).values():
+        xobject = xobject.get_object()
+        if id(xobject) not in seen:
+            seen.add(id(xobject))
+            _repair_fonts(xobject.get("/Resources"), seen)
 
 
 _pages = {}  # (cache folder, booklet SHA-256) -> {page: text}; session 10: also kept in memory
 
 
+LAZY_PAGES = True  # session 11, step 4 (adopted): read a page only when it is first asked for (Pages)
+
+
 def load_pages(pdf_path, cache_dir=CACHE_DIR):
     """Return {page number (1-based): text}, using the cache when possible. A booklet is parsed once per run,
-    also when two threads ask for it at the same time (src/memo.py); every caller gets its own dict."""
+    also when two threads ask for it at the same time (src/memo.py); every caller gets its own dict.
+    With LAZY_PAGES and no cache file: a Pages mapping that reads each page when it is first asked for (shared
+    by the callers of this process; nothing in src/ changes a booklet's pages)."""
     key = _sha256(pdf_path)
+    if LAZY_PAGES and not (Path(cache_dir) / f"{key}.json").exists():
+        return memo.once(_pages, (str(cache_dir), key, "lazy"), lambda: Pages(pdf_path, key))
     return dict(memo.once(_pages, (str(cache_dir), key), lambda: _load_pages(pdf_path, key, cache_dir)))
+
+
+_reader_lock = threading.Lock()  # every lazy page read of this process, and the opening and closing of readers
+_open_reader = {"pages": None}  # the one Pages whose PdfReader is open in this process
+
+
+class Pages(Mapping):
+    """{page number: text} of a booklet, each page read from the PDF when first asked for (session 11, step 4).
+
+    The text of a page is exactly what extract_pages gives for it (the same reading and repair, page by page).
+    key: the PDF file's SHA-256, so that caches of parsed booklets need not read every page to name the booklet.
+    Asking whether a page exists, or how many pages there are, reads no page. A process keeps one PDF open: opening
+    another booklet's reader closes the previous one (its pages already read keep their text; a page read later
+    reopens the file), so the parsed PDFs do not pile up in memory."""
+
+    def __init__(self, pdf_path, key):
+        self.key = key
+        self._path = str(pdf_path)
+        self._reader = None
+        self._texts = {}
+        with _reader_lock:
+            self._count = len(self._open().pages)
+
+    def _open(self):
+        """This booklet's PdfReader, opened if needed (the caller holds _reader_lock)."""
+        if self._reader is None:
+            from pypdf import PdfReader
+
+            previous = _open_reader["pages"]
+            if previous is not None and previous is not self:
+                previous._reader = None
+            self._reader = PdfReader(self._path)
+            _open_reader["pages"] = self
+        return self._reader
+
+    def __getitem__(self, number):
+        if not (isinstance(number, int) and 1 <= number <= self._count):
+            raise KeyError(number)
+        with _reader_lock:
+            if number not in self._texts:
+                from src import timing
+                with timing.phase("pdf_read"):
+                    self._texts[number] = _page_text(self._open().pages[number - 1])
+            return self._texts[number]
+
+    def __contains__(self, number):
+        return isinstance(number, int) and 1 <= number <= self._count
+
+    def __iter__(self):
+        return iter(range(1, self._count + 1))
+
+    def __len__(self):
+        return self._count
 
 
 def _load_pages(pdf_path, key, cache_dir):

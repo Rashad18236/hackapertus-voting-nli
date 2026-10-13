@@ -1,0 +1,28 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "20:15",
+ "kind": "offline check",
+ "code": "this branch after the step 1 fixes (before: main at 014f691)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "93 booklets (every 2016-2026 booklet in de, fr, it except the sealed dates); probe 94 task A cases; G1/G2 on dev 600 and val 580",
+ "setup": "scripts/parser_coverage.py (per booklet and cross-language), before and after; scripts/route_check.py on the probe; prompt_snapshot G1/G2",
+ "format": "parser checks without labels; no model calls",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Booklets complete 64 -> 88 of 93, votes passing 178 -> 244 of 249 found (all 249 with a usable part), cross-language disagreements 2 -> 0; probe routed 83 -> 90 of 94; G1/G2 pass on dev and val.",
+ "results": {
+  "booklets": 93,
+  "booklets_complete_before": 64,
+  "booklets_complete_after": 88,
+  "votes_ok_before": 178,
+  "votes_ok_after": 244,
+  "votes_after": 249,
+  "probe_routed_before": 83,
+  "probe_routed_after": 90
+ }
+}

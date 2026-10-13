@@ -34,8 +34,11 @@ import math
 import multiprocessing
 import os
 import threading
+import time
 from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from pathlib import Path
+
+from src import timing
 
 log = logging.getLogger("pipeline")
 
@@ -70,10 +73,50 @@ def available_cpus():
     return max(1, cpus)
 
 
+def cgroup_memory():
+    """The container's memory limit in bytes (docker run --memory) from cgroup v2 or v1, or None if there is none."""
+    for path in ("/sys/fs/cgroup/memory.max", "/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        try:
+            value = Path(path).read_text().strip()
+        except OSError:
+            continue
+        if value != "max" and value.isdigit() and int(value) < 2**60:  # v1 reports a huge number for "no limit"
+            return int(value)
+    return None
+
+
+# Session 11, step 5: the lanes' number from the container's memory limit (each lane that embeds holds its own copy
+# of e5). None leaves the number to the CPUs alone, as in session 10.
+MEMORY_FOR_TWO_LANES = 2684354560  # bytes (2.5 GiB; session 11, step 5, adopted); below it one lane
+MEMORY_FOR_ONE_LANE = None   # bytes; below it no lane (every case in turn in the main process)
+
+
 def default_workers():
     """Worker processes: two on a machine with at least two CPUs, else one. Each worker owns whole booklets
-    (src/cli.py's lane_key), so no booklet is read twice; the main process needs little CPU."""
-    return 2 if available_cpus() >= 2 else 1
+    (src/cli.py's lane_key), so no booklet is read twice; the main process needs little CPU. Session 11, step 5:
+    fewer under a low memory limit (MEMORY_FOR_TWO_LANES, MEMORY_FOR_ONE_LANE)."""
+    workers = 2 if available_cpus() >= 2 else 1
+    memory = cgroup_memory()
+    if memory is not None and MEMORY_FOR_ONE_LANE is not None and memory < MEMORY_FOR_ONE_LANE:
+        return 0
+    if memory is not None and MEMORY_FOR_TWO_LANES is not None and memory < MEMORY_FOR_TWO_LANES:
+        return min(workers, 1)
+    return workers
+
+
+LIGHT_FIRST = True  # session 11, step 4 (adopted): a lane prepares the cases that need no embedding model first (deferral.py)
+SHARE_CPUS = True  # session 11, step 4 (adopted): the lanes share the CPUs for onnxruntime's threads (embedding_threads)
+LANES = {"count": 0}  # lanes of this run, set before they are forked (each lane inherits it)
+
+
+def embedding_threads():
+    """onnxruntime threads for one process's embedding model: every CPU (session 10), or with SHARE_CPUS each lane
+    its share of them, so that two lanes embedding at once do not run more threads than there are CPUs (an idle
+    onnxruntime thread spins and takes CPU time from the other lane)."""
+    cpus = available_cpus()
+    if SHARE_CPUS and LANES["count"] > 1:
+        return max(1, cpus // LANES["count"])
+    return cpus
 
 
 class Lanes:
@@ -118,16 +161,28 @@ class Lanes:
 
 
 def _lane(group, prepare, send):
-    """A worker process: prepare each case of its list in turn and send (number, ok, result or error text)."""
-    for number, case in group:
-        try:
-            message = (number, True, prepare(case))
-        except Exception as e:
-            message = (number, False, f"{type(e).__name__}: {e}")
-        try:
-            send.send(message)
-        except Exception as e:  # e.g. a result that cannot be sent
-            send.send((number, False, f"{type(e).__name__}: {e}"))
+    """A worker process: prepare each case of its list and send (number, ok, result or error text).
+
+    Session 11, step 4 (src/deferral.py): first every case that needs no embedding model, in list order; a case that
+    would need the model is put aside and prepared in a second pass, in list order."""
+    from src import deferral, timing
+    deferred = []
+    for passes, cases in (("first", group), ("second", deferred)):
+        deferral.DEFER["on"] = passes == "first" and LIGHT_FIRST
+        for number, case in list(cases):
+            try:
+                message = (number, True, prepare(case))
+            except deferral.NeedsModel:
+                deferred.append((number, case))
+                continue
+            except Exception as e:
+                message = (number, False, f"{type(e).__name__}: {e}")
+            try:
+                send.send(message)
+            except Exception as e:  # e.g. a result that cannot be sent
+                send.send((number, False, f"{type(e).__name__}: {e}"))
+    deferral.DEFER["on"] = False
+    timing.report("lane")
     send.close()
 
 
@@ -150,6 +205,7 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
         groups = [[] for _ in range(max(1, workers))]
         for number, case in order:
             groups[(lane_key(case) if lane_key else 0) % len(groups)].append((number, case))
+        LANES["count"] = sum(1 for g in groups if g)
         lanes = Lanes([g for g in groups if g], prepare)  # forked before any thread below starts
         preparing = {lanes.futures[number]: (number, case) for number, case in order}
         preparers = None
@@ -163,7 +219,11 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
                 while ready and len(calling) < in_flight:
                     number, case, future = ready.popleft()
                     calling[callers.submit(_complete, future, case, complete, fallback)] = (number, case)
+                idle = not calling and not ready  # session 11, step 4a: nothing to send, waiting for a lane
+                started = time.perf_counter()
                 done, _ = wait(set(preparing) | set(calling), return_when=FIRST_COMPLETED)
+                if idle:
+                    timing.add("main_wait_no_case", time.perf_counter() - started)
                 for future in sorted(done, key=lambda f: (preparing.get(f) or calling.get(f))[0]):
                     if future in preparing:
                         number, case = preparing.pop(future)
@@ -172,6 +232,7 @@ def run(items, prepare, complete, fallback, emit, workers, in_flight=1, order_ke
                         number, case = calling.pop(future)
                         emit(number, case, future.result())
     finally:
+        timing.report("main")
         if preparers is not None:
             preparers.shutdown()
         if lanes is not None:

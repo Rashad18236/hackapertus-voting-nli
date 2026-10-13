@@ -4,7 +4,7 @@ Run from track_2a/ (Docker running, image built):
 
     python3 scripts/local_time.py --image hackapertus-voting-nli --cases output/devA/cases.jsonl \\
         --booklets output/booklets_dev --delay 1.0 --out <folder> \\
-        [--replay docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA/replay_table.json]
+        [--replay docs/runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA/replay_table.json]
 
 The organisers' rule (docs/official_scoring.md): local time = the wall-clock time of the container run minus
 the time during which at least one model request is in flight. This script measures exactly that against
@@ -47,7 +47,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import stub_llm  # noqa: E402
 
-REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA/replay_table.json"
+REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA/replay_table.json"
 
 
 def union_length(intervals, lo, hi):
@@ -114,10 +114,16 @@ def docker_command(args, base_url, out_dir):
            "--read-only", "--tmpfs", "/tmp", "--user", f"{os.getuid()}:{os.getgid()}",
            "-e", f"BASE_URL={base_url}", "-e", "API_KEY=stub",
            "-v", f"{cases}:/data/cases.jsonl:ro"]
+    if args.cpuset:  # session 11: keep the container off the CPUs a model run beside it uses
+        cmd += ["--cpuset-cpus", args.cpuset]
     if args.booklets:
         cmd += ["-v", f"{Path(args.booklets).resolve()}:/data/booklets:ro"]
     if args.src:
         cmd += ["-v", f"{Path(args.src).resolve()}:/app/src:ro"]
+    if args.models:  # session 11: e.g. the folder with e5's 8-bit export next to model.onnx
+        cmd += ["-v", f"{Path(args.models).resolve()}:/app/models/multilingual-e5-small:ro"]
+    for item in args.env:  # session 11: e.g. PROFILE_PHASES=1 (src/timing.py)
+        cmd += ["-e", item]
     cmd += ["-v", f"{out_dir}:/output"]
     cli = ["--input", "/data/cases.jsonl", "--output", "/output/predictions.jsonl"] + args.cli_args
     if args.peak_memory:  # the CLI under sh, which then copies the container's peak memory (cgroup v1) to /output
@@ -136,8 +142,12 @@ def main():
     ap.add_argument("--delay", type=float, default=1.0, help="seconds the fake model takes per answer")
     ap.add_argument("--cpus", default="2")
     ap.add_argument("--memory", default="4g")
+    ap.add_argument("--cpuset", help="docker --cpuset-cpus, e.g. 2,3 (session 11: measure beside a model run "
+                                     "pinned to the other CPUs)")
     ap.add_argument("--src", help="mount this folder over the image's /app/src (measure working-tree code)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--models", help="mount this folder over the image's e5 folder (session 11)")
+    ap.add_argument("--env", action="append", default=[], help="KEY=VALUE for the container (session 11)")
     ap.add_argument("--peak-memory", action="store_true",
                     help="also record the container's peak memory (cgroup v1; the CLI then runs under sh)")
     ap.add_argument("cli_args", nargs="*", help="extra arguments for the CLI, after --")
@@ -178,6 +188,15 @@ def main():
     })
     if args.peak_memory and (out_dir / "peak_memory_bytes").exists():
         result["peak_memory_mib"] = round(int((out_dir / "peak_memory_bytes").read_text().strip()) / 2**20)
+    phases = [json.loads(line[7:]) for line in (out_dir / "stderr.log").read_text(encoding="utf-8").splitlines()
+              if line.startswith("PHASES ")] if (out_dir / "stderr.log").exists() else []
+    if phases:  # session 11, step 4a: src/timing.py's per-process totals (PROFILE_PHASES=1)
+        result["phases"] = phases
+        totals = {}
+        for ph in phases:
+            for k, v in ph["seconds"].items():
+                totals[k] = round(totals.get(k, 0) + v, 3)
+        result["phase_totals_s"] = totals
     with open(out_dir / "calls.jsonl", "w", encoding="utf-8") as f:
         for c in calls:
             f.write(json.dumps({k: v for k, v in c.items() if k != "payload"}) + "\n")

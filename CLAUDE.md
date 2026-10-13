@@ -201,11 +201,13 @@ src/
   pipeline.py   session 10: two forked worker processes ("lanes", each owning whole booklets) prepare cases
                 while the main process sends them, one request at a time
   memo.py       session 10: compute-once caches safe with threads
+  ap_parse.py   session 11: Apertus in the parsing roles (AP-part: the claim's part; AP-structure: the contents)
+  timing.py, deferral.py  session 11: phase timing (PROFILE_PHASES=1); light-first deferral of e5 cases in a lane
   llm.py        the only module that calls Apertus; records tokens and time per call; one kept connection
   nli.py        prompts and label parsing
   env.py        minimal .env reader (environment wins)
   evaluate.py   per-language breakdowns only; official scores come from the starter
-  parse.py      booklet PDF -> text per page (pypdf, 1-based pages), cached in /tmp by SHA-256
+  parse.py      booklet PDF -> text per page (pypdf, 1-based pages); session 11: pages read when first asked for
   booklet.py    booklet -> votes and parts (summary, detail, committee, parliament, council, law)
                 from the contents lines, checked against page headings; boxes per voice; paragraphs
   claim_router.py  claim opening -> part (summary, council, committee, law, detail), de/fr/it, or None
@@ -294,9 +296,57 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 10 (2026-10-12 11:42 UTC to 2026-10-13 13:00 UTC)
+## Current stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
 
-Branch `rashad/session-10` from `main` at `42b2a3c` (draft PR #17, never merged, no tag); status
+Branch `rashad/session-11` from `main` at `014f691` (draft PR #18, never merged, no tag); status
+`track_2a/docs/session_11_status.md`, decisions `docs/decisions/2026-10-12-2010_rashad_session-11.md`,
+report `track_2a/docs/session_11_report.md`. Goal: unseen booklets, Apertus as parser, a fast server, memory,
+task B tokens. Rules as in session 10 (sealed dates, who sets the label, the 8B on Public AI at one request per
+second, one model run at a time, interleaved runs with an arm "today"), plus: no booklet-specific code (every parser
+or router change states a general cause and has a unit test on a synthetic page); booklet PDFs and text never
+committed; every Apertus call counts as tokens (a booklet's call in its first case); G1/G2 after every code change.
+
+- **Parser coverage (step 1):** every federal booklet 2016–2026 in de/fr/it (93 PDFs, kept outside the repository,
+  `scripts/fetch_unseen_booklets.py`; sealed dates never downloaded), checked by `scripts/parser_coverage.py`
+  (cross-language: same votes, parts and start pages per date). Fixes: the contents layout used until mid-2018,
+  unreadable font descriptors, a lost arguments heading, per-part validity (`Vote.valid`). Complete booklets
+  64 → 88 of 93, votes passing 178 → 244 of 249, probe routed 83 → 90 of 94.
+- **Fallbacks (step 2):** VW (vote-wide) and BW (booklet-wide) fail the FALLBACK RULE (val); off. Today's fallback
+  (embed-e5-small) stays. The forced test is `scripts/paired_run.py`'s arm field `force` ("no part", "no vote",
+  "no parser").
+- **Apertus as parser (step 3, `src/ap_parse.py`):** **AP-part after the rules is a default**: when the rules find no
+  part, the lane prepares every valid part and the fallback, the main process asks Apertus which part the opening
+  names (one call, its tokens in the case's metrics) and sends that part's request; "none" goes to the fallback
+  (HYBRID RULE: +0.073 dev, +0.051 val over VW on 150 reworded openings each; no dev, val or probe case needs it in the
+  final runs: there the rules name a part for every claim). AP-structure (contents read by Apertus, checked by the parser) agrees with the parser on 78.7 % of
+  votes (needs 95 %): off. AP-all is reported only (dev 0.960 vs 0.977, local time 0.822 vs 0.101 s at 0.3 s).
+  Page images: accepted by the endpoint, heading not read.
+- **Fast server (step 4), adopted by the SAME-ANSWER RULE:** light-first lanes (`pipeline.LIGHT_FIRST`), lazy page
+  reading (`parse.LAZY_PAGES`, one open reader per process, cache key = the PDF's SHA-256), onnxruntime threads
+  shared between lanes (`pipeline.SHARE_CPUS`). Task A local time at 0.3 s per request 0.202 → 0.101 s per case.
+- **Memory (step 5):** one lane under a 2.5 GiB limit (`pipeline.MEMORY_FOR_TWO_LANES`): task A answers every case at
+  2 GiB and 1.5 GiB with 2 CPUs (before: 3 GiB); 1 GiB fails (e5's load peak 1.16 GiB). Task B needs < 0.1 GB.
+- **Task B (step 6):** **selector T is the default** (`context_b = "cut4-t"`: a reference over 3,000 characters is
+  cut to its first line and the 4 paragraphs whose first 300 characters are most similar to the claim, e5):
+  TASK B RULE on dev and val (0.987 / 0.968 vs 0.967 / 0.954, −59 % / −58 % input tokens, local time +0.002 s).
+  E (B-cut4) and Q (8-bit e5) fail on local time at 0.3 s; H and L stay in the code.
+- **Measurement setup:** model runs pinned to CPUs 0–1, timing to CPUs 2–3 (`scripts/local_time.py --cpuset`); step 4
+  variants in alternating rounds. New scripts: `parser_coverage.py`, `ap_structure_check.py`, `ap_claim_search.py`,
+  `ap_summary.py`, `ap_replay_table.py`, `make_reworded.py`, `fallback_local_time.py`, `taskb_selectors.py`,
+  `image_check.py`; `src/timing.py` (PROFILE_PHASES=1), `src/deferral.py`.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1`,
+  the `session-11` tag; `docs/runs/2026-10-13_rashad_final-s11_*`): dev task A 0.980 (evidence 0.985), task B 0.987;
+  val 0.959 (0.955), 0.968; probe 0.971 (0.954), 0.977. Tokens per case (dev, input + output): A 1,238 + 14.5,
+  B 815 + 8.7. Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.018 / 0.155 (repeat 0.108) / 0.316 s,
+  B 0.010 / 0.009 / 0.130 s. REF SCORE dev 0.909 / 0.851, val 0.908 / 0.906, probe 0.897 / 0.825 (1.0 / 0.3 s).
+  Memory: both tasks answer every case at 1.5 GiB; 1 GiB fails. Python wrote 1 of 2,128 labels.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA` (also
+  `scripts/local_time.py`'s default table); `scripts/prompt_snapshot.py` pairs a case's parsing calls
+  (`ap_request_sha256`) and G1 compares them.
+
+## Previous stage: session 10 (2026-10-12 11:42 UTC; ended early, merged before session 11)
+
+Branch `rashad/session-10` from `main` at `42b2a3c` (PR #17, merged into `main` on 2026-10-12 as `014f691`); status
 `track_2a/docs/session_10_status.md`, decisions `docs/decisions/2026-10-12-1142_rashad_session-10.md`,
 report at the end `track_2a/docs/session_10_report.md`. Goal: score what the organisers score
 (`track_2a/docs/official_scoring.md`): tokens and local time per case now count, not only Macro-F1.
@@ -335,7 +385,7 @@ report at the end `track_2a/docs/session_10_report.md`. Goal: score what the org
 - **The published image:** `.github/workflows/publish-image.yml` (tags: commit, `session-10`, `latest` from
   `main`); after a merge into `main`, check that `latest` pulls without logging in.
 
-## Previous stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
+## Earlier stage: session 9 (2026-10-09 17:07 UTC to 2026-10-10 13:00 UTC)
 
 Branch `rashad/until-1600` from `main` at `418ebfa` (PR #16, merged into `main` on 2026-10-10 as `42b2a3c`); report
 `track_2a/docs/session_9_report.md`, status log `track_2a/docs/session_9_status.md`, decisions

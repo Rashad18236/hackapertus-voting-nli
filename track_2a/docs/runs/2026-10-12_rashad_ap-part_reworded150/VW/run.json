@@ -1,0 +1,39 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "23:18",
+ "kind": "model run",
+ "code": "f0c8ca2 working tree (step 4 switches being turned on; same requests by G1/G2), scripts/paired_run.py in-process",
+ "cases": "dev, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py)",
+ "format": "official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_ap-part_reworded150/today",
+  "2026-10-12_rashad_ap-part_reworded150/AP-part"
+ ],
+ "setup": "VW for a case the rules cannot route (vote-wide paragraphs, A-v4-vote-wide-L1)",
+ "results": {
+  "macro_f1": 0.894,
+  "f1": {
+   "entailment": 0.947,
+   "neutral": 0.877,
+   "contradiction": 0.857
+  },
+  "evidence": {
+   "score": 0.67,
+   "found": 67,
+   "cases": 100
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1045,
+  "mean_time_ms": 3473,
+  "p95_time_ms": 9179,
+  "mean_output_tokens": 14.5
+ }
+}

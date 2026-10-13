@@ -1,0 +1,28 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "02:52",
+ "kind": "offline check",
+ "code": "3db4b57 (src/ as in bb2d08f: the final defaults of session 11, the published image's code)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 600 cases (300 task A, 300 task B); val, all 580 task A cases",
+ "setup": "session 11 reference for the final defaults (task B selector T, AP-part after the rules, step 4 and 5 defaults): the real CLI against the fake model; SHA-256 of every request body (parsing calls apart) and every task A path; the final dev run's 600 answers and the final val task A run's 580 answers replayed by request hash",
+ "format": "official (starter's evaluate.py on the replayed predictions); no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model scripts/stub_llm.py, replay of saved answers)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Replay of the final code reproduces the saved answers of the final runs exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.980 / evidence 0.985, task B 0.987; val task A 0.959 / 0.955. Replaces the session 10 reference as the anchor of G1 and G2.",
+ "results": {
+  "requests_hashed": 1180,
+  "task_a_paths": {"route": 876, "fallback:embed-e5-small": 4},
+  "replayed_answers": 1180,
+  "dev_A_macro_f1": 0.98,
+  "dev_A_evidence": 0.985,
+  "dev_B_macro_f1": 0.987,
+  "val_A_macro_f1": 0.959,
+  "val_A_evidence": 0.955
+ }
+}

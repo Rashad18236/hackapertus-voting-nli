@@ -1,0 +1,39 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "21:22",
+ "kind": "model run",
+ "code": "f295639 (scripts/paired_run.py with the arm field force, in-process)",
+ "cases": "val, the balanced 300-case sample, forced into a fallback situation per arm",
+ "format": "official scorer; interleaved, 3 arms, 1 request per second (session 11 step 2, forced fallback test, confirmation)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_fallbacks_valA300/VW-nopart",
+  "2026-10-12_rashad_fallbacks_valA300/BW-novote"
+ ],
+ "setup": "forced 'no part' (the router returns nothing): today's fallback, embed-e5-small (8 chunks of the whole booklet, A-v3-excerpts)",
+ "results": {
+  "macro_f1": 0.875,
+  "f1": {
+   "entailment": 0.907,
+   "neutral": 0.899,
+   "contradiction": 0.819
+  },
+  "evidence": {
+   "score": 0.593,
+   "found": 121,
+   "cases": 204
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1827,
+  "mean_time_ms": 3883,
+  "p95_time_ms": 18605,
+  "mean_output_tokens": 15.8
+ }
+}

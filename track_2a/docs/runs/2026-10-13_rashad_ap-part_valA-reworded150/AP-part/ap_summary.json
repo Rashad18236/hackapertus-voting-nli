@@ -1,0 +1,40 @@
+{
+ "cases": 150,
+ "calls": {
+  "AP-claim-v1": 150
+ },
+ "parsing_problems": {},
+ "parsing_tokens_per_case": {
+  "input": 236.0,
+  "output": 48.9
+ },
+ "part": {
+  "asked": 150,
+  "rules_named_a_part": 0,
+  "apertus_equal_to_rules": 0,
+  "apertus_different": 0,
+  "share_equal": null,
+  "rules_none_apertus_part": 142,
+  "apertus_none": 8,
+  "rules_to_apertus": {
+   "None -> council": 54,
+   "None -> summary": 44,
+   "None -> committee": 30,
+   "None -> law": 10,
+   "None -> None": 8,
+   "None -> detail": 4
+  }
+ },
+ "structure": {
+  "cases_asked": 0,
+  "vote_found_and_checked": 0
+ },
+ "paths": {
+  "council": 54,
+  "summary": 44,
+  "committee": 29,
+  "law": 10,
+  "vote-wide": 9,
+  "detail": 4
+ }
+}

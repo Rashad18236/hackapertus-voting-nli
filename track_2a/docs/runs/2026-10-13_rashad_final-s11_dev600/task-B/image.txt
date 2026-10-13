@@ -1,0 +1,2 @@
+sha256:9fd82f9f22133ac41640159119aead7d1fc771af08d68fa48eb6657d30c2b685 2026-10-13T02:14:08.244358392Z
+ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1

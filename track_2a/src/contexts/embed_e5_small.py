@@ -38,6 +38,7 @@ CHUNK_CHARS = 1000  # about 250 to 300 tokens, well under e5's 512-token limit
 TOP_K = 8
 MAX_TOKENS = 512  # e5's maximum input length; longer inputs are truncated
 BATCH_SIZE = 16  # session 8: 32 before; with length-sorted batches, 16 is faster and needs less memory
+BATCH_TOKENS = None  # session 11, step 5 (off): if set, a batch also holds at most this many tokens (texts x longest)
 MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-small"))
 
 
@@ -57,13 +58,22 @@ def chunk_pages(pages, max_chars=CHUNK_CHARS):
     return chunks
 
 
+MEMORY_ARENA = True
+
+
 class E5Embedder:
     """multilingual-e5-small in ONNX format: tokenize, run the model, mean-pool, L2-normalise."""
 
     _lock = threading.Lock()  # session 10: one embedding at a time, also across threads (onnxruntime uses every core)
 
-    def __init__(self, model_dir=MODEL_DIR):
+    def __init__(self, model_dir=MODEL_DIR, model_file="model.onnx"):
         # Imported here so the other variants and the tests need neither package loaded.
+        from src import deferral, timing
+        deferral.check()  # session 11, step 4: in a lane's first pass the model is not loaded
+        with timing.phase("e5_load"):
+            self._load(model_dir, model_file)
+
+    def _load(self, model_dir, model_file):
         import onnxruntime
         from tokenizers import Tokenizer
 
@@ -75,8 +85,11 @@ class E5Embedder:
         # Session 10: as many threads as the container may use. By default onnxruntime starts one per core of the
         # machine, which under a CPU limit (docker run --cpus 2 on 4 cores) is throttled: 2 threads embedded 124
         # paragraphs in 9.5-10.1 s against 11.3-12.5 s. The vectors are the same for 1, 2 and 4 threads.
-        options.intra_op_num_threads = pipeline.available_cpus()
-        self.session = onnxruntime.InferenceSession(str(Path(model_dir) / "model.onnx"), options,
+        options.intra_op_num_threads = pipeline.embedding_threads()  # session 11: the lanes' share with SHARE_CPUS
+        # Session 11, step 5 (off by default): onnxruntime's memory arena keeps the largest batch's buffers for the
+        # rest of the run; without it they are freed after each batch (the same arithmetic, so the same vectors).
+        options.enable_cpu_mem_arena = MEMORY_ARENA
+        self.session = onnxruntime.InferenceSession(str(Path(model_dir) / model_file), options,
                                                     providers=["CPUExecutionProvider"])
         self.input_names = {i.name for i in self.session.get_inputs()}
 
@@ -89,14 +102,36 @@ class E5Embedder:
         vectors are the same (padding is masked out)."""
         import numpy as np
 
-        with self._lock:
+        from src import deferral, timing
+        deferral.check()  # session 11, step 4: in a lane's first pass nothing is embedded
+        with self._lock, timing.phase("embed"):
             return self._embed(np, texts)
+
+    def _batches(self, texts, order):
+        """The texts' indices in batches, in length order: BATCH_SIZE texts each, as since session 8; with
+        BATCH_TOKENS set (session 11, step 5), a batch also stops before its texts times its longest text's tokens
+        would exceed BATCH_TOKENS (a batch is padded to its longest text, so this bounds its memory)."""
+        if BATCH_TOKENS is None:
+            return [order[start:start + BATCH_SIZE] for start in range(0, len(order), BATCH_SIZE)]
+        encoded = self.tokenizer.encode_batch([texts[i] for i in order])  # padded: the real length is the mask's sum
+        lengths = {i: sum(e.attention_mask) for i, e in zip(order, encoded)}
+        batches, current, longest = [], [], 0
+        for i in order:
+            longer = max(longest, lengths[i])
+            if current and (len(current) == BATCH_SIZE or (len(current) + 1) * longer > BATCH_TOKENS):
+                batches.append(current)
+                current, longer = [], lengths[i]
+            current.append(i)
+            longest = longer
+        if current:
+            batches.append(current)
+        return batches
 
     def _embed(self, np, texts):
         order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
         vectors = []
-        for start in range(0, len(texts), BATCH_SIZE):
-            encoded = self.tokenizer.encode_batch([texts[i] for i in order[start:start + BATCH_SIZE]])
+        for batch in self._batches(texts, order):
+            encoded = self.tokenizer.encode_batch([texts[i] for i in batch])
             ids = np.array([e.ids for e in encoded], dtype=np.int64)
             mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
             inputs = {"input_ids": ids, "attention_mask": mask}
@@ -120,6 +155,15 @@ _chunk_cache = {}  # booklet text SHA-256 -> (chunks, chunk vectors)
 def _get_embedder():
     """The run's E5Embedder, loaded on first use (once, also when several threads ask at the same time)."""
     return memo.once(_embedders, MODEL_DIR, E5Embedder)
+
+
+QUANTISED_FILE = "model_qint8_avx512_vnni.onnx"  # session 11, step 6: the 8-bit export in the model's own repository
+
+
+def _get_quantised_embedder():
+    """Session 11, step 6 (task B selector Q, off by default): the same model quantised to 8-bit integers, from the
+    model's own repository at the same commit (MIT). Loaded on first use."""
+    return memo.once(_embedders, (MODEL_DIR, QUANTISED_FILE), lambda: E5Embedder(MODEL_DIR, QUANTISED_FILE))
 
 
 def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):

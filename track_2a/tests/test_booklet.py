@@ -67,12 +67,19 @@ class Parse(unittest.TestCase):
     def test_no_contents_gives_none(self):
         self.assertIsNone(booklet.parse({1: "Titelseite", 2: "Nur Text ohne Inhaltsverzeichnis"}))
 
-    def test_a_start_page_without_its_heading_gives_no_parts(self):
+    def test_a_start_page_without_its_heading_loses_only_that_part(self):
+        # Session 11, per-part validity: before, the whole vote lost its parts.
         self.pages[18] = f"18\n{paragraph('Ohne Überschrift')}"
         second = booklet.parse(self.pages).votes[1]
         self.assertFalse(second.ok)
-        self.assertEqual(second.parts, {})
         self.assertIn("no detail heading on page 18", second.problems)
+        self.assertNotIn("detail", second.valid)
+        self.assertNotIn("detail", second.parts)
+        self.assertEqual(second.valid, {"summary", "committee", "parliament", "council", "law"})
+        self.assertEqual(second.parts["council"], [22, 23])
+
+    def test_a_vote_that_passes_has_every_part_valid(self):
+        self.assertEqual([v.valid for v in self.bk.votes], [set(booklet.PARTS)] * 2)
 
 
 class Paragraphs(unittest.TestCase):
@@ -111,6 +118,97 @@ class Session8Patterns(unittest.TestCase):
             with self.subTest(text=text):
                 self.assertTrue(booklet._has(text, booklet._HEADINGS["arguments"]))
         self.assertFalse(booklet._has("Im Detail", booklet._HEADINGS["arguments"]))
+
+
+class PerPartValidity(unittest.TestCase):
+    """Session 11: a vote keeps every part that passes its own checks when another part fails."""
+
+    def test_contents_entry_without_arguments(self):
+        # General cause (seen in one 2025 booklet): the text layer drops a vote's "Argumente" contents line. The
+        # arguments start where the detail page's list and the page headings put the first sub-section.
+        pages = booklet_pages()
+        pages[2] = pages[2].replace("Argumente 20\n", "")
+        pages[18] = ("18 Zweite Vorlage: Jagdgesetz\nIm Detail\nArgumente Referendumskomitee 20\n"
+                     "Argumente Bundesrat und Parlament 22\n" + paragraph("Jagd im Detail"))
+        second = booklet.parse(pages).votes[1]
+        self.assertIn("contents entry without arguments", second.problems)
+        self.assertFalse(second.ok)
+        self.assertEqual(second.valid, {"summary", "detail", "committee", "parliament", "council", "law"})
+        self.assertEqual((second.parts["detail"], second.parts["committee"], second.parts["council"]),
+                         ([18, 19], [20, 21], [22, 23]))
+
+    def test_without_arguments_entry_and_without_a_sub_section_detail_is_not_guessed(self):
+        pages = booklet_pages()
+        pages[2] = pages[2].replace("Argumente 20\n", "")
+        pages[20] = f"20\n{paragraph('Kein Titel')}"
+        pages[22] = f"22\n{paragraph('Kein Titel')}"
+        second = booklet.parse(pages).votes[1]
+        self.assertEqual(second.valid, {"summary", "law"})  # the detailed section's end is unknown
+
+    def test_a_lost_arguments_heading_confirmed_by_the_per_vote_list(self):
+        # General cause: the text layer can lose a heading. The contents entry and the detail page's list of
+        # sub-sections name the same page, so the arguments' start counts as confirmed.
+        pages = booklet_pages()
+        pages[12] = f"12 Erste Vorlage: Velowege\n{paragraph('Das Komitee will Velowege')}"  # heading lost
+        first = booklet.parse(pages).votes[0]
+        self.assertFalse(first.ok)
+        self.assertEqual(first.valid, set(booklet.PARTS))
+        self.assertEqual(first.parts["committee"], [12, 13])
+        self.assertIn("arguments start on page 12 confirmed by the per-vote list only", first.problems)
+
+
+def old_layout_pages(spaced=False):
+    """A miniature booklet in the older layout (until mid-2018): one contents entry per vote and its legal text;
+    inside the vote's pages, each part starts on a page whose heading names it (not always the first line)."""
+    pages = {n: f"{n}\n{paragraph(f'Seite {n} endet hier')}" for n in range(1, 17)}
+    seiten = "Sei ten" if spaced else "Seiten"
+    pages[3] = (f"3\nDarüber wird abgestimmt\nVolksinitiative «Für mehr Velowege»\n{paragraph('Die Initiative will')}\n"
+                f"Informationen zur Vorlage {seiten} 4–1 1\nDer Abstimmungstext Seite 8\n"
+                f"Bundesgesetz über die Jagd\nInformationen zur Vorlage {seiten} 12–15\nDer Abstimmungstext Seite 14")
+    pages[4] = f"4\nErste Vorlage\nVolksinitiative «Für mehr Velowege»\n{paragraph('Abstimmungsfrage')}"
+    pages[5] = f"5\n{paragraph('Im Kasten steht')}\nDas Wichtigste in Kürze\n{paragraph('Velowege sind gut')}"
+    pages[6] = f"6\nDie Vorlage im Detail\n{paragraph('Velowege im Detail')}"
+    pages[8] = f"8\n§\nAbstimmungstext\n{paragraph('Art. 1 Velowege')}"
+    pages[9] = f"9\nDie Beratungen im Parlament\n{paragraph('Das Parlament hat beraten')}"
+    pages[10] = f"10\nDie Argumente des Initiativkomitees\n{paragraph('Das Komitee will Velowege')}"
+    pages[11] = f"11\n{paragraph('Der Bundesrat lehnt ab')}\nDie Argumente von Bundesrat und Parlament"
+    pages[12] = f"12\nZweite Vorlage\nDas Wichtigste in Kürze\n{paragraph('Jagd kurz')}"
+    pages[13] = f"13\nDie Vorlage im Detail\n{paragraph('Jagd im Detail')}"
+    pages[14] = f"14\n§\nAbstimmungstext\n{paragraph('Art. 7 Jagdbare Arten')}"
+    pages[15] = f"15\nDie Argumente des Bundesrates\n{paragraph('Der Bundesrat ist dafür')}"
+    return pages
+
+
+class OldLayout(unittest.TestCase):
+    """Session 11: booklets until mid-2018 (one contents entry per vote; parts found by their page headings)."""
+
+    def test_votes_and_parts(self):
+        parsed = booklet.parse(old_layout_pages())
+        first, second = parsed.votes
+        self.assertTrue(first.ok and second.ok)
+        self.assertEqual({k: v for k, v in first.parts.items() if v},
+                         {"summary": [4, 5], "detail": [6, 7], "law": [8], "parliament": [9], "committee": [10],
+                          "council": [11]})
+        self.assertEqual(second.parts["council"], [15])
+        self.assertEqual(second.parts["committee"], [])  # no committee for this vote
+        self.assertIs(booklet.find_vote(parsed, "Bundesgesetz über die Jagd"), second)
+
+    def test_stray_spaces_in_the_contents_line(self):
+        # General cause (2016 booklets): the text layer puts spaces inside words and numbers ("Sei ten 4–1 1").
+        votes = booklet.parse(old_layout_pages(spaced=True)).votes
+        self.assertEqual([v.entry["block"] for v in votes], [(4, 11), (12, 15)])
+
+    def test_a_missing_heading_leaves_the_other_parts_valid(self):
+        pages = old_layout_pages()
+        pages[13] = f"13\n{paragraph('Ohne Überschrift')}"
+        second = booklet.parse(pages).votes[1]
+        self.assertFalse(second.ok)
+        self.assertIn("no detail heading in pages 12-15", second.problems)
+        self.assertEqual(second.valid, {"summary", "law", "council"})
+
+    def test_a_heading_in_the_running_text_does_not_count(self):
+        self.assertIsNone(booklet._old_heading("10\nWie die Vorlage im Detail zeigt, ist das so."))
+        self.assertEqual(booklet._old_heading("10\nText\nDie Vorlage im Detail"), "detail")
 
 
 if __name__ == "__main__":

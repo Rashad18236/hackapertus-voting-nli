@@ -106,8 +106,8 @@ def main():
             reason = "no route"
         elif found is None:
             reason = "vote not found in the booklet"
-        elif not found.ok:
-            reason = "vote's structure not found"
+        elif part not in found.valid:  # session 11: per-part validity (was: not found.ok)
+            reason = "the part did not pass the parser's checks"
         elif routed is None:
             reason = f"part '{part}' empty for this vote"
         if reason:
@@ -121,7 +121,7 @@ def main():
             _, paragraphs = routed
             row["chars_sent"] = sum(len(section_route.display(t)) for _, t in paragraphs)
             row["paragraphs_sent"] = len(paragraphs)
-            row["part_pages"] = found.parts[part]
+            row["part_pages"] = found.parts.get(part, []) if found is not None else []
             row["trimmed"] = sum(len(section_route.display(t)) for _, t in booklet.part_paragraphs(pages, found, part)) \
                 > section_route.MAX_CHARS
         g = gold[case["id"]]
