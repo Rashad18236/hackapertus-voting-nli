@@ -227,7 +227,13 @@ def fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found
     fallback (embed-e5-small)."""
     case_id = case["id"]
     if settings.fallback_a == "bm25-ap" and settings.context_a == "section-route":
-        prepared = bm25_fallback(case, pages, vote, claim_text, raw, settings)
+        try:
+            prepared = bm25_fallback(case, pages, vote, claim_text, raw, settings)
+        except Exception as e:  # e.g. a page without text: the case goes on to embed-e5-small, as before
+            raw["bm25_error"] = f"{type(e).__name__}: {e}"
+            for key in ("fallback", "prompt_version", "pages_total"):
+                raw.pop(key, None)
+            prepared = None
         if prepared is not None:
             return prepared
     wide = wide_fallback(pages, vote, claim_text, raw, settings, found if ap_in_prepare(settings) else None)

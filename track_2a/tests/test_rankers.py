@@ -215,6 +215,24 @@ class AskStructure(unittest.TestCase):
         self.assertFalse(cli.ap_in_prepare(cli.Settings(ap_structure_a="ask-after-parser")))
 
 
+class FallbackRobustness(unittest.TestCase):
+    def test_a_bm25_error_goes_on_to_embed_e5_small(self):
+        from unittest import mock
+        from src import cli, llm
+        from tests.test_cli import fake_chat
+        pages = {1: "Einleitung.", 2: None}  # a page without text makes the chunking raise
+        case = {"id": "a2", "vote": "Vorlage", "claim": {"text": "Die Kantone zahlen", "language": "de"},
+                "booklet": {"path": "booklets/x.pdf", "language": "de"}}
+        seen = []
+        with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+                mock.patch.object(cli.Path, "is_file", return_value=True), \
+                mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "Einleitung.")]), \
+                mock.patch.object(llm, "chat", fake_chat(['{"pages": [1], "label": 1}'], seen)):
+            resp, status, raw = cli.predict(case, ".", cli.Settings(fallback_a="bm25-ap", ap_part_a="off"))
+        self.assertEqual((status, raw["fallback"], len(seen)), ("ok", "embed-e5-small", 1))
+        self.assertIn("bm25_error", raw)
+
+
 class MemoryGuard(unittest.TestCase):
     """Step 2: no embedding model under a low memory limit, without its files, or when it fails to load."""
 
