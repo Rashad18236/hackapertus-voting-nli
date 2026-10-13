@@ -56,10 +56,21 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   `passage_ballot`'s 80 characters, then whitespace until the budget ran out: unreadable); today, B2, B3, B4 readable.
 - (22:35) Step 2 dev run started (`docs/runs/2026-10-13_rashad_prompts-B_devB300`: today, B2, B3, B4).
 
+- (23:04) Step 2 dev run done (`docs/runs/2026-10-13_rashad_prompts-B_devB300`): today 0.987, B2 0.983 (not ruled
+  out), B3 0.980 (fails b), B4 0.980 (fails b, d, e: 5 unreadable).
+- (23:04) Step 2 val run started (`docs/runs/2026-10-13_rashad_prompts-B_valB580`: today, B2, B3); step 6 queued after
+  it (val task A, today and `--ranker S`).
+- (23:06) Val local time (step 6): task A today 0.0091 / 0.0088 s, S 0.0073 / 0.0071 s per case at 1.0 / 0.3 s per
+  request (medians of three).
+
+- (23:37) Step 2 val run done (`docs/runs/2026-10-13_rashad_prompts-B_valB580`): today 0.968, B2 0.974 (fixes 8 of
+  the 9; fails (c) p = 0.30 and (e) 2 unreadable vs 1), B3 0.966. **Step 2 adopts nothing.**
+- (23:37) Step 6 started (`docs/runs/2026-10-13_rashad_S-val_valA580`: val task A, today and `--ranker S`).
+
 ## Running
 
-- Step 2 dev run (until about 23:20); val local time for step 6 (today and S, task A; today, task B) on CPUs 2–3.
+- Step 6 run (until about 00:05); val task B local time on CPUs 2–3.
 
 ## Next
 
-- Step 2 val run; step 6.
+- S RULE; combination (H, and S if it passes); FINISH.
