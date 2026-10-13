@@ -21,13 +21,25 @@ Updated after every step. If the session is restarted with "continue", work goes
   (`src/rankers.py` run_guard / failed), task B `cut4-r` (B-R) and `cut4-bm25` (B-BM25, Apertus translates
   cross-language claims), task A `--fallback-a bm25-ap`. G1/G2 pass; 310 tests pass. Commit `c3cbaac`.
 
+- (11:47) Step 3 (`docs/runs/2026-10-13_rashad_taskb-selectors-s12_devB300`, one backend): T 0.987, B-R 0.973,
+  H 0.993 (+13 % tokens), B-BM25 0.967: **none passes TASK B RULE 2; T stays**, no val run.
+- (12:20) Step 1c (`docs/runs/2026-10-13_rashad_S-cost_devAB600`): task A local time per case at 1.0 / 0.3 / 0.1 s per
+  request: e5 0.017 / 0.144 / 0.365, S 0.016 / 0.018 / 0.043; peak memory 2,286 → 200 MiB.
+- (12:45) Steps 4 and 5 on dev (`docs/runs/2026-10-13_rashad_S-and-fallbacks_devA300`, one backend): **S fails S
+  RULE (a)** (0.973 / 0.970 against 0.980 / 0.980; 2 breaks, 0 fixes): off, no val run, step 8 not done. **bm25-ap
+  passes on dev** (forced fallback 0.956 / 0.736 against 0.900 / 0.672).
+- (13:00) Step 2 (`docs/runs/2026-10-13_rashad_memory-guard_grid48`): memory guard on by default; both tasks write
+  every response from 4g to 512m with 2 and 1 CPUs.
+
 ## Running
 
-- Step 3 dev run (`docs/runs/2026-10-13_rashad_taskb-selectors-s12_devB300`, from 11:19): today (T), B-R, H, B-BM25.
-- The image with model S (publish workflow, `c3cbaac`), for step 1c (local time, memory of S) and step 2 (memory grid).
+- Step 6 dev run (`docs/runs/2026-10-13_rashad_ap-structure-ask_devA300`, from 12:46): forced "no parser", today vs
+  AP-structure asked after the parser.
+- Then step 5 val (`docs/runs/2026-10-13_rashad_bm25ap-fallback_valA300`), forced fallback on the val sample.
+- Memory grid with S (information) on CPUs 2-3.
 
 ## Next
 
-- Step 1c through the image; step 2 grid (4g … 512m × 2/1 CPUs).
-- Step 3 val run of the best version (TASK B RULE 2 in the decisions file).
-- Step 4 (R = S in task A) and step 5 (bm25-ap fallback): forced and cut-case runs on dev, then val.
+- Step 6 val if it passes on dev; probe run (exploring).
+- FINISH: final defaults (memory guard; bm25-ap and AP-structure-ask if confirmed), image `session-12`, final runs
+  dev / val / probe, local time, REF SCORE, memory grid, replay reference, reports, CLAUDE.md, technical report.
