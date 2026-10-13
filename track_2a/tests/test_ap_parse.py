@@ -134,6 +134,10 @@ class AskPartAfterRules(unittest.TestCase):
         self.assertFalse(cli.ap_in_prepare(self.settings))
         self.assertTrue(cli.ap_in_prepare(cli.Settings(ap_part_a="all")))
         self.assertTrue(cli.ap_in_prepare(cli.Settings(ap_part_a="after-rules", ap_structure_a="after-parser")))
+        # session 12: AP-structure asked after the parser (main process) keeps AP-part after the rules
+        both = cli.Settings(ap_part_a="after-rules", ap_structure_a="ask-after-parser")
+        self.assertTrue(cli.ask_part_after_rules(both))
+        self.assertFalse(cli.ap_in_prepare(both))
 
     def test_candidates_only_when_the_rules_name_no_part(self):
         raw = {}

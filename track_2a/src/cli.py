@@ -317,8 +317,8 @@ def ask_part_after_rules(settings):
     """Session 11, step 3: AP-part after the rules, without AP-structure. The worker process prepares, for a claim
     whose opening the rules do not know, every valid part of its vote and the usual fallback; the main process then
     asks Apertus which part the opening names (one request, src/ap_parse.claim) and sends that part's request."""
-    return (settings.ap_part_a == "after-rules" and settings.ap_structure_a == "off"
-            and settings.context_a == "section-route")
+    return (settings.ap_part_a == "after-rules" and settings.ap_structure_a in ("off", "ask-after-parser")
+            and settings.context_a == "section-route")  # session 12: AP-structure asked after the parser keeps AP-part
 
 
 def part_candidates(pages, vote, claim_text, raw, settings):
