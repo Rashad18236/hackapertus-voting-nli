@@ -956,10 +956,19 @@ def main():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)
     logging.getLogger("pypdf").setLevel(logging.ERROR)  # font warnings are noise here
-    # Session 12, step 2: the memory guard. Below the memory the ranker's model needs, or without its files, the whole
-    # run uses no embedding model (src/rankers.py), so that no case is lost to an out-of-memory kill.
+    # Session 12, step 2: the memory guard. Below the memory a model needs, or without its files, the whole run does
+    # without that model (src/rankers.py), so that no case is lost to an out-of-memory kill.
+    rankers.reset()
     for model, reason in rankers.run_guard(pipeline.cgroup_memory()).items():
         log.warning("Memory guard: %s; this run does without %s", reason, model)
+    try:
+        return _run(args, settings)
+    finally:
+        rankers.reset()  # nothing of this run's state stays in the process (tests run several in one process)
+
+
+def _run(args, settings):
+    """main() after the arguments: read the cases, answer each, write the responses."""
 
     env.load_env_file()
     lines = read_lines(args.input)

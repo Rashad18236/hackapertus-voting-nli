@@ -217,6 +217,9 @@ class AskStructure(unittest.TestCase):
 
 
 class FallbackRobustness(unittest.TestCase):
+    def tearDown(self):
+        rankers.reset()
+
     def test_a_bm25_error_goes_on_to_embed_e5_small(self):
         from unittest import mock
         from src import cli, llm
@@ -238,9 +241,7 @@ class MemoryGuard(unittest.TestCase):
     """Step 2: no embedding model under a low memory limit, without its files, or when it fails to load."""
 
     def tearDown(self):
-        rankers.ACTIVE["name"] = "e5"
-        rankers.CASE["guard"] = None
-        rankers._unusable.clear()
+        rankers.reset()
 
     def test_low_memory_limit_marks_the_model_for_the_whole_run(self):
         from unittest import mock

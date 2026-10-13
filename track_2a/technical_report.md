@@ -18,7 +18,8 @@ system decides whether the source supports (entailment, 0), does not settle (neu
 **Apertus v1.5 makes every decision.** Everything else is local and runs on CPU in the Docker image: reading the
 PDF, choosing the part of the booklet Apertus reads, and turning the paragraphs Apertus cites into evidence quoted
 verbatim with their 1-based PDF page. Apertus also names the part a claim refers to when the rules do not know the
-claim's opening (section 4).
+claim's opening, reads a booklet's contents when our parser cannot split it, and translates a claim for the keyword
+search of the fallback (section 4).
 
 The central experiment, full booklet against selected context, decided the design: in one interleaved run on 100
 dev cases [E1-curve] the whole booklet scored 0.858 with 37,586 input tokens per case, the part of the vote that
@@ -26,15 +27,15 @@ the claim names (`section-route`) 0.989 with 1,248; without any booklet text Ape
 
 | Final defaults, published image [FIN] | dev | val | probe (2 unseen dates) |
 |---|---|---|---|
-| Task A Macro-F1 (weight 0.30 of the score) | **0.980** | **0.959** | **0.971** |
-| Task A evidence (0.12) | **0.985** | **0.955** | **0.954** |
-| Task A tokens per case, input + output (K, 0.09) | 1,238 + 14.5 | 1,206 + 14.5 | 1,136 + 14.5 |
-| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.018 / 0.155 s (repeat: 0.108) | 0.008 / 0.010 s | 0.026 / 0.237 s |
-| Task B Macro-F1 (0.28) | **0.987** | **0.968** | **0.977** |
-| Task B tokens per case, input + output (K, 0.06) | 815 + 8.7 | 820 + 9.3 | 789 + 8.9 |
-| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.010 / 0.009 s | 0.007 / 0.007 s | 0.015 / 0.015 s |
+| Task A Macro-F1 (weight 0.30 of the score) | **0.977** | **0.961** | **0.971** |
+| Task A evidence (0.12) | **0.980** | **0.960** | **0.969** |
+| Task A tokens per case, input + output (K, 0.09) | 1,240 + 14.7 | 1,211 + 14.7 | 1,169 + 16.5 |
+| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | LT_DEV_A | LT_VAL_A | LT_PROBE_A |
+| Task B Macro-F1 (0.28) | **0.987** | **0.969** | **0.977** |
+| Task B tokens per case, input + output (K, 0.06) | 815 + 8.7 | 820 + 9.4 | 789 + 8.6 |
+| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | LT_DEV_B | LT_VAL_B | LT_PROBE_B |
 | Labels written by Python (neutral fallback) | 0 of 600 | 1 of 1,160 | 0 of 188 |
-| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.909 / 0.851** | **0.908 / 0.906** | **0.897 / 0.825** |
+| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | REF_DEV | REF_VAL | REF_PROBE |
 
 **Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15): TODO, results after the organisers' evaluation.
 
@@ -223,9 +224,10 @@ code, off):
 | Session 12, model S in place of e5 for task A (dev 0.973 / 0.970 against 0.980 / 0.980; local time at 0.3 s per request 0.018 against 0.144 s; peak memory 200 against 2,286 MiB) | fails by one case (−0.0067; allowed −0.005): off, available as `--ranker S` |
 
 **Probe: two unseen voting dates** (test rows of 2021-03-07 and 2025-09-28, opened in session 10).
-Through the final image [FIN-probe]: task A **0.971**, evidence **0.954** (62 of 65), task B **0.977**; REF SCORE
-0.897 / 0.825. Session 10's image: 0.960, 0.908, 0.971. 90 of 94 task A cases are routed (83 before step 1's parser
-fixes); the 4 others are claims about a committee in votes that have none, answered by the fallback.
+Through the final image [FIN-probe]: task A **0.971**, evidence **0.969** (63 of 65), task B **0.977**; REF SCORE
+REF_PROBE. Session 11's image: 0.971, 0.954, 0.977; session 10's: 0.960, 0.908, 0.971. 90 of 94 task A cases are
+routed (83 before session 11's parser fixes); the 4 others are claims about a committee in votes that have none,
+answered by the fallback (bm25-ap since session 12: all 4 right, 3 of them with a translation call).
 
 ## 7. Limitations
 
@@ -244,11 +246,11 @@ fixes); the 4 others are claims about a committee in votes that have none, answe
 
 - **Published image:** `docker pull ghcr.io/rashad18236/hackapertus-voting-nli:latest` (built from `main` by
   `.github/workflows/publish-image.yml`, which also runs it on a fresh runner without internet); then the
-  organisers' command with `BASE_URL` and `API_KEY` (README). This report's final numbers come from `sha-bb2d08fea0f1` (the `session-11` tag of the branch).
+  organisers' command with `BASE_URL` and `API_KEY` (README). This report's final numbers come from `sha-828429cab766` (built from the session 12 branch).
 - **From source:** `make run` builds the image and answers `examples/cases.jsonl`.
-- **Hardware:** CPU only; 2 CPUs and 4 GB measured (peak 2.3 GiB with two worker processes); the image also answers
-  every case with 1.5 GiB (one worker process under 2.5 GiB) [MEM].
-- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 273 tests.
+- **Hardware:** CPU only; 2 CPUs and 4 GB measured (peak 2.3 GiB with two worker processes); the image answers every
+  case down to 512 MiB, with 2 CPUs or 1: below 1.5 GiB without the embedding model [MEM, GUARD].
+- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); TESTS_COUNT tests.
 
 ## License
 
@@ -260,9 +262,15 @@ Code: Apache-2.0 (the repository's `LICENSE`). Report text: Creative Commons Att
   `gitlab.com/ifsoftware/hackapertus-starter`. Apertus v1.5, Swiss AI Initiative.
 - Wang, L. et al. (2024). *Multilingual E5 Text Embeddings: A Technical Report.* arXiv:2402.05672
   (`intfloat/multilingual-e5-small`, MIT). pypdf (BSD-3), rapidfuzz (MIT), onnxruntime (MIT), requests (Apache-2.0).
-- Runs (`docs/runs/` + name): FIN `2026-10-13_rashad_final-s11_{dev600,val1160}`, FIN-probe
-  `2026-10-13_rashad_final-s11_probe188`; STEP4 `2026-10-12_rashad_local-time-step4_devA300`; MEM
+- Static embeddings (model S): `sentence-transformers/static-similarity-mrl-multilingual-v1` (Apache-2.0). BM25:
+  Robertson, S. and Zaragoza, H. (2009). *The Probabilistic Relevance Framework: BM25 and Beyond.*
+- Runs (`docs/runs/` + name): FIN `2026-10-13_rashad_final-s12_{dev600,val1160}`, FIN-probe
+  `2026-10-13_rashad_final-s12_probe188`; session 12: S12-dev `2026-10-13_rashad_S-and-fallbacks_devA300` and
+  `2026-10-13_rashad_ap-structure-ask_devA300`, S12-val `2026-10-13_rashad_bm25ap-fallback_valA300` and
+  `2026-10-13_rashad_ap-structure-ask_valA300`, GUARD `2026-10-13_rashad_memory-guard_grid48`, rankers
+  `2026-10-13_rashad_rankers-S_offline`, S cost `2026-10-13_rashad_S-cost_devAB600`, task B
+  `2026-10-13_rashad_taskb-selectors-s12_devB300`; STEP4 `2026-10-12_rashad_local-time-step4_devA300`; MEM
   `2026-10-13_rashad_memory-step5_devA300`; TB-dev / TB-val `2026-10-13_rashad_taskb-selectors_{devB300,valB580}`;
-  AP runs `2026-10-1*_rashad_ap-*`; replay reference `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`; COV `2026-10-12_rashad_parser-coverage_booklets93`; FB-dev / FB-val
+  AP runs `2026-10-1*_rashad_ap-*`; replay reference `2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA`; COV `2026-10-12_rashad_parser-coverage_booklets93`; FB-dev / FB-val
   `2026-10-12_rashad_fallbacks_{devA300,valA300}`; from 2026-10-09: E1-curve `context-curve_devA100`, E2-cb
   `closed-book_devA300`.

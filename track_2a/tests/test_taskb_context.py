@@ -5,7 +5,7 @@ from unittest import mock
 
 import numpy as np
 
-from src import cli, llm, taskb_context
+from src import cli, llm, rankers, taskb_context
 from src.contexts import retrieval
 
 TITLE = "Bundesgesetz über die Velowege"
@@ -81,6 +81,9 @@ class CutAndPara(unittest.TestCase):
 
 
 class CliModes(unittest.TestCase):
+    def tearDown(self):
+        rankers.reset()  # session 12: a test below makes the model fail, which the run remembers (src/rankers.py)
+
     def predict(self, mode, answer, reference_text):
         seen = {}
 
@@ -142,6 +145,9 @@ if __name__ == "__main__":
 
 class Selectors(unittest.TestCase):
     """Session 11, step 6 (off by default): other ways to pick B-cut4's 4 paragraphs."""
+
+    def tearDown(self):
+        rankers.reset()
 
     PARAGRAPHS = [f"Absatz {i}: " + "Die Gemeinden verwalten ihre Strassen und Plätze selbst. " * 3 for i in range(8)]
 

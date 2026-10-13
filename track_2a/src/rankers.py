@@ -49,6 +49,14 @@ ACTIVE = {"name": "e5"}
 _vectors = {}  # (model, SHA-256 of the texts) -> vectors
 
 
+def reset():
+    """This process's ranker state back to the defaults (src/cli.py's main() calls it at its start and end, so state
+    from one run never reaches the next run in the same process, as in the tests)."""
+    ACTIVE["name"] = "e5"
+    CASE["guard"] = None
+    _unusable.clear()
+
+
 def uses_model(name):
     """The embedding model a ranker needs ("e5-small", "static-s"), or None."""
     return MODEL.get(name.split("+")[0])

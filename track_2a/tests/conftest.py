@@ -9,6 +9,4 @@ from src import rankers
 @pytest.fixture(autouse=True)
 def fresh_ranker_state():
     yield
-    rankers.ACTIVE["name"] = "e5"
-    rankers.CASE["guard"] = None
-    rankers._unusable.clear()
+    rankers.reset()

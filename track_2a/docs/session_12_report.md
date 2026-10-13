@@ -9,7 +9,19 @@ the instruction's own references, and the reading was written down before any of
 
 ## In short
 
-FINAL_SUMMARY
+**Finished:** steps 0 to 6 and FINISH; step 7 (the final defaults' memory and local time) is part of FINISH; step 8
+was not needed (no default uses model S). Nothing was dropped for time. The sealed test dates were never run, parsed,
+downloaded or opened; `data/test/`, the splits file and the scorer are unchanged; no key was printed, logged or
+committed; no booklet PDF or booklet text is committed; no translation model is in the image or `requirements.txt`.
+Every label comes from an answer of Apertus; Python wrote 1 label in the final runs (2,128 cases): the neutral
+fallback for 1 val task B answer it could not read; 0 failed calls. Every Apertus call counts in its case's tokens.
+
+**Defaults changed, each by its rule:** the memory guard (step 2), the bm25-ap fallback (step 5, FALLBACK RULE on dev
+and val) and AP-structure asked after the parser (step 6, STRUCTURE RULE on dev and val). They act only on cases
+section-route cannot route (8 of 2,128 final cases), on booklets the parser cannot split (none in dev, val or the
+probe) and under memory limits below 1.5 GiB; every other request is unchanged (G1/G2 differ only on the 4 dev and
+val cases that fall back). **Not adopted:** model S for task A (one case short of its rule) and every task B selector
+of step 3; they stay in the code, switched off.
 
 **Each step, before → after:**
 
@@ -25,7 +37,24 @@ FINAL_SUMMARY
 | 7 | final defaults' memory and local time | in FINISH below | — |
 | 8 | an image without e5 | not done: no default uses S | — |
 
-FINAL_TABLE
+**Final defaults through the published image** (`sha-828429cab766`; task A and B in separate containers; every
+answer from one backend), session 11's final image → session 12's (different runs):
+
+| | dev | val | probe |
+|---|---|---|---|
+| Task A Macro-F1 / evidence | 0.980 / 0.985 → **0.977 / 0.980** | 0.959 / 0.955 → **0.961 / 0.960** | 0.971 / 0.954 → **0.971 / 0.969** |
+| Task B Macro-F1 | 0.987 → **0.987** | 0.968 → **0.969** | 0.977 → **0.977** |
+| Task A tokens per case (input + output) | 1,238 + 14.5 → 1,240 + 14.7 | 1,206 + 14.5 → 1,211 + 14.7 | 1,136 + 14.5 → 1,169 + 16.5 |
+| Task B tokens per case | 815 + 8.7 → 815 + 8.7 | 820 + 9.3 → 820 + 9.4 | 789 + 8.9 → 789 + 8.6 |
+| Task A local time per case, 1.0 / 0.3 s per request | 0.018 / 0.155 (repeat 0.108) → LT_DEV_A | 0.008 / 0.010 → LT_VAL_A | 0.026 / 0.237 → LT_PROBE_A |
+| Task B local time per case, 1.0 / 0.3 s | 0.010 / 0.009 → LT_DEV_B | 0.007 / 0.007 → LT_VAL_B | 0.015 / 0.015 → LT_PROBE_B |
+| **REF SCORE**, 1.0 / 0.3 s | 0.909 / 0.851 → REF_DEV | 0.908 / 0.906 → REF_VAL | 0.897 / 0.825 → REF_PROBE |
+
+Against session 11's final runs, one dev task A label changed with an identical request (row 1161, the endpoint's own
+variation) and the fallback cases changed path; on val one fallback case moved from neutral to entailment (gold:
+contradiction, wrong both times) and one routed case (row 1162) moved from neutral to its gold contradiction with an
+identical request. The probe's 4 fallback cases are
+all right with bm25-ap (3 with a translation call), as before; its evidence rose from 62 to 63 of 65.
 
 ## Details, step by step
 
