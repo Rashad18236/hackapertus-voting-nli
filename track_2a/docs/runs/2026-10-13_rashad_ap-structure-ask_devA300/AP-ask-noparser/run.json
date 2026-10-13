@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "12:46",
+ "kind": "model run",
+ "code": "01acada (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task A cases, forced 'no parser'",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 12 step 6)",
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and contents call from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-13_rashad_ap-structure-ask_devA300/today-noparser",
+ "setup": "the same force with --ap-structure-a ask-after-parser: the main process asks Apertus to read the contents (one call per booklet, its tokens in the booklet's first such case); parts that pass the parser's heading checks are routed, else the fallback",
+ "results": {
+  "macro_f1": 0.946,
+  "f1": {
+   "entailment": 0.95,
+   "neutral": 0.956,
+   "contradiction": 0.933
+  },
+  "evidence": {
+   "score": 0.925,
+   "found": 186,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1564,
+  "mean_time_ms": 3791,
+  "p95_time_ms": 17596,
+  "mean_output_tokens": 42.8
+ }
+}

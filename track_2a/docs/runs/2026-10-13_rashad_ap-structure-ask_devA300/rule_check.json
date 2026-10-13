@@ -1,0 +1,100 @@
+{
+ "cases": 300,
+ "same_backend_cases": 300,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 300
+ },
+ "arms": {
+  "today-noparser": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.8962,
+    "neutral_recall": 0.8586,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1868.1,
+    "output_tokens": 15.8,
+    "evidence": 0.6716
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.8962,
+    "neutral_recall": 0.8586,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1868.1,
+    "output_tokens": 15.8,
+    "evidence": 0.6716
+   }
+  },
+  "AP-ask-noparser": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9464,
+    "neutral_recall": 0.9899,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1564.3,
+    "output_tokens": 42.8,
+    "evidence": 0.9254
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9464,
+    "neutral_recall": 0.9899,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1564.3,
+    "output_tokens": 42.8,
+    "evidence": 0.9254
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 23,
+    "breaks": 8,
+    "sign_test_p": 0.0107,
+    "fixed": [
+     "v1.1-row-1026-A",
+     "v1.1-row-1177-A",
+     "v1.1-row-1253-A",
+     "v1.1-row-1271-A",
+     "v1.1-row-1474-A",
+     "v1.1-row-1478-A",
+     "v1.1-row-263-A",
+     "v1.1-row-288-A",
+     "v1.1-row-293-A",
+     "v1.1-row-304-A",
+     "v1.1-row-510-A",
+     "v1.1-row-517-A",
+     "v1.1-row-528-A",
+     "v1.1-row-538-A",
+     "v1.1-row-577-A",
+     "v1.1-row-608-A",
+     "v1.1-row-629-A",
+     "v1.1-row-633-A",
+     "v1.1-row-648-A",
+     "v1.1-row-665-A",
+     "v1.1-row-757-A",
+     "v1.1-row-793-A",
+     "v1.1-row-849-A"
+    ],
+    "broken": [
+     "v1.1-row-1016-A",
+     "v1.1-row-1138-A",
+     "v1.1-row-1161-A",
+     "v1.1-row-1384-A",
+     "v1.1-row-212-A",
+     "v1.1-row-241-A",
+     "v1.1-row-262-A",
+     "v1.1-row-85-A"
+    ]
+   }
+  }
+ }
+}
