@@ -45,9 +45,9 @@ class Hedge(unittest.TestCase):
 
 
 class HedgeInCli(unittest.TestCase):
-    def test_off_by_default_and_labels_unchanged_when_on(self):
-        self.assertFalse(cli.Settings().evidence_hedge_a)
-        today, _, seen_today = run(cli.Settings(), ['{"paragraphs": [2], "label": 2}'])
+    def test_on_by_default_and_labels_and_requests_unchanged(self):
+        self.assertTrue(cli.Settings().evidence_hedge_a)
+        today, _, seen_today = run(cli.Settings(evidence_hedge_a=False), ['{"paragraphs": [2], "label": 2}'])
         hedged, _, seen_h = run(cli.Settings(evidence_hedge_a=True), ['{"paragraphs": [2], "label": 2}'])
         self.assertEqual(seen_today, seen_h)  # same request
         self.assertEqual(hedged["label"], today["label"])

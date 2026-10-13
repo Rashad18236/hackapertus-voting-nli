@@ -87,8 +87,10 @@ class Settings:
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
     prompt_a: str = ""           # session 13, step 1: the routed prompt version (nli.ROUTED_VERSIONS: A-v6-says,
                                  # A-v6-residual, A-v6-mismatch, A-v6-opposite, A-v6-words); "" = today's (A-v4-section-route-L1)
-    evidence_hedge_a: bool = False  # H (session 13, step 3): routed evidence adds the paragraph before the first cited one
-                                    # (when that one opens its page) and the cited page's whole text; see evidence.hedge()
+    evidence_hedge_a: bool = True   # H (session 13, step 3, adopted: H RULE): routed evidence adds the paragraph before the
+                                    # first cited one (when that one opens its page) and the cited page's whole text; see
+                                    # evidence.hedge(). Rule 3 (first gold page) dev 116 -> 119, val 223 -> 236, probe 44 ->
+                                    # 46; nothing worse under any page rule; labels and requests unchanged
     second_look_a6: bool = False  # A6 (session 13, step 1): a neutral answer that cites paragraphs gets one more call
                                   # (A-v6-second-look) with the cited paragraphs and their neighbours; see second_look_a6()
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
