@@ -1,0 +1,37 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "16:18",
+ "kind": "model run",
+ "code": "421d8c8 working tree (scripts/paired_run.py, in-process)",
+ "cases": "val, all 580 task B cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": null,
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-12_rashad_fewer-tokens-B_valB580/today",
+ "setup": "B-cut4: references over 3,000 characters cut to the first line plus the 4 paragraphs most similar to the claim (e5)",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "B-cut4 (references over 3,000 characters cut)",
+  "n_cases": 580,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "results": {
+  "macro_f1": 0.961,
+  "f1": {
+   "entailment": 0.976,
+   "neutral": 0.955,
+   "contradiction": 0.951
+  },
+  "parse_failures": 1,
+  "failed_calls": 0,
+  "mean_input_tokens": 892,
+  "mean_time_ms": 1238,
+  "p95_time_ms": 2956
+ }
+}

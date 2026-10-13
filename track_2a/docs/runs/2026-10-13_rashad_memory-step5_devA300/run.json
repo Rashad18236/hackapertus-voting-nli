@@ -1,0 +1,24 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "00:23",
+ "kind": "offline check",
+ "code": "e9b592f to b223653 working tree copies (src with step 4's defaults; variants with constants switched); image sha-421d8c804677 with src mounted",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases (task B: all 300 dev task B cases)",
+ "setup": "scripts/local_time.py --peak-memory: the image under docker --memory 4g/3g/2g/1.5g/1g x --cpus 2/1 (pinned to CPUs 2-3), fake model replaying the session 10 reference's answers after 0.1 s; a limit passes if the run exits 0, answers every case and gives the same labels as at 4g; lower limits are not run after the first that fails",
+ "format": "lowest working memory limit and peak memory (cgroup, page cache included)",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Before: task A needs 3 GiB with 2 CPUs (2 GiB: OOM, 24 responses missing) and 1.5 GiB with 1 CPU; task B runs in 1 GiB. Adopted: one lane under a 2.5 GiB limit: all responses with identical labels at 2 GiB and 1.5 GiB with 2 CPUs (peak 1.17 GiB); 1 GiB still fails (loading e5 alone peaks at 1.16 GiB).",
+ "results": {
+  "lowest_working_limit_before": {"A_2cpus": "3g", "A_1cpu": "1.5g", "B_2cpus": "1g"},
+  "lowest_working_limit_after": {"A_2cpus": "1.5g", "A_1cpu": "1.5g", "B_2cpus": "1g"},
+  "peak_memory_mib_4g_2cpus_before": 2285,
+  "peak_memory_mib_2g_2cpus_after": 1194
+ }
+}

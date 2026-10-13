@@ -28,6 +28,11 @@ new model calls. Tokens of every call are summed into the case's metrics.
 
 If a model call fails, run() raises StrategyFailed with what was spent so far, and the caller answers the case
 the normal way. A failed translation or an unreadable rewrite is not a failure: the case then runs as today.
+
+Status: measured on 2026-10-12 (docs/robustness_experiments.md) and not adopted. The --strategy-a/-b switches in
+src/cli.py that ran it exist at commit 95588ed only; they were not carried over when main's src/cli.py became a
+prepare-then-run pipeline (sessions 10 and 11). This module and its tests are kept so the runs can be explained and
+redone from that commit.
 """
 
 import time

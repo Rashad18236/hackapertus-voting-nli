@@ -1,0 +1,73 @@
+{
+ "cases": 94,
+ "same_backend_cases": 94,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 94
+ },
+ "arms": {
+  "today": {
+   "all": {
+    "cases": 94,
+    "macro_f1": 0.9713,
+    "neutral_recall": 0.9655,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1135.5,
+    "output_tokens": 14.5,
+    "evidence": 0.9538
+   },
+   "same_backend": {
+    "cases": 94,
+    "macro_f1": 0.9713,
+    "neutral_recall": 0.9655,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1135.5,
+    "output_tokens": 14.5,
+    "evidence": 0.9538
+   }
+  },
+  "AP-all": {
+   "all": {
+    "cases": 94,
+    "macro_f1": 0.9507,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1383.2,
+    "output_tokens": 71.6,
+    "evidence": 0.8769
+   },
+   "same_backend": {
+    "cases": 94,
+    "macro_f1": 0.9507,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1383.2,
+    "output_tokens": 71.6,
+    "evidence": 0.8769
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": false,
+    "evidence at most 0.010 lower": false,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 1,
+    "breaks": 3,
+    "sign_test_p": 0.625,
+    "fixed": [
+     "v1.1-row-763-A"
+    ],
+    "broken": [
+     "v1.1-row-1058-A",
+     "v1.1-row-1261-A",
+     "v1.1-row-225-A"
+    ]
+   }
+  }
+ }
+}

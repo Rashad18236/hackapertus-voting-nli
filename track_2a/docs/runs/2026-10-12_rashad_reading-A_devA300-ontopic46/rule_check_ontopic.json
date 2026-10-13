@@ -1,0 +1,107 @@
+{
+ "cases": 46,
+ "same_backend_cases": 46,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 46
+ },
+ "arms": {
+  "today": {
+   "all": {
+    "cases": 46,
+    "macro_f1": 0.2684,
+    "neutral_recall": 0.6739,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 684.7,
+    "output_tokens": 13.0,
+    "evidence": null
+   },
+   "same_backend": {
+    "cases": 46,
+    "macro_f1": 0.2684,
+    "neutral_recall": 0.6739,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 684.7,
+    "output_tokens": 13.0,
+    "evidence": null
+   }
+  },
+  "CS": {
+   "all": {
+    "cases": 46,
+    "macro_f1": 0.2523,
+    "neutral_recall": 0.6087,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 684.7,
+    "output_tokens": 13.1,
+    "evidence": null
+   },
+   "same_backend": {
+    "cases": 46,
+    "macro_f1": 0.2523,
+    "neutral_recall": 0.6087,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 684.7,
+    "output_tokens": 13.1,
+    "evidence": null
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": false,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": false
+   },
+   "fixes_breaks": {
+    "fixes": 0,
+    "breaks": 3,
+    "sign_test_p": 0.25,
+    "fixed": [],
+    "broken": [
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-232-ot-A",
+     "v1.1-row-85-ot-A"
+    ]
+   }
+  },
+  "SL": {
+   "all": {
+    "cases": 46,
+    "macro_f1": 0.2684,
+    "neutral_recall": 0.6739,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 713.0,
+    "output_tokens": 13.9,
+    "evidence": null
+   },
+   "same_backend": {
+    "cases": 46,
+    "macro_f1": 0.2684,
+    "neutral_recall": 0.6739,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 713.0,
+    "output_tokens": 13.9,
+    "evidence": null
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": false,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": false
+   },
+   "fixes_breaks": {
+    "fixes": 0,
+    "breaks": 0,
+    "sign_test_p": 1.0,
+    "fixed": [],
+    "broken": []
+   }
+  }
+ }
+}

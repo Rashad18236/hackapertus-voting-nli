@@ -1,0 +1,47 @@
+[
+ {
+  "level": "today-fallback",
+  "cases": 300,
+  "seconds_per_case": 1.7383,
+  "seconds_per_case_later_cases_of_a_booklet": 0.0209,
+  "seconds_total": 521.5,
+  "paths": {
+   "embed-e5-small": 300
+  }
+ },
+ {
+  "level": "VW",
+  "cases": 300,
+  "seconds_per_case": 1.3124,
+  "seconds_per_case_later_cases_of_a_booklet": 1.0179,
+  "seconds_total": 393.7,
+  "paths": {
+   "vote-wide": 300
+  }
+ },
+ {
+  "level": "BW",
+  "cases": 300,
+  "seconds_per_case": 1.6093,
+  "seconds_per_case_later_cases_of_a_booklet": 0.0547,
+  "seconds_total": 482.8,
+  "paths": {
+   "booklet-wide": 300
+  }
+ },
+ {
+  "level": "today-routed",
+  "cases": 300,
+  "seconds_per_case": 0.2868,
+  "seconds_per_case_later_cases_of_a_booklet": 0.3003,
+  "seconds_total": 86.0,
+  "paths": {
+   "detail": 43,
+   "council": 102,
+   "committee": 48,
+   "law": 39,
+   "summary": 67,
+   "embed-e5-small": 1
+  }
+ }
+]

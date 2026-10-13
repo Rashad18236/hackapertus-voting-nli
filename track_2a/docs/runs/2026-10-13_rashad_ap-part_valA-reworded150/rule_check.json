@@ -1,0 +1,138 @@
+{
+ "cases": 150,
+ "same_backend_cases": 150,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 150
+ },
+ "arms": {
+  "today": {
+   "all": {
+    "cases": 150,
+    "macro_f1": 0.898,
+    "neutral_recall": 0.96,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1714.7,
+    "output_tokens": 15.5,
+    "evidence": 0.52
+   },
+   "same_backend": {
+    "cases": 150,
+    "macro_f1": 0.898,
+    "neutral_recall": 0.96,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1714.7,
+    "output_tokens": 15.5,
+    "evidence": 0.52
+   }
+  },
+  "VW": {
+   "all": {
+    "cases": 150,
+    "macro_f1": 0.8755,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1023.7,
+    "output_tokens": 14.7,
+    "evidence": 0.65
+   },
+   "same_backend": {
+    "cases": 150,
+    "macro_f1": 0.8755,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1023.7,
+    "output_tokens": 14.7,
+    "evidence": 0.65
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 6,
+    "breaks": 9,
+    "sign_test_p": 0.6072,
+    "fixed": [
+     "v1.1-row-1358-A",
+     "v1.1-row-1440-A",
+     "v1.1-row-235-A",
+     "v1.1-row-56-A",
+     "v1.1-row-579-A",
+     "v1.1-row-945-A"
+    ],
+    "broken": [
+     "v1.1-row-1086-A",
+     "v1.1-row-1156-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-1273-A",
+     "v1.1-row-1389-A",
+     "v1.1-row-15-A",
+     "v1.1-row-255-A",
+     "v1.1-row-993-A",
+     "v1.1-row-996-A"
+    ]
+   }
+  },
+  "AP-part": {
+   "all": {
+    "cases": 150,
+    "macro_f1": 0.9263,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1323.2,
+    "output_tokens": 63.3,
+    "evidence": 0.84
+   },
+   "same_backend": {
+    "cases": 150,
+    "macro_f1": 0.9263,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1323.2,
+    "output_tokens": 63.3,
+    "evidence": 0.84
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 10,
+    "breaks": 6,
+    "sign_test_p": 0.4545,
+    "fixed": [
+     "v1.1-row-1055-A",
+     "v1.1-row-1221-A",
+     "v1.1-row-1256-A",
+     "v1.1-row-1322-A",
+     "v1.1-row-1358-A",
+     "v1.1-row-1440-A",
+     "v1.1-row-1455-A",
+     "v1.1-row-56-A",
+     "v1.1-row-579-A",
+     "v1.1-row-945-A"
+    ],
+    "broken": [
+     "v1.1-row-1159-A",
+     "v1.1-row-13-A",
+     "v1.1-row-1401-A",
+     "v1.1-row-1417-A",
+     "v1.1-row-255-A",
+     "v1.1-row-63-A"
+    ]
+   }
+  }
+ }
+}

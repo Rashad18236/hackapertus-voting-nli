@@ -1,0 +1,123 @@
+{
+ "val_d1.0": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9588630579593392,
+   "evidence": 0.9551122194513716,
+   "tokens_per_case": 1220.3706896551723,
+   "local_time_s": 0.0116,
+   "K": 0.4917,
+   "T": 1.0,
+   "S": 0.8942,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.960578456179876,
+   "evidence": null,
+   "tokens_per_case": 1966.1637931034484,
+   "local_time_s": 0.0069,
+   "K": 0.4069,
+   "T": 0.7246,
+   "S": 0.8421,
+   "valid": true
+  },
+  "score": 0.8734,
+  "peak_memory_mib": {
+   "A": null,
+   "B": null
+  },
+  "replay_misses": {
+   "A": 0,
+   "B": 580
+  }
+ },
+ "val_d0.3": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9588630579593392,
+   "evidence": 0.9551122194513716,
+   "tokens_per_case": 1220.3706896551723,
+   "local_time_s": 0.0335,
+   "K": 0.4917,
+   "T": 1.0,
+   "S": 0.8942,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.960578456179876,
+   "evidence": null,
+   "tokens_per_case": 1966.1637931034484,
+   "local_time_s": 0.0052,
+   "K": 0.4069,
+   "T": 0.9615,
+   "S": 0.8777,
+   "valid": true
+  },
+  "score": 0.8876,
+  "peak_memory_mib": {
+   "A": null,
+   "B": null
+  },
+  "replay_misses": {
+   "A": 0,
+   "B": 580
+  }
+ },
+ "mean_over_delays": {
+  "S_A": 0.8942,
+  "S_B": 0.8599,
+  "score": 0.8805
+ },
+ "val_with_dev_local_time_d1.0": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9588630579593392,
+   "evidence": 0.9551122194513716,
+   "tokens_per_case": 1220.3706896551723,
+   "local_time_s": 0.0171,
+   "K": 0.4917,
+   "T": 1.0,
+   "S": 0.8942,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.960578456179876,
+   "evidence": null,
+   "tokens_per_case": 1966.1637931034484,
+   "local_time_s": 0.01,
+   "K": 0.4069,
+   "T": 0.5,
+   "S": 0.8084,
+   "valid": true
+  },
+  "score": 0.8599
+ },
+ "val_with_dev_local_time_d0.3": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9588630579593392,
+   "evidence": 0.9551122194513716,
+   "tokens_per_case": 1220.3706896551723,
+   "local_time_s": 0.1538,
+   "K": 0.4917,
+   "T": 0.3251,
+   "S": 0.793,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.960578456179876,
+   "evidence": null,
+   "tokens_per_case": 1966.1637931034484,
+   "local_time_s": 0.0068,
+   "K": 0.4069,
+   "T": 0.7353,
+   "S": 0.8437,
+   "valid": true
+  },
+  "score": 0.8133
+ }
+}

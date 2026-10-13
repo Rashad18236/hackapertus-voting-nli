@@ -1,0 +1,305 @@
+300 cases, 0 booklets parsed; arms: ['today', 'BP-short', 'B-cut4', 'BP-short+B-cut4']
+[1/300] v1.1-row-2-B | today: entailment | BP-short: neutral | BP-short+B-cut4: entailment | B-cut4: entailment
+[2/300] v1.1-row-4-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[3/300] v1.1-row-5-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[4/300] v1.1-row-9-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: neutral
+[5/300] v1.1-row-18-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[6/300] v1.1-row-21-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[7/300] v1.1-row-22-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: neutral | today: entailment
+[8/300] v1.1-row-26-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[9/300] v1.1-row-27-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[10/300] v1.1-row-31-B | BP-short: neutral (unparseable answer) | B-cut4: entailment | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[11/300] v1.1-row-35-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[12/300] v1.1-row-36-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[13/300] v1.1-row-40-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[14/300] v1.1-row-48-B | BP-short: neutral (unparseable answer) | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[15/300] v1.1-row-49-B | B-cut4: entailment | BP-short+B-cut4: neutral (unparseable answer) | BP-short: neutral (unparseable answer) | today: entailment
+[16/300] v1.1-row-68-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[17/300] v1.1-row-75-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[18/300] v1.1-row-76-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[19/300] v1.1-row-80-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: neutral | today: entailment
+[20/300] v1.1-row-84-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[21/300] v1.1-row-85-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[22/300] v1.1-row-86-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[23/300] v1.1-row-93-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[24/300] v1.1-row-94-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[25/300] v1.1-row-95-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[26/300] v1.1-row-109-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[27/300] v1.1-row-116-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[28/300] v1.1-row-133-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[29/300] v1.1-row-134-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[30/300] v1.1-row-135-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[31/300] v1.1-row-146-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[32/300] v1.1-row-150-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[33/300] v1.1-row-154-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[34/300] v1.1-row-160-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[35/300] v1.1-row-161-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[36/300] v1.1-row-162-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[37/300] v1.1-row-166-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[38/300] v1.1-row-167-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[39/300] v1.1-row-168-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[40/300] v1.1-row-170-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[41/300] v1.1-row-179-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[42/300] v1.1-row-180-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[43/300] v1.1-row-188-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[44/300] v1.1-row-189-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[45/300] v1.1-row-198-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[46/300] v1.1-row-205-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[47/300] v1.1-row-212-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[48/300] v1.1-row-216-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[49/300] v1.1-row-223-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[50/300] v1.1-row-228-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[51/300] v1.1-row-232-B | B-cut4: contradiction | BP-short+B-cut4: neutral (unparseable answer) | BP-short: neutral (unparseable answer) | today: entailment
+[52/300] v1.1-row-237-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[53/300] v1.1-row-240-B | today: entailment | BP-short: neutral | BP-short+B-cut4: entailment | B-cut4: entailment
+[54/300] v1.1-row-241-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[55/300] v1.1-row-247-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[56/300] v1.1-row-260-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[57/300] v1.1-row-262-B | today: entailment | BP-short: entailment | BP-short+B-cut4: entailment | B-cut4: entailment
+[58/300] v1.1-row-263-B | BP-short: neutral (unparseable answer) | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral (unparseable answer)
+[59/300] v1.1-row-269-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[60/300] v1.1-row-273-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[61/300] v1.1-row-288-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[62/300] v1.1-row-290-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[63/300] v1.1-row-293-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[64/300] v1.1-row-303-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[65/300] v1.1-row-304-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[66/300] v1.1-row-308-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[67/300] v1.1-row-310-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral (unparseable answer) | today: entailment
+[68/300] v1.1-row-313-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[69/300] v1.1-row-330-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[70/300] v1.1-row-331-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[71/300] v1.1-row-333-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[72/300] v1.1-row-339-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[73/300] v1.1-row-345-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[74/300] v1.1-row-347-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[75/300] v1.1-row-350-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[76/300] v1.1-row-359-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[77/300] v1.1-row-363-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[78/300] v1.1-row-367-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[79/300] v1.1-row-370-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[80/300] v1.1-row-371-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[81/300] v1.1-row-380-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[82/300] v1.1-row-408-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[83/300] v1.1-row-412-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral (unparseable answer) | today: entailment
+[84/300] v1.1-row-414-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[85/300] v1.1-row-418-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: entailment
+[86/300] v1.1-row-419-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[87/300] v1.1-row-424-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: neutral | today: entailment
+[88/300] v1.1-row-429-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[89/300] v1.1-row-430-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[90/300] v1.1-row-431-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[91/300] v1.1-row-439-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[92/300] v1.1-row-450-B | BP-short+B-cut4: entailment | today: entailment | B-cut4: entailment | BP-short: entailment
+[93/300] v1.1-row-455-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[94/300] v1.1-row-458-B | BP-short: entailment | B-cut4: entailment | today: entailment | BP-short+B-cut4: entailment
+[95/300] v1.1-row-469-B | B-cut4: entailment | BP-short+B-cut4: entailment | BP-short: entailment | today: entailment
+[96/300] v1.1-row-471-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[97/300] v1.1-row-474-B | today: entailment | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral | B-cut4: entailment
+[98/300] v1.1-row-478-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[99/300] v1.1-row-482-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[100/300] v1.1-row-491-B | BP-short+B-cut4: neutral | today: entailment | B-cut4: entailment | BP-short: neutral
+[101/300] v1.1-row-492-B | today: entailment | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: entailment
+[102/300] v1.1-row-493-B | BP-short: neutral | B-cut4: entailment | today: entailment | BP-short+B-cut4: neutral
+[103/300] v1.1-row-500-B | B-cut4: contradiction | BP-short+B-cut4: neutral | BP-short: contradiction | today: contradiction
+[104/300] v1.1-row-501-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[105/300] v1.1-row-507-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[106/300] v1.1-row-510-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[107/300] v1.1-row-511-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[108/300] v1.1-row-515-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[109/300] v1.1-row-517-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[110/300] v1.1-row-521-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[111/300] v1.1-row-528-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: contradiction
+[112/300] v1.1-row-531-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[113/300] v1.1-row-538-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[114/300] v1.1-row-549-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[115/300] v1.1-row-554-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[116/300] v1.1-row-556-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[117/300] v1.1-row-564-B | today: neutral | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral | B-cut4: neutral
+[118/300] v1.1-row-566-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[119/300] v1.1-row-567-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[120/300] v1.1-row-568-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[121/300] v1.1-row-577-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[122/300] v1.1-row-580-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[123/300] v1.1-row-608-B | B-cut4: contradiction | BP-short+B-cut4: neutral | BP-short: contradiction | today: contradiction
+[124/300] v1.1-row-614-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral (unparseable answer)
+[125/300] v1.1-row-616-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[126/300] v1.1-row-619-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[127/300] v1.1-row-623-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[128/300] v1.1-row-629-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[129/300] v1.1-row-633-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[130/300] v1.1-row-637-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[131/300] v1.1-row-638-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[132/300] v1.1-row-640-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[133/300] v1.1-row-645-B | today: neutral (unparseable answer) | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral | B-cut4: neutral
+[134/300] v1.1-row-648-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[135/300] v1.1-row-656-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[136/300] v1.1-row-662-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[137/300] v1.1-row-665-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[138/300] v1.1-row-666-B | BP-short: neutral | B-cut4: neutral | today: contradiction | BP-short+B-cut4: neutral
+[139/300] v1.1-row-668-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[140/300] v1.1-row-670-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[141/300] v1.1-row-679-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[142/300] v1.1-row-682-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[143/300] v1.1-row-688-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[144/300] v1.1-row-691-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[145/300] v1.1-row-692-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[146/300] v1.1-row-700-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[147/300] v1.1-row-711-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[148/300] v1.1-row-713-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[149/300] v1.1-row-720-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[150/300] v1.1-row-724-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[151/300] v1.1-row-726-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[152/300] v1.1-row-731-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[153/300] v1.1-row-739-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[154/300] v1.1-row-746-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[155/300] v1.1-row-757-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[156/300] v1.1-row-762-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[157/300] v1.1-row-767-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[158/300] v1.1-row-770-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[159/300] v1.1-row-777-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[160/300] v1.1-row-782-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[161/300] v1.1-row-793-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[162/300] v1.1-row-797-B | BP-short: contradiction | B-cut4: neutral | today: contradiction | BP-short+B-cut4: neutral
+[163/300] v1.1-row-798-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[164/300] v1.1-row-800-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[165/300] v1.1-row-810-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[166/300] v1.1-row-820-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[167/300] v1.1-row-821-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[168/300] v1.1-row-826-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[169/300] v1.1-row-830-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[170/300] v1.1-row-836-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[171/300] v1.1-row-841-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[172/300] v1.1-row-843-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[173/300] v1.1-row-844-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[174/300] v1.1-row-849-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[175/300] v1.1-row-852-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[176/300] v1.1-row-853-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[177/300] v1.1-row-854-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: neutral | B-cut4: neutral
+[178/300] v1.1-row-869-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[179/300] v1.1-row-875-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[180/300] v1.1-row-876-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[181/300] v1.1-row-896-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[182/300] v1.1-row-899-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[183/300] v1.1-row-901-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[184/300] v1.1-row-904-B | BP-short+B-cut4: neutral | today: neutral (unparseable answer) | B-cut4: neutral | BP-short: neutral
+[185/300] v1.1-row-909-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[186/300] v1.1-row-920-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[187/300] v1.1-row-930-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[188/300] v1.1-row-932-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[189/300] v1.1-row-935-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[190/300] v1.1-row-939-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[191/300] v1.1-row-944-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[192/300] v1.1-row-946-B | BP-short+B-cut4: neutral | today: contradiction | B-cut4: neutral | BP-short: neutral
+[193/300] v1.1-row-947-B | today: neutral | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral | B-cut4: neutral
+[194/300] v1.1-row-948-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[195/300] v1.1-row-951-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[196/300] v1.1-row-953-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[197/300] v1.1-row-965-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[198/300] v1.1-row-977-B | BP-short: neutral | B-cut4: neutral | today: neutral | BP-short+B-cut4: neutral
+[199/300] v1.1-row-980-B | B-cut4: neutral | BP-short+B-cut4: neutral | BP-short: neutral | today: neutral
+[200/300] v1.1-row-981-B | BP-short+B-cut4: neutral | today: neutral | B-cut4: neutral | BP-short: neutral
+[201/300] v1.1-row-988-B | today: neutral | BP-short: neutral | BP-short+B-cut4: neutral | B-cut4: neutral
+[202/300] v1.1-row-994-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[203/300] v1.1-row-1000-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[204/300] v1.1-row-1003-B | BP-short+B-cut4: neutral (unparseable answer) | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[205/300] v1.1-row-1011-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[206/300] v1.1-row-1014-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[207/300] v1.1-row-1015-B | B-cut4: contradiction | BP-short+B-cut4: neutral (unparseable answer) | BP-short: contradiction | today: contradiction
+[208/300] v1.1-row-1016-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[209/300] v1.1-row-1020-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[210/300] v1.1-row-1022-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[211/300] v1.1-row-1023-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[212/300] v1.1-row-1026-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[213/300] v1.1-row-1039-B | today: contradiction | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: contradiction
+[214/300] v1.1-row-1052-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[215/300] v1.1-row-1056-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[216/300] v1.1-row-1063-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[217/300] v1.1-row-1064-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[218/300] v1.1-row-1067-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[219/300] v1.1-row-1074-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[220/300] v1.1-row-1080-B | BP-short+B-cut4: neutral (unparseable answer) | today: contradiction | B-cut4: contradiction | BP-short: neutral (unparseable answer)
+[221/300] v1.1-row-1083-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[222/300] v1.1-row-1085-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[223/300] v1.1-row-1092-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[224/300] v1.1-row-1098-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[225/300] v1.1-row-1100-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[226/300] v1.1-row-1102-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[227/300] v1.1-row-1110-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[228/300] v1.1-row-1115-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[229/300] v1.1-row-1117-B | today: contradiction | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: contradiction
+[230/300] v1.1-row-1118-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[231/300] v1.1-row-1128-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[232/300] v1.1-row-1138-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[233/300] v1.1-row-1144-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[234/300] v1.1-row-1152-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[235/300] v1.1-row-1161-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[236/300] v1.1-row-1166-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[237/300] v1.1-row-1167-B | today: entailment | BP-short: neutral | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[238/300] v1.1-row-1169-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[239/300] v1.1-row-1177-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[240/300] v1.1-row-1183-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[241/300] v1.1-row-1194-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[242/300] v1.1-row-1198-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[243/300] v1.1-row-1203-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[244/300] v1.1-row-1205-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[245/300] v1.1-row-1208-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[246/300] v1.1-row-1219-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[247/300] v1.1-row-1223-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[248/300] v1.1-row-1230-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[249/300] v1.1-row-1238-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[250/300] v1.1-row-1243-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[251/300] v1.1-row-1246-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[252/300] v1.1-row-1251-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[253/300] v1.1-row-1253-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[254/300] v1.1-row-1258-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[255/300] v1.1-row-1263-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[256/300] v1.1-row-1265-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[257/300] v1.1-row-1267-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[258/300] v1.1-row-1271-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[259/300] v1.1-row-1276-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[260/300] v1.1-row-1280-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[261/300] v1.1-row-1283-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[262/300] v1.1-row-1291-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[263/300] v1.1-row-1297-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[264/300] v1.1-row-1302-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[265/300] v1.1-row-1304-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[266/300] v1.1-row-1308-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[267/300] v1.1-row-1320-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[268/300] v1.1-row-1324-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[269/300] v1.1-row-1326-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[270/300] v1.1-row-1335-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[271/300] v1.1-row-1341-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[272/300] v1.1-row-1342-B | BP-short+B-cut4: neutral (unparseable answer) | today: contradiction | B-cut4: contradiction | BP-short: neutral (unparseable answer)
+[273/300] v1.1-row-1343-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[274/300] v1.1-row-1350-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[275/300] v1.1-row-1364-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[276/300] v1.1-row-1369-B | BP-short+B-cut4: neutral (unparseable answer) | today: contradiction | B-cut4: contradiction | BP-short: neutral (unparseable answer)
+[277/300] v1.1-row-1375-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[278/300] v1.1-row-1376-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[279/300] v1.1-row-1381-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[280/300] v1.1-row-1383-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[281/300] v1.1-row-1384-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[282/300] v1.1-row-1391-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[283/300] v1.1-row-1396-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[284/300] v1.1-row-1403-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[285/300] v1.1-row-1407-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[286/300] v1.1-row-1416-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[287/300] v1.1-row-1421-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[288/300] v1.1-row-1424-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[289/300] v1.1-row-1436-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[290/300] v1.1-row-1444-B | BP-short: neutral (unparseable answer) | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: neutral (unparseable answer)
+[291/300] v1.1-row-1451-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[292/300] v1.1-row-1456-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[293/300] v1.1-row-1459-B | today: contradiction | BP-short: neutral (unparseable answer) | BP-short+B-cut4: neutral (unparseable answer) | B-cut4: contradiction
+[294/300] v1.1-row-1464-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[295/300] v1.1-row-1468-B | B-cut4: entailment | BP-short+B-cut4: neutral | BP-short: neutral | today: entailment
+[296/300] v1.1-row-1472-B | BP-short+B-cut4: contradiction | today: contradiction | B-cut4: contradiction | BP-short: contradiction
+[297/300] v1.1-row-1474-B | today: contradiction | BP-short: contradiction | BP-short+B-cut4: contradiction | B-cut4: contradiction
+[298/300] v1.1-row-1477-B | BP-short: contradiction | B-cut4: contradiction | today: contradiction | BP-short+B-cut4: contradiction
+[299/300] v1.1-row-1478-B | B-cut4: contradiction | BP-short+B-cut4: contradiction | BP-short: contradiction | today: contradiction
+[300/300] v1.1-row-1481-B | BP-short+B-cut4: neutral (unparseable answer) | today: contradiction | B-cut4: contradiction | BP-short: neutral (unparseable answer)
+today: ok: 298, unparseable answer: 2; HTTP 429 answers: 0, retries: 0
+BP-short: ok: 271, unparseable answer: 29; HTTP 429 answers: 0, retries: 0
+B-cut4: ok: 300; HTTP 429 answers: 0, retries: 0
+BP-short+B-cut4: ok: 276, unparseable answer: 24; HTTP 429 answers: 0, retries: 0

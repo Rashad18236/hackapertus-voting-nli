@@ -1,0 +1,33 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "22:18",
+ "kind": "model check",
+ "code": "f295639 (src/ap_parse.py, scripts/ap_structure_check.py)",
+ "task": "A",
+ "variant": "AP-structure (Apertus reads the contents pages)",
+ "cases": "93 booklets (every 2016-2026 booklet in de, fr, it except the sealed dates), one call each",
+ "setup": "src/ap_parse.py structure(): the first six pages, JSON schema with each vote's title and start pages of summary, detail, arguments and law; compared with the Python parser (step 1's coverage)",
+ "format": "agreement with the parser's contents entries; parser checks on Apertus's entries; no labels",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "notes": "NOTES.md",
+ "summary": "All four start pages equal to the parser's for 78.7 % of the 178 current-layout votes that pass the parser (per field 0.79-0.84); older layout: law page equal 30 %; of the 5 votes the parser fails, Apertus's entry passes every check for 1; 1,796 + 176 tokens per booklet.",
+ "results": {
+  "booklets": 93,
+  "calls_failed": 0,
+  "answers_unreadable": 0,
+  "votes_compared_current_layout": 178,
+  "all_pages_equal_current_layout": 0.787,
+  "per_field_equal_current_layout": {"summary": 0.837, "detail": 0.787, "arguments": 0.803, "law": 0.792},
+  "votes_compared_older_layout": 66,
+  "law_page_equal_older_layout": 0.303,
+  "votes_parser_fails": 5,
+  "parser_fails_apertus_passes_all_checks": 1,
+  "vote_count_equal_share_of_booklets": 0.946,
+  "mean_input_tokens_per_booklet": 1796,
+  "mean_output_tokens_per_booklet": 176
+ }
+}

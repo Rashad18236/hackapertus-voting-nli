@@ -1,4 +1,4 @@
-"""Tests for the robustness experiments: strategies (src/strategies.py), their hooks in src/cli.py, BM25 and the
+"""Tests for the robustness experiments: strategies (src/strategies.py), BM25 and the
 hybrid ranking (src/contexts/bm25.py), translation pieces (src/translate.py) and language detection (src/langid.py).
 No model and no translation model: the judge, llm.chat and translate.translate are replaced."""
 
@@ -6,7 +6,7 @@ import json
 import unittest
 from unittest import mock
 
-from src import cli, langid, llm, strategies, translate
+from src import langid, llm, strategies, translate
 from src.contexts import bm25
 from tests.test_booklet import booklet_pages
 from tests.test_section_route import COUNCIL_CLAIM, VOTE
@@ -117,40 +117,6 @@ class NegationAndDecompose(unittest.TestCase):
              self.assertRaises(strategies.StrategyFailed) as ctx:
             strategies.run("negation", fake_judge([1]), "c", ["p"], "de", "de")  # base answers, the rewrite fails
         self.assertEqual((ctx.exception.input_tokens, ctx.exception.output_tokens), (10, 2))
-
-
-class CliHooks(unittest.TestCase):
-    def test_task_b_negation_sums_tokens_and_answers_once(self):
-        answers = iter([result('{"label": 1}', 100, 5), result('{"claim": "neg"}', 30, 8),
-                        result('{"label": 0}', 100, 5)])
-        case = {"id": "b", "vote": "v", "claim": {"text": "c", "language": "de"},
-                "reference": {"text": "r", "language": "de"}}
-        with mock.patch.object(llm, "chat", lambda *a, **k: next(answers)):
-            resp, status, raw = cli.predict(case, ".", cli.Settings(strategy_b="negation"))
-        self.assertEqual((resp["label"], status), (2, "ok"))
-        self.assertEqual(resp["metrics"]["input_tokens"], 230)
-        self.assertEqual(resp["metrics"]["output_tokens"], 18)
-        self.assertEqual(raw["strategy"]["name"], "negation")
-
-    def test_task_a_failed_strategy_falls_back_to_one_call_and_keeps_its_tokens(self):
-        calls = []
-
-        def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
-            calls.append(messages)
-            if len(calls) == 2:  # the negation rewrite fails
-                raise llm.LLMError("down")
-            return result('{"paragraphs": [1], "label": 0}', 40, 6)
-        case = {"id": "a", "vote": VOTE, "claim": {"text": COUNCIL_CLAIM, "language": "de"},
-                "booklet": {"path": "booklets/x.pdf", "language": "de"}}
-        with mock.patch.object(llm, "chat", chat), \
-             mock.patch.object(cli.parse, "load_pages", return_value=booklet_pages()), \
-             mock.patch.object(cli.Path, "is_file", return_value=True):
-            resp, status, raw = cli.predict(case, ".", cli.Settings(strategy_a="negation"))
-        self.assertEqual((resp["label"], status), (0, "ok"))
-        self.assertEqual(len(calls), 3)  # base, failed rewrite, the normal single call
-        self.assertEqual(resp["metrics"]["input_tokens"], 80)
-        self.assertTrue(resp["evidence"])
-        self.assertIn("error", raw["strategy"])
 
 
 class Bm25(unittest.TestCase):

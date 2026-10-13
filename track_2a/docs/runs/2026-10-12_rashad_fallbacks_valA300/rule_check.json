@@ -1,0 +1,193 @@
+{
+ "cases": 300,
+ "same_backend_cases": 300,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 300
+ },
+ "arms": {
+  "today-fallback-nopart": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.8749,
+    "neutral_recall": 0.9271,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1826.8,
+    "output_tokens": 15.8,
+    "evidence": 0.5931
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.8749,
+    "neutral_recall": 0.9271,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1826.8,
+    "output_tokens": 15.8,
+    "evidence": 0.5931
+   }
+  },
+  "VW-nopart": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.8731,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1079.3,
+    "output_tokens": 14.4,
+    "evidence": 0.7157
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.8731,
+    "neutral_recall": 1.0,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1079.3,
+    "output_tokens": 14.4,
+    "evidence": 0.7157
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 19,
+    "breaks": 19,
+    "sign_test_p": 1.0,
+    "fixed": [
+     "v1.1-row-1036-A",
+     "v1.1-row-1107-A",
+     "v1.1-row-1146-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1299-A",
+     "v1.1-row-1334-A",
+     "v1.1-row-1418-A",
+     "v1.1-row-1460-A",
+     "v1.1-row-1465-A",
+     "v1.1-row-19-A",
+     "v1.1-row-396-A",
+     "v1.1-row-476-A",
+     "v1.1-row-529-A",
+     "v1.1-row-532-A",
+     "v1.1-row-621-A",
+     "v1.1-row-681-A",
+     "v1.1-row-773-A",
+     "v1.1-row-823-A",
+     "v1.1-row-923-A"
+    ],
+    "broken": [
+     "v1.1-row-1001-A",
+     "v1.1-row-1086-A",
+     "v1.1-row-1142-A",
+     "v1.1-row-1175-A",
+     "v1.1-row-1197-A",
+     "v1.1-row-1215-A",
+     "v1.1-row-1288-A",
+     "v1.1-row-1294-A",
+     "v1.1-row-1300-A",
+     "v1.1-row-1405-A",
+     "v1.1-row-1455-A",
+     "v1.1-row-1476-A",
+     "v1.1-row-286-A",
+     "v1.1-row-321-A",
+     "v1.1-row-7-A",
+     "v1.1-row-993-A",
+     "v1.1-row-996-A",
+     "v1.1-row-997-A",
+     "v1.1-row-999-A"
+    ]
+   }
+  },
+  "BW-novote": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.8559,
+    "neutral_recall": 0.9896,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 951.5,
+    "output_tokens": 14.5,
+    "evidence": 0.6275
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.8559,
+    "neutral_recall": 0.9896,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 951.5,
+    "output_tokens": 14.5,
+    "evidence": 0.6275
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": false,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 21,
+    "breaks": 27,
+    "sign_test_p": 0.4709,
+    "fixed": [
+     "v1.1-row-1107-A",
+     "v1.1-row-1146-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1245-A",
+     "v1.1-row-1299-A",
+     "v1.1-row-1334-A",
+     "v1.1-row-1418-A",
+     "v1.1-row-1460-A",
+     "v1.1-row-1465-A",
+     "v1.1-row-182-A",
+     "v1.1-row-19-A",
+     "v1.1-row-394-A",
+     "v1.1-row-476-A",
+     "v1.1-row-529-A",
+     "v1.1-row-532-A",
+     "v1.1-row-621-A",
+     "v1.1-row-681-A",
+     "v1.1-row-773-A",
+     "v1.1-row-823-A",
+     "v1.1-row-923-A",
+     "v1.1-row-995-A"
+    ],
+    "broken": [
+     "v1.1-row-1001-A",
+     "v1.1-row-1086-A",
+     "v1.1-row-1175-A",
+     "v1.1-row-1197-A",
+     "v1.1-row-1213-A",
+     "v1.1-row-1215-A",
+     "v1.1-row-1274-A",
+     "v1.1-row-1288-A",
+     "v1.1-row-1294-A",
+     "v1.1-row-1300-A",
+     "v1.1-row-1352-A",
+     "v1.1-row-1405-A",
+     "v1.1-row-1430-A",
+     "v1.1-row-1431-A",
+     "v1.1-row-1473-A",
+     "v1.1-row-17-A",
+     "v1.1-row-173-A",
+     "v1.1-row-187-A",
+     "v1.1-row-192-A",
+     "v1.1-row-196-A",
+     "v1.1-row-252-A",
+     "v1.1-row-286-A",
+     "v1.1-row-341-A",
+     "v1.1-row-421-A",
+     "v1.1-row-7-A",
+     "v1.1-row-984-A",
+     "v1.1-row-999-A"
+    ]
+   }
+  }
+ }
+}

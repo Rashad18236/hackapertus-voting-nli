@@ -1,0 +1,120 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "14:57",
+ "kind": "offline check",
+ "code": "6204a67 (image hackapertus-voting-nli:s10-lanes)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases (and all 300 task B cases with two lanes)",
+ "setup": "session 10: two worker processes owning whole booklets (lanes) against one, same image (--workers 1), fake model replaying saved answers after 1.0 s and 0.3 s, 2 CPUs, 4 GB; K4 with two lanes; peak memory (cgroup v1)",
+ "format": "scripts/local_time.py; no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model scripts/stub_llm.py, replay)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Task A local time per case, two lanes / one: 0.206 / 0.316 s at 0.3 s per request; 0.018 / 0.015-0.016 s at 1.0 s. Peak memory 2.3 / 1.2 GB. Task B 0.007 / 0.008 s (one lane either way). K4 with two lanes 0.080 / 0.772 s.",
+ "results": {
+  "lanes1_devA_d0.3": {
+   "local_s": 94.812,
+   "local_per_case_s": 0.316,
+   "to_first_request_s": 3.064,
+   "gaps_s": 91.612,
+   "gap_p95_s": 1.3329,
+   "tail_s": 0.136,
+   "peak_memory_mib": 1174,
+   "measured_at": "2026-10-12T15:00:22Z"
+  },
+  "lanes1_devA_d1.0_b": {
+   "local_s": 4.577,
+   "local_per_case_s": 0.0153,
+   "to_first_request_s": 3.247,
+   "gaps_s": 1.217,
+   "gap_p95_s": 0.0079,
+   "tail_s": 0.113,
+   "peak_memory_mib": null,
+   "measured_at": "2026-10-12T15:26:00Z"
+  },
+  "lanes1_devA_d1.0_c": {
+   "local_s": 4.754,
+   "local_per_case_s": 0.0158,
+   "to_first_request_s": 3.209,
+   "gaps_s": 1.407,
+   "gap_p95_s": 0.0099,
+   "tail_s": 0.138,
+   "peak_memory_mib": null,
+   "measured_at": "2026-10-12T15:36:11Z"
+  },
+  "lanes2_K4_devA_d0.3": {
+   "local_s": 231.483,
+   "local_per_case_s": 0.7716,
+   "to_first_request_s": 6.483,
+   "gaps_s": 224.858,
+   "gap_p95_s": 3.1987,
+   "tail_s": 0.142,
+   "peak_memory_mib": 2322,
+   "measured_at": "2026-10-12T15:08:34Z"
+  },
+  "lanes2_K4_devA_d1.0": {
+   "local_s": 23.976,
+   "local_per_case_s": 0.0799,
+   "to_first_request_s": 6.749,
+   "gaps_s": 17.094,
+   "gap_p95_s": 0.2032,
+   "tail_s": 0.134,
+   "peak_memory_mib": 2323,
+   "measured_at": "2026-10-12T15:13:56Z"
+  },
+  "lanes2_devA_d0.3": {
+   "local_s": 61.752,
+   "local_per_case_s": 0.2058,
+   "to_first_request_s": 3.371,
+   "gaps_s": 58.254,
+   "gap_p95_s": 0.9194,
+   "tail_s": 0.127,
+   "peak_memory_mib": 2309,
+   "measured_at": "2026-10-12T14:57:49Z"
+  },
+  "lanes2_devA_d1.0_a": {
+   "local_s": 5.421,
+   "local_per_case_s": 0.0181,
+   "to_first_request_s": 3.211,
+   "gaps_s": 2.06,
+   "gap_p95_s": 0.029,
+   "tail_s": 0.15,
+   "peak_memory_mib": 2307,
+   "measured_at": "2026-10-12T15:03:28Z"
+  },
+  "lanes2_devA_d1.0_b": {
+   "local_s": 5.435,
+   "local_per_case_s": 0.0181,
+   "to_first_request_s": 3.28,
+   "gaps_s": 2.006,
+   "gap_p95_s": 0.0177,
+   "tail_s": 0.15,
+   "peak_memory_mib": null,
+   "measured_at": "2026-10-12T15:31:05Z"
+  },
+  "lanes2_devB_d0.3": {
+   "local_s": 2.424,
+   "local_per_case_s": 0.0081,
+   "to_first_request_s": 1.262,
+   "gaps_s": 1.011,
+   "gap_p95_s": 0.0046,
+   "tail_s": 0.151,
+   "peak_memory_mib": 58,
+   "measured_at": "2026-10-12T15:24:24Z"
+  },
+  "lanes2_devB_d1.0": {
+   "local_s": 2.201,
+   "local_per_case_s": 0.0073,
+   "to_first_request_s": 0.924,
+   "gaps_s": 1.118,
+   "gap_p95_s": 0.0053,
+   "tail_s": 0.159,
+   "peak_memory_mib": 49,
+   "measured_at": "2026-10-12T15:19:21Z"
+  }
+ }
+}

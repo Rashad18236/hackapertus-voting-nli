@@ -1,0 +1,20 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+Cases: 188  responses: 188
+
+Task A (document, 94 cases)
+  macro-F1:       0.9598   (minimum 0.60: pass)
+  accuracy:       0.9574
+    entailment    P=0.957 R=1.000 F1=0.978 n=22
+    neutral       P=0.933 R=0.966 F1=0.949 n=29
+    contradiction P=0.976 R=0.930 F1=0.952 n=43
+  evidence score: 0.9077   (59 of 65 entailment/contradiction cases cite the gold passage)
+
+Task B (reference, 94 cases)
+  macro-F1:       0.9605   (minimum 0.75: pass)
+  accuracy:       0.9574
+    entailment    P=1.000 R=1.000 F1=1.000 n=22
+    neutral       P=1.000 R=0.862 F1=0.926 n=29
+    contradiction P=0.915 R=1.000 F1=0.956 n=43
+
+Self-reported usage per case: input_tokens 1531, output_tokens 11, inference_time_ms 1442
+Token and time scores are relative to other teams and are computed only in the official run.

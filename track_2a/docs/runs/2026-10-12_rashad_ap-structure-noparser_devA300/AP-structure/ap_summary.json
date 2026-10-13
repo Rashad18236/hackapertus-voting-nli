@@ -1,0 +1,33 @@
+{
+ "cases": 300,
+ "calls": {
+  "AP-structure-v1": 44
+ },
+ "parsing_problems": {},
+ "parsing_tokens_per_case": {
+  "input": 268.1,
+  "output": 28.5
+ },
+ "part": {
+  "asked": 0,
+  "rules_named_a_part": 0,
+  "apertus_equal_to_rules": 0,
+  "apertus_different": 0,
+  "share_equal": null,
+  "rules_none_apertus_part": 0,
+  "apertus_none": 0,
+  "rules_to_apertus": {}
+ },
+ "structure": {
+  "cases_asked": 300,
+  "vote_found_and_checked": 277
+ },
+ "paths": {
+  "council": 93,
+  "summary": 62,
+  "committee": 44,
+  "detail": 36,
+  "law": 35,
+  "vote-wide": 30
+ }
+}

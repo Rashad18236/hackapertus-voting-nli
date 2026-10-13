@@ -1,0 +1,42 @@
+{
+ "cases": 300,
+ "requests": 644,
+ "wall_s": 440.366,
+ "in_flight_s": 193.712,
+ "local_s": 246.654,
+ "local_per_case_s": 0.8222,
+ "to_first_request_s": 1.067,
+ "tail_s": 0.637,
+ "gaps_s": 244.95,
+ "gap_count": 643,
+ "gap_median_s": 0.0215,
+ "gap_p95_s": 1.6281,
+ "gap_max_s": 30.947,
+ "max_in_flight": 1,
+ "exit_code": 0,
+ "image": "ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677",
+ "image_id": "sha256:b101f52d4df6c370acfbe5a2dc3983bd4302da417c44f45121ac2be996c361f5",
+ "cases_file": "output/devA/cases.jsonl",
+ "delay_s": 0.3,
+ "cpus": "2",
+ "memory": "4g",
+ "cli_args": [
+  "--ap-part-a",
+  "all",
+  "--ap-structure-a",
+  "all",
+  "--fallback-a",
+  "vw+bw"
+ ],
+ "src_mounted": true,
+ "responses": 300,
+ "unique_ids": 300,
+ "answer_kinds": {
+  "replay": 644
+ },
+ "replay_misses": 0,
+ "input_tokens_per_case": 214.7,
+ "output_tokens_per_case": 21.5,
+ "measured_at": "2026-10-13T01:22:49Z",
+ "peak_memory_mib": 1275
+}

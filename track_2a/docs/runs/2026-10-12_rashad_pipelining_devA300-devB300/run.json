@@ -1,0 +1,148 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "12:46",
+ "kind": "offline check",
+ "code": "628f5b0 (threads, image s10-step2-a) and 150ae44 (one worker process, image s10-step2-b)",
+ "task": "A",
+ "variant": "section-route",
+ "cases": "dev, all 300 task A cases and all 300 task B cases (separate runs)",
+ "setup": "session 10 step 2: cases prepared in the background (threads, then one forked worker process), one kept connection, booklet parsed once, ONNX threads = CPU limit, src/ compiled; task B with B-cut and without (--context-b full); same measurement as step 1 (2 CPUs, 4 GB, fake model replaying session 9's answers after 1.0 s and 0.3 s)",
+ "format": "scripts/local_time.py; G1 and G2 (scripts/prompt_snapshot.py) against the session 9 reference; REF SCORE with session 9's Macro-F1, evidence and tokens",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none (fake model scripts/stub_llm.py, replay)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Local time per case, one worker process: task A 0.015 s (1.0 s per request) / 0.300 s (0.3 s), was 0.803 / 0.742; task B without the cut 0.008 / 0.009 s, with B-cut 0.008 / 0.470 s, was 0.985 / 0.939. REF SCORE dev 0.877 / 0.799, val 0.868 / 0.789 (was 0.770 / 0.761 at 1.0 s).",
+ "results": {
+  "threads_devA_d1.0": {
+   "local_s": 31.567,
+   "local_per_case_s": 0.1052,
+   "to_first_request_s": 6.266,
+   "gaps_s": 24.567,
+   "gap_max_s": 3.757,
+   "tail_s": 0.734,
+   "replay_misses": 0
+  },
+  "threads_devA_d0.3": {
+   "local_s": 112.012,
+   "local_per_case_s": 0.3734,
+   "to_first_request_s": 6.826,
+   "gaps_s": 104.448,
+   "gap_max_s": 7.617,
+   "tail_s": 0.739,
+   "replay_misses": 0
+  },
+  "threads_devB_d1.0": {
+   "local_s": 11.16,
+   "local_per_case_s": 0.0372,
+   "to_first_request_s": 1.557,
+   "gaps_s": 8.8,
+   "gap_max_s": 7.555,
+   "tail_s": 0.802,
+   "replay_misses": 0
+  },
+  "threads_devB_d0.3": {
+   "local_s": 199.08,
+   "local_per_case_s": 0.6636,
+   "to_first_request_s": 0.935,
+   "gaps_s": 197.349,
+   "gap_max_s": 11.197,
+   "tail_s": 0.796,
+   "replay_misses": 0
+  },
+  "process_devA_d1.0": {
+   "local_s": 4.546,
+   "local_per_case_s": 0.0152,
+   "to_first_request_s": 3.118,
+   "gaps_s": 1.185,
+   "gap_max_s": 0.011,
+   "tail_s": 0.243,
+   "replay_misses": 0
+  },
+  "process_devA_d0.3": {
+   "local_s": 89.954,
+   "local_per_case_s": 0.2998,
+   "to_first_request_s": 3.564,
+   "gaps_s": 86.155,
+   "gap_max_s": 12.157,
+   "tail_s": 0.235,
+   "replay_misses": 0
+  },
+  "process_devB_d1.0": {
+   "local_s": 2.39,
+   "local_per_case_s": 0.008,
+   "to_first_request_s": 1.002,
+   "gaps_s": 1.133,
+   "gap_max_s": 0.025,
+   "tail_s": 0.256,
+   "replay_misses": 0
+  },
+  "process_devB_d0.3": {
+   "local_s": 140.839,
+   "local_per_case_s": 0.4695,
+   "to_first_request_s": 1.144,
+   "gaps_s": 139.478,
+   "gap_max_s": 4.547,
+   "tail_s": 0.218,
+   "replay_misses": 0
+  },
+  "process_nocut_devB_d1.0": {
+   "local_s": 2.373,
+   "local_per_case_s": 0.0079,
+   "to_first_request_s": 1.087,
+   "gaps_s": 1.098,
+   "gap_max_s": 0.019,
+   "tail_s": 0.188,
+   "replay_misses": 105
+  },
+  "process_nocut_devB_d0.3": {
+   "local_s": 2.627,
+   "local_per_case_s": 0.0088,
+   "to_first_request_s": 1.355,
+   "gaps_s": 1.136,
+   "gap_max_s": 0.028,
+   "tail_s": 0.135,
+   "replay_misses": 105
+  },
+  "ref_score": {
+   "dev_d1.0": {
+    "S_A": 0.9078,
+    "T_A": 1.0,
+    "K_A": 0.4791,
+    "S_B": 0.8318,
+    "T_B": 0.6329,
+    "K_B": 0.3995,
+    "score": 0.8774
+   },
+   "dev_d0.3": {
+    "S_A": 0.7829,
+    "T_A": 0.1668,
+    "K_A": 0.4791,
+    "S_B": 0.822,
+    "T_B": 0.5682,
+    "K_B": 0.3995,
+    "score": 0.7985
+   },
+   "val_d1.0": {
+    "S_A": 0.8959,
+    "T_A": 1.0,
+    "K_A": 0.4917,
+    "S_B": 0.8259,
+    "T_B": 0.6329,
+    "K_B": 0.4069,
+    "score": 0.8679
+   },
+   "val_d0.3": {
+    "S_A": 0.7709,
+    "T_A": 0.1668,
+    "K_A": 0.4917,
+    "S_B": 0.8162,
+    "T_B": 0.5682,
+    "K_B": 0.4069,
+    "score": 0.789
+   }
+  }
+ }
+}

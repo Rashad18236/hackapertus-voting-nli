@@ -36,7 +36,7 @@ import os
 import time
 from pathlib import Path
 
-from src import parse
+from src import memo, parse
 from src.contexts import embed_e5_small, vote_section
 
 CHUNK_CHARS = 1000  # as embed-e5-small
@@ -81,7 +81,8 @@ class GraniteEmbedder:
 
 # name -> (embedder factory, query prefix, passage prefix)
 MODELS = {
-    "e5-small": (lambda: embed_e5_small.E5Embedder(), "query: ", "passage: "),
+    "e5-small": (lambda: embed_e5_small._get_embedder(), "query: ", "passage: "),  # one instance per run
+    "e5-small-q8": (lambda: embed_e5_small._get_quantised_embedder(), "query: ", "passage: "),  # session 11, step 6
     "granite-97m-r2": (lambda: GraniteEmbedder(), "", ""),
 }
 
@@ -91,15 +92,14 @@ _query_cache = {}  # (model, claim text) -> vector
 
 
 def embedder(model):
-    if model not in _embedders:
-        _embedders[model] = MODELS[model][0]()
-    return _embedders[model]
+    return memo.once(_embedders, model, MODELS[model][0])
 
 
 def page_chunks(model, text):
     """(chunk texts, vectors, CPU seconds to embed) for one page, embedded on first use."""
     key = (model, hashlib.sha256(text.encode("utf-8")).hexdigest())
-    if key not in _page_cache:
+
+    def embed_page():
         chunks = parse._split(text.strip(), CHUNK_CHARS)
         vectors, cpu = None, 0.0
         if chunks:
@@ -107,15 +107,13 @@ def page_chunks(model, text):
             start = time.process_time()
             vectors = embedder(model).embed([prefix + c for c in chunks])
             cpu = time.process_time() - start
-        _page_cache[key] = (chunks, vectors, cpu)
-    return _page_cache[key]
+        return chunks, vectors, cpu
+    return memo.once(_page_cache, key, embed_page)
 
 
 def query_vector(model, claim_text):
-    key = (model, claim_text)
-    if key not in _query_cache:
-        _query_cache[key] = embedder(model).embed([MODELS[model][1] + claim_text])[0]
-    return _query_cache[key]
+    return memo.once(_query_cache, (model, claim_text),
+                     lambda: embedder(model).embed([MODELS[model][1] + claim_text])[0])
 
 
 def rank(vectors, query, k, neighbours):

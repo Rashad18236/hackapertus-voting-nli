@@ -1,0 +1,144 @@
+# Publishes the submission image (track_2a/) to the GitHub container registry, where the organisers pull it:
+#
+#   ghcr.io/rashad18236/hackapertus-voting-nli
+#
+# Tags (session 10, step 3):
+#   - a push to main:                "latest" and the commit hash ("sha-" + 12 characters);
+#   - a push to rashad/session-10:   "session-10" and the commit hash;
+#   - a push to rashad/session-11:   "session-11" and the commit hash (session 11);
+#   - started by hand (Actions -> publish-image -> Run workflow): the commit hash, plus "latest" on main
+#     and the session tag on a session branch. "latest" is only ever built from main.
+#
+# Job 1 builds the image for linux/amd64 from track_2a/ (the same Dockerfile as `make build`) and pushes it.
+# Job 2 pulls the pushed image by its commit-hash tag on a fresh runner and runs it with the organisers' command
+# (`--input /data/cases.jsonl --output /output/predictions.jsonl`, /data read-only, read-only root, /tmp in
+# memory) on examples/cases.jsonl, against the fake model (scripts/stub_llm.py) on a Docker network without
+# internet access; it fails unless every id gets exactly one valid response.
+#
+# The only credential is the workflow's own GITHUB_TOKEN; its only write permission is packages. Nothing from
+# .env goes into the image (.dockerignore). A new package on ghcr.io is private until its owner makes it public
+# (github.com/users/<owner>/packages/container/hackapertus-voting-nli/settings -> Change visibility).
+
+name: publish-image
+
+on:
+  push:
+    branches: [main, rashad/session-10, rashad/session-11]
+    paths: ["track_2a/**", ".github/workflows/publish-image.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY_IMAGE: ghcr.io/rashad18236/hackapertus-voting-nli
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      sha_tag: ${{ steps.tags.outputs.sha_tag }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Tags for this commit and branch
+        id: tags
+        run: |
+          sha_tag="sha-${GITHUB_SHA::12}"
+          tags="$REGISTRY_IMAGE:$sha_tag"
+          if [ "$GITHUB_REF_NAME" = "main" ]; then tags="$tags,$REGISTRY_IMAGE:latest"; fi
+          if [ "$GITHUB_REF_NAME" = "rashad/session-10" ]; then tags="$tags,$REGISTRY_IMAGE:session-10"; fi
+          if [ "$GITHUB_REF_NAME" = "rashad/session-11" ]; then tags="$tags,$REGISTRY_IMAGE:session-11"; fi
+          echo "sha_tag=$sha_tag" >> "$GITHUB_OUTPUT"
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
+          echo "Tags: $tags"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build for linux/amd64 and push
+        uses: docker/build-push-action@v6
+        with:
+          context: track_2a
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.description=HackApertus Track 2A: NLI over Swiss voting booklets (entrypoint: --input /data/cases.jsonl --output /output/predictions.jsonl)
+
+      - name: Summary
+        run: |
+          {
+            echo "### Published"
+            echo "Tags: \`${{ steps.tags.outputs.tags }}\`"
+            echo ""
+            echo "If the package is still private, make it public in its package settings (Change visibility)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  pull-and-run:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: track_2a
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull the published image
+        run: |
+          image="$REGISTRY_IMAGE:${{ needs.publish.outputs.sha_tag }}"
+          docker pull --platform linux/amd64 "$image"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+
+      - name: Fake model on a network without internet access
+        run: |
+          docker network create --internal nonet
+          docker run -d --name stub --network nonet --read-only \
+            -v "$PWD/scripts/stub_llm.py:/stub/stub_llm.py:ro" \
+            --entrypoint python "$IMAGE" /stub/stub_llm.py --host 0.0.0.0 --port 8099
+          for i in $(seq 1 30); do
+            if docker run --rm --network nonet --entrypoint python "$IMAGE" -c \
+                 "import urllib.request; urllib.request.urlopen('http://stub:8099/health', timeout=2)"; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "the fake model did not start"; docker logs stub; exit 1
+
+      - name: The organisers' command on examples/cases.jsonl
+        run: |
+          mkdir -p output/pulled && chmod 777 output/pulled
+          docker run --rm --network nonet --read-only --tmpfs /tmp \
+            -e BASE_URL=http://stub:8099/v1 -e API_KEY=ci-dummy-key-not-a-secret \
+            -v "$PWD/examples/cases.jsonl:/data/cases.jsonl:ro" \
+            -v "$PWD/examples/booklets:/data/booklets:ro" \
+            -v "$PWD/output/pulled:/output" \
+            "$IMAGE" --input /data/cases.jsonl --output /output/predictions.jsonl
+
+      - name: Every id has exactly one valid response
+        run: |
+          python3 scripts/check_format.py output/pulled/predictions.jsonl examples/cases.jsonl
+          python3 - <<'EOF'
+          import json, sys
+          ids = [json.loads(l)["id"] for l in open("examples/cases.jsonl", encoding="utf-8") if l.strip()]
+          got = [json.loads(l)["id"] for l in open("output/pulled/predictions.jsonl", encoding="utf-8") if l.strip()]
+          print(f"{len(ids)} ids, {len(got)} responses")
+          sys.exit(0 if sorted(ids) == sorted(got) else 1)
+          EOF

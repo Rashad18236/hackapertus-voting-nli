@@ -1,0 +1,28 @@
+[
+ {
+  "arm": "docs/runs/2026-10-12_rashad_reading-A_valA580/today",
+  "cases": 580,
+  "changed": 13,
+  "changed_now_right": 10,
+  "changed_now_wrong": 2,
+  "macro_f1": 0.9589,
+  "macro_f1_rule": 0.9728,
+  "neutral_recall": 1.0,
+  "neutral_recall_rule": 0.9888,
+  "changed_ids": [
+   "v1.1-row-1036-A",
+   "v1.1-row-1053-A",
+   "v1.1-row-1151-A",
+   "v1.1-row-1162-A",
+   "v1.1-row-1210-A",
+   "v1.1-row-1226-A",
+   "v1.1-row-1309-A",
+   "v1.1-row-1318-A",
+   "v1.1-row-1404-A",
+   "v1.1-row-1467-A",
+   "v1.1-row-341-A",
+   "v1.1-row-646-A",
+   "v1.1-row-991-A"
+  ]
+ }
+]

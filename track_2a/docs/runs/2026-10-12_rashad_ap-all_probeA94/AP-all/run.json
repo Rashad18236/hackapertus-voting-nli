@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "23:07",
+ "kind": "model run",
+ "code": "f0c8ca2 (scripts/paired_run.py, in-process)",
+ "cases": "probe, all 94 task A cases (test rows of 2021-03-07 and 2025-09-28)",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1, probe)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-12_rashad_ap-all_probeA94/today",
+ "setup": "AP-all: Apertus names every claim's part (AP-claim, one call per case) and reads every booklet's contents (AP-structure, one call per booklet); entries that pass the heading checks are used, else VW/BW; part 'none' goes to VW. Tokens include every parsing call",
+ "results": {
+  "macro_f1": 0.951,
+  "f1": {
+   "entailment": 0.977,
+   "neutral": 0.935,
+   "contradiction": 0.94
+  },
+  "evidence": {
+   "score": 0.877,
+   "found": 57,
+   "cases": 65
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1383,
+  "mean_time_ms": 5156,
+  "p95_time_ms": 14824,
+  "mean_output_tokens": 71.6
+ }
+}

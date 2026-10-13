@@ -93,14 +93,75 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/negation/task-B`](runs/2026-10-12_kaan_strategies_dev600/negation/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_strategies_dev600/decompose/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b negation: today's call, Apertus writes the negated claim, negation judged; a neutral answer takes the negation's implied label | 0.960 (E 0.976, N 0.952, C 0.951) | not scored for task B | 0 | 0 | 2636 | 3424 | 4632 |
 | 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/xlang`](runs/2026-10-12_kaan_strategies_dev600/xlang/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/negation`, `2026-10-12_kaan_strategies_dev600/decompose` | A | dev, all 300 task A cases (600-case run: data/dev/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b xlang: cross-language tournament (local MT m2m100_418M; both sides must agree, else a tie-break call with today's request) | 0.980 (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 2060 | 4908 | 9377 |
 | 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/xlang/task-B`](runs/2026-10-12_kaan_strategies_dev600/xlang/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/negation/task-B`, `2026-10-12_kaan_strategies_dev600/decompose/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b xlang: cross-language tournament (local MT m2m100_418M; both sides must agree, else a tie-break call with today's request) | 0.970 (E 0.985, N 0.969, C 0.956) | not scored for task B | 0 | 0 | 2106 | 5081 | 9098 |
+| 2026-10-12 | 13:49 | rashad | [`2026-10-12_rashad_probe-defaults_probe188`](runs/2026-10-12_rashad_probe-defaults_probe188/) | 83e7fab (Docker image hackapertus-voting-nli:s10-step2-c, built from it) | official, Docker image via make run, task A and task B in separate containers (session 10 step 4) | A | probe, all 94 task A cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults after step 2: section-route, A-v4-section-route-L1 + json_schema, evidence with halves; one worker process; LLM_MIN_INTERVAL=1 | **0.960** (E 0.978, N 0.949, C 0.952) | 0.908 (59/65) | 0 | 0 | 1232 | 1655 | 4288 |
+| 2026-10-12 | 13:51 | rashad | [`2026-10-12_rashad_probe-defaults_probe188/task-B`](runs/2026-10-12_rashad_probe-defaults_probe188/task-B/) | 83e7fab (Docker image hackapertus-voting-nli:s10-step2-c, built from it) | official, Docker image via make run, task B in its own container (session 10 step 4) | B | probe, all 94 task B cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults after step 2: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema; LLM_MIN_INTERVAL=1 | **0.960** (E 1.000, N 0.926, C 0.956) | not scored for task B | 0 | 0 | 1831 | 1229 | 2194 |
+| 2026-10-12 | 13:53 | rashad | [`2026-10-12_rashad_fewer-tokens-A_devA300/K4`](runs/2026-10-12_rashad_fewer-tokens-A_devA300/K4/) | 343196e working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-A_devA300/today`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | K4: --section-top-k-a 4 (the 4 paragraphs most similar to the claim, e5) | 0.990 (E 0.990, N 0.995, C 0.985) | 0.975 (196/201) | 0 | 0 | 808 | 1542 | 2967 |
+| 2026-10-12 | 13:53 | rashad | [`2026-10-12_rashad_fewer-tokens-A_devA300/P-short`](runs/2026-10-12_rashad_fewer-tokens-A_devA300/P-short/) | 343196e working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-A_devA300/today`, `2026-10-12_rashad_fewer-tokens-A_devA300/K4`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | P-short: A-v5-short (same rules, 200 fixed tokens instead of 330) | 0.670 (E 0.331, N 0.710, C 0.969) | 0.527 (106/201) | 0 | 0 | 1108 | 1255 | 1695 |
+| 2026-10-12 | 13:53 | rashad | [`2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4`](runs/2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4/) | 343196e working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-A_devA300/today`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short`, `2026-10-12_rashad_fewer-tokens-A_devA300/K4` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | P-short and K4 | 0.619 (E 0.239, N 0.669, C 0.947) | 0.478 (96/201) | 0 | 0 | 679 | 1673 | 3333 |
+| 2026-10-12 | 13:53 | rashad | [`2026-10-12_rashad_fewer-tokens-A_devA300/today`](runs/2026-10-12_rashad_fewer-tokens-A_devA300/today/) | 343196e working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-A_devA300/P-short`, `2026-10-12_rashad_fewer-tokens-A_devA300/K4`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: A-v4-section-route-L1 + json_schema, evidence with halves | 0.980 (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 1238 | 1096 | 1805 |
+| 2026-10-12 | 14:24 | rashad | [`2026-10-12_rashad_fewer-tokens-A_valA580/K4`](runs/2026-10-12_rashad_fewer-tokens-A_valA580/K4/) | 9f40793 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation); paired with `2026-10-12_rashad_fewer-tokens-A_valA580/today` | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | K4: --section-top-k-a 4 (the 4 paragraphs most similar to the claim, e5) | 0.944 (E 0.971, N 0.937, C 0.924) | 0.938 (376/401) | 0 | 0 | 804 | 2113 | 4442 |
+| 2026-10-12 | 14:24 | rashad | [`2026-10-12_rashad_fewer-tokens-A_valA580/today`](runs/2026-10-12_rashad_fewer-tokens-A_valA580/today/) | 9f40793 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation); paired with `2026-10-12_rashad_fewer-tokens-A_valA580/K4` | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: A-v4-section-route-L1 + json_schema, evidence with halves | 0.959 (E 0.976, N 0.955, C 0.946) | 0.955 (383/401) | 0 | 0 | 1206 | 1355 | 1801 |
+| 2026-10-12 | 14:58 | rashad | [`2026-10-12_rashad_response-format-off_devA100/no-schema`](runs/2026-10-12_rashad_response-format-off_devA100/no-schema/) | 6204a67 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 7); paired with `2026-10-12_rashad_response-format-off_devA100/today` | A | dev, 100 task A cases (every third, 34 / 33 / 33 by gold label) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | the same prompt without response_format (schema_a false): the answer read as free text | 0.980 (E 0.986, N 0.985, C 0.969) | 0.970 (65/67) | 0 | 0 | 1230 | 1824 | 4586 |
+| 2026-10-12 | 14:58 | rashad | [`2026-10-12_rashad_response-format-off_devA100/today`](runs/2026-10-12_rashad_response-format-off_devA100/today/) | 6204a67 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 7); paired with `2026-10-12_rashad_response-format-off_devA100/no-schema` | A | dev, 100 task A cases (every third, 34 / 33 / 33 by gold label) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: A-v4-section-route-L1 + json_schema (response_format) | 0.969 (E 0.986, N 0.971, C 0.952) | 0.955 (64/67) | 0 | 0 | 1230 | 1471 | 3272 |
+| 2026-10-12 | 15:04 | rashad | [`2026-10-12_rashad_reading-A_devA300-ontopic46/CS`](runs/2026-10-12_rashad_reading-A_devA300-ontopic46/CS/) | d2e17d5 working tree (scripts/paired_run.py with --exclude-paragraphs, in-process) | official scorer on dev; interleaved, 3 arms, 1 request per second (session 10 step 6); paired with `2026-10-12_rashad_reading-A_devA300-ontopic46/today`, `2026-10-12_rashad_reading-A_devA300-ontopic46/SL` | A | dev, all 300 task A cases, plus the 46 cases of the on-topic neutral set (data/ontopic_neutral/; scored separately; mean tokens and times include them) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | CS: today's prompt with the coupled schema (anyOf: neutral cites nothing, 0/2 cite 1-3 paragraphs) | 0.983 (E 0.980, N 0.995, C 0.975) | 0.990 (199/201) | 0 | 0 | 1164 | 1167 | 1483 |
+| 2026-10-12 | 15:04 | rashad | [`2026-10-12_rashad_reading-A_devA300-ontopic46/SL`](runs/2026-10-12_rashad_reading-A_devA300-ontopic46/SL/) | d2e17d5 working tree (scripts/paired_run.py with --exclude-paragraphs, in-process) | official scorer on dev; interleaved, 3 arms, 1 request per second (session 10 step 6); paired with `2026-10-12_rashad_reading-A_devA300-ontopic46/today`, `2026-10-12_rashad_reading-A_devA300-ontopic46/CS` | A | dev, all 300 task A cases, plus the 46 cases of the on-topic neutral set (data/ontopic_neutral/; scored separately; mean tokens and times include them) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | SL: after a neutral answer that cites paragraphs, one more call with only those paragraphs (A-v4-second-look-cited); 0/2 replaces | 0.987 (E 0.980, N 1.000, C 0.980) | 0.990 (199/201) | 0 | 0 | 1171 | 852 | 1336 |
+| 2026-10-12 | 15:04 | rashad | [`2026-10-12_rashad_reading-A_devA300-ontopic46/today`](runs/2026-10-12_rashad_reading-A_devA300-ontopic46/today/) | d2e17d5 working tree (scripts/paired_run.py with --exclude-paragraphs, in-process) | official scorer on dev; interleaved, 3 arms, 1 request per second (session 10 step 6); paired with `2026-10-12_rashad_reading-A_devA300-ontopic46/CS`, `2026-10-12_rashad_reading-A_devA300-ontopic46/SL` | A | dev, all 300 task A cases, plus the 46 cases of the on-topic neutral set (data/ontopic_neutral/; scored separately; mean tokens and times include them) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: A-v4-section-route-L1 + json_schema, evidence with halves | 0.983 (E 0.980, N 0.995, C 0.975) | 0.985 (198/201) | 0 | 0 | 1164 | 786 | 1409 |
+| 2026-10-12 | 15:26 | rashad | [`2026-10-12_rashad_reading-A_valA580/SL`](runs/2026-10-12_rashad_reading-A_valA580/SL/) | 785bc22 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 6, val confirmation); paired with `2026-10-12_rashad_reading-A_valA580/today` | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | SL: after a neutral answer that cites paragraphs, one more call with only those paragraphs (A-v4-second-look-cited); 0/2 replaces | 0.962 (E 0.979, N 0.960, C 0.948) | 0.960 (385/401) | 0 | 0 | 1215 | 926 | 2041 |
+| 2026-10-12 | 15:26 | rashad | [`2026-10-12_rashad_reading-A_valA580/today`](runs/2026-10-12_rashad_reading-A_valA580/today/) | 785bc22 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 6, val confirmation); paired with `2026-10-12_rashad_reading-A_valA580/SL` | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: A-v4-section-route-L1 + json_schema, evidence with halves | 0.959 (E 0.976, N 0.955, C 0.946) | 0.958 (384/401) | 0 | 0 | 1206 | 823 | 1553 |
+| 2026-10-12 | 15:53 | rashad | [`2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4/) | 2509882 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-B_devB300/today`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4: references over 3,000 characters cut to the first line plus the 4 paragraphs most similar to the claim (e5) | 0.987 (E 0.990, N 0.990, C 0.980) | not scored for task B | 0 | 0 | 883 | 1104 | 2767 |
+| 2026-10-12 | 15:53 | rashad | [`2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/BP-short/) | 2509882 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-B_devB300/today`, `2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | BP-short: v6-short (v3's rules in 144 fixed tokens instead of 203) | 0.667 (E 0.431, N 0.671, C 0.898) | not scored for task B | 29 | 0 | 1935 | 1061 | 2016 |
+| 2026-10-12 | 15:53 | rashad | [`2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4/) | 2509882 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-B_devB300/today`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`, `2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | BP-short and B-cut4 | 0.718 (E 0.532, N 0.710, C 0.912) | not scored for task B | 24 | 0 | 824 | 1074 | 2627 |
+| 2026-10-12 | 15:53 | rashad | [`2026-10-12_rashad_fewer-tokens-B_devB300/today`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/today/) | 2509882 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms (Williams design), 1 request per second (session 10 step 5); paired with `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`, `2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: v3-topic-first, the whole reference, max_tokens 32, no schema | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 2 | 0 | 1994 | 1038 | 2047 |
+| 2026-10-12 | 16:18 | rashad | [`2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4/) | 421d8c8 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation); paired with `2026-10-12_rashad_fewer-tokens-B_valB580/today` | B | val, all 580 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4: references over 3,000 characters cut to the first line plus the 4 paragraphs most similar to the claim (e5) | 0.961 (E 0.976, N 0.955, C 0.951) | not scored for task B | 1 | 0 | 892 | 1238 | 2956 |
+| 2026-10-12 | 16:18 | rashad | [`2026-10-12_rashad_fewer-tokens-B_valB580/today`](runs/2026-10-12_rashad_fewer-tokens-B_valB580/today/) | 421d8c8 working tree (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 5, val confirmation); paired with `2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4` | B | val, all 580 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: v3-topic-first, the whole reference, max_tokens 32, no schema | 0.957 (E 0.984, N 0.945, C 0.942) | not scored for task B | 3 | 0 | 1957 | 943 | 1910 |
 | 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/bm25`](runs/2026-10-12_kaan_retrievers_devA300/bm25/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25 (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.827 (E 0.836, N 0.821, C 0.824) | 0.507 (102/201) | 0 | 0 | 2396 | 2245 | 2840 |
 | 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/bm25-mt`](runs/2026-10-12_kaan_retrievers_devA300/bm25-mt/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25-mt (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | **0.963** (E 0.967, N 0.964, C 0.959) | 0.771 (155/201) | 0 | 0 | 2505 | 2095 | 3196 |
 | 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/embed-e5-small`](runs/2026-10-12_kaan_retrievers_devA300/embed-e5-small/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a embed-e5-small (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.900 (E 0.941, N 0.873, C 0.884) | 0.682 (137/201) | 0 | 0 | 1868 | 2240 | 3546 |
 | 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/hybrid`](runs/2026-10-12_kaan_retrievers_devA300/hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.936 (E 0.971, N 0.928, C 0.910) | 0.766 (154/201) | 0 | 0 | 2362 | 2317 | 3750 |
 | 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/vote-section-hybrid`](runs/2026-10-12_kaan_retrievers_devA300/vote-section-hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a vote-section-hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.920 (E 0.966, N 0.899, C 0.893) | 0.741 (149/201) | 0 | 0 | 2362 | 2281 | 3920 |
+| 2026-10-12 | 17:02 | rashad | [`2026-10-12_rashad_unified-B_devB300/B-U`](runs/2026-10-12_rashad_unified-B_devB300/B-U/) | 421d8c8 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 9, optional); paired with `2026-10-12_rashad_unified-B_devB300/today` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-U: B-cut's text as numbered paragraphs with task A's default routed prompt (A-v4-section-route-L1) and paragraph schema; evidence [] | 0.976 (E 0.985, N 0.980, C 0.964) | not scored for task B | 0 | 0 | 1403 | 1857 | 3669 |
+| 2026-10-12 | 17:02 | rashad | [`2026-10-12_rashad_unified-B_devB300/today`](runs/2026-10-12_rashad_unified-B_devB300/today/) | 421d8c8 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 10 step 9, optional); paired with `2026-10-12_rashad_unified-B_devB300/B-U` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: v3-topic-first, the whole reference, max_tokens 32, no schema | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 2 | 0 | 1994 | 1098 | 2063 |
+| 2026-10-12 | 17:19 | rashad | [`2026-10-12_rashad_final-defaults_dev600/task-A`](runs/2026-10-12_rashad_final-defaults_dev600/task-A/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: section-route, A-v4-section-route-L1 + json_schema, evidence with halves, vote names by meaning, two worker processes, one kept connection; LLM_MIN_INTERVAL=1 | **0.983** (E 0.985, N 0.990, C 0.974) | 0.980 (197/201) | 0 | 0 | 1238 | 1961 | 4889 |
+| 2026-10-12 | 17:25 | rashad | [`2026-10-12_rashad_final-defaults_dev600/task-B`](runs/2026-10-12_rashad_final-defaults_dev600/task-B/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema, one kept connection; LLM_MIN_INTERVAL=1 | **0.967** (E 0.985, N 0.963, C 0.951) | not scored for task B | 3 | 0 | 1994 | 1128 | 2102 |
+| 2026-10-12 | 17:30 | rashad | [`2026-10-12_rashad_final-defaults_val1160/task-A`](runs/2026-10-12_rashad_final-defaults_val1160/task-A/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: section-route, A-v4-section-route-L1 + json_schema, evidence with halves, vote names by meaning, two worker processes, one kept connection; LLM_MIN_INTERVAL=1 | **0.959** (E 0.976, N 0.955, C 0.946) | 0.955 (383/401) | 0 | 0 | 1206 | 1722 | 4523 |
 | 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/bm25-mt`](runs/2026-10-12_kaan_retrievers_valA580/bm25-mt/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/hybrid` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25-mt (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | **0.923** (E 0.952, N 0.923, C 0.893) | 0.706 (283/401) | 0 | 0 | 2522 | 2419 | 3100 |
 | 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/embed-e5-small`](runs/2026-10-12_kaan_retrievers_valA580/embed-e5-small/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/bm25-mt`, `2026-10-12_kaan_retrievers_valA580/hybrid` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a embed-e5-small (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | 0.871 (E 0.923, N 0.867, C 0.823) | 0.589 (236/401) | 0 | 0 | 1856 | 2070 | 2706 |
 | 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/hybrid`](runs/2026-10-12_kaan_retrievers_valA580/hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/bm25-mt` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | **0.926** (E 0.957, N 0.920, C 0.900) | 0.713 (286/401) | 0 | 0 | 2381 | 2341 | 3446 |
+| 2026-10-12 | 17:41 | rashad | [`2026-10-12_rashad_final-defaults_val1160/task-B`](runs/2026-10-12_rashad_final-defaults_val1160/task-B/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | B | val, all 580 task B cases (the B cases of the val rows, output/valB/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema, one kept connection; LLM_MIN_INTERVAL=1 | **0.961** (E 0.984, N 0.951, C 0.947) | not scored for task B | 3 | 0 | 1957 | 1197 | 2127 |
+| 2026-10-12 | 17:53 | rashad | [`2026-10-12_rashad_final-defaults_probe188/task-A`](runs/2026-10-12_rashad_final-defaults_probe188/task-A/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | A | probe, all 94 task A cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: section-route, A-v4-section-route-L1 + json_schema, evidence with halves, vote names by meaning, two worker processes, one kept connection; LLM_MIN_INTERVAL=1 | **0.960** (E 0.978, N 0.949, C 0.952) | 0.908 (59/65) | 0 | 0 | 1232 | 1953 | 2892 |
+| 2026-10-12 | 17:55 | rashad | [`2026-10-12_rashad_final-defaults_probe188/task-B`](runs/2026-10-12_rashad_final-defaults_probe188/task-B/) | 421d8c8 (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 10 FINISH) | B | probe, all 94 task B cases (test rows dated 2021-03-07 and 2025-09-28, data/probe/) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 10 final defaults: v3-topic-first, the whole reference (no cut), max_tokens 32, no schema, one kept connection; LLM_MIN_INTERVAL=1 | **0.971** (E 1.000, N 0.945, C 0.966) | not scored for task B | 0 | 0 | 1831 | 1254 | 2148 |
+| 2026-10-12 | 20:31 | rashad | [`2026-10-12_rashad_fallbacks_devA300/BW-novote`](runs/2026-10-12_rashad_fallbacks_devA300/BW-novote/) | 44983b2 working tree, committed unchanged as 6903fab (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 2, forced fallback test); paired with `2026-10-12_rashad_fallbacks_devA300/today-routed`, `2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_devA300/VW-nopart` | A | dev, all 300 task A cases, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no vote' (the vote match fails): BW, the whole booklet's paragraphs, the 8 most similar (A-v4-booklet-wide-L1) | 0.857 (E 0.921, N 0.833, C 0.818) | 0.647 (130/201) | 0 | 0 | 939 | 2909 | 11716 |
+| 2026-10-12 | 20:31 | rashad | [`2026-10-12_rashad_fallbacks_devA300/VW-nopart`](runs/2026-10-12_rashad_fallbacks_devA300/VW-nopart/) | 44983b2 working tree, committed unchanged as 6903fab (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 2, forced fallback test); paired with `2026-10-12_rashad_fallbacks_devA300/today-routed`, `2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_devA300/BW-novote` | A | dev, all 300 task A cases, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no part': VW, the vote's valid parts' paragraphs with their part names, the 8 most similar (A-v4-vote-wide-L1) | 0.927 (E 0.959, N 0.904, C 0.919) | 0.766 (154/201) | 0 | 0 | 1078 | 2558 | 6970 |
+| 2026-10-12 | 20:31 | rashad | [`2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart`](runs/2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart/) | 44983b2 working tree, committed unchanged as 6903fab (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 2, forced fallback test); paired with `2026-10-12_rashad_fallbacks_devA300/today-routed`, `2026-10-12_rashad_fallbacks_devA300/VW-nopart`, `2026-10-12_rashad_fallbacks_devA300/BW-novote` | A | dev, all 300 task A cases, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no part' (the router returns nothing): today's fallback, embed-e5-small (8 chunks of the whole booklet, A-v3-excerpts) | 0.900 (E 0.941, N 0.873, C 0.884) | 0.672 (135/201) | 0 | 0 | 1868 | 3246 | 12006 |
+| 2026-10-12 | 20:31 | rashad | [`2026-10-12_rashad_fallbacks_devA300/today-routed`](runs/2026-10-12_rashad_fallbacks_devA300/today-routed/) | 44983b2 working tree, committed unchanged as 6903fab (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 2, forced fallback test); paired with `2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_devA300/VW-nopart`, `2026-10-12_rashad_fallbacks_devA300/BW-novote` | A | dev, all 300 task A cases, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults, not forced (reference): routed cases as section-route routes them | 0.977 (E 0.976, N 0.990, C 0.964) | 0.980 (197/201) | 0 | 0 | 1238 | 1476 | 2233 |
+| 2026-10-12 | 21:22 | rashad | [`2026-10-12_rashad_fallbacks_valA300/BW-novote`](runs/2026-10-12_rashad_fallbacks_valA300/BW-novote/) | f295639 (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 3 arms, 1 request per second (session 11 step 2, forced fallback test, confirmation); paired with `2026-10-12_rashad_fallbacks_valA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_valA300/VW-nopart` | A | val, the balanced 300-case sample, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no vote' (the vote match fails): BW, the whole booklet's paragraphs, the 8 most similar (A-v4-booklet-wide-L1) | 0.856 (E 0.910, N 0.837, C 0.821) | 0.627 (128/204) | 0 | 0 | 951 | 3483 | 17514 |
+| 2026-10-12 | 21:22 | rashad | [`2026-10-12_rashad_fallbacks_valA300/VW-nopart`](runs/2026-10-12_rashad_fallbacks_valA300/VW-nopart/) | f295639 (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 3 arms, 1 request per second (session 11 step 2, forced fallback test, confirmation); paired with `2026-10-12_rashad_fallbacks_valA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_valA300/BW-novote` | A | val, the balanced 300-case sample, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no part': VW, the vote's valid parts' paragraphs with their part names, the 8 most similar (A-v4-vote-wide-L1) | 0.873 (E 0.924, N 0.877, C 0.819) | 0.716 (146/204) | 0 | 0 | 1079 | 3829 | 11802 |
+| 2026-10-12 | 21:22 | rashad | [`2026-10-12_rashad_fallbacks_valA300/today-fallback-nopart`](runs/2026-10-12_rashad_fallbacks_valA300/today-fallback-nopart/) | f295639 (scripts/paired_run.py with the arm field force, in-process) | official scorer; interleaved, 3 arms, 1 request per second (session 11 step 2, forced fallback test, confirmation); paired with `2026-10-12_rashad_fallbacks_valA300/VW-nopart`, `2026-10-12_rashad_fallbacks_valA300/BW-novote` | A | val, the balanced 300-case sample, forced into a fallback situation per arm | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | forced 'no part' (the router returns nothing): today's fallback, embed-e5-small (8 chunks of the whole booklet, A-v3-excerpts) | 0.875 (E 0.907, N 0.899, C 0.819) | 0.593 (121/204) | 0 | 0 | 1827 | 3883 | 18605 |
+| 2026-10-12 | 22:33 | rashad | [`2026-10-12_rashad_ap-all_devA300/AP-all`](runs/2026-10-12_rashad_ap-all_devA300/AP-all/) | 34587d1 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1); paired with `2026-10-12_rashad_ap-all_devA300/today` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | AP-all: Apertus names every claim's part (AP-claim, one call per case) and reads every booklet's contents (AP-structure, one call per booklet); entries that pass the heading checks are used, else VW/BW; part 'none' goes to VW. Tokens include every parsing call | 0.960 (E 0.955, N 0.961, C 0.964) | 0.891 (179/201) | 0 | 0 | 1655 | 5234 | 13571 |
+| 2026-10-12 | 22:33 | rashad | [`2026-10-12_rashad_ap-all_devA300/today`](runs/2026-10-12_rashad_ap-all_devA300/today/) | 34587d1 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1); paired with `2026-10-12_rashad_ap-all_devA300/AP-all` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults (section-route, fallback embed-e5-small) | 0.977 (E 0.976, N 0.990, C 0.964) | 0.980 (197/201) | 0 | 0 | 1238 | 1195 | 2474 |
+| 2026-10-12 | 23:07 | rashad | [`2026-10-12_rashad_ap-all_probeA94/AP-all`](runs/2026-10-12_rashad_ap-all_probeA94/AP-all/) | f0c8ca2 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1, probe); paired with `2026-10-12_rashad_ap-all_probeA94/today` | A | probe, all 94 task A cases (test rows of 2021-03-07 and 2025-09-28) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | AP-all: Apertus names every claim's part (AP-claim, one call per case) and reads every booklet's contents (AP-structure, one call per booklet); entries that pass the heading checks are used, else VW/BW; part 'none' goes to VW. Tokens include every parsing call | 0.951 (E 0.977, N 0.935, C 0.940) | 0.877 (57/65) | 0 | 0 | 1383 | 5156 | 14824 |
+| 2026-10-12 | 23:07 | rashad | [`2026-10-12_rashad_ap-all_probeA94/today`](runs/2026-10-12_rashad_ap-all_probeA94/today/) | f0c8ca2 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second, also inside a case (session 11 step 3, run 1, probe); paired with `2026-10-12_rashad_ap-all_probeA94/AP-all` | A | probe, all 94 task A cases (test rows of 2021-03-07 and 2025-09-28) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults (section-route, fallback embed-e5-small) | 0.971 (E 1.000, N 0.949, C 0.965) | 0.954 (62/65) | 0 | 0 | 1135 | 2022 | 1602 |
+| 2026-10-12 | 23:18 | rashad | [`2026-10-12_rashad_ap-part_reworded150/AP-part`](runs/2026-10-12_rashad_ap-part_reworded150/AP-part/) | f0c8ca2 working tree (step 4 switches being turned on; same requests by G1/G2), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2); paired with `2026-10-12_rashad_ap-part_reworded150/today`, `2026-10-12_rashad_ap-part_reworded150/VW` | A | dev, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | AP-part after the rules: Apertus names the part when the rules find none (one call), then section-route; 'none' goes to VW | 0.967 (E 0.958, N 0.990, C 0.951) | 0.880 (88/100) | 0 | 0 | 1383 | 3696 | 5341 |
+| 2026-10-12 | 23:18 | rashad | [`2026-10-12_rashad_ap-part_reworded150/VW`](runs/2026-10-12_rashad_ap-part_reworded150/VW/) | f0c8ca2 working tree (step 4 switches being turned on; same requests by G1/G2), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2); paired with `2026-10-12_rashad_ap-part_reworded150/today`, `2026-10-12_rashad_ap-part_reworded150/AP-part` | A | dev, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | VW for a case the rules cannot route (vote-wide paragraphs, A-v4-vote-wide-L1) | 0.894 (E 0.947, N 0.877, C 0.857) | 0.670 (67/100) | 0 | 0 | 1045 | 3473 | 9179 |
+| 2026-10-12 | 23:18 | rashad | [`2026-10-12_rashad_ap-part_reworded150/today`](runs/2026-10-12_rashad_ap-part_reworded150/today/) | f0c8ca2 working tree (step 4 switches being turned on; same requests by G1/G2), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2); paired with `2026-10-12_rashad_ap-part_reworded150/VW`, `2026-10-12_rashad_ap-part_reworded150/AP-part` | A | dev, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: the rules find no part, so embed-e5-small | 0.906 (E 0.931, N 0.902, C 0.887) | 0.700 (70/100) | 0 | 0 | 1699 | 6392 | 31713 |
+| 2026-10-12 | 23:52 | rashad | [`2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure`](runs/2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure/) | e9b592f (scripts/paired_run.py with the arm field force 'no parser', in-process) | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 3); paired with `2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser`, `2026-10-12_rashad_ap-structure-noparser_devA300/VW` | A | dev, all 300 task A cases, the Python parser switched off for the case's vote (test only) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | AP-structure after the parser: Apertus reads the contents (one call per booklet); its entries pass the parser's heading checks, then section-route routes the rules' part; else VW | 0.970 (E 0.971, N 0.985, C 0.953) | 0.955 (192/201) | 0 | 0 | 1478 | 2687 | 12846 |
+| 2026-10-12 | 23:52 | rashad | [`2026-10-12_rashad_ap-structure-noparser_devA300/VW`](runs/2026-10-12_rashad_ap-structure-noparser_devA300/VW/) | e9b592f (scripts/paired_run.py with the arm field force 'no parser', in-process) | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 3); paired with `2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser`, `2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure` | A | dev, all 300 task A cases, the Python parser switched off for the case's vote (test only) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | VW with no valid part: the vote's pages as paragraphs without part names (A-v4-vote-wide-L1) | 0.886 (E 0.929, N 0.880, C 0.849) | 0.687 (138/201) | 0 | 0 | 1055 | 2358 | 6346 |
+| 2026-10-12 | 23:52 | rashad | [`2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser`](runs/2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser/) | e9b592f (scripts/paired_run.py with the arm field force 'no parser', in-process) | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 3); paired with `2026-10-12_rashad_ap-structure-noparser_devA300/VW`, `2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure` | A | dev, all 300 task A cases, the Python parser switched off for the case's vote (test only) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults with no valid part for the vote: the fallback embed-e5-small | 0.900 (E 0.941, N 0.873, C 0.884) | 0.672 (135/201) | 0 | 0 | 1868 | 3929 | 21267 |
+| 2026-10-13 | 00:38 | rashad | [`2026-10-13_rashad_ap-part_valA-reworded150/AP-part`](runs/2026-10-13_rashad_ap-part_valA-reworded150/AP-part/) | 9948e7a (AP-part after the rules on the worker-process path), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2 confirmed on val); paired with `2026-10-13_rashad_ap-part_valA-reworded150/today`, `2026-10-13_rashad_ap-part_valA-reworded150/VW` | A | val, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py, the dev replacements unchanged) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | AP-part after the rules: Apertus names the part when the rules find none (one call), then section-route; 'none' goes to VW | 0.926 (E 0.929, N 0.935, C 0.915) | 0.840 (84/100) | 0 | 0 | 1323 | 5322 | 11027 |
+| 2026-10-13 | 00:38 | rashad | [`2026-10-13_rashad_ap-part_valA-reworded150/VW`](runs/2026-10-13_rashad_ap-part_valA-reworded150/VW/) | 9948e7a (AP-part after the rules on the worker-process path), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2 confirmed on val); paired with `2026-10-13_rashad_ap-part_valA-reworded150/today`, `2026-10-13_rashad_ap-part_valA-reworded150/AP-part` | A | val, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py, the dev replacements unchanged) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | VW for a case the rules cannot route (vote-wide paragraphs, A-v4-vote-wide-L1) | 0.876 (E 0.932, N 0.885, C 0.810) | 0.650 (65/100) | 0 | 0 | 1024 | 2458 | 6034 |
+| 2026-10-13 | 00:38 | rashad | [`2026-10-13_rashad_ap-part_valA-reworded150/today`](runs/2026-10-13_rashad_ap-part_valA-reworded150/today/) | 9948e7a (AP-part after the rules on the worker-process path), scripts/paired_run.py in-process | official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 2 confirmed on val); paired with `2026-10-13_rashad_ap-part_valA-reworded150/VW`, `2026-10-13_rashad_ap-part_valA-reworded150/AP-part` | A | val, 150 balanced task A cases whose opening was reworded so the rules find no part (scripts/make_reworded.py, the dev replacements unchanged) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's defaults: the rules find no part, so embed-e5-small | 0.898 (E 0.923, N 0.923, C 0.848) | 0.520 (52/100) | 0 | 0 | 1715 | 4715 | 21541 |
+| 2026-10-13 | 01:10 | rashad | [`2026-10-13_rashad_taskb-selectors_devB300/E`](runs/2026-10-13_rashad_taskb-selectors_devB300/E/) | ac9fe5f (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 6b); paired with `2026-10-13_rashad_taskb-selectors_devB300/today`, `2026-10-13_rashad_taskb-selectors_devB300/T`, `2026-10-13_rashad_taskb-selectors_devB300/H` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4 (E): a reference over 3,000 characters is cut to its first line and the 4 paragraphs most similar to the claim (e5) | 0.987 (E 0.990, N 0.990, C 0.980) | not scored for task B | 0 | 0 | 883 | 2354 | 7524 |
+| 2026-10-13 | 01:10 | rashad | [`2026-10-13_rashad_taskb-selectors_devB300/H`](runs/2026-10-13_rashad_taskb-selectors_devB300/H/) | ac9fe5f (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 6b); paired with `2026-10-13_rashad_taskb-selectors_devB300/today`, `2026-10-13_rashad_taskb-selectors_devB300/E`, `2026-10-13_rashad_taskb-selectors_devB300/T` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4 with selector H: L (shared character 4-grams and numbers, no model) for a claim in the reference's language, else T | 0.993 (E 0.990, N 1.000, C 0.990) | not scored for task B | 0 | 0 | 923 | 728 | 1843 |
+| 2026-10-13 | 01:10 | rashad | [`2026-10-13_rashad_taskb-selectors_devB300/T`](runs/2026-10-13_rashad_taskb-selectors_devB300/T/) | ac9fe5f (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 6b); paired with `2026-10-13_rashad_taskb-selectors_devB300/today`, `2026-10-13_rashad_taskb-selectors_devB300/E`, `2026-10-13_rashad_taskb-selectors_devB300/H` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4 with selector T: e5 on the first 300 characters of each paragraph | 0.987 (E 0.985, N 0.995, C 0.980) | not scored for task B | 0 | 0 | 815 | 887 | 2453 |
+| 2026-10-13 | 01:10 | rashad | [`2026-10-13_rashad_taskb-selectors_devB300/today`](runs/2026-10-13_rashad_taskb-selectors_devB300/today/) | ac9fe5f (scripts/paired_run.py, in-process) | official scorer; interleaved, 4 arms, 1 request per second (session 11 step 6b); paired with `2026-10-13_rashad_taskb-selectors_devB300/E`, `2026-10-13_rashad_taskb-selectors_devB300/T`, `2026-10-13_rashad_taskb-selectors_devB300/H` | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's task B default: the whole reference (v3-topic-first) | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 2 | 0 | 1994 | 1226 | 2287 |
+| 2026-10-13 | 01:41 | rashad | [`2026-10-13_rashad_taskb-selectors_valB580/T`](runs/2026-10-13_rashad_taskb-selectors_valB580/T/) | 27a61c9 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 11 step 6b, confirmation); paired with `2026-10-13_rashad_taskb-selectors_valB580/today` | B | val, all 580 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | B-cut4 with selector T: a reference over 3,000 characters is cut to its first line and the 4 paragraphs whose first 300 characters are most similar to the claim (e5) | 0.968 (E 0.982, N 0.963, C 0.958) | not scored for task B | 1 | 0 | 820 | 932 | 1763 |
+| 2026-10-13 | 01:41 | rashad | [`2026-10-13_rashad_taskb-selectors_valB580/today`](runs/2026-10-13_rashad_taskb-selectors_valB580/today/) | 27a61c9 (scripts/paired_run.py, in-process) | official scorer; interleaved, 2 arms, 1 request per second (session 11 step 6b, confirmation); paired with `2026-10-13_rashad_taskb-selectors_valB580/T` | B | val, all 580 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | today's task B default: the whole reference (v3-topic-first) | 0.954 (E 0.984, N 0.938, C 0.938) | not scored for task B | 3 | 0 | 1957 | 1007 | 2032 |
+| 2026-10-13 | 02:15 | rashad | [`2026-10-13_rashad_final-s11_dev600/task-A`](runs/2026-10-13_rashad_final-s11_dev600/task-A/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: section-route (A-v4-section-route-L1 + json_schema), AP-part after the rules, evidence with halves, vote names by meaning; light-first lanes, lazy pages, shared onnxruntime threads, one lane under 2.5 GiB; one kept connection; LLM_MIN_INTERVAL=1 | **0.980** (E 0.976, N 0.995, C 0.969) | 0.985 (198/201) | 0 | 0 | 1238 | 2500 | 9408 |
+| 2026-10-13 | 02:21 | rashad | [`2026-10-13_rashad_final-s11_dev600/task-B`](runs/2026-10-13_rashad_final-s11_dev600/task-B/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | B | dev, all 300 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: v3-topic-first, references over 3,000 characters cut to the first line and 4 paragraphs by selector T (cut4-t), max_tokens 32, no schema; LLM_MIN_INTERVAL=1 | **0.987** (E 0.985, N 0.995, C 0.980) | not scored for task B | 0 | 0 | 815 | 1790 | 4145 |
+| 2026-10-13 | 02:26 | rashad | [`2026-10-13_rashad_final-s11_val1160/task-A`](runs/2026-10-13_rashad_final-s11_val1160/task-A/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | A | val, all 580 task A cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: section-route (A-v4-section-route-L1 + json_schema), AP-part after the rules, evidence with halves, vote names by meaning; light-first lanes, lazy pages, shared onnxruntime threads, one lane under 2.5 GiB; one kept connection; LLM_MIN_INTERVAL=1 | **0.959** (E 0.976, N 0.955, C 0.946) | 0.955 (383/401) | 0 | 0 | 1206 | 1569 | 3641 |
+| 2026-10-13 | 02:37 | rashad | [`2026-10-13_rashad_final-s11_val1160/task-B`](runs/2026-10-13_rashad_final-s11_val1160/task-B/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | B | val, all 580 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: v3-topic-first, references over 3,000 characters cut to the first line and 4 paragraphs by selector T (cut4-t), max_tokens 32, no schema; LLM_MIN_INTERVAL=1 | **0.968** (E 0.982, N 0.963, C 0.958) | not scored for task B | 1 | 0 | 820 | 1332 | 2164 |
+| 2026-10-13 | 02:48 | rashad | [`2026-10-13_rashad_final-s11_probe188/task-A`](runs/2026-10-13_rashad_final-s11_probe188/task-A/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | A | probe, all 94 task A cases (test rows of 2021-03-07 and 2025-09-28) | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: section-route (A-v4-section-route-L1 + json_schema), AP-part after the rules, evidence with halves, vote names by meaning; light-first lanes, lazy pages, shared onnxruntime threads, one lane under 2.5 GiB; one kept connection; LLM_MIN_INTERVAL=1 | **0.971** (E 1.000, N 0.949, C 0.965) | 0.954 (62/65) | 0 | 0 | 1135 | 1592 | 3139 |
+| 2026-10-13 | 02:49 | rashad | [`2026-10-13_rashad_final-s11_probe188/task-B`](runs/2026-10-13_rashad_final-s11_probe188/task-B/) | bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since) | official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH) | B | probe, all 94 task B cases | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm-0.23.1rc1, blablador) | session 11 final defaults: v3-topic-first, references over 3,000 characters cut to the first line and 4 paragraphs by selector T (cut4-t), max_tokens 32, no schema; LLM_MIN_INTERVAL=1 | **0.977** (E 0.977, N 0.966, C 0.989) | not scored for task B | 0 | 0 | 789 | 1188 | 2236 |
 
 ## Task B runs
 
@@ -131,10 +192,32 @@ Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour
 | 2026-10-09 | 21:22 | [`2026-10-09_rashad_final-defaults_dev600/task-B`](runs/2026-10-09_rashad_final-defaults_dev600/task-B/) | current | v3-topic-first | B-cut (session 9 default) for references over 8,000 characters | 300 | no | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 2021 | 3774 | – |
 | 2026-10-10 | 01:56 | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | current | v3-topic-first | none: stability point 2 (point 1's image and settings) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1812 | 3066 | – |
 | 2026-10-10 | 09:56 | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | current | v3-topic-first | none: stability point 3 (point 1's image and settings) | 300 | no | 32 | 0.963 (E 0.985, N 0.958, C 0.946) | 0 | 1994 | 1637 | 2595 | – |
+| 2026-10-12 | 12:11 | [`2026-10-12_rashad_connection-time_devB20`](runs/2026-10-12_rashad_connection-time_devB20/) | current | v3-topic-first | none (connection handling only) | 20 | False | 32 | not recorded | not recorded | not recorded | not recorded | not recorded | – |
 | 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/base/task-B`](runs/2026-10-12_kaan_strategies_dev600/base/task-B/) | current | v3-topic-first | none (today's defaults, B-cut) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 936 | 1391 | – |
 | 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/decompose/task-B`](runs/2026-10-12_kaan_strategies_dev600/decompose/task-B/) | current | v3-topic-first | strategy decompose | 300 | no | 32 | 0.937 (E 0.944, N 0.944, C 0.924) | 0 | 1842 | 2257 | 6384 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
 | 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/negation/task-B`](runs/2026-10-12_kaan_strategies_dev600/negation/task-B/) | current | v3-topic-first | strategy negation | 300 | no | 32 | 0.960 (E 0.976, N 0.952, C 0.951) | 0 | 2636 | 3424 | 4632 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
 | 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/xlang/task-B`](runs/2026-10-12_kaan_strategies_dev600/xlang/task-B/) | current | v3-topic-first | strategy xlang | 300 | no | 32 | 0.970 (E 0.985, N 0.969, C 0.956) | 0 | 2106 | 5081 | 9098 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
+| 2026-10-12 | 13:51 | [`2026-10-12_rashad_probe-defaults_probe188/task-B`](runs/2026-10-12_rashad_probe-defaults_probe188/task-B/) | current | v3-topic-first | none (probe set) | 94 | False | 32 | **0.960** (E 1.000, N 0.926, C 0.956) | 0 | 1831 | 1229 | 2194 | – |
+| 2026-10-12 | 15:53 | [`2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4/) | current | v3-topic-first | B-cut4 (references over 3,000 characters cut) | 300 | False | 32 | 0.987 (E 0.990, N 0.990, C 0.980) | 0 | 883 | 1104 | 2767 | – |
+| 2026-10-12 | 15:53 | [`2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/BP-short/) | current | v6-short | v3-topic-first's rules in fewer words, README label names | 300 | False | 32 | 0.667 (E 0.431, N 0.671, C 0.898) | 0 | 1935 | 1061 | 2016 | – |
+| 2026-10-12 | 15:53 | [`2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4/) | current | v6-short | v6-short with B-cut4 | 300 | False | 32 | 0.718 (E 0.532, N 0.710, C 0.912) | 0 | 824 | 1074 | 2627 | – |
+| 2026-10-12 | 15:53 | [`2026-10-12_rashad_fewer-tokens-B_devB300/today`](runs/2026-10-12_rashad_fewer-tokens-B_devB300/today/) | current | v3-topic-first | none (today) | 300 | False | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1038 | 2047 | – |
+| 2026-10-12 | 16:18 | [`2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4`](runs/2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4/) | current | v3-topic-first | B-cut4 (references over 3,000 characters cut) | 580 | False | 32 | 0.961 (E 0.976, N 0.955, C 0.951) | 0 | 892 | 1238 | 2956 | – |
+| 2026-10-12 | 16:18 | [`2026-10-12_rashad_fewer-tokens-B_valB580/today`](runs/2026-10-12_rashad_fewer-tokens-B_valB580/today/) | current | v3-topic-first | none (today) | 580 | False | 32 | 0.957 (E 0.984, N 0.945, C 0.942) | 0 | 1957 | 943 | 1910 | – |
+| 2026-10-12 | 17:02 | [`2026-10-12_rashad_unified-B_devB300/B-U`](runs/2026-10-12_rashad_unified-B_devB300/B-U/) | current | A-v4-section-route-L1 | task A's prompt and schema on numbered (cut) paragraphs | 300 | True | 128 | 0.976 (E 0.985, N 0.980, C 0.964) | 0 | 1403 | 1857 | 3669 | – |
+| 2026-10-12 | 17:02 | [`2026-10-12_rashad_unified-B_devB300/today`](runs/2026-10-12_rashad_unified-B_devB300/today/) | current | v3-topic-first | none (today) | 300 | False | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1098 | 2063 | – |
+| 2026-10-12 | 17:25 | [`2026-10-12_rashad_final-defaults_dev600/task-B`](runs/2026-10-12_rashad_final-defaults_dev600/task-B/) | current | v3-topic-first | none (final defaults) | 300 | False | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1128 | 2102 | – |
+| 2026-10-12 | 17:41 | [`2026-10-12_rashad_final-defaults_val1160/task-B`](runs/2026-10-12_rashad_final-defaults_val1160/task-B/) | current | v3-topic-first | none (final defaults) | 580 | False | 32 | **0.961** (E 0.984, N 0.951, C 0.947) | 0 | 1957 | 1197 | 2127 | – |
+| 2026-10-12 | 17:55 | [`2026-10-12_rashad_final-defaults_probe188/task-B`](runs/2026-10-12_rashad_final-defaults_probe188/task-B/) | current | v3-topic-first | none (final defaults) | 94 | False | 32 | **0.971** (E 1.000, N 0.945, C 0.966) | 0 | 1831 | 1254 | 2148 | – |
+| 2026-10-13 | 01:10 | [`2026-10-13_rashad_taskb-selectors_devB300/E`](runs/2026-10-13_rashad_taskb-selectors_devB300/E/) | current | v3-topic-first | B-cut4 (E: e5 on whole paragraphs) | 300 | False | 32 | 0.987 (E 0.990, N 0.990, C 0.980) | 0 | 883 | 2354 | 7524 | – |
+| 2026-10-13 | 01:10 | [`2026-10-13_rashad_taskb-selectors_devB300/H`](runs/2026-10-13_rashad_taskb-selectors_devB300/H/) | current | v3-topic-first | B-cut4 with selector H (4-grams and numbers in the reference's language, else T) | 300 | False | 32 | 0.993 (E 0.990, N 1.000, C 0.990) | 0 | 923 | 728 | 1843 | – |
+| 2026-10-13 | 01:10 | [`2026-10-13_rashad_taskb-selectors_devB300/T`](runs/2026-10-13_rashad_taskb-selectors_devB300/T/) | current | v3-topic-first | B-cut4 with selector T (e5 on each paragraph's first 300 characters) | 300 | False | 32 | 0.987 (E 0.985, N 0.995, C 0.980) | 0 | 815 | 887 | 2453 | – |
+| 2026-10-13 | 01:10 | [`2026-10-13_rashad_taskb-selectors_devB300/today`](runs/2026-10-13_rashad_taskb-selectors_devB300/today/) | current | v3-topic-first | none (the whole reference) | 300 | False | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1226 | 2287 | – |
+| 2026-10-13 | 01:41 | [`2026-10-13_rashad_taskb-selectors_valB580/T`](runs/2026-10-13_rashad_taskb-selectors_valB580/T/) | current | v3-topic-first | B-cut4 with selector T (e5 on each paragraph's first 300 characters) | 580 | False | 32 | 0.968 (E 0.982, N 0.963, C 0.958) | 0 | 820 | 932 | 1763 | – |
+| 2026-10-13 | 01:41 | [`2026-10-13_rashad_taskb-selectors_valB580/today`](runs/2026-10-13_rashad_taskb-selectors_valB580/today/) | current | v3-topic-first | none (the whole reference) | 580 | False | 32 | 0.954 (E 0.984, N 0.938, C 0.938) | 0 | 1957 | 1007 | 2032 | – |
+| 2026-10-13 | 02:21 | [`2026-10-13_rashad_final-s11_dev600/task-B`](runs/2026-10-13_rashad_final-s11_dev600/task-B/) | current | v3-topic-first | cut4-t (final defaults) | 300 | False | 32 | **0.987** (E 0.985, N 0.995, C 0.980) | 0 | 815 | 1790 | 4145 | – |
+| 2026-10-13 | 02:37 | [`2026-10-13_rashad_final-s11_val1160/task-B`](runs/2026-10-13_rashad_final-s11_val1160/task-B/) | current | v3-topic-first | cut4-t (final defaults) | 580 | False | 32 | **0.968** (E 0.982, N 0.963, C 0.958) | 0 | 820 | 1332 | 2164 | – |
+| 2026-10-13 | 02:49 | [`2026-10-13_rashad_final-s11_probe188/task-B`](runs/2026-10-13_rashad_final-s11_probe188/task-B/) | current | v3-topic-first | cut4-t (final defaults) | 94 | False | 32 | **0.977** (E 0.977, N 0.966, C 0.989) | 0 | 789 | 1188 | 2236 | – |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -182,11 +265,22 @@ check, the best evidence score a model could reach by citing it.
 - [`2026-10-09_rashad_analysis-offline_devA-valA-devB`](runs/2026-10-09_rashad_analysis-offline_devA-valA-devB/): 2026-10-09 17:54 UTC, rashad; session 9 phase B (B1-B6): bootstrap intervals and language tables, evidence pages under three rules, claim tags, rules without a model, E6's val errors, similarity of E5's neutral answers. Task A Macro-F1 dev+val pooled 0.955 (95 % bootstrap 0.938-0.970); every evidence page holds its quote (rule 3), 179/182 lie on a gold page, 107/182 on its first page; task B references over 8,000 characters are 99/105 neutral, shorter ones 0/195; 12 of E6's 13 val errors had the gold passage sent (reading errors); L2 threshold 0.845 flags 10/11 wrong and 11/99 right neutral answers of E5.
 - [`2026-10-09_rashad_llm-router_dev300-stress300`](runs/2026-10-09_rashad_llm-router_dev300-stress300/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-09 21:09 UTC, rashad; session 9 E3 (information only): one Apertus call per claim asks which part the opening names (summary, council, committee, law, detail, none; json_schema), compared with src/claim_router.py's rules and, for the stress openings, with the intended part. Dev: Apertus agrees with the rules on 278 of 300 claims (16 law claims naming the Federal Assembly's recommendation it calls council). Stress: right 283 of 300 (rules 285), wrong part 17 (rules 0), no fallback where the rules fall back 15 times; 220 input and 8 output tokens, 1.3 s per call.
 - [`2026-10-09_rashad_prompt-snapshot-final_devAB-valA`](runs/2026-10-09_rashad_prompt-snapshot-final_devAB-valA/): 2026-10-09 21:46 UTC, rashad; session 9 reference for the final defaults (B-cut, L1, evidence halves): the real CLI against the fake model; SHA-256 of every request body and every task A path; the final dev run's 600 answers and the val L1 arm's 580 answers replayed by request hash. Replay of the final code reproduces the saved answers exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.980 / evidence 0.980, task B 0.967; val task A (all 580) 0.961 / 0.958. Replaces the session 8 reference as the anchor of G1 and G2.
+- [`2026-10-12_rashad_local-time-main_devA300-devB300`](runs/2026-10-12_rashad_local-time-main_devA300-devB300/): 2026-10-12 11:57 UTC, rashad; session 10 step 1: main's image with the organisers' command, 2 CPUs, 4 GB, read-only root, /tmp tmpfs; fake model in replay mode (session 9's saved answers) answering after 1.0 s and after 0.3 s. Local time per case of main: task A 0.803 s (delay 1.0 s) / 0.742 s (0.3 s), task B 0.985 / 0.939 s; REF SCORE dev 0.7700, val 0.7612 (delay 1.0 s), T_A 0.062, T_B 0.005.
+- [`2026-10-12_rashad_connection-time_devB20`](runs/2026-10-12_rashad_connection-time_devB20/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-12 12:11 UTC, rashad; session 10 step 1: each case twice, back to back in alternating order: src/llm.py as on main (requests.post, a new connection per call) and the same with one kept requests.Session; default task B settings (v3-topic-first, B-cut). Set-up before the first byte: new connection per call 486.0 ms mean (median 465.3), kept connection 24.3 ms mean (1.2 ms after the first call); 20 vs 1 connections opened for 20 calls each.
+- [`2026-10-12_rashad_pipelining_devA300-devB300`](runs/2026-10-12_rashad_pipelining_devA300-devB300/): 2026-10-12 12:46 UTC, rashad; session 10 step 2: cases prepared in the background (threads, then one forked worker process), one kept connection, booklet parsed once, ONNX threads = CPU limit, src/ compiled; task B with B-cut and without (--context-b full); same measurement as step 1 (2 CPUs, 4 GB, fake model replaying session 9's answers after 1.0 s and 0.3 s). Local time per case, one worker process: task A 0.015 s (1.0 s per request) / 0.300 s (0.3 s), was 0.803 / 0.742; task B without the cut 0.008 / 0.009 s, with B-cut 0.008 / 0.470 s, was 0.985 / 0.939. REF SCORE dev 0.877 / 0.799, val 0.868 / 0.789 (was 0.770 / 0.761 at 1.0 s).
+- [`2026-10-12_rashad_lanes_devA300-devB300`](runs/2026-10-12_rashad_lanes_devA300-devB300/): 2026-10-12 14:57 UTC, rashad; session 10: two worker processes owning whole booklets (lanes) against one, same image (--workers 1), fake model replaying saved answers after 1.0 s and 0.3 s, 2 CPUs, 4 GB; K4 with two lanes; peak memory (cgroup v1). Task A local time per case, two lanes / one: 0.206 / 0.316 s at 0.3 s per request; 0.018 / 0.015-0.016 s at 1.0 s. Peak memory 2.3 / 1.2 GB. Task B 0.007 / 0.008 s (one lane either way). K4 with two lanes 0.080 / 0.772 s.
+- [`2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`](runs/2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA/): 2026-10-12 18:02 UTC, rashad; session 10 reference for the final defaults (task B whole reference, two lanes, vote names by meaning): the real CLI against the fake model; SHA-256 of every request body and every task A path; the final dev run's 600 answers and the final val task A run's 580 answers replayed by request hash. Replay of the final code reproduces the saved answers of the final runs exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.983 / evidence 0.980, task B 0.967; val task A 0.959 / 0.955. Replaces the session 9 reference as the anchor of G1 and G2.
+- [`2026-10-12_rashad_parser-coverage_booklets93`](runs/2026-10-12_rashad_parser-coverage_booklets93/): 2026-10-12 20:15 UTC, rashad; scripts/parser_coverage.py (per booklet and cross-language), before and after; scripts/route_check.py on the probe; prompt_snapshot G1/G2. Booklets complete 64 -> 88 of 93, votes passing 178 -> 244 of 249 found (all 249 with a usable part), cross-language disagreements 2 -> 0; probe routed 83 -> 90 of 94; G1/G2 pass on dev and val.
+- [`2026-10-12_rashad_local-time-step4_devA300`](runs/2026-10-12_rashad_local-time-step4_devA300/): 2026-10-12 21:31 UTC, rashad; scripts/local_time.py: the image with 2 CPUs (pinned to CPUs 2-3), 4 GB, fake model replaying the session 10 reference's answers after 0.3 s (also 1.0 and 0.1 s for the first four variants); PROFILE_PHASES=1. Local time per case at 0.3 s per request (mean of rounds): today 0.202 s; light-first 0.177; lazy pages 0.184; both 0.156; one onnxruntime thread per lane (SHARE_CPUS) 0.124; light-first + SHARE_CPUS 0.120; all three 0.101. G1/G2 pass with all three on: adopted.
+- [`2026-10-12_rashad_ap-structure_booklets93`](runs/2026-10-12_rashad_ap-structure_booklets93/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-12 22:18 UTC, rashad; src/ap_parse.py structure(): the first six pages, JSON schema with each vote's title and start pages of summary, detail, arguments and law; compared with the Python parser (step 1's coverage). All four start pages equal to the parser's for 78.7 % of the 178 current-layout votes that pass the parser (per field 0.79-0.84); older layout: law page equal 30 %; of the 5 votes the parser fails, Apertus's entry passes every check for 1; 1,796 + 176 tokens per booklet.
+- [`2026-10-13_rashad_memory-step5_devA300`](runs/2026-10-13_rashad_memory-step5_devA300/): 2026-10-13 00:23 UTC, rashad; scripts/local_time.py --peak-memory: the image under docker --memory 4g/3g/2g/1.5g/1g x --cpus 2/1 (pinned to CPUs 2-3), fake model replaying the session 10 reference's answers after 0.1 s; a limit passes if the run exits 0, answers every case and gives the same labels as at 4g; lower limits are not run after the first that fails. Before: task A needs 3 GiB with 2 CPUs (2 GiB: OOM, 24 responses missing) and 1.5 GiB with 1 CPU; task B runs in 1 GiB. Adopted: one lane under a 2.5 GiB limit: all responses with identical labels at 2 GiB and 1.5 GiB with 2 CPUs (peak 1.17 GiB); 1 GiB still fails (loading e5 alone peaks at 1.16 GiB).
+- [`2026-10-13_rashad_image-check_page1`](runs/2026-10-13_rashad_image-check_page1/) **model check** (swiss-ai/apertus-v1.5-8b): 2026-10-13 00:38 UTC, rashad; scripts/image_check.py: an OpenAI-style image part with the question 'What is the heading of this page?'. The endpoint accepted the image request (HTTP 200, 1,077 input + 26 output tokens), but the answer did not contain the page's heading 'Im Detail': the text model does not read the image. Recorded only.
+- [`2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`](runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA/): 2026-10-13 02:52 UTC, rashad; session 11 reference for the final defaults (task B selector T, AP-part after the rules, step 4 and 5 defaults): the real CLI against the fake model; SHA-256 of every request body (parsing calls apart) and every task A path; the final dev run's 600 answers and the final val task A run's 580 answers replayed by request hash. Replay of the final code reproduces the saved answers of the final runs exactly (0 label and 0 evidence differences in 1,180 cases): dev task A 0.980 / evidence 0.985, task B 0.987; val task A 0.959 / 0.955. Replaces the session 10 reference as the anchor of G1 and G2.
 
 ## Runs by person
 
 - **kaan** (23): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`, `2026-10-12_kaan_retrieval-check_devA201/bm25`, `2026-10-12_kaan_retrieval-check_devA201/bm25-mt`, `2026-10-12_kaan_retrieval-check_devA201/embed-e5-small`, `2026-10-12_kaan_retrieval-check_devA201/hybrid`, `2026-10-12_kaan_retrieval-check_devA201/vote-section-hybrid`, `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/decompose`, `2026-10-12_kaan_strategies_dev600/decompose/task-B`, `2026-10-12_kaan_strategies_dev600/negation`, `2026-10-12_kaan_strategies_dev600/negation/task-B`, `2026-10-12_kaan_strategies_dev600/xlang`, `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid`, `2026-10-12_kaan_retrievers_valA580/bm25-mt`, `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/hybrid`
-- **rashad** (86): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`
+- **rashad** (158): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`, `2026-10-12_rashad_local-time-main_devA300-devB300`, `2026-10-12_rashad_connection-time_devB20`, `2026-10-12_rashad_pipelining_devA300-devB300`, `2026-10-12_rashad_probe-defaults_probe188`, `2026-10-12_rashad_probe-defaults_probe188/task-B`, `2026-10-12_rashad_fewer-tokens-A_devA300/K4`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short`, `2026-10-12_rashad_fewer-tokens-A_devA300/P-short+K4`, `2026-10-12_rashad_fewer-tokens-A_devA300/today`, `2026-10-12_rashad_fewer-tokens-A_valA580/K4`, `2026-10-12_rashad_fewer-tokens-A_valA580/today`, `2026-10-12_rashad_lanes_devA300-devB300`, `2026-10-12_rashad_response-format-off_devA100/no-schema`, `2026-10-12_rashad_response-format-off_devA100/today`, `2026-10-12_rashad_reading-A_devA300-ontopic46/CS`, `2026-10-12_rashad_reading-A_devA300-ontopic46/SL`, `2026-10-12_rashad_reading-A_devA300-ontopic46/today`, `2026-10-12_rashad_reading-A_valA580/SL`, `2026-10-12_rashad_reading-A_valA580/today`, `2026-10-12_rashad_fewer-tokens-B_devB300/B-cut4`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short`, `2026-10-12_rashad_fewer-tokens-B_devB300/BP-short+B-cut4`, `2026-10-12_rashad_fewer-tokens-B_devB300/today`, `2026-10-12_rashad_fewer-tokens-B_valB580/B-cut4`, `2026-10-12_rashad_fewer-tokens-B_valB580/today`, `2026-10-12_rashad_unified-B_devB300/B-U`, `2026-10-12_rashad_unified-B_devB300/today`, `2026-10-12_rashad_final-defaults_dev600/task-A`, `2026-10-12_rashad_final-defaults_dev600/task-B`, `2026-10-12_rashad_final-defaults_val1160/task-A`, `2026-10-12_rashad_final-defaults_val1160/task-B`, `2026-10-12_rashad_final-defaults_probe188/task-A`, `2026-10-12_rashad_final-defaults_probe188/task-B`, `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`, `2026-10-12_rashad_parser-coverage_booklets93`, `2026-10-12_rashad_fallbacks_devA300/BW-novote`, `2026-10-12_rashad_fallbacks_devA300/VW-nopart`, `2026-10-12_rashad_fallbacks_devA300/today-fallback-nopart`, `2026-10-12_rashad_fallbacks_devA300/today-routed`, `2026-10-12_rashad_fallbacks_valA300/BW-novote`, `2026-10-12_rashad_fallbacks_valA300/VW-nopart`, `2026-10-12_rashad_fallbacks_valA300/today-fallback-nopart`, `2026-10-12_rashad_local-time-step4_devA300`, `2026-10-12_rashad_ap-structure_booklets93`, `2026-10-12_rashad_ap-all_devA300/AP-all`, `2026-10-12_rashad_ap-all_devA300/today`, `2026-10-12_rashad_ap-all_probeA94/AP-all`, `2026-10-12_rashad_ap-all_probeA94/today`, `2026-10-12_rashad_ap-part_reworded150/AP-part`, `2026-10-12_rashad_ap-part_reworded150/VW`, `2026-10-12_rashad_ap-part_reworded150/today`, `2026-10-12_rashad_ap-structure-noparser_devA300/AP-structure`, `2026-10-12_rashad_ap-structure-noparser_devA300/VW`, `2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser`, `2026-10-13_rashad_memory-step5_devA300`, `2026-10-13_rashad_ap-part_valA-reworded150/AP-part`, `2026-10-13_rashad_ap-part_valA-reworded150/VW`, `2026-10-13_rashad_ap-part_valA-reworded150/today`, `2026-10-13_rashad_image-check_page1`, `2026-10-13_rashad_taskb-selectors_devB300/E`, `2026-10-13_rashad_taskb-selectors_devB300/H`, `2026-10-13_rashad_taskb-selectors_devB300/T`, `2026-10-13_rashad_taskb-selectors_devB300/today`, `2026-10-13_rashad_taskb-selectors_valB580/T`, `2026-10-13_rashad_taskb-selectors_valB580/today`, `2026-10-13_rashad_final-s11_dev600/task-A`, `2026-10-13_rashad_final-s11_dev600/task-B`, `2026-10-13_rashad_final-s11_val1160/task-A`, `2026-10-13_rashad_final-s11_val1160/task-B`, `2026-10-13_rashad_final-s11_probe188/task-A`, `2026-10-13_rashad_final-s11_probe188/task-B`, `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`
 
 ## Notes per run
 
@@ -1044,6 +1138,274 @@ where the claim's and the negation's labels are inconsistent (13 of those 23 are
 consistent. Task A: 4 of the 5 wrong answers among 19 inconsistent cases. The check finds errors but its rule
 does not fix them.
 
+### Probe: two unseen voting dates with today's defaults (session 10, step 4)
+
+**The probe set** (`data/probe/`, `scripts/make_probe.py`): the 94 test rows dated 2021-03-07 and 2025-09-28,
+copied as 94 task A and 94 task B cases with their expected labels (`data/test/` unchanged). The other three test
+dates (2020-02-09, 2022-02-13, 2022-05-15) stay sealed: no line of theirs was parsed (lines were chosen by the
+booklet path and the row id before parsing). Six booklets (de, fr, it for both dates) in `output/booklets_probe/`.
+No pattern, rule or threshold in `src/` was written for these dates; from now on the probe may be used like dev.
+
+**Without the model** (`offline/route_check_summary.json`, `scripts/route_check.py`):
+
+- Booklets: 5 of 6 parse completely; `2025_09_28_fr`, vote 1: "contents entry without arguments" (14 of 15
+  votes pass the checks).
+- Router: all 94 claims get a part (council 34, summary 20, law 16, committee 14, detail 10).
+- Routed: 83 of 94 cases; 11 fall back to embed-e5-small (8: the vote's structure not found, all in
+  `2025_09_28_fr`; 3: the committee part empty for that vote).
+- Every routed case with a gold passage (57) has it among the sent paragraphs (hit 1.000); mean 2,848
+  characters sent.
+- Local time (`local_time_*.json`, image `s10-step2-c`, 2 CPUs): task A 0.037 s per case at 1.0 s per request,
+  0.236 s at 0.3 s; task B 0.015 / 0.014 s. Per case higher than dev for task B because the fixed start-up
+  (about 0.9 s) is shared by 94 cases instead of 300.
+
+**With the model** (image `s10-step2-c`, the organisers' command via `make run`, task A and task B in separate
+containers, Public AI `apertus-v1.5-8b`, one request per second; every answer from one backend, blablador; 0
+failed calls, 0 unreadable answers, so 0 neutral-fallback labels):
+
+| | Macro-F1 | F1 E / N / C | evidence | input + output tokens | probe | dev (session 9) | val (session 9) |
+|---|---|---|---|---|---|---|---|
+| task A | **0.960** | 0.978 / 0.949 / 0.952 | **0.908** (59 of 65) | 1,232 + 14.4 | | 0.980, ev. 0.980 | 0.961, ev. 0.958 |
+| task B | **0.961** | 1.000 / 0.926 / 0.956 | | 1,831 + 8.6 | | 0.967 (no cut) | 0.957 (no cut) |
+
+The probe lands on val's level for both tasks (task A a little below dev, as val was).
+
+**Every error, by mechanism** (`errors.json`):
+
+| task | case | gold → answer | path | mechanism |
+|---|---|---|---|---|
+| A | row-1058 | 2 → 0 | fallback (2025_09_28_fr) | entailment and contradiction mixed up |
+| A | row-763 | 1 → 2 | law | called contradiction, gold neutral (a claim about a 2019 Japan agreement) |
+| A | row-1453 | 2 → 1 | committee | neutral although a paragraph was cited ([6]) |
+| A | row-1176 | 2 → 1 | law | neutral, nothing cited |
+| B | row-536, 644, 763, 918 | 1 → 2 | task B | called contradiction, gold neutral (claims about another ballot or fact) |
+
+Task B's four errors are all session 9's main pattern (a neutral claim called a contradiction); row 763 is wrong
+in both tasks. Task A's errors are spread over the mechanisms; one comes from the fallback path.
+
+**Evidence misses** (`evidence_misses.json`): 6 of 65. Four are on the fallback path (rows 485, 1058, 1123, 1220;
+three in `2025_09_28_fr`, whose first vote the parser does not find), two are neutral answers to contradictions
+(rows 1176, 1453: no evidence). On the routed path every answered contradiction or entailment cites the gold
+passage. The parser gap in `2025_09_28_fr` costs 3 evidence hits and probably the 2 → 0 error.
+
+**REF SCORE on the probe** (`ref_score.json`; the probe's own local times):
+
+| | S_A | T_A | K_A | S_B | T_B | K_B | REF SCORE |
+|---|---|---|---|---|---|---|---|
+| 1.0 s per request | 0.884 | 1.000 | 0.481 | 0.789 | 0.343 | 0.435 | **0.846** |
+| 0.3 s per request | 0.765 | 0.212 | 0.481 | 0.790 | 0.347 | 0.435 | **0.775** |
+
+Files: `predictions.jsonl`, `raw_answers.jsonl`, `official_score.*` (both tasks; task A in `run.json`),
+`task-B/` (task B's own run), `cli.log`, `errors.json`, `evidence_misses.json`, `local_time_*.json`,
+`offline/route_check_summary.json`.
+
+### Fewer tokens for task A: P-short, K4 and both, against today, on dev (session 10, step 5)
+
+**Run.** All 300 dev task A cases, four arms interleaved (`scripts/paired_run.py`, Williams design, one request
+per second), Public AI `apertus-v1.5-8b`; every one of the 1,200 answers came from the same backend (blablador,
+`vllm-0.23.1rc1 ... dd237840`), so all cases are same-backend cases. 0 failed calls, 0 HTTP 429.
+
+- **today:** the defaults after step 2 (section-route, `A-v4-section-route-L1` + json_schema, evidence with halves).
+- **P-short:** routed cases get `A-v5-short`, the same rules in fewer words: 200 fixed tokens (system prompt and
+  user labels, Apertus v1 tokenizer) instead of 330; L1's sentence word for word; the label names of the dataset
+  README ("Entailment (0)", "Unrelated / Neutral (1)", "Contradiction (2)").
+- **K4:** `--section-top-k-a 4`: a routed case keeps only the 4 paragraphs most similar to the claim (e5), in
+  their order.
+- **P-short+K4:** both.
+
+| arm | Macro-F1 | F1 E / N / C | evidence | neutral recall | unreadable | input + output tokens | fixes / breaks vs today |
+|---|---|---|---|---|---|---|---|
+| today | 0.980 | 0.980 / 0.990 / 0.969 | 0.980 | 1.000 | 0 | 1,237.8 + 14.5 | |
+| P-short | 0.670 | 0.331 / 0.710 / 0.969 | 0.527 | 1.000 | 0 | 1,108.2 + 15.0 | 2 / 82 |
+| **K4** | **0.990** | 0.990 / 0.995 / 0.985 | **0.975** | **1.000** | 0 | **808.5** + 14.3 | 5 / 2 (p 0.45) |
+| P-short+K4 | 0.619 | 0.239 / 0.669 / 0.947 | 0.478 | 0.990 | 0 | 678.9 + 14.9 | 2 / 94 |
+
+(`rule_check.json`, `scripts/rule_check.py`; Macro-F1 and evidence as the starter's scorer gives them,
+`<arm>/official_score.txt`.)
+
+**P-short fails.** It cites a paragraph and then answers neutral: 82 entailments became neutral (its most frequent
+answers are `{"paragraphs": [n], "label": 1}`). Shortening today's wording changed how Apertus reads the rule;
+the step does not try a third wording.
+
+**K4 passes the TOKEN RULE on dev:** Macro-F1 +0.010 (rule: at most 0.005 lower), evidence −0.005 (at most 0.010
+lower), neutral recall 1.000 (at least 0.98), no unreadable answers, input tokens −34.7 % (at least 10 % lower). It
+goes to val (`2026-10-12_rashad_fewer-tokens-A_valA580`).
+
+**K4 costs local time.** It embeds the paragraphs of every routed part with e5 (cached per part). Measured with the
+fake model (`scripts/local_time.py`, image of this code, 2 CPUs; measured while another model run used the CPU):
+0.215 s per case at 1.0 s per request (today 0.015 s) and 0.837 s at 0.3 s (today 0.300 s). Its REF SCORE is in
+the val notes.
+
+### K4 against today on val: K4 fails (session 10, step 5)
+
+**Run.** All 580 val task A cases, two arms interleaved (`scripts/paired_run.py`, one request per second), Public AI
+`apertus-v1.5-8b`; all 1,160 answers from one backend (blablador). 0 failed calls, 0 HTTP 429. K4 was the only
+version that passed the TOKEN RULE on dev (`2026-10-12_rashad_fewer-tokens-A_devA300`); P-short and P-short+K4
+failed there.
+
+| arm | Macro-F1 | F1 E / N / C | evidence | neutral recall | unreadable | input + output tokens | fixes / breaks |
+|---|---|---|---|---|---|---|---|
+| today | 0.959 | 0.976 / 0.955 / 0.946 | 0.955 | 1.000 | 0 | 1,205.8 + 14.5 | |
+| K4 | 0.944 | 0.971 / 0.937 / 0.924 | 0.938 | 0.994 | 0 | 804.2 + 14.3 | 6 / 15 (p 0.08) |
+
+**TOKEN RULE: K4 fails on val** (Macro-F1 −0.015, rule at most −0.005; evidence −0.017, rule at most −0.010;
+neutral recall, unreadable answers and input tokens (−33.3 %) pass). **No task A version is adopted in step 5.**
+The instruction's second dev run with K6 was for a K4 that fails on dev; K4 passed on dev and failed on val, so
+there is no K6 run.
+
+**REF SCORE** (`scripts/official_score.py`; val numbers of this run; local time from the step 5 measurements of K4,
+0.215 / 0.837 s per case, and step 2's one-worker image for today, 0.015 / 0.300 s): today S_A 0.894 at 1.0 s per
+request and 0.769 at 0.3 s; K4 S_A 0.804 and 0.778. K4 would also lower the mean over both delays (0.791 against
+0.832): its embedding of every routed part costs local time, and its Macro-F1 and evidence fall on val.
+
+### Task A without response_format: is the free-text answer readable? (session 10, step 7)
+
+**Why.** `src/llm.py` drops `response_format` for the rest of a run if the endpoint refuses it (session 9). The
+organisers' proxy may refuse it; then every task A answer is read as free text. This run checks how often such an
+answer cannot be read.
+
+**Run.** 100 dev task A cases (every third case of `output/devA/cases.jsonl`: 34 entailment, 33 neutral, 33
+contradiction), two arms interleaved, Public AI `apertus-v1.5-8b`, one request per second; all 200 answers from one
+backend (blablador); 0 failed calls.
+
+| arm | Macro-F1 | evidence | neutral recall | unreadable | input + output tokens | fixes / breaks |
+|---|---|---|---|---|---|---|
+| today (json_schema) | 0.969 | 0.955 (64 of 67) | 1.000 | 0 | 1,230.0 + 14.5 | |
+| no response_format | 0.980 | 0.970 (65 of 67) | 1.000 | **0** | 1,230.0 + 15.8 | 1 / 0 |
+
+**Result: 0 of 100 answers unreadable** (rule: more than 2 % would call for a more tolerant reader; not needed).
+Without the schema the model still wrote the same JSON object (`{"paragraphs": [...], "label": n}`) every time;
+it used 1.3 more output tokens per case. No default changes: the schema stays (it guarantees the keys).
+
+**Task B** sends no `response_format` by default (`schema_b` off since session 2), so "today" and "off" are the
+same requests; there is nothing to compare, and no task B run was made.
+
+### Task A reading: CS and SL against today, on dev, the on-topic neutral set and val (session 10, step 6)
+
+**Endpoint check** (`schema_check.json`, `scripts/schema_check.py`, 5 real calls): Public AI enforces a schema
+with `anyOf`. The coupled schema (a neutral answer cites no paragraph; an entailment or contradiction cites one to
+three) was accepted, and three requests that told the model to answer a forbidden combination all came back
+schema-conformant (asked `{"paragraphs": [], "label": 0}`, got `{"paragraphs": [0], "label": 0}`). So CS was run.
+
+**Versions** (all off by default, in `src/cli.py` / `src/nli.py`):
+
+- **CS:** today's prompt with the coupled schema (`nli.ANSWER_SCHEMA_A_COUPLED`).
+- **SL:** when Apertus answers neutral but cites paragraphs, one more call with only the cited paragraphs and the
+  claim (prompt `A-v4-second-look-cited`: `A-v4-second-look` with its first sentence adapted; all three labels
+  allowed). An entailment or contradiction in the second answer replaces the neutral one; it is Apertus's label.
+
+**The on-topic neutral set** (`data/ontopic_neutral/`, `scripts/make_ontopic.py`, indicative only): 46 routed dev
+cases with gold 0 or 2 whose gold passage lies in the routed part; every paragraph that overlaps the gold passage
+(rapidfuzz partial ratio ≥ 90 either way, or a 60-character window of it inside the passage) is removed before any
+length cut, and a case is kept if at least three paragraphs remain. The right answer is then neutral: the model
+reads the part the claim names, without the passage the claim came from. Run with the test-only option
+`scripts/paired_run.py --exclude-paragraphs`; `src/` is unchanged.
+
+**Dev run** (this folder): all 300 dev task A cases and the 46 on-topic cases, three arms interleaved, one request
+per second (SL's second calls paced too); all 1,038 answers from one backend (blablador); 0 failed calls.
+
+| arm | dev Macro-F1 | dev evidence | dev neutral recall | input + output tokens (dev) | fixes / breaks (dev) | on-topic: answered neutral |
+|---|---|---|---|---|---|---|
+| today | 0.983 | 0.985 | 1.000 | 1,237.8 + 14.5 | | 31 of 46 (0.674) |
+| CS | 0.983 | 0.990 | 0.990 | 1,237.8 + 14.5 | 1 / 1 | 28 of 46 (0.609) |
+| SL | **0.987** | 0.990 | 1.000 | 1,241.1 + 14.6 | 1 / 0 | 31 of 46 (0.674) |
+
+SL made 5 second calls (2 on dev, 3 on the on-topic set); one turned a neutral into a right contradiction. CS
+changed one wrong label to right and one right to wrong on dev, and turned 3 on-topic neutral answers into
+contradictions: it fails rule (d) (on-topic share 0.065 below today's, limit 0.05). SL goes to val.
+
+**Val run** (`2026-10-12_rashad_reading-A_valA580`): all 580 val task A cases, today and SL; all answers from
+one backend.
+
+| arm | val Macro-F1 | evidence | neutral recall | input + output tokens | fixes / breaks |
+|---|---|---|---|---|---|
+| today | 0.959 | 0.958 | 1.000 | 1,205.8 + 14.5 | |
+| SL | 0.962 | 0.960 | 1.000 | 1,215.0 + 14.8 | 2 / 0 |
+
+SL made 11 second calls on val: 2 became right (an entailment, a contradiction), 9 stayed neutral.
+
+**PAIRED RULE for SL:** (a) val Macro-F1 +0.005: **+0.0034, fails**; (b) dev at most 0.004 lower: +0.0034, holds;
+(c) over dev and val more fixes than breaks with the exact two-sided sign test p ≤ 0.10: 3 fixes, 0 breaks,
+**p = 0.25, fails**; (d) input tokens +0.3 % (dev) and +0.8 % (val), at most +3 %: holds; neutral recall 1.000:
+holds; on-topic share unchanged: holds. **SL stays off; CS stays off.** Nothing changes in step 6.
+
+**The Python rule "neutral with a citation → contradiction", scored offline from today's saved answers only**
+(`python_rule_offline.json`; never in `src/`): dev 0.9833 → 0.9834 (2 changes: 1 right, 1 wrong); on-topic
+neutral set 31 → 28 of 46 answered neutral (3 changes, all wrong); val 0.9589 → 0.9728 (13 changes: 10 right, 2
+wrong, 1 wrong either way; neutral recall 1.000 → 0.989). On val the rule would gain more than SL, because
+Apertus, asked again, keeps 9 of its 11 neutral answers; on the on-topic set it is wrong every time it acts.
+
+### SL against today on val (session 10, step 6)
+
+See `../2026-10-12_rashad_reading-A_devA300-ontopic46/NOTES.md` (dev, on-topic set and this val run, PAIRED RULE). Files: `rule_check.json`, `python_rule_offline.json`, each arm's predictions, raw answers and scores.
+
+### Fewer tokens for task B: BP-short, B-cut4 and both, against today, on dev (session 10, step 5)
+
+**Run.** All 300 dev task B cases, four arms interleaved (Williams design, one request per second), Public AI
+`apertus-v1.5-8b`; all 1,200 answers from one backend (blablador). 0 failed calls, 0 HTTP 429.
+
+- **today:** the defaults after step 2: `v3-topic-first`, the whole reference (no cut), max_tokens 32, no schema.
+- **BP-short:** `v6-short`, v3's rules in fewer words (144 fixed tokens with the Apertus v1 tokenizer instead of
+  203; the README's label names).
+- **B-cut4:** a reference over 3,000 characters becomes its first line plus the 4 paragraphs most similar to the
+  claim (multilingual-e5-small), in their order; prompt unchanged.
+- **BP-short+B-cut4:** both.
+
+| arm | Macro-F1 | F1 E / N / C | neutral recall | unreadable | input + output tokens | fixes / breaks vs today |
+|---|---|---|---|---|---|---|
+| today | 0.967 | 0.985 / 0.963 / 0.951 | 0.929 | 2 | 1,994.2 + 8.4 | |
+| BP-short | 0.667 | 0.431 / 0.671 / 0.898 | 0.960 | 29 | 1,935.2 + 6.7 | 3 / 86 |
+| **B-cut4** | **0.987** | 0.990 / 0.990 / 0.980 | 0.980 | **0** | **882.6** + 8.9 | 7 / 1 (p 0.07) |
+| BP-short+B-cut4 | 0.718 | 0.532 / 0.710 / 0.912 | 1.000 | 24 | 823.6 + 7.2 | 8 / 79 |
+
+(`rule_check.json`; Macro-F1 as the starter's scorer gives it, `<arm>/official_score.txt`.)
+
+**BP-short fails**: it answers neutral far more often (153 of 300 `{"label": 1}`), and 29 answers cannot be read
+(28 a bare digit such as `2`, one `1 (Unrelated / Neutral)`). Its fixed text saves 59 tokens on about 2,000, 3 %: it could not have
+met the rule's 10 % anyway.
+
+**B-cut4 passes the TOKEN RULE on dev**: Macro-F1 +0.020 (rule: at most 0.005 lower), fewer unreadable answers (0
+against 2), input tokens −55.7 % (at least 10 % lower). Of its 7 fixes, 5 are neutral claims (paired with a long
+unrelated section) that today called a contradiction; the others are one contradiction and one entailment; its
+one break is an entailment it calls a contradiction (row 232). It goes to val
+(`2026-10-12_rashad_fewer-tokens-B_valB580`). Its local time (e5 embedding of every reference over 3,000
+characters) enters the decision through REF SCORE (val notes).
+
+### B-cut4 against today on val, and B-cut4's REF SCORE (session 10, step 5)
+
+**Run.** All 580 val task B cases, two arms interleaved, one request per second, Public AI `apertus-v1.5-8b`; all
+1,160 answers from one backend (blablador); 0 failed calls. B-cut4 was the only task B version that passed the
+TOKEN RULE on dev (`2026-10-12_rashad_fewer-tokens-B_devB300`).
+
+| arm | Macro-F1 | F1 E / N / C | neutral recall | unreadable | input + output tokens | fixes / breaks |
+|---|---|---|---|---|---|---|
+| today | 0.957 | 0.984 / 0.945 / 0.942 | 0.911 | 3 | 1,957.2 + 8.9 | |
+| B-cut4 | 0.961 | 0.976 / 0.955 / 0.951 | 0.950 | 1 | 891.5 + 9.4 | 9 / 7 |
+
+**TOKEN RULE: B-cut4 passes on val too** (Macro-F1 +0.004; fewer unreadable answers; input tokens −54.4 %). It is
+the only qualifying version of step 5.
+
+**Local time** (`local_time_*.json`: `scripts/local_time.py`, the current image with two lanes, 2 CPUs, all 300 dev
+task B cases, measured back to back with nothing else running): B-cut4 **0.066 s** per case at 1.0 s per request
+and **0.730 s** at 0.3 s (it embeds every paragraph of the 218 references over 3,000 characters with e5); today
+0.0075 s and 0.0067 s. Peak memory with B-cut4 1.8 GB (today: no model in memory).
+
+**REF SCORE S_B** (`ref_score.json`; Macro-F1 and tokens of each set's run, local time from dev):
+
+| | K | T at 1.0 s | S_B at 1.0 s | T at 0.3 s | S_B at 0.3 s | **mean** |
+|---|---|---|---|---|---|---|
+| dev, today | 0.400 | 0.667 | 0.837 | 0.746 | 0.849 | **0.843** |
+| dev, B-cut4 | 0.897 | 0.076 | 0.837 | 0.007 | 0.826 | 0.832 |
+| val, today | 0.407 | 0.667 | 0.831 | 0.746 | 0.843 | **0.837** |
+| val, B-cut4 | 0.888 | 0.076 | 0.817 | 0.007 | 0.807 | 0.812 |
+
+**Decision: B-cut4 is not adopted.** It qualifies under the TOKEN RULE, but it lowers REF SCORE (mean over both
+delays) on dev and val: what it gains in tokens (K +0.49) and Macro-F1 it loses in local time (T −0.59 at 1.0 s).
+The rule recorded before these runs: a qualifying version is adopted only if REF SCORE, mean over the two measured
+delays, does not fall. The outcome depends on the other teams: REF SCORE takes 0.005 s as the best task B local time
+per case; if the best is above about 0.027 s, B-cut4 would win at 1.0 s per request. B-cut4 stays in the code
+(`--context-b cut4`).
+
 ### Retrievers with the model, routing off: all 300 dev task A cases (one interleaved run, five arms)
 
 **Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small MT_MODEL_DIR=models/m2m100_418M-ct2
@@ -1080,6 +1442,126 @@ contradiction; exact words on the translated claim find nothing convincing, so t
 Offline (R0) hybrid had the higher hit rate (0.866 against 0.851), but with the model bm25-mt answers better; the
 hit rate counts the gold passage among 8 chunks, not what else the 8 chunks contain.
 
+### B-U: task B read like task A, against today on dev (session 10, step 9, optional)
+
+**Version (off by default, `--context-b unified`):** task B's reference as numbered paragraphs (B-cut's text: a
+reference over 8,000 characters keeps its first line and the 8 paragraphs most similar to the claim, e5), with task
+A's default routed prompt (`A-v4-section-route-L1`) and paragraph schema; the cited paragraphs are not used (task B
+evidence stays empty).
+
+**Run.** All 300 dev task B cases, two arms interleaved, one request per second; all answers from one backend.
+
+| arm | Macro-F1 | F1 E / N / C | neutral recall | unreadable | input + output tokens | fixes / breaks |
+|---|---|---|---|---|---|---|
+| today | 0.967 | 0.985 / 0.963 / 0.951 | 0.929 | 2 | 1,994.2 + 8.4 | |
+| B-U | 0.976 | 0.985 / 0.980 / 0.964 | 1.000 | 0 | 1,403.2 + **14.0** | 7 / 4 (p 0.55) |
+
+**Not adopted, and not run on val.** (1) B-U adds 5.6 output tokens per case (its answer names paragraphs before the
+label); the session's rules allow no version to add output tokens. (2) Its cut text needs e5 like B-cut (step 2),
+whose local time at 0.3 s per request was 0.47 s per case against 0.009 s: estimated REF SCORE S_B, mean over both
+delays, 0.816 against today's 0.843 even with this run's Macro-F1 and tokens. The PAIRED RULE (margin 0.01 on val,
+tokens ≤ +5 %) was therefore not tried on val. B-U stays in the code, off.
+
+### FINISH: all 600 dev cases with the final defaults of session 10, through the published image
+
+**What ran.** The image published by `.github/workflows/publish-image.yml`, pulled from
+`ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677` (built from `421d8c8`; `src/`, `Dockerfile` and
+`requirements.txt` unchanged since; id in `task-*/image.txt`), run by `make run` with the organisers' command,
+**task A and task B in separate containers** (as the organisers run them), the real endpoint (Public AI,
+`swiss-ai/apertus-v1.5-8b` from `.env`), `LLM_MIN_INTERVAL=1`. Task A: the 300 task A lines of
+`data/dev/cases.jsonl`, 17:19:11–17:25:13 UTC; task B: its 300 task B lines, 17:25:13–17:30:53 UTC. Both exit 0,
+300 responses each.
+
+Final defaults: task A `section-route` with `A-v4-section-route-L1` and `json_schema`, evidence with halves,
+vote names by meaning when the title match fails (step 8); task B `v3-topic-first` with the whole reference (no
+cut, step 2), max_tokens 32, no schema; two worker processes ("lanes") prepare the cases, one kept connection.
+
+**Scores** (the starter's `evaluate.py`: `task-*/official_score.json`, `.txt`; calls: `calls_summary.json`):
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case | Mean / p95 time per case |
+|---|---|---|---|---|---|---|
+| A (300) | **0.983** | 0.985 / 0.990 / 0.974 | **0.980** (197/201) | 0 | 1,237.8 + 14.5 | 2.0 / 4.9 s |
+| B (300) | **0.967** | 0.985 / 0.963 / 0.951 | not scored | 3 | 1,994.2 + 8.4 | 1.1 / 2.1 s |
+
+- **Paths (task A):** 299 routed (council 102, summary 67, committee 48, detail 43, law 39), 1 fallback to
+  `embed-e5-small`.
+- **Neutral fallbacks:** the only labels Python wrote are 3 task B answers it could not read (a bare `1`, and two
+  answers that began with an explanation in English instead of the JSON object); each became neutral.
+- **Endpoint:** all 600 answers from one backend (blablador, `vllm-0.23.1rc1…dd237840`); 0 failed calls, 0
+  retries, 0 HTTP 429, no gateway cache hits.
+- **Compared with what (different runs, indicative only):** "today" scored task A 0.980 and 0.983 in the step 5
+  and step 6 dev runs, and task B 0.967 with 1,994 input tokens in step 5. Every default of this image was adopted
+  by its own rule (an interleaved run, or the same-answer gates G1/G2 with measured local time), not on this run.
+
+These answers (task A and task B) and the val task A answers (`2026-10-12_rashad_final-defaults_val1160`) are
+the saved answers of the new replay reference `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`.
+
+**Local time of the same image** (`scripts/local_time.py`, `local_time_dev*_d*.json`, measured 18:06–18:53 UTC after
+one warm-up run, nothing else running): the published image with the organisers' command, 2 CPUs, 4 GB, read-only,
+against the fake model replaying the final runs' answers (`2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`)
+after 1.0 s or 0.3 s.
+
+| Task | 1.0 s per request: local time per case (in all) | 0.3 s per request | replay misses | peak memory (1.0 s) |
+|---|---|---|---|---|
+| A | 0.0171 s (5.1 s; first request 3.0 s) | 0.1538 s (46.1 s; first request 2.9 s) | 0 | 2308 MiB |
+| B | 0.0100 s (3.0 s; first request 1.8 s) | 0.0068 s (2.0 s; first request 0.9 s) | 0 | 58 MiB |
+
+**REF SCORE** (`ref_score.json`, `scripts/official_score.py`; tokens = input + output; Macro-F1 and evidence from
+this run):
+
+| | T_A | K_A | S_A | T_B | K_B | S_B | REF SCORE |
+|---|---|---|---|---|---|---|---|
+| 1.0 s per request | 1.000 | 0.479 | 0.909 | 0.500 | 0.400 | 0.811 | **0.870** |
+| 0.3 s per request | 0.325 | 0.479 | 0.808 | 0.735 | 0.400 | 0.847 | **0.824** |
+
+### FINISH: all 580 val task A and 580 val task B cases with the final defaults of session 10, through the published image
+
+**What ran.** The same published image as `2026-10-12_rashad_final-defaults_dev600`
+(`ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677`, built from `421d8c8`), `make run` with the
+organisers' command, task A and task B in separate containers, Public AI `swiss-ai/apertus-v1.5-8b`,
+`LLM_MIN_INTERVAL=1`. Task A: `data/val/cases.jsonl` (580 cases), 17:30:53–17:41:59 UTC; task B:
+`output/valB/cases.jsonl` (the task B cases of the same 580 val rows), 17:41:59–17:53:35 UTC. Both exit 0, 580
+responses each. Val is for confirming only: no pattern, rule or threshold was written because of a val case.
+
+**Scores** (the starter's `evaluate.py`: `task-*/official_score.json`, `.txt`; calls: `calls_summary.json`):
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case | Mean / p95 time per case |
+|---|---|---|---|---|---|---|
+| A (580) | **0.959** | 0.976 / 0.955 / 0.946 | **0.955** (383/401) | 0 | 1,205.8 + 14.5 | 1.7 / 4.5 s |
+| B (580) | **0.961** | 0.984 / 0.951 / 0.947 | not scored | 3 | 1,957.2 + 9.0 | 1.2 / 2.1 s |
+
+- **Paths (task A):** 577 routed (council 175, summary 139, committee 102, law 87, detail 74), 3 fallbacks to
+  `embed-e5-small`.
+- **Neutral fallbacks:** 3 task B answers could not be read (a bare `1`, and two explanations in English
+  without the JSON object); each became neutral. Task A: none.
+- **Endpoint:** all 1,160 answers from one backend (blablador, `vllm-0.23.1rc1…dd237840`); 0 failed calls; one
+  HTTP 502 (row 118, task A) answered on its retry; 0 HTTP 429; no gateway cache hits.
+- **Compared with what (different runs, indicative only):** "today" of the step 5 and step 6 val runs scored task
+  A 0.959 (evidence 0.955 and 0.958) and task B 0.957.
+
+The task A answers are saved answers of the new replay reference `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`
+(with the dev run's 600).
+
+**Local time of the same image** (`scripts/local_time.py`, `local_time_val*_d*.json`, measured 18:06–18:53 UTC after
+one warm-up run, nothing else running): the published image with the organisers' command, 2 CPUs, 4 GB, read-only,
+against the fake model replaying the final runs' answers (`2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`)
+after 1.0 s or 0.3 s. The replay table holds dev's and val task A's answers only; where it has none (task B) the fake model gives its fixed answer, which changes the evidence built but not the local work that counts (the same requests, one per case).
+
+| Task | 1.0 s per request: local time per case (in all) | 0.3 s per request | replay misses | peak memory (1.0 s) |
+|---|---|---|---|---|
+| A | 0.0116 s (6.7 s; first request 2.7 s) | 0.0335 s (19.4 s; first request 2.0 s) | 0 | not measured |
+| B | 0.0069 s (4.0 s; first request 1.7 s) | 0.0052 s (3.0 s; first request 0.8 s) | 580 | not measured |
+
+**REF SCORE** (`ref_score.json`, `scripts/official_score.py`; tokens = input + output; Macro-F1 and evidence from
+this run):
+
+| | T_A | K_A | S_A | T_B | K_B | S_B | REF SCORE |
+|---|---|---|---|---|---|---|---|
+| 1.0 s per request | 1.000 | 0.492 | 0.894 | 0.725 | 0.407 | 0.842 | **0.873** |
+| 0.3 s per request | 1.000 | 0.492 | 0.894 | 0.962 | 0.407 | 0.878 | **0.888** |
+
+With dev's local times instead (as `main`'s val REF SCORE was computed in step 1): 0.860 / 0.813. Local time per case is lower on val because the start (about 1–3 s) is shared by 580 cases and each booklet's reading by more cases.
+
 ### Retrievers with the model on val, routing off: all 580 val task A cases (confirmation, three arms)
 
 **Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small MT_MODEL_DIR=models/m2m100_418M-ct2
@@ -1108,6 +1590,467 @@ contradiction 345 / 368 / 375 of 401; same language 175 / 188 / 181 of 196; cros
 evidence, and are equal to each other. On dev bm25-mt was ahead of hybrid (13 vs 5, p = 0.096). bm25-mt needs no
 embedding of the booklet (today's fallback embeds the whole booklet on its first case: the slowest local step),
 only the translation of one claim.
+
+### FINISH: the probe (94 task A and 94 task B cases) with the final defaults of session 10, through the published image
+
+**What ran.** The same published image as `2026-10-12_rashad_final-defaults_dev600`
+(`ghcr.io/rashad18236/hackapertus-voting-nli:sha-421d8c804677`, built from `421d8c8`), `make run` with the
+organisers' command, task A and task B in separate containers, Public AI `swiss-ai/apertus-v1.5-8b`,
+`LLM_MIN_INTERVAL=1`. Task A: `output/probeA/cases.jsonl`, 17:53:35–17:55:30 UTC; task B: `output/probeB/cases.jsonl`,
+17:55:30–17:57:29 UTC. Both exit 0, 94 responses each. The probe is the test rows of 2021-03-07 and 2025-09-28
+(`data/probe/`, session 10 step 4); the other three test dates stay sealed.
+
+**Scores** (the starter's `evaluate.py`: `task-*/official_score.json`, `.txt`; calls: `calls_summary.json`):
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case | Mean / p95 time per case |
+|---|---|---|---|---|---|---|
+| A (94) | **0.960** | 0.978 / 0.949 / 0.952 | **0.908** (59/65) | 0 | 1,232.2 + 14.4 | 2.0 / 2.9 s |
+| B (94) | **0.971** | 1.000 / 0.945 / 0.966 | not scored | 0 | 1,830.5 + 8.3 | 1.3 / 2.1 s |
+
+- **Paths (task A):** 83 routed, 11 fallbacks to `embed-e5-small` (8 in `2025_09_28_fr`, whose first vote the
+  parser does not find; 3 committee claims on a vote without a committee part), as in step 4.
+- **Errors:** task A the same 4 as in step 4 (rows 763, 1453, 1058, 1176); task B 3 (rows 644, 763, 918: neutral
+  claims called a contradiction); row 536 (task B), wrong in step 4, is right here. What was sent equals step 4's
+  in every case (same paths, paragraphs, pages and input tokens: vote names by meaning place no probe vote
+  differently, and the lanes change no request); the endpoint answered 3 of 188 requests differently: row 536-B's label, and the cited paragraphs of rows 1044-A and 379-A (evidence
+  changed, both still cite the gold passage: evidence 59 of 65 in both runs).
+- **Endpoint:** all 188 answers from one backend (blablador); 0 failed calls, 0 unreadable answers, so 0
+  neutral-fallback labels.
+
+**Local time of the same image** (`scripts/local_time.py`, `local_time_probe*_d*.json`, measured 18:06–18:53 UTC after
+one warm-up run, nothing else running): the published image with the organisers' command, 2 CPUs, 4 GB, read-only,
+against the fake model replaying the final runs' answers (`2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA`)
+after 1.0 s or 0.3 s. The replay table holds dev's and val task A's answers only; where it has none (task A, task B) the fake model gives its fixed answer, which changes the evidence built but not the local work that counts (the same requests, one per case).
+
+| Task | 1.0 s per request: local time per case (in all) | 0.3 s per request | replay misses | peak memory (1.0 s) |
+|---|---|---|---|---|
+| A | 0.0385 s (3.6 s; first request 2.9 s) | 0.2485 s (23.4 s; first request 3.3 s) | 94 | not measured |
+| B | 0.0138 s (1.3 s; first request 0.8 s) | 0.0142 s (1.3 s; first request 0.9 s) | 94 | not measured |
+
+**REF SCORE** (`ref_score.json`, `scripts/official_score.py`; tokens = input + output; Macro-F1 and evidence from
+this run):
+
+| | T_A | K_A | S_A | T_B | K_B | S_B | REF SCORE |
+|---|---|---|---|---|---|---|---|
+| 1.0 s per request | 1.000 | 0.481 | 0.884 | 0.362 | 0.435 | 0.799 | **0.850** |
+| 0.3 s per request | 0.201 | 0.481 | 0.764 | 0.352 | 0.435 | 0.797 | **0.777** |
+
+### Fallback levels on dev, forced (session 11 step 2): VW passes dev, BW is lower than today's fallback
+
+**What it tests.** On dev almost every task A case is routed (the claim's opening names a part, the parser finds the
+vote and that part), so a fallback is rarely reached and cannot be judged on the cases where it happens. The forced
+test (`scripts/paired_run.py`, arm field `force`, test only) puts every case into one fallback situation:
+
+- **"no part"**: the router returns nothing, as for a claim whose opening names no part;
+- **"no vote"**: the vote match fails, as for a vote name the parser cannot place.
+
+Arms (interleaved, every case to all four back to back in rotating order, 1 request per second, 20:31 to 21:22 UTC;
+all 1,200 answers from one backend, blablador `vllm-0.23.1rc1`):
+
+- **today-routed**: today's defaults, not forced (the reference);
+- **today-fallback-nopart**: forced "no part", today's fallback `embed-e5-small` (8 chunks of at most 1,000
+  characters from the whole booklet, prompt `A-v3-excerpts`);
+- **VW-nopart**: forced "no part", **VW (vote-wide)**: the paragraphs of every valid part of the found vote, each
+  marked with its part's name, the 8 most similar to the claim by e5, numbered (`A-v4-vote-wide-L1`: the routed
+  prompt with the L1 sentence; routed evidence);
+- **BW-novote**: forced "no vote", **BW (booklet-wide)**: the paragraphs of the whole booklet's valid parts, the 8
+  most similar (`A-v4-booklet-wide-L1`).
+
+| Arm | Macro-F1 | Evidence (of 201) | F1 ent / neu / con | Input + output tokens per case | p95 time | Fixes / breaks vs today's fallback |
+|---|---|---|---|---|---|---|
+| today-routed | 0.977 | 0.980 (197) | 0.976 / 0.990 / 0.964 | 1,238 + 14.5 | 2.2 s | 27 / 4 |
+| today-fallback-nopart | 0.900 | 0.672 (135) | 0.941 / 0.873 / 0.884 | 1,868 + 15.8 | 12.0 s | |
+| VW-nopart | **0.927** | **0.766** (154) | 0.959 / 0.904 / 0.919 | 1,078 + 14.4 | 7.0 s | 21 / 13 |
+| BW-novote | 0.857 | 0.647 (130) | 0.921 / 0.833 / 0.818 | 939 + 14.3 | 11.7 s | 17 / 30 |
+
+(Times include the model and the 1 s pacing; the local time per fallback case is measured apart,
+`scripts/fallback_local_time.py`.) 0 failed calls, 0 unreadable answers, 0 HTTP 429 in all arms.
+
+**FALLBACK RULE, dev part ("neither is lower on dev").** VW is higher than today's fallback on dev (+0.028 Macro-F1,
++0.094 evidence, −42 % input tokens; neutral recall 1.000 against 0.869); it goes on to the val confirmation. BW is
+lower (−0.042 Macro-F1, −0.025 evidence), so **BW fails the rule** and stays in the code, switched off. In its
+situation ("no vote") today's fallback stays.
+
+Note: the dev case file is ordered by label (entailments first), so partial scores during a run mean nothing; only
+the finished run is scored. today-routed agrees with the session 10 final dev run on the cases checked during the
+run (the same request bodies, G1).
+
+Files: one folder per arm (`predictions.jsonl`, `raw_answers.jsonl` with the backend of every call,
+`official_score.*`, `settings.json`, `run.json`), `rule_check.json` (`scripts/rule_check.py` with
+today-fallback-nopart as the reference: per-arm numbers on all cases and on same-backend cases, fixes and breaks),
+`paired_run.log`.
+
+**Local work and tokens per fallback case** (`fallback_local_time.json`, `scripts/fallback_local_time.py`, no model:
+each level in a fresh process on 2 pinned CPUs, every dev case forced into the level's situation as in the run,
+`prepare()` timed per case; the booklets' pages were read beforehand, so PDF reading is not included; e5 loading and
+every embedding are):
+
+| Level | Seconds of preparation per case | … for later cases of a booklet | Input + output tokens per case (run) |
+|---|---|---|---|
+| routed today (no force) | 0.29 | 0.30 | 1,238 + 14.5 |
+| today's fallback (embed-e5-small) | 1.74 | 0.02 | 1,868 + 15.8 |
+| VW | 1.31 | 1.02 | 1,078 + 14.4 |
+| BW | 1.61 | 0.05 | 939 + 14.3 |
+
+Today's fallback and BW embed the whole booklet once (about 12 s and 11 s for its first case, then almost nothing);
+VW embeds the paragraphs of the case's vote, so its cost repeats for each vote. In a container run these seconds
+hide behind the requests only when the model is slow.
+
+### Fallback levels on val, forced (session 11 step 2, confirmation): neither VW nor BW passes the FALLBACK RULE
+
+The confirmation of `2026-10-12_rashad_fallbacks_devA300` on the balanced val sample (300 task A cases), with the
+same forced situations (`scripts/paired_run.py`, arm field `force`): "no part" (the router returns nothing) for
+today's fallback and VW, "no vote" (the vote match fails) for BW. Interleaved, 1 request per second, 21:22 to
+22:18 UTC; all 900 answers from one backend (blablador `vllm-0.23.1rc1`). The dev run's today-routed arm is not
+repeated here: val only confirms.
+
+| Arm | Macro-F1 | Evidence (of 204) | F1 ent / neu / con | Input + output tokens per case | p95 time | Fixes / breaks vs today's fallback |
+|---|---|---|---|---|---|---|
+| today-fallback-nopart (embed-e5-small) | 0.875 | 0.593 (121) | 0.907 / 0.899 / 0.819 | 1,827 + 15.8 | 18.6 s | |
+| VW-nopart | 0.873 | 0.716 (146) | 0.924 / 0.877 / 0.819 | 1,079 + 14.4 | 11.8 s | 19 / 19 |
+| BW-novote | 0.856 | 0.627 (128) | 0.910 / 0.837 / 0.821 | 951 + 14.5 | 17.5 s | 21 / 27 |
+
+0 failed calls, 0 unreadable answers, 0 HTTP 429. One today's-fallback answer cited no valid page for a label 0/2
+(no evidence item; the label stands).
+
+**FALLBACK RULE** ("VW and BW each replace today's fallback in their situation if, forced on val, Macro-F1 is at
+least 0.02 higher and evidence at least 0.05 higher than today's fallback, neither is lower on dev, and no routed
+case changes"):
+
+- **VW: fails.** Evidence +0.123 (passes), but Macro-F1 −0.002 (needs +0.02). On dev it was +0.028 / +0.094;
+  19 fixes and 19 breaks on val. VW stays in the code, switched off (`--fallback-a vw`).
+- **BW: fails.** Macro-F1 −0.019 and lower on dev too (−0.042). Stays off (`--fallback-a bw`).
+
+Today's fallback (embed-e5-small) therefore stays in both situations, and no routed case can change. What VW would
+have brought (−41 % input tokens and +0.12 evidence on fallback cases) is reported, not used. The probe run
+"today against the new defaults" is not run: there are no new defaults.
+
+Files: one folder per arm, `rule_check.json` (today-fallback-nopart as the reference), `paired_run.log`.
+
+### AP-all against today on dev: Apertus in both parsing roles costs 0.017 Macro-F1, 0.090 evidence and 34 % more input tokens (session 11 step 3, run 1)
+
+**Arms** (interleaved, all 300 dev task A cases, 1 request per second also between a case's own calls, 22:33 to
+23:07 UTC; all 944 requests answered by one backend, blablador `vllm-0.23.1rc1`):
+
+- **today**: the defaults (section-route; fallback embed-e5-small).
+- **AP-all**: Apertus in both parsing roles (`--ap-part-a all --ap-structure-a all --fallback-a vw+bw`).
+  AP-claim: one call per case names the part the claim's opening refers to (or "none") and restates the claim
+  without its opening in the booklet's language. AP-structure: one call per booklet reads the contents pages
+  (44 calls); its entries pass the parser's heading checks before any part is used. A case whose vote Apertus's
+  contents do not place goes to BW, a part "none" or a part that failed its checks to VW. The Python parser and
+  router are not used. All parsing calls count in the case's tokens (a booklet's contents call in its first case).
+
+| Arm | Macro-F1 | Evidence (of 201) | F1 ent / neu / con | Input + output tokens per case | of which parsing calls | p95 time |
+|---|---|---|---|---|---|---|
+| today | **0.977** | **0.980** (197) | 0.976 / 0.990 / 0.964 | **1,238 + 14.5** | 0 | 2.5 s |
+| AP-all | 0.960 | 0.891 (179) | 0.955 / 0.961 / 0.964 | 1,655 + 90.9 | 502 + 76.5 | 13.6 s |
+
+Fixes / breaks of AP-all against today: 1 / 6. 0 failed calls, 0 unreadable answers (parsing calls included).
+
+**What Apertus did** (`AP-all/ap_summary.json`, `scripts/ap_summary.py`):
+
+- **Part (AP-claim):** equal to the rules' part for 267 of 300 claims (89.0 %). Differences: detail → council 12,
+  detail → none 7, law → summary 4, law → council 4, law → none 3, detail → law 2, detail → committee 1; "none" 10 times
+  in all. The rules route all 300 dev claims, so on dev Apertus can only lose here.
+- **Structure (AP-structure):** the case's vote placed and checked for 279 of 300 cases (93.0 %); the other 21 went
+  booklet-wide. Paths: council 103, summary 65, committee 46, law 27, detail 17, vote-wide 21, booklet-wide 21
+  (today: 299 routed, 1 to embed-e5-small).
+- **Tokens:** 502 input + 76.5 output tokens of parsing per case (one claim call per case, ~1,800 + 180 per booklet
+  for the contents), +34 % input tokens and +527 % output tokens in all.
+
+AP-all never becomes the default (the step's rule). **Its local time** (`AP-all/local_time_d0.3.json`): the image
+with the step 4 defaults, 2 CPUs, a fake model replaying these very answers after 0.3 s (`scripts/ap_replay_table.py`
+builds the table; 644 requests, 0 replay misses): **0.822 s per case**, against 0.101 s for today's defaults in the
+same setting. With Apertus asked while a case is prepared, the CLI prepares and completes each case in turn, so no
+local work hides behind a request. The probe run is `2026-10-12_rashad_ap-all_probeA94`.
+
+### AP-all against today on the probe (session 11 step 3, run 1, unseen dates)
+
+The same two arms as `2026-10-12_rashad_ap-all_devA300`, on the probe's 94 task A cases (the test rows of 2021-03-07
+and 2025-09-28, 6 booklets), 23:07 to 23:19 UTC; all 288 requests answered by one backend (blablador
+`vllm-0.23.1rc1`).
+
+| Arm | Macro-F1 | Evidence (of 65) | F1 ent / neu / con | Input + output tokens per case | of which parsing calls |
+|---|---|---|---|---|---|
+| today | **0.971** | **0.954** (62) | 1.000 / 0.949 / 0.965 | **1,135 + 14.5** | 0 |
+| AP-all | 0.951 | 0.877 (57) | 0.977 / 0.935 / 0.940 | 1,383 + 71.6 | 346 + 57.4 |
+
+Fixes / breaks of AP-all against today: 1 / 3. 0 failed calls, 0 unreadable answers.
+
+Today routes 90 of 94 probe cases (session 10's code routed 83; step 1's parser fixes added 7) and 4 fall back
+(the rules name the committee, but in these votes of 2025-09-28 that part has no paragraphs). AP-all: Apertus's part equals the rules' for 84 of 94 claims
+(89.4 %), "none" twice; its contents reading placed the vote for 86 of 94 cases (8 went booklet-wide). As on dev,
+Apertus in the parsing roles costs Macro-F1 and evidence and adds tokens.
+
+**Step 3b** (`../2026-10-12_rashad_ap-all_devA300/ap_claim_search.json`, `scripts/ap_claim_search.py`, no model
+calls): of the dev and probe cases whose routed part is cut to 8 paragraphs and whose claim is in another language
+than the booklet (17 dev + 1 probe), the 9 with a gold passage all have it among the 8 chosen with the claim, and
+also with Apertus's restated statement: net gain 0 (needs ≥ 5). The measure as written (the first paragraph
+today's correct answers cite) stays 7 of 7. **Run 4 is not run.**
+
+### AP-part on reworded openings (dev): +0.073 Macro-F1 over VW, passes the HYBRID RULE on dev (session 11 step 3, run 2)
+
+**Cases.** 150 balanced dev task A cases (50 per label) whose opening formula was replaced by other words for the
+same source ("Die Landesregierung" for the Federal Council, "Kommt die Vorlage durch" for "Wird die Abstimmung
+angenommen", …; `scripts/make_reworded.py`, `output/devA_reworded150/rewording.json`), so the label cannot change
+and the rules (`src/claim_router.py`) find no part in any of them. This is the situation of a claim whose opening the
+rules do not know (no dev, val or probe claim in the dataset; a reworded or new opening would be).
+
+**Arms** (interleaved, 1 request per second also between a case's own calls, 23:18 to 23:53 UTC; all 600 requests
+answered by one backend, blablador `vllm-0.23.1rc1`):
+
+- **today**: the defaults; no part, so embed-e5-small (8 chunks of the whole booklet);
+- **VW**: the vote-wide fallback (step 2);
+- **AP-part**: when the rules find no part, one call asks Apertus which part the opening names
+  (`src/ap_parse.py`, `AP-claim-v1`), then section-route routes to that part as for a rule match; "none", or a part
+  the parser did not validate, goes to VW.
+
+| Arm | Macro-F1 | Evidence (of 100) | F1 ent / neu / con | Input + output tokens per case | of which the part call |
+|---|---|---|---|---|---|
+| today | 0.906 | 0.700 (70) | 0.931 / 0.902 / 0.887 | 1,699 + 15.6 | 0 |
+| VW | 0.894 | 0.670 (67) | 0.947 / 0.877 / 0.857 | 1,045 + 14.5 | 0 |
+| **AP-part** | **0.967** | **0.880** (88) | 0.958 / 0.990 / 0.951 | 1,383 + 63.4 | 236 + 49.0 |
+
+Fixes / breaks against today: VW 9 / 11, AP-part 13 / 4. 0 failed calls, 0 unreadable answers.
+
+**Apertus's part against the part the original opening named:** 118 of 150 equal (78.7 %): council 47/48,
+summary 35/37, committee 23/23, law 9/17, detail 4/25 ("detail" openings such as "Kommt die Vorlage durch" were read
+as the council 10 times and as no part 9 times). 15 answers "none" (to VW). Paths: council 58, summary 39,
+committee 22, law 11, detail 4, vote-wide 16.
+
+**HYBRID RULE, AP-part** ("becomes the step after the rules if run 2's Macro-F1 is ≥ 0.02 above VW's"): 0.967 against
+0.894, **+0.073: passes on dev**; confirmed on the reworded val sample next (`2026-10-12_rashad_ap-part_valA-reworded150`
+or the next day's folder). A case the rules route is never touched (the call is made only when they find no part).
+
+### AP-structure with the Python parser switched off (dev): +0.084 Macro-F1 and +0.269 evidence over VW, but not adoptable (session 11 step 3, run 3)
+
+**What it tests.** Whether Apertus's reading of the contents can replace the Python parser where the parser fails.
+A test-only force in `scripts/paired_run.py` ("no parser") keeps the case's vote and its contents entry but makes
+every part fail its checks, as if the parser had failed for that vote. All 300 dev task A cases, interleaved, 1 request
+per second also between a case's own calls, 23:52 to 00:38 UTC; all 944 requests (900 answers and 44 contents calls)
+answered by one backend (blablador `vllm-0.23.1rc1`).
+
+- **today-noparser**: the defaults; no valid part, so embed-e5-small;
+- **VW**: the vote-wide fallback; with no valid part it shows the vote's pages as paragraphs without part names;
+- **AP-structure** (`--ap-structure-a after-parser`): when the parser gives no valid part, Apertus reads the
+  contents pages (one call per booklet, cached); its entries go through the parser's own heading checks
+  (`booklet._parse_vote`); a vote placed this way is routed by the rules' part as usual; otherwise VW.
+
+| Arm | Macro-F1 | Evidence (of 201) | F1 ent / neu / con | Input + output tokens per case | of which contents calls |
+|---|---|---|---|---|---|
+| today-noparser | 0.900 | 0.672 (135) | 0.941 / 0.873 / 0.884 | 1,868 + 15.8 | 0 |
+| VW | 0.886 | 0.687 (138) | 0.929 / 0.880 / 0.849 | 1,055 + 14.5 | 0 |
+| **AP-structure** | **0.970** | **0.955** (192) | 0.971 / 0.985 / 0.953 | 1,478 + 43.1 | 268 + 28.5 |
+
+Fixes / breaks against today-noparser: VW 19 / 23, AP-structure 25 / 4. 0 failed calls, 0 unreadable answers.
+Apertus's contents placed the vote with parts that passed the heading checks for 277 of 300 cases (paths: council 93,
+summary 62, committee 44, detail 36, law 35; vote-wide 30). For comparison, the routed defaults scored 0.977 / 0.980 on
+the same cases (`2026-10-12_rashad_ap-all_devA300`, arm today): with the parser off, Apertus's reading of the contents
+plus the parser's checks recovers most of the routed quality.
+
+**HYBRID RULE, AP-structure** ("becomes the step after the parser if run 3's Macro-F1 is ≥ +0.02 or its evidence
+≥ +0.05 above VW's, on dev and on val, and in a. ≥ 95 % of its votes equal the Python parser's where that passes"):
+dev passes (+0.084, +0.269), but part a fails (78.7 %, `2026-10-12_rashad_ap-structure_booklets93`), so **AP-structure
+is not adopted** whatever val shows, and no val run was spent on it. It stays in the code, off
+(`--ap-structure-a after-parser`). On the 93 booklets the parser now fails 5 votes, all with usable parts, so the
+situation it would cover is rare in the booklets we know.
+
+### AP-part on reworded openings, confirmed on val: +0.051 Macro-F1 over VW; adopted as the step after the rules (session 11 step 3)
+
+The val confirmation of `2026-10-12_rashad_ap-part_reworded150`: 150 balanced val task A cases (50 per label) whose
+opening was replaced by other words for the same source with the dev replacements, unchanged
+(`scripts/make_reworded.py --cases data/val/cases.jsonl`; the rules find no part in any of them). Same three arms,
+interleaved, 1 request per second also inside a case, 00:38 to 01:09 UTC; all 600 requests answered by one backend
+(blablador `vllm-0.23.1rc1`). The AP-part arm ran the implementation that ships (the worker process prepares every
+valid part of the vote; the main process asks Apertus, then sends that part's request; "none" goes to the arm's
+fallback, VW, as on dev).
+
+| Arm | Macro-F1 | Evidence (of 100) | F1 ent / neu / con | Input + output tokens per case | of which the part call |
+|---|---|---|---|---|---|
+| today (embed-e5-small) | 0.898 | 0.520 (52) | 0.923 / 0.923 / 0.848 | 1,715 + 15.5 | 0 |
+| VW | 0.876 | 0.650 (65) | 0.932 / 0.885 / 0.810 | 1,024 + 14.7 | 0 |
+| **AP-part** | **0.926** | **0.840** (84) | 0.929 / 0.935 / 0.915 | 1,323 + 63.3 | 236 + 48.9 |
+
+Fixes / breaks against today: VW 6 / 9, AP-part 10 / 6. 0 failed calls, 0 unreadable answers. Apertus's part equals
+the original opening's for 127 of 150 (84.7 %): council 46/46, summary 38/38, committee 30/30, law 9/19, detail 4/17;
+"none" 8 times.
+
+**HYBRID RULE, AP-part:** dev +0.073, val **+0.051** over VW (needs +0.02 on both): **adopted** as the step after the
+rules (`ap_part_a = "after-rules"`). A case the rules route is never touched; Apertus is asked only when the rules
+find no part and the vote has valid parts. Its "none" (and a part the parser did not validate) goes to today's
+fallback (embed-e5-small), since VW was not adopted (step 2). On dev and val the rules route all but a few cases, so
+the default costs tokens only for those (G1/G2 list them).
+
+### Task B: fewer tokens without local time (session 11 step 6): T and H pass the TASK B RULE on dev, E fails on local time
+
+**Step 6a, no model.** B-cut4 (E, session 10) cuts a reference over 3,000 characters to its first line (the ballot's
+title) and the 4 paragraphs most similar to the claim by e5; it halves the tokens but its e5 work cost local time.
+Cheaper selectors of the same 4 paragraphs (`src/taskb_context.py`, `--context-b cut4-*`): **Q** e5's own 8-bit
+export (`model_qint8_avx512_vnni.onnx`, same repository and licence), **T** e5 on the first 300 characters of each
+paragraph, **L** shared character 4-grams and numbers (no model), **H** L when the claim is in the reference's
+language, else T.
+
+Agreement with E's paragraphs on the 218 dev references E cuts (`selector_agreement.json`,
+`scripts/taskb_selectors.py`; E's own mean is 3.81 because some references have fewer than 4 paragraphs after the
+first line):
+
+| Selector | Mean paragraphs shared with E | All equal to E |
+|---|---|---|
+| Q | 3.36 | 60 % |
+| T | 3.06 | 42 % |
+| H | 2.78 | 37 % |
+| L | 2.03 | 23 % |
+
+Local time per case of the image with each selector (`local_time/`; 2 CPUs, the step 4 defaults, fake model after
+1.0 / 0.3 / 0.1 s per request; requests the replay table does not know get the fake model's fixed answer, which does
+not change the local work):
+
+| Context | 1.0 s | 0.3 s | 0.1 s | within +0.005 s of today at 1.0 and 0.3 s? |
+|---|---|---|---|---|
+| today (whole reference) | 0.0067 | 0.0066 | 0.0067 | — |
+| E | 0.0110 | 0.661 | not measured | no |
+| Q | 0.0099 | 0.440 | not measured | no |
+| T | 0.0077 | 0.0089 | not measured | yes |
+| H | 0.0072 | 0.0082 | 0.059 | yes |
+| L | 0.0065 | 0.0066 | 0.0067 | yes |
+
+With step 4's light-first lanes, T's and H's short e5 work hides behind the requests down to 0.3 s per request; E and
+Q embed every paragraph in full and do not. The 1–2 best selectors within the bound by agreement: **T and H**.
+
+**Step 6b, dev run** (interleaved, 300 dev task B cases, 1 request per second, 01:10 to 01:41 UTC; all 1,200 answers
+from one backend, blablador `vllm-0.23.1rc1`):
+
+| Arm | Macro-F1 | F1 ent / neu / con | Unreadable (neutral fallback) | Input + output tokens per case | Fixes / breaks vs today |
+|---|---|---|---|---|---|
+| today | 0.967 | 0.985 / 0.963 / 0.951 | 2 | 1,994 + 8.3 | |
+| E | 0.987 | 0.990 / 0.990 / 0.980 | 0 | 883 + 8.7 (−55.7 %) | 7 / 1 |
+| **T** | 0.987 | 0.985 / 0.995 / 0.980 | 0 | **815 + 8.5 (−59.1 %)** | 8 / 2 |
+| H | **0.993** | 0.990 / 1.000 / 0.990 | 0 | 923 + 8.5 (−53.7 %) | 8 / 0 |
+
+**TASK B RULE on dev** (Macro-F1 at most 0.005 lower, no more unreadable answers, input tokens at least 30 % lower,
+local time at most +0.005 s per case at 1.0 and 0.3 s): **T passes, H passes, E fails** (local time at 0.3 s). The
+best for val: T, by REF SCORE (mean S_B over 1.0 and 0.3 s with the measured tokens and local times: T 0.927, H 0.922;
+H's higher Macro-F1 is 2 cases of 300, T's tokens are 12 % fewer). Val: `2026-10-13_rashad_taskb-selectors_valB580`.
+
+### Task B selector T confirmed on val: TASK B RULE passes; T becomes task B's default (session 11 step 6b)
+
+The val confirmation of `2026-10-13_rashad_taskb-selectors_devB300`: all 580 val task B cases, today (the whole
+reference) against T (B-cut4 with selector T: a reference over 3,000 characters is cut to its first line and the 4
+paragraphs whose first 300 characters are most similar to the claim by e5). Interleaved, 1 request per second,
+01:41 to 02:04 UTC; all 1,160 answers from one backend (blablador `vllm-0.23.1rc1`).
+
+| Arm | Macro-F1 | F1 ent / neu / con | Unreadable (neutral fallback) | Input + output tokens per case | Fixes / breaks vs today |
+|---|---|---|---|---|---|
+| today | 0.954 | 0.984 / 0.938 / 0.938 | 3 | 1,957 + 9.0 | |
+| **T** | **0.968** | 0.982 / 0.963 / 0.958 | 1 | **820 + 9.4 (−58.1 %)** | 12 / 4 |
+
+**TASK B RULE** (dev and val: Macro-F1 at most 0.005 lower, no more unreadable answers, input tokens at least 30 %
+lower, local time at most +0.005 s per case at 1.0 and 0.3 s per request):
+
+| | dev | val |
+|---|---|---|
+| Macro-F1, today → T | 0.967 → 0.987 | 0.954 → 0.968 |
+| Unreadable answers | 2 → 0 | 3 → 1 |
+| Input tokens | −59.1 % | −58.1 % |
+| Local time per case at 1.0 / 0.3 s (dev, image) | 0.0067 / 0.0066 → 0.0077 / 0.0089 | (dev's) |
+
+**T passes and becomes task B's default** (`context_b = "cut4-t"`); output tokens rise by 0.2 to 0.4 per case.
+
+### FINISH: all 600 dev cases with the final defaults of session 11, through the published image
+
+**What ran.** The image published by `.github/workflows/publish-image.yml`, pulled from
+`ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1` (built from `bb2d08f`, also tagged `session-11` at
+the time; `src/` unchanged since; id in `task-*/image.txt`), run by `make run` with the organisers' command, **task A
+and task B in separate containers**, the real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `.env`),
+`LLM_MIN_INTERVAL=1`. Task A: the 300 task A lines of `data/dev/cases.jsonl`, 02:15–02:21 UTC; task B: its 300 task B
+lines, 02:21–02:27 UTC. Both exit 0, 300 responses each.
+
+Final defaults: task A `section-route` with `A-v4-section-route-L1` and `json_schema`, AP-part after the rules,
+evidence with halves, vote names by meaning; task B `v3-topic-first`, a reference over 3,000 characters cut to its
+first line and the 4 paragraphs chosen by selector T, max_tokens 32; light-first lanes, lazy page reading, shared
+onnxruntime threads, one lane under a 2.5 GiB memory limit, one kept connection.
+
+**Scores** (the starter's `evaluate.py`: `task-*/official_score.*`; calls: `calls_summary.json`):
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case |
+|---|---|---|---|---|---|
+| A (300) | **0.980** | 0.976 / 0.995 / 0.969 | **0.985** (198/201) | 0 | 1,237.8 + 14.5 |
+| B (300) | **0.987** | 0.985 / 0.995 / 0.980 | not scored | 0 | 815.3 + 8.7 |
+
+- **Paths (task A):** 299 routed (council 102, summary 67, committee 48, detail 43, law 39), 1 to embed-e5-small. No
+  case asked Apertus for its part (the rules name one for every claim).
+- **Endpoint:** all 600 answers from one backend (blablador, `vllm-0.23.1rc1`); 0 failed calls, 0 retries, 0 HTTP
+  429, no gateway cache hits.
+- **Session 10's final image on the same dev cases** (`2026-10-12_rashad_final-defaults_dev600`, a different run):
+  task A 0.983 / 0.980 with the same 1,238 + 14.5 tokens; task B 0.967 with 1,994 + 8.4.
+
+These answers and the val task A answers are the saved answers of the new replay reference
+`2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA` (the replay reproduces them exactly).
+
+**Local time of the same image** (`scripts/local_time.py`, `local_time_dev*_d*.json`, 03:00–03:12 UTC after one
+warm-up run, nothing else running, 2 CPUs pinned to CPUs 2–3, 4 GB, fake model replaying these answers):
+
+| Task | 1.0 s per request | 0.3 s | 0.1 s | replay misses | peak memory (1.0 s) |
+|---|---|---|---|---|---|
+| A | 0.018 s per case | 0.155 s (a repeat at 03:46: 0.108 s) | 0.316 s | 0 | 2,287 MiB |
+| B | 0.0104 s | 0.0093 s | 0.130 s | 0 | 1,673 MiB |
+
+The two task A values at 0.3 s show how much one measurement varies. Under the same conditions on CPUs 0–1
+(`local_time_same_conditions/`), session 10's image needs 0.223 s per case at 0.3 s and this image 0.129 s (0.123 s
+with e5's files mounted from the host).
+
+**REF SCORE** (`ref_score.json`; reference "best" values 600 / 800 tokens, 0.05 / 0.005 s): **0.909** at 1.0 s per
+request (S_A 0.909, S_B 0.908), **0.851** at 0.3 s (0.864 with the repeat measurement), 0.806 at 0.1 s. Session 10:
+0.870 / 0.824 (different runs).
+
+**Memory of the final image** (the grid of step 5 on this image, `memory_final.txt`): task A
+answers every case at 2 GiB and 1.5 GiB with 2 CPUs and with 1 CPU, not at 1 GiB; task B (selector T loads e5 for long
+references) at 1.5 GiB, not at 1 GiB.
+
+### FINISH: all 580 val rows (task A and task B) with the final defaults of session 11, through the published image
+
+Same image, command and settings as `2026-10-13_rashad_final-s11_dev600` (`sha-bb2d08fea0f1`, task A and task B in
+separate containers, real endpoint, `LLM_MIN_INTERVAL=1`). Task A: `data/val/cases.jsonl`, 02:26–02:37 UTC; task B:
+`output/valB/cases.jsonl`, 02:37–02:48 UTC. Both exit 0, 580 responses each.
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case |
+|---|---|---|---|---|---|
+| A (580) | **0.959** | 0.976 / 0.955 / 0.946 | **0.955** (383/401) | 0 | 1,205.8 + 14.5 |
+| B (580) | **0.968** | 0.982 / 0.963 / 0.958 | not scored | 1 | 819.5 + 9.3 |
+
+- **Paths (task A):** 577 routed, 3 to embed-e5-small; no case asked Apertus for its part.
+- **Neutral fallback:** the only label Python wrote is 1 task B answer it could not read.
+- **Endpoint:** all 1,160 answers from one backend (blablador, `vllm-0.23.1rc1`); 0 failed calls, 0 retries, 0 HTTP 429.
+- **Session 10's final image** (`2026-10-12_rashad_final-defaults_val1160`, a different run): task A 0.959 / 0.955,
+  task B 0.961 with 1,957 + 9.0 tokens.
+
+**Local time of the same image** (`local_time_val*_d*.json`; 2 CPUs, 4 GB; the replay table holds the val task A
+answers; task B's requests are not in it and get the fake model's fixed answer, which does not change the local
+work): task A 0.0083 / 0.0103 s per case at 1.0 / 0.3 s per request, task B 0.0070 / 0.0074 s. **REF SCORE**
+(`ref_score.json`): **0.908 / 0.906** (session 10: 0.873 / 0.888).
+
+### FINISH: the probe (94 test rows of 2021-03-07 and 2025-09-28, task A and task B) with the final defaults of session 11
+
+Same image, command and settings as `2026-10-13_rashad_final-s11_dev600` (`sha-bb2d08fea0f1`). Task A:
+`output/probeA/cases.jsonl` (booklets in `output/booklets_probe`), 02:48–02:50 UTC; task B: `output/probeB/cases.jsonl`,
+02:50–02:51 UTC. Both exit 0, 94 responses each. The other three test dates stay sealed.
+
+| Task | Macro-F1 | F1 E / N / C | Evidence | Neutral fallbacks | Input + output tokens per case |
+|---|---|---|---|---|---|
+| A (94) | **0.971** | 1.000 / 0.949 / 0.965 | **0.954** (62/65) | 0 | 1,135.5 + 14.5 |
+| B (94) | **0.977** | 0.977 / 0.966 / 0.989 | not scored | 0 | 788.7 + 8.9 |
+
+- **Paths (task A):** 90 routed (session 10: 83), 4 to embed-e5-small: the rules route these claims to the committee,
+  and their votes of 2025-09-28 have no committee part; Apertus is not asked (the rules named a part).
+- **Endpoint:** all 188 answers from one backend; 0 failed calls, 0 retries.
+- **Before (session 10's final image, `2026-10-12_rashad_final-defaults_probe188`, a different run):** task A 0.960,
+  evidence 0.908 (59/65), task B 0.971 with 1,831 + 8.3 tokens. Step 1's parser fixes (the first vote of
+  `2025_09_28_fr`) and task B's selector T account for the changes.
+
+**Local time** (`local_time_probe*_d*.json`; no saved answers in the replay table for the probe, so every request gets
+the fake model's fixed answer; the local work does not depend on it): task A 0.026 / 0.237 s per case at 1.0 / 0.3 s
+(six booklets for 94 cases: each booklet's reading and embedding is shared by few cases), task B 0.015 / 0.015 s.
+**REF SCORE** (`ref_score.json`): **0.897 / 0.825** (session 10: 0.850 / 0.777).
 
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 
@@ -1491,3 +2434,444 @@ the rules give none) would fix the 15 stress fallbacks, which this check did not
   on: `python3 scripts/prompt_snapshot.py run --out <dir> --replay <this folder>/replay_table.json`, then
   `compare --reference <this folder> --new <dir>`. Metrics in `dev/` and `val/` come from the fake model and
   mean nothing.
+
+### Local time of `main`, the organisers' way, and its REF SCORE (session 10, step 1)
+
+**What was measured.** `main`'s image (`42b2a3c`, built at `50cb320` with the same `src/`) ran with the
+organisers' command (`--input /data/cases.jsonl --output /output/predictions.jsonl`) on all 300 dev task A
+cases and, in a separate container, all 300 dev task B cases, with 2 CPUs and 4 GB, a read-only root, /tmp in
+memory and the data read-only (`scripts/local_time.py`). The fake model (`scripts/stub_llm.py`) answered every
+request with session 9's saved real answer for exactly that request (replay; 0 misses in all four runs) after a
+fixed delay of 1.0 s, then 0.3 s, standing in for the model's latency. Local time = wall-clock of `docker run`
+minus the union of the intervals during which a request was in flight (the organisers' rule,
+`docs/official_scoring.md`). Page cache warm (one short warm-up run first).
+
+| | task A, 1.0 s | task A, 0.3 s | task B, 1.0 s | task B, 0.3 s |
+|---|---|---|---|---|
+| wall-clock | 541.3 s | 312.8 s | 595.7 s | 372.0 s |
+| in flight | 300.3 s | 90.3 s | 300.3 s | 90.3 s |
+| **local time** | 241.0 s | 222.5 s | 295.5 s | 281.7 s |
+| **local time per case** | **0.803 s** | **0.742 s** | **0.985 s** | **0.939 s** |
+| to the first request | 3.43 s | 3.44 s | 1.11 s | 1.20 s |
+| gaps between requests | 236.6 s | 218.1 s | 293.8 s | 279.9 s |
+| gap median / p95 / max | 0.044 / 3.41 / 22.9 s | 0.044 / 3.15 / 21.9 s | 0.004 / 4.70 / 8.9 s | 0.004 / 4.55 / 9.0 s |
+| after the last answer | 0.95 s | 1.02 s | 0.59 s | 0.64 s |
+
+The two delays give the same local time within about 8 % (241.0 against 222.5 s for task A): that is the
+measurement's noise on this machine, not an effect of the delay (the local work does not depend on it).
+
+**Where task A's local time goes.** The first case of each of the 44 booklets waits for the PDF to be read
+(pypdf; 108 s in all, median 2.0 s per booklet); a few cases embed a long part or, on the fallback path, a
+whole booklet with e5 (the largest gaps, 11 to 23 s); every other case costs about 0.04 s. A profile of the
+preparation on the host (`cProfile`, all 300 cases): PDF text extraction 80 %, e5 10 % (model load 3.4 s once),
+`booklet.parse` 3 % (it ran on every case).
+
+**Where task B's local time goes.** Almost all of it is B-cut (session 9): the 105 references over 8,000
+characters are cut to the 8 paragraphs most similar to the claim, which embeds every paragraph with e5 (median
+gap 0.004 s for the others, p95 4.7 s). The first case of the run also loads the e5 model.
+
+**Cold start.** The very first run after the Docker daemon started read the 470 MB e5 model file from this
+sandbox's slow disk: one task B case then took 54 s instead of about 10 s. The measurements above are warm.
+
+**REF SCORE of `main`** (`scripts/official_score.py`, fixed reference values: 600 / 800 tokens and 0.05 /
+0.005 s per case for A / B; tokens = input + output per case; Macro-F1, evidence and tokens from session 9's
+runs on all 600 dev cases (`2026-10-09_rashad_final-defaults_dev600`) and on val (`label-errors-confirm_valA580`
+L1, `taskb-cut-confirm_valB580` B-cut); local time from the dev runs above, for both sets):
+
+| | Macro-F1 A | evidence | tokens A | K_A | T_A | S_A | Macro-F1 B | tokens B | K_B | T_B | S_B | **REF SCORE** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| dev, delay 1.0 s | 0.980 | 0.980 | 1,252 | 0.479 | 0.062 | 0.767 | 0.967 | 1,240 | 0.645 | 0.005 | 0.774 | **0.770** |
+| dev, delay 0.3 s | 0.980 | 0.980 | 1,252 | 0.479 | 0.067 | 0.768 | 0.967 | 1,240 | 0.645 | 0.005 | 0.774 | **0.770** |
+| val, delay 1.0 s | 0.961 | 0.958 | 1,220 | 0.492 | 0.062 | 0.755 | 0.961 | 1,239 | 0.646 | 0.005 | 0.770 | **0.761** |
+| val, delay 0.3 s | 0.961 | 0.958 | 1,220 | 0.492 | 0.067 | 0.756 | 0.961 | 1,239 | 0.646 | 0.005 | 0.770 | **0.762** |
+
+Tokens per case, input + output: task A dev 1,237.8 + 14.5, val 1,205.8 + 14.5; task B dev 1,231.2 + 8.4,
+val 1,230.3 + 8.9. **T is almost zero for both tasks**: 15 % of each task's score is local time, and `main`
+spends 0.74 to 0.99 s per case where the reference best is 0.05 s (A) and 0.005 s (B).
+
+Files: `local_time_<task>_d<delay>.json` (each run's numbers, from `scripts/local_time.py`), `ref_score.json`.
+
+### Connection set-up per model call: new connection vs one kept connection (session 10, step 1)
+
+20 dev task B cases (the first 20 whose reference has at most 8,000 characters, so no embedding model is
+loaded), each answered twice by `cli.predict()` with the default settings, back to back, in an order that
+alternates from case to case: once with `src/llm.py` as on `main` (`requests.post`, which opens a new
+connection for every call), once with the same code but `requests.post` replaced by the `post` of one
+`requests.Session` kept for the whole run. 40 real calls to Public AI's `apertus-v1.5-8b`, paced at one
+request per second, all HTTP 200.
+
+| | new connection per call (main) | one kept connection |
+|---|---|---|
+| connections opened | 20 | 1 |
+| set-up before the first byte, mean | 486.0 ms | 24.3 ms |
+| set-up, median | 465.3 ms | 1.2 ms |
+| set-up after the first call, mean | 484.2 ms | 1.2 ms |
+| whole call, mean | 1339.9 ms | 623.1 ms |
+
+Set-up is the time from `post()` to the first byte of the request written to the socket: building the
+request, reading the proxy settings, DNS, TCP, the sandbox's proxy tunnel (CONNECT) and TLS. It is local time
+in the organisers' sense (no request has reached their proxy yet). The sandbox reaches the endpoint through
+an egress proxy, so the absolute numbers belong to this sandbox; the organisers' proxy may be closer. The
+difference is what a kept connection saves on every call after the first. The whole-call times also differ
+because the second of two identical requests can come from the gateway's cache (about 10 minutes); they are
+not compared.
+
+Files: `calls.jsonl` (one line per call: case, arm, set-up, connect and total time, connections opened,
+HTTP status), `summary.json`.
+
+### Background preparation: local time before and after, B-cut against no cut (session 10, step 2)
+
+**What changed (same requests and answers).** `src/cli.py`'s `predict()` was split into `prepare()` (the local
+work of a case: booklet, routing, embedding, messages) and `complete()` (the model call and the response).
+`src/pipeline.py` prepares the cases in the background while the main process sends the prepared ones, one
+request at a time, in the order they become ready. Also: one kept connection per thread (`requests.Session`;
+a connection error is sent once more on a new connection), each booklet parsed once (`booklet.parse` was run
+on every case), pages kept in memory per booklet, pypdf imported on first use, ONNX threads = the
+container's CPU limit (2 instead of 4: about 20 % faster under `--cpus 2`, vectors bit-identical), `src/`
+compiled when the image is built. `--workers 0` keeps the sequential path.
+
+**Gates.** G1 and G2 against the session 9 reference (`2026-10-09_rashad_prompt-snapshot-final_devAB-valA`):
+pass for the thread version and for the process version (all 1,180 dev and val requests, paths, labels and
+evidence equal). With task B's new default (no cut, below), the requests of exactly the 105 long dev task B
+references differ, as expected; every other request, label and evidence is unchanged. Unit, contract and
+pipeline tests pass (164 unit; 43 contract and pipeline, one slow test skipped).
+
+**Local time per case** (same measurement as step 1: 2 CPUs, 4 GB, fake model replaying session 9's answers):
+
+| | task A, 1.0 s | task A, 0.3 s | task B, 1.0 s | task B, 0.3 s |
+|---|---|---|---|---|
+| `main` (step 1) | 0.803 s | 0.742 s | 0.985 s | 0.939 s |
+| two worker threads | 0.105 s | 0.373 s | 0.037 s | 0.664 s |
+| **one worker process** | **0.015 s** | **0.300 s** | 0.008 s | 0.470 s |
+| one worker process, task B without the cut | | | **0.008 s** | **0.009 s** |
+
+One worker process, task A at 1.0 s: 4.5 s of local time in a 305 s run: 3.1 s to the first request (start-up
+and the first booklet), 1.2 s of gaps (median 3.8 ms per request), 0.24 s after the last answer.
+
+**Why a process.** With threads, the PDF reader (pure Python) and the creation of the ONNX session (it holds
+Python's lock for up to 2.45 s, measured in the container) kept the thread that sends the requests waiting:
+task B's second request left 7.6 s late, and two threads reading two booklets at once doubled the time to
+task A's first request (3.4 to 6.3 s). In input order, the first 25 task A cases each needed a new booklet;
+the cases are now prepared grouped by booklet (first appearance), task B's light cases first.
+
+**When the model is fast, the preparation is the limit.** At 0.3 s per request the 300 requests are in flight
+for 90 s, while the worker needs about 180 s for task A (reading 44 booklets, a few e5 embeddings) and about
+225 s for task B with the cut (embedding every paragraph of the 105 long references). Without the cut, task B
+has no local model work.
+
+**B-cut against no cut under REF SCORE** (S_B = 0.70 Macro-F1 + 0.15 T + 0.15 K; Macro-F1 and tokens from
+session 9's interleaved runs, `2026-10-09_rashad_taskb-context_devB300` and `taskb-cut-confirm_valB580`):
+
+| | Macro-F1 | tokens per case | K | T at 1.0 s | S_B at 1.0 s | T at 0.3 s | S_B at 0.3 s | mean S_B |
+|---|---|---|---|---|---|---|---|---|
+| dev, B-cut | 0.967 | 1,239.6 | 0.645 | 0.625 | 0.868 | 0.011 | 0.775 | 0.821 |
+| dev, no cut | 0.967 | 2,002.7 | 0.400 | 0.633 | 0.832 | 0.568 | 0.822 | **0.827** |
+| val, B-cut | 0.961 | 1,239.2 | 0.646 | 0.625 | 0.863 | 0.011 | 0.771 | 0.817 |
+| val, no cut | 0.957 | 1,966.1 | 0.407 | 0.633 | 0.826 | 0.568 | 0.816 | **0.821** |
+
+The two delays disagree: B-cut wins when the model takes 1.0 s per request (its embedding hides behind the
+requests), no cut wins at 0.3 s. B-cut is hidden only if a request takes at least about 0.75 s (225 s of
+embedding over 300 requests); Public AI's server time per task B call was about 0.6 to 0.85 s in step 1's
+connection check, right at that edge. **Decision: no cut**, by the mean S_B over both delays (dev +0.006, val
++0.004); it also does not depend on the model's speed, and task B no longer reads the 470 MB e5 file, which in
+a freshly pulled image is read from disk on first use (54 s on this sandbox's disk in step 1).
+
+**REF SCORE after step 2** (task A: one worker process; task B: no cut; local time measured on dev, used for
+both sets):
+
+| | S_A | T_A | S_B | T_B | K_B | **REF SCORE** | `main` |
+|---|---|---|---|---|---|---|---|
+| dev, 1.0 s per request | 0.908 | 1.000 | 0.832 | 0.633 | 0.400 | **0.877** | 0.770 |
+| dev, 0.3 s | 0.783 | 0.167 | 0.822 | 0.568 | 0.400 | **0.799** | 0.770 |
+| val, 1.0 s | 0.896 | 1.000 | 0.826 | 0.633 | 0.407 | **0.868** | 0.761 |
+| val, 0.3 s | 0.771 | 0.167 | 0.816 | 0.568 | 0.407 | **0.789** | 0.762 |
+
+Tokens are not changed by step 2 (G1: the same requests), except task B's long references, now sent whole.
+The fake model reports fixed token counts, so the `input_tokens_per_case` in the `local_time_*.json` files
+(100 and 10) are not real; the real counts are session 9's.
+
+Files: `local_time_<version>_<task>_d<delay>.json`, `ref_score.json`.
+
+### Two worker processes owning whole booklets ("lanes") against one (session 10, after step 2)
+
+**What changed (same requests and answers).** Since step 2 one forked worker process prepared all cases. With two,
+each would read most booklets again (each process has its own caches), so each lane now owns whole booklets:
+task A cases go to lane `booklet rank % 2` (booklets in order of first appearance), task B cases to lane 0. The
+lanes are forked with their list of cases before the main process starts any thread, and send each prepared case
+back through a pipe (`src/pipeline.py` Lanes). G1 and G2 against the step 2 snapshot: pass (all 1,180 dev and val
+requests, labels and evidence unchanged; the replay of dev and val took 288 s instead of 477 s). Unit, contract and
+pipeline tests pass.
+
+**Local time per case** (`scripts/local_time.py`, image `s10-lanes`, 2 CPUs, 4 GB; one lane = the same image with
+`--workers 1`; the 1.0 s pairs were measured back to back while a light model run went on):
+
+| | two lanes | one lane |
+|---|---|---|
+| task A, 0.3 s per request | **0.206 s** (local 61.8 s; first request 3.4 s) | 0.316 s (94.8 s) |
+| task A, 1.0 s per request | 0.018 s (twice: 5.4 s and 5.4 s) | 0.015 / 0.016 s (4.6 s, 4.8 s) |
+| task A, peak memory | 2.3 GB | 1.2 GB |
+| task B, 1.0 s / 0.3 s | 0.007 / 0.008 s (one lane either way: no booklets) | |
+| K4 (task A), 1.0 s / 0.3 s | 0.080 / 0.772 s | 0.215 / 0.837 s (step 5) |
+
+At 1.0 s per request two lanes cost about 0.8 s more per 300 cases: small gaps between requests (p95 18 ms
+against 8 ms) while both lanes are busy on the two CPUs. Running the lanes at a lower CPU priority (`os.nice`) did
+not change it (0.0179 against 0.0146 s, measured back to back) and was taken out again. At 0.3 s per request two
+lanes read two PDFs at the same time and cut task A's local time by a third.
+
+**Decision: two lanes by default (one on a single CPU).** Under REF SCORE task A's local time at 1.0 s is below the
+reference best (0.05 s) either way, so T_A is 1.0 with one lane or two; at 0.3 s T_A rises from 0.16 to 0.24. Task
+B is unchanged. Peak memory stays under 4 GB with room to spare.
+
+### 2026-10-12, session 10 reference for the final defaults: request snapshot and replay (no model calls)
+
+- Code: `29b1485` (`src/` as in `421d8c8`, the code of the published image `sha-421d8c804677`; defaults:
+  section-route with `A-v4-section-route-L1` and `json_schema`, evidence halves, vote names by meaning; task B
+  `v3-topic-first` with the whole reference; two worker processes, one kept connection). Commands (from
+  `track_2a/`): `python3 scripts/prompt_snapshot.py run --out <dir>` (fixed fake answers), then `python3
+  scripts/prompt_snapshot.py table --snapshot <dir>/snapshot.json --runs
+  docs/runs/2026-10-12_rashad_final-defaults_dev600/task-A docs/runs/2026-10-12_rashad_final-defaults_dev600/task-B
+  docs/runs/2026-10-12_rashad_final-defaults_val1160/task-A --out replay_table.json`, then `python3
+  scripts/prompt_snapshot.py run --out <this folder> --replay replay_table.json`. `.env` never read, no key used.
+- `snapshot.json`: per case, the SHA-256 of the whole request body and, for task A, the path: dev 299 routed and 1
+  fallback, val 577 routed and 3 fallbacks. It equals the snapshot of the gate run for the two lanes (`g_lanes`,
+  the last change to `src/`). Against the session 9 reference, all 880 task A requests and 195 of 300 task B
+  requests are the same; the other 105 are the long task B references, now sent whole (step 2).
+- `replay_table.json`: **1,180** request hashes, every request of both sets, with the answer the final defaults got
+  from the real endpoint through the published image (`2026-10-12_rashad_final-defaults_dev600`, task A and task B,
+  17:19–17:31 UTC; `2026-10-12_rashad_final-defaults_val1160/task-A`, 17:31–17:42 UTC). No request has two
+  different saved answers.
+- **The replay reproduces the saved answers exactly** (`replay_vs_final_runs.json`): 0 label and 0 evidence
+  differences in 1,180 cases. The starter's `evaluate.py` on the replay (`scores/`): dev task A Macro-F1 0.9832,
+  evidence 0.9801 (197 of 201); task B 0.9666; val task A 0.9589, evidence 0.9551 (383 of 401).
+- **This folder replaces `2026-10-09_rashad_prompt-snapshot-final_devAB-valA` as the anchor for G1 and G2** from
+  now on: `python3 scripts/prompt_snapshot.py run --out <dir> --replay <this folder>/replay_table.json`, then
+  `compare --reference <this folder> --new <dir>`. Its table is also the default for `scripts/local_time.py`.
+  Metrics in `dev/` and `val/` come from the fake model and mean nothing.
+
+### Parser coverage on every booklet from 2016 to 2026, before and after the session 11 fixes (step 1, no model)
+
+**Booklets.** Every federal voting booklet in the Federal Chancellery's collection from 2016-02-28 to 2026-06-14, plus
+2026-09-27 (on admin.ch, not yet in the collection), in German, French and Italian: 31 voting dates, 93 PDFs
+(`scripts/fetch_unseen_booklets.py --since 2016 --out <folder outside the repository>`). The three sealed test dates
+(2020-02-09, 2022-02-13, 2022-05-15) are dropped from the list before any request: never downloaded, parsed or
+opened. The dev, val and probe booklets are among the 93. The PDFs and their text are not committed; the JSON files
+here hold only numbers, part names and the parser's own problem messages (`scripts/parser_coverage.py`).
+
+**Cross-language check (without labels).** The de, fr and it booklets of one date print the same votes and parts,
+so they must agree on the number of votes, the parts each vote has and each part's start page (within one page).
+A disagreement is a parser gap in at least one language.
+
+**Before** (`main` at `014f691`, `coverage_before.json`): 64 of 93 booklets complete; 180 votes found, 178 pass.
+**After** (this branch, `coverage_after.json`): **88 of 93 complete; 249 votes found, 244 pass every check, all 249
+have at least one usable part; 0 dates with a cross-language disagreement.** Booklets complete (all votes pass)
+by year and language:
+
+| Year | de before → after | fr before → after | it before → after | votes passing (after) |
+|---|---|---|---|---|
+| 2016 | 0/4 → 4/4 | 0/4 → 4/4 | 0/4 → 4/4 | 39/39 |
+| 2017 | 0/3 → 2/3 | 0/3 → 2/3 | 0/3 → 2/3 | 15/18 |
+| 2018 | 2/4 → 4/4 | 2/4 → 4/4 | 1/4 → 3/4 | 29/30 |
+| 2019 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 9/9 |
+| 2020 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 21/21 |
+| 2021 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 39/39 |
+| 2022 | 1/1 → 1/1 | 1/1 → 1/1 | 1/1 → 1/1 | 9/9 |
+| 2023 | 1/1 → 1/1 | 1/1 → 1/1 | 1/1 → 1/1 | 9/9 |
+| 2024 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 36/36 |
+| 2025 | 3/3 → 3/3 | 2/3 → 2/3 | 3/3 → 3/3 | 14/15 |
+| 2026 | 3/3 → 3/3 | 3/3 → 3/3 | 3/3 → 3/3 | 24/24 |
+
+(2020 has two dates here: 2020-02-09 is sealed. The votes column counts the votes found after; before, the 27
+booklets of 2016 to mid-2018 gave no votes at all.)
+
+**Distinct causes before, most frequent first, and the fix** (each a general cause with a unit test on a synthetic
+page or PDF; no booklet-specific code):
+
+| Cause | Booklets before | Fix | After |
+|---|---|---|---|
+| No contents entry found: the older layout (until 2018-06-10) lists one entry per vote ("Informationen zur Vorlage Seiten 4–11", "Explications pages …", "Spiegazioni pagine …") and its legal text, not the four part entries | 20 | `_parse_old_layout`: that contents grammar; inside the vote's pages each part starts on a page whose heading names it (a whole line, anywhere on the page); wordings incl. "Argumente von Bundesrat und Parlament"; stray spaces inside words ("Sei ten") tolerated; a legal text belongs to the vote whose pages hold it, else to the entry before it | 0 |
+| PDF text not readable: a font descriptor names two embedded programs of one font (/FontFile and /FontFile3); pypdf 6 refuses the page, and so the whole booklet | 7 (2016-09-25, 2018-03-04, 2018-06-10 de) | `parse.extract_pages`: keep one program per descriptor in the reader's copy and read the page again; a page that still fails gets empty text instead of failing the booklet | 0 (the 7 now parse in the older layout) |
+| No arguments heading on the contents' arguments page (the text layer lost the heading) | 1 (2018_09_23_it) | the arguments' start also counts as confirmed when the detail page's list of sub-sections names the same page; the problem stays listed | vote not "ok", all its parts valid |
+| Contents entry without arguments (the text layer dropped the line) | 1 (2025_09_28_fr, the probe) | **per-part validity** (step 1e): a vote keeps every part that passes its own checks; without the arguments entry, the arguments start at the earliest sub-section the detail page's list and the headings give, if that page carries an arguments heading | vote not "ok", all its parts valid |
+
+**Per-part validity (1e).** `Vote.valid` holds the parts that passed their own checks (all parts when `Vote.ok`);
+section-route routes a claim to its part when the part is valid (before: only when the whole vote passed). For the
+178 votes that passed before, every part's pages are unchanged (checked: 178 of 178).
+
+**Remaining causes after** (`coverage_after.json`): 2017-09-24 vote 2 (two linked pension votes in one block; no
+"Vorlage im Detail" heading in de, fr or it: 3 booklets; its summary, arguments and law are valid); 2018_09_23_it
+and 2025_09_28_fr as above (all parts valid, the problem listed).
+
+**Effect on cases.** G1 and G2 against `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA` pass
+(`gates_g1_g2.json`): all 1,180 dev and val requests, labels and evidence unchanged (their 4 fallbacks are not
+structure failures). On the probe (`route_check_probe_after.json`, `scripts/route_check.py`): **90 of 94 task A cases
+routed, 83 before**; 7 cases move from the fallback to the routed path: rows 1058 (summary), 1123, 1220, 1420, 584
+(council), 1247 (law), 208 (summary), all in `2025_09_28_fr`; the 8th case of that vote is a committee claim on a vote
+without a committee (still a fallback, as are 3 such claims elsewhere). Every routed probe case with a gold passage
+has it among the paragraphs sent (63 of 63).
+
+### Step 4, a fast server: where task A's local time goes at 0.3 s per request, and three changes that halve it (session 11)
+
+**Profile** (`single/today/d*.json` and `.phases.txt`; `src/timing.py` with `PROFILE_PHASES=1`; the image with 2 CPUs,
+4 GB, fake model replaying the session 10 reference's answers). Today's defaults, all 300 dev task A cases:
+
+| Model time per request | Local time per case | Time to the first request | Main process waiting for a case |
+|---|---|---|---|
+| 1.0 s | 0.017 s | 3.1 s | 2.2 s |
+| 0.3 s | 0.225 s | 3.7 s | 63.9 s |
+| 0.1 s | 0.426 s | 3.3 s | 124.5 s |
+
+At 0.3 s per request the two lanes are busy all the time: per lane about 145–155 s of preparation for 90 s of
+requests. Phase totals over both lanes: **PDF reading 107 s** (44 booklets, 2,624 pages, about 2.4 s per booklet),
+**e5 embedding 177 s** (47 long parts, about 3.8 s each), e5 loading 4.6 s (once per lane), parsing 1.2 s. The main
+process waited for a prepared case 25 times, 62 s in all. At 1.0 s per request the same work hides behind the
+requests.
+
+**Candidates** (each a switch in `src/`, G1/G2 decide whether answers stay identical):
+
+- **light-first** (`pipeline.LIGHT_FIRST`): a lane first prepares every case that needs no embedding model (a case
+  that would need it is put aside by `src/deferral.py`), then the others; the e5 model is loaded only when the
+  first such case comes (no separate change was needed for "e5 loaded only when needed").
+- **lazy pages** (`parse.LAZY_PAGES`): a page is read from the PDF when first asked for; the cache key is the PDF
+  file's SHA-256 (no page needs reading to name the booklet); one PDF reader open per process. The parser still
+  asks for 84 % of the pages (2,208 of 2,624).
+- **SHARE_CPUS** (`pipeline.SHARE_CPUS`), found in the profile: two lanes embedding at once each started
+  onnxruntime with every CPU, so 4 threads (which spin while idle) shared 2 CPUs; now each lane gets its share
+  (1 thread under a 2-CPU limit; the vectors are the same for 1, 2 and 4 threads, session 10).
+- no-spin (onnxruntime's `allow_spinning` off, 2 threads per lane), for comparison.
+- Not built: shared reading of the first booklet (the time to the first request is 3.1 s, 0.010 s per case; the
+  smallest booklet first would cut part of it), quantised e5 for task A (changes 50 of 75 cut selections, so it
+  fails G1).
+
+**Rounds at 0.3 s per request** (`rr1_runs/`, `rr2_runs/`; every variant once per round, beside a model run on the
+other two CPUs, so single values vary by about ±0.015 s):
+
+| Variant | Local time per case (rounds) | Mean |
+|---|---|---|
+| today | 0.184, 0.210, 0.218, 0.195 | 0.202 |
+| light-first | 0.176, 0.178 | 0.177 |
+| lazy pages | 0.173, 0.196 | 0.184 |
+| light-first + lazy | 0.159, 0.153 | 0.156 |
+| no-spin | 0.128, 0.131 | 0.129 |
+| SHARE_CPUS | 0.113, 0.127, 0.135, 0.120 | 0.124 |
+| light-first + SHARE_CPUS | 0.124, 0.116 | 0.120 |
+| **light-first + lazy + SHARE_CPUS** | 0.101, 0.101 | **0.101** |
+
+With all three, PDF reading falls to 58 s and embedding to 145 s over both lanes, and the main process waits 27 s
+instead of 62 s.
+
+**SAME-ANSWER RULE.** G1 and G2 pass on dev and val with all three switched on (every request, label and evidence
+identical to the session 10 reference), and each lowers the local time: **all three adopted** (commit after this
+folder). The target (≤ 0.05 s per case at 0.3 s) is **not reached**: what still takes the time is PDF reading
+(about 1.3 s per booklet, pure Python in pypdf) and e5 embedding of long parts (about 3 s per part); both are done
+once per booklet or part, and with a fast model they no longer hide behind the requests. The final image is
+measured at 1.0, 0.3 and 0.1 s in FINISH.
+
+Peak memory rose with the first version of lazy pages (2.58 GiB against 2.31 GiB: every booklet's PDF reader stayed
+open); the adopted version keeps one reader per process. Memory is step 5.
+
+### AP-structure: Apertus reads the booklet's contents, against the Python parser (session 11 step 3a)
+
+**What it is.** One call per booklet (`src/ap_parse.py`, `structure()`): the first six pages (the pages the parser
+reads for the contents), each with a page marker, and a JSON schema asking for every vote in the contents with its
+title and the start pages of its summary, detailed explanation, arguments and text put to the vote (null if the
+contents give none). The answer is cached per booklet, so its tokens count once per booklet and are spread over
+that booklet's cases. Before any part is used, Apertus's entries go through the parser's own checks
+(`booklet_from_entries` → `booklet._parse_vote`: every start page must carry its heading, pages in order, the
+arguments' sub-sections must agree).
+
+**Set.** The 93 booklets of step 1 (every federal booklet 2016–2026 in de, fr and it, sealed dates excluded),
+22:18 to 22:33 UTC, all 93 answers from one backend (blablador `vllm-0.23.1rc1`), 0 failed calls, 0 unreadable
+answers. Votes are matched by their order (Apertus's entries sorted by summary page). The JSON holds numbers and
+field names only (no titles).
+
+| Measure | Result |
+|---|---|
+| Current layout (2018 on), votes that pass the parser on a date without a cross-language disagreement | 178 |
+| … all four start pages equal to the parser's | **78.7 %** (de 53/60, fr 43/59, it 44/59) |
+| … per field: summary / detail / arguments / law | 83.7 % / 78.7 % / 80.3 % / 79.2 % |
+| … booklets with every vote equal | 54 of 66 |
+| Older layout (2016 to mid-2018, no per-part contents entries): law page equal | 30.3 % of 66 votes |
+| Booklets where Apertus lists as many votes as the parser | 94.6 % |
+| Votes the parser fails (5): Apertus's entry passes every check | 1 (`2025_09_28_fr` vote 1, the probe's cause, which step 1 already fixed); it adds no valid part the parser lacks |
+| Tokens per booklet, input + output | **1,796 + 176** (about 265 + 26 per case on dev, 6.8 cases per booklet) |
+
+By year, all pages equal: 2018 17/17, 2019 9/9, 2020 11/21, 2021 26/39, 2022 6/9, 2023 8/9, 2024 35/36, 2025 11/14,
+2026 17/24. Misses spread over all four fields (detail 38, law 37, arguments 35, summary 29 of 178 votes); a wrong
+summary page also shifts the order matching, so one reading error can count against several votes.
+
+**HYBRID RULE, part a.** AP-structure would need ≥ 95 % of its votes equal to the parser's where the parser passes;
+it reaches 78.7 %. So AP-structure **cannot become the step after the parser**, whatever run 3 shows; run 3 is
+still run, to report its effect on Macro-F1 and evidence when the parser is off. How many of the wrong pages the
+heading checks reject is not measured here (Apertus's entries are not stored); run 3 shows what reaches the model.
+
+### Step 5, memory: task A needed 3 GiB with 2 CPUs; one lane under 2.5 GiB brings it to 1.5 GiB (session 11)
+
+**What holds the memory** (task A, dev, 2 CPUs, 4 GB; `before/A_c2_m4g.phases.txt` and an in-process probe): the
+main process stays at 48 MiB (it only sends requests); each of the two lanes peaks at about 1.19 GiB. Of that,
+**loading e5 peaks at 1.16 GiB** (the 470 MB ONNX file is read and its weights copied; 0.80 GiB once loaded),
+onnxruntime's memory arena keeps the largest batch's buffers (+0.34 GiB after embedding long parts), page texts and
+the parsed booklets are small (about 6 MB per booklet). With two lanes, two e5 copies: the container's peak is
+2.29 GiB (cgroup, page cache included). Task B (whole reference, no e5) peaks at 49 MiB.
+
+**Before** (`before/sweep.txt`; the image under `--memory` × `--cpus`, fake model at 0.1 s, a limit passes if all 300
+responses are written with the labels of the 4g run; lower limits not run after a failure):
+
+| | 4g | 3g | 2g | 1.5g | 1g |
+|---|---|---|---|---|---|
+| task A, 2 CPUs | ok (peak 2,285 MiB) | ok | **OOM** (exit 137, 24 responses missing) | — | — |
+| task A, 1 CPU (one lane) | ok (1,193 MiB) | ok | ok | ok | OOM |
+| task B, 2 CPUs | ok (49 MiB) | — | ok | ok | ok |
+
+**Fixes tried at 2 CPUs** (`variants/`; local time per case at 0.1 s per request in brackets, today 0.29 s at 4g):
+
+| Variant | 4g | 2g | 1.5g | 1g |
+|---|---|---|---|---|
+| arena off (`MEMORY_ARENA = False`), two lanes | ok, 1,992 MiB (0.348 s) | ok, 2,005 MiB (0.352 s) | ok (0.728 s) | OOM |
+| arena off + batches of at most 4,096 tokens | ok, 2,033 MiB (0.331 s) | — | ok (0.698 s) | OOM |
+| **one lane under 2.5 GiB** (`MEMORY_FOR_TWO_LANES`) | ok, two lanes (0.309 s) | **ok, 1,194 MiB (0.423 s)** | **ok, 1,195 MiB (0.421 s)** | OOM |
+| all three | ok (0.352 s) | ok (0.492 s) | ok (0.495 s) | — |
+
+**Adopted: one lane under a 2.5 GiB limit** (`src/pipeline.py`, `MEMORY_FOR_TWO_LANES = 2.5 GiB`). Under 2.5 GiB the
+container now answers every case with the same labels at 2 GiB and at 1.5 GiB with 2 CPUs (the target was 2 GiB);
+at 2.5 GiB and above nothing changes (two lanes, the same requests: G1/G2 pass, as the fake-model runs use no
+limit). Not adopted: the arena off (it lowers the peak only to 2.0 GiB with two lanes, leaving 43 MiB of margin at
+2 GiB, and costs 0.06 s per case at every limit) and token-bounded batches (no further gain); both stay in the code,
+off. Not built: one e5 copy shared by both lanes, and dropping page texts (about 6 MB per booklet). 1 GiB stays out
+of reach: loading e5 alone peaks at 1.16 GiB.
+
+### Can Apertus read a page image? One request (session 11 step 3d, recorded only)
+
+`scripts/image_check.py` rendered page 8 of `2024_09_22_de.pdf` (the first page of a vote's detailed section, whose
+printed heading the parser checks: "Im Detail") as a 72 dpi PNG (53 kB) and sent it as an OpenAI-style image part
+with the question "What is the heading of this page?" (00:38 UTC, blablador `vllm-0.23.1rc1`).
+
+The endpoint **accepted** the request (HTTP 200, 1,077 input and 26 output tokens), but the 93-character answer **did
+not contain the heading**: Apertus v1.5 8B is a text model, and the answer does not reflect the page. Nothing of the
+answer or the page is stored here (booklet text). Page images are therefore no way to check headings with Apertus;
+the parser's text checks stay.
+
+### 2026-10-13, session 11 reference for the final defaults: request snapshot and replay (no model calls)
+
+- Code: `src/` as in `bb2d08f`, the code of the published image `sha-bb2d08fea0f1` (defaults: section-route with
+  `A-v4-section-route-L1` and `json_schema`, evidence halves, vote names by meaning, AP-part after the rules; task B
+  `v3-topic-first` with selector T for references over 3,000 characters; light-first lanes, lazy pages, shared
+  onnxruntime threads, one lane under 2.5 GiB; one kept connection). Commands (from `track_2a/`):
+  `python3 scripts/prompt_snapshot.py run --out <dir>` (fixed fake answers), then `python3 scripts/prompt_snapshot.py
+  table --snapshot <dir>/snapshot.json --runs docs/runs/2026-10-13_rashad_final-s11_dev600/task-A
+  docs/runs/2026-10-13_rashad_final-s11_dev600/task-B docs/runs/2026-10-13_rashad_final-s11_val1160/task-A --out
+  replay_table.json`, then `python3 scripts/prompt_snapshot.py run --out <this folder> --replay replay_table.json`.
+  `.env` never read, no key used.
+- `snapshot.json`: per case, the SHA-256 of the whole request body (and of any parsing call, `ap_request_sha256`;
+  none in these sets) and, for task A, the path: dev 299 routed and 1 fallback, val 577 routed and 3 fallbacks.
+  Against the session 10 reference, all 880 task A requests and 82 of 300 task B requests are the same; the other 218
+  are the long task B references, now cut by selector T (step 6).
+- `replay_table.json`: **1,180** request hashes, every request of both sets, with the answer the final defaults got
+  from the real endpoint through the published image (`2026-10-13_rashad_final-s11_dev600`, task A and task B;
+  `2026-10-13_rashad_final-s11_val1160/task-A`). No request has two different saved answers.
+- **The replay reproduces the saved answers exactly** (`replay_vs_final_runs.json`): 0 label and 0 evidence
+  differences in 1,180 cases. The starter's `evaluate.py` on the replay (`scores/`): dev task A Macro-F1 0.9800,
+  evidence 0.9851 (198 of 201); task B 0.9867; val task A 0.9589, evidence 0.9551 (383 of 401).
+- **This folder replaces `2026-10-12_rashad_prompt-snapshot-final-s10_devAB-valA` as the anchor for G1 and G2** from
+  now on: `python3 scripts/prompt_snapshot.py run --out <dir> --replay <this folder>/replay_table.json`, then
+  `compare --reference <this folder> --new <dir>`. Metrics in `dev/` and `val/` come from the fake model and mean
+  nothing.

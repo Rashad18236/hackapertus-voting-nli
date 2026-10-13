@@ -1,0 +1,39 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "23:52",
+ "kind": "model run",
+ "code": "e9b592f (scripts/paired_run.py with the arm field force 'no parser', in-process)",
+ "cases": "dev, all 300 task A cases, the Python parser switched off for the case's vote (test only)",
+ "format": "official scorer; interleaved, 3 arms, 1 request per second also inside a case (session 11 step 3, run 3)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_rashad_ap-structure-noparser_devA300/today-noparser",
+  "2026-10-12_rashad_ap-structure-noparser_devA300/VW"
+ ],
+ "setup": "AP-structure after the parser: Apertus reads the contents (one call per booklet); its entries pass the parser's heading checks, then section-route routes the rules' part; else VW",
+ "results": {
+  "macro_f1": 0.97,
+  "f1": {
+   "entailment": 0.971,
+   "neutral": 0.985,
+   "contradiction": 0.953
+  },
+  "evidence": {
+   "score": 0.955,
+   "found": 192,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1478,
+  "mean_time_ms": 2687,
+  "p95_time_ms": 12846,
+  "mean_output_tokens": 43.1
+ }
+}

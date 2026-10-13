@@ -1,0 +1,48 @@
+{
+ "cases": 300,
+ "calls": {
+  "AP-claim-v1": 300,
+  "AP-structure-v1": 44
+ },
+ "parsing_problems": {},
+ "parsing_tokens_per_case": {
+  "input": 501.5,
+  "output": 76.5
+ },
+ "part": {
+  "asked": 300,
+  "rules_named_a_part": 300,
+  "apertus_equal_to_rules": 267,
+  "apertus_different": 33,
+  "share_equal": 0.89,
+  "rules_none_apertus_part": 0,
+  "apertus_none": 10,
+  "rules_to_apertus": {
+   "council -> council": 102,
+   "summary -> summary": 67,
+   "committee -> committee": 49,
+   "law -> law": 28,
+   "detail -> detail": 21,
+   "detail -> council": 12,
+   "detail -> None": 7,
+   "law -> summary": 4,
+   "law -> council": 4,
+   "law -> None": 3,
+   "detail -> law": 2,
+   "detail -> committee": 1
+  }
+ },
+ "structure": {
+  "cases_asked": 300,
+  "vote_found_and_checked": 279
+ },
+ "paths": {
+  "council": 103,
+  "summary": 65,
+  "committee": 46,
+  "law": 27,
+  "vote-wide": 21,
+  "booklet-wide": 21,
+  "detail": 17
+ }
+}

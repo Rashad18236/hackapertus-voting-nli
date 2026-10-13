@@ -116,6 +116,7 @@ class Vote:
     boxes: dict = field(default_factory=dict)  # voice -> [(page, verbatim text)]
     ok: bool = False                # every check passed
     problems: list = field(default_factory=list)
+    valid: set = field(default_factory=set)  # session 11: parts that passed their own checks (all PARTS when ok)
 
 
 @dataclass
@@ -230,10 +231,16 @@ def _boxes(pages, summary_pages):
 
 
 def parse(pages):
-    """Booklet with its votes, or None when no contents entry is found."""
+    """Booklet with its votes, or None when no contents entry is found.
+
+    Session 11: per-part validity. A vote keeps every part that passes its own checks when another part fails
+    (Vote.valid); Vote.ok still means that every check passed, and for such a vote the parts are exactly those of
+    session 10. A booklet in the older layout (2016 to mid-2018, one contents entry per vote) is read by
+    _parse_old_layout.
+    """
     blocks = _blocks(pages)
     if not blocks:
-        return None
+        return _parse_old_layout(pages)
     blocks.sort(key=lambda b: b["summary"][0])
     last_page = max(pages)
     first_detail = min((b.get("overview", b.get("detail", 10**6)) for b in blocks), default=None)
@@ -241,60 +248,220 @@ def parse(pages):
     for i, b in enumerate(blocks):
         vote = Vote(title=b["title"], entry={k: v for k, v in b.items() if k != "title"})
         votes.append(vote)
-        missing = [k for k in ("summary", "detail", "arguments", "law") if k not in b]
-        if missing:
-            vote.problems.append(f"contents entry without {', '.join(missing)}")
+        _parse_vote(pages, blocks, i, b, first_detail, last_page, vote)
+    return Booklet(votes=votes)
+
+
+def _parse_vote(pages, blocks, i, b, first_detail, last_page, vote):
+    """Fill vote.parts, vote.valid, vote.boxes, vote.ok and vote.problems for contents block b."""
+    missing = [k for k in ("summary", "detail", "arguments", "law") if k not in b]
+    if missing:
+        vote.problems.append(f"contents entry without {', '.join(missing)}")
+    s0, s1 = b["summary"]  # a block always starts with its summary line
+    nxt = blocks[i + 1] if i + 1 < len(blocks) else None
+    s_end = (nxt["summary"][0] - 1) if nxt else (first_detail - 1 if first_detail else s1)
+    # Section starts of all votes (overview pages, such as "Übersicht Volksinitiativen", can be
+    # shared by two votes): a part ends before the next start.
+    starts = sorted({x[k] for x in blocks for k in ("overview", "detail") if k in x})
+    law = b.get("law")
+    later = [n for n in starts if law is not None and n > law]
+    law_end = (later[0] - 1) if later else last_page - 1  # the last page is the back cover
+    overview = []
+    if "overview" in b and "detail" in b:
+        ov = b["overview"]
+        overview = list(range(ov, min(n for n in starts + [b["detail"] + 1] if n > ov)))
+    sequence = [max(s1, s_end)] + [b[k] for k in ("detail", "arguments", "law") if k in b]
+    if not (s0 <= sequence[0] and all(x < y for x, y in zip(sequence, sequence[1:]))
+            and (law is None or law <= law_end) and all(s_end < n < b["detail"] for n in overview[:1])):
+        vote.problems.append("contents page numbers out of order")
+        return
+    headed = set()
+    for part, page in (("summary", s0), ("detail", b.get("detail")), ("arguments", b.get("arguments")), ("law", law)):
+        if page is None:
             continue
-        s0, s1 = b["summary"]
-        nxt = blocks[i + 1] if i + 1 < len(blocks) else None
-        s_end = (nxt["summary"][0] - 1) if nxt else (first_detail - 1 if first_detail else s1)
-        # Section starts of all votes (overview pages, such as "Übersicht Volksinitiativen", can be
-        # shared by two votes): a part ends before the next start.
-        starts = sorted({x[k] for x in blocks for k in ("overview", "detail") if k in x})
-        later = [n for n in starts if n > b["law"]]
-        law_end = (later[0] - 1) if later else last_page - 1  # the last page is the back cover
-        overview = []
-        if "overview" in b:
-            ov = b["overview"]
-            overview = list(range(ov, min(n for n in starts + [b["detail"] + 1] if n > ov)))
-        if not (s0 <= max(s1, s_end) < b["detail"] < b["arguments"] < b["law"] <= law_end
-                and all(s_end < n < b["detail"] for n in overview[:1])):
-            vote.problems.append("contents page numbers out of order")
-            continue
-        for part, page in (("summary", s0), ("detail", b["detail"]), ("arguments", b["arguments"]), ("law", b["law"])):
-            if page not in pages or not _has(pages[page], _HEADINGS[part]):
-                vote.problems.append(f"no {part} heading on page {page}")
-        if vote.problems:
-            continue
-        vote_pages = range(s0, b["law"])
-        listed, headed = _sub_starts(pages, vote_pages, b["arguments"], b["law"])
-        starts = {}
-        for name in ("committee", "council", "parliament"):
-            if name in listed and name in headed and listed[name] != headed[name]:
-                vote.problems.append(f"{name}: listed on page {listed[name]}, heading on page {headed[name]}")
-            elif name in listed or name in headed:
-                starts[name] = listed.get(name, headed.get(name))
-        if vote.problems:
-            continue
-        if "council" not in starts:
-            vote.problems.append("no start page for the council's arguments")
-            continue
+        if page not in pages or not _has(pages[page], _HEADINGS[part]):
+            vote.problems.append(f"no {part} heading on page {page}")
+        else:
+            headed.add(part)
+    if "arguments" in b and "arguments" not in headed and law is not None:
+        # The text layer can lose a page's heading. The arguments' start still counts as confirmed when the
+        # detail page's own list of sub-sections names the contents' arguments page (two sources agree).
+        listed, _ = _sub_starts(pages, range(s0, law), b["arguments"], law)
+        if b["arguments"] in listed.values():
+            vote.problems.append(f"arguments start on page {b['arguments']} confirmed by the per-vote list only")
+            headed.add("arguments")
+    args_start = b.get("arguments") if "arguments" in headed else None
+    if "arguments" not in b and {"detail", "law"} <= headed:
+        args_start = _arguments_without_entry(pages, s0, b["detail"], law)
+        if args_start is None:
+            vote.problems.append("no arguments heading after the detailed section")
+    sub = _sub_parts(pages, range(s0, law if law is not None else last_page), args_start, law, vote) \
+        if args_start is not None and law is not None else None
+    parts, valid = {}, set()
+    if "summary" in headed:
+        parts["summary"] = list(range(s0, max(s1, s_end) + 1))
+        valid.add("summary")
+    if "detail" in headed and args_start is not None:
+        parts["detail"] = sorted(set(overview) | set(range(b["detail"], args_start)))
+        valid.add("detail")
+    parts["committee"], parts["parliament"] = [], []
+    if sub is not None:
+        parts.update(sub)
+        valid |= {"committee", "parliament", "council"}
+    if "law" in headed:
+        parts["law"] = list(range(law, law_end + 1))
+        valid.add("law")
+    vote.parts = {k: parts[k] for k in ("summary", "detail", "committee", "parliament", "council", "law") if k in parts}
+    vote.valid = valid
+    vote.boxes = _boxes(pages, parts["summary"]) if "summary" in valid else {}
+    vote.ok = not vote.problems
+    if vote.ok:
+        vote.valid = set(PARTS)
+
+
+def _arguments_without_entry(pages, s0, detail, law):
+    """The arguments' start page when the contents name none (session 11).
+
+    General cause: a contents block can lack its arguments line (the text layer drops it), while the detail page's
+    per-vote list and the page headings still name the sub-sections. The start is the earliest sub-section start
+    found after the detailed section's first page (the same list-and-heading search as for every vote), and that
+    page must carry an arguments heading, as a contents entry's start page must."""
+    listed, headed = _sub_starts(pages, range(s0, law), detail + 1, law)
+    found = sorted(set(listed.values()) | set(headed.values()))
+    if found and found[0] in pages and _has(pages[found[0]], _HEADINGS["arguments"]):
+        return found[0]
+    return None
+
+
+def _sub_parts(pages, vote_pages, args_start, law, vote):
+    """{committee, parliament, council: pages} from the arguments' start, or None (with a problem) on a conflict."""
+    listed, headed = _sub_starts(pages, vote_pages, args_start, law)
+    starts = {}
+    problems = []
+    for name in ("committee", "council", "parliament"):
+        if name in listed and name in headed and listed[name] != headed[name]:
+            problems.append(f"{name}: listed on page {listed[name]}, heading on page {headed[name]}")
+        elif name in listed or name in headed:
+            starts[name] = listed.get(name, headed.get(name))
+    if not problems and "council" not in starts:
+        problems.append("no start page for the council's arguments")
+    if not problems:
         order = sorted((page, name) for name, page in starts.items())
-        if order[0][0] != b["arguments"] or len({page for page, _ in order}) < len(order):
-            vote.problems.append(f"arguments start on page {b['arguments']}, sub-sections at {order}")
-            continue
-        # Each sub-section of the arguments runs to the page before the next one (the last: before the law text).
-        ends = [page for page, _ in order[1:]] + [b["law"]]
-        vote.parts = {
-            "summary": list(range(s0, max(s1, s_end) + 1)),
-            "detail": sorted(set(overview) | set(range(b["detail"], b["arguments"]))),
-            "committee": [],
-            "parliament": [],
-            **{name: list(range(page, end)) for (page, name), end in zip(order, ends)},
-            "law": list(range(b["law"], law_end + 1)),
-        }
-        vote.boxes = _boxes(pages, vote.parts["summary"])
-        vote.ok = True
+        if order[0][0] != args_start or len({page for page, _ in order}) < len(order):
+            problems.append(f"arguments start on page {args_start}, sub-sections at {order}")
+    if problems:
+        vote.problems += problems
+        return None
+    # Each sub-section of the arguments runs to the page before the next one (the last: before the law text).
+    ends = [page for page, _ in order[1:]] + [law]
+    return {name: list(range(page, end)) for (page, name), end in zip(order, ends)}
+
+
+# ---------------------------------------------------------------- the older layout (session 11)
+
+# Booklets until mid-2018 list one contents entry per vote ("Informationen zur Vorlage Seiten 4–11",
+# "Explications pages 4–11", "Spiegazioni pagine 4–11") and the pages of its legal text ("Der Abstimmungstext
+# Seite 8", "Texte soumis au vote pages 9–10", "Testo in votazione pagina 8"; a block with two legal texts names
+# each: "Der Text des Bundesgesetzes Seiten 26–61"). Inside a vote's pages, each part starts on a page whose
+# heading names it. Seen on all 27 booklets from 2016-02-28 to 2018-06-10 (session 11, parser coverage).
+def _spaced(word):
+    """A word that may carry stray spaces between its letters in the text layer ("sei ten", "se iten")."""
+    return r"\s?".join(re.escape(c) if c != " " else r"\s+" for c in word)
+
+
+_OLD_PAGES = (rf"(?:{_spaced('seiten')}|{_spaced('seite')}|{_spaced('pages')}|{_spaced('page')}|{_spaced('pagine')}"
+              rf"|{_spaced('pagina')})\s+(?P<a>{_NUM})(?:\s*[–-]\s*(?P<b>{_NUM}))?")
+_OLD_BLOCK = re.compile(rf"^(?:{_spaced('informationen zur vorlage')}|{_spaced('explications')}|{_spaced('spiegazioni')})"
+                        rf"\s+{_OLD_PAGES}(?:\s+\d+)?$")
+_OLD_LAW = re.compile(rf"^(?:der abstimmungstext|texte soumis au vote|testo in votazione"
+                      rf"|der text des (?:bundesbeschlusses|bundesgesetzes)|texte de (?:l'arrêté fédéral|la loi fédérale)"
+                      rf"|testo (?:del decreto federale|della legge federale))\s+{_OLD_PAGES}$")
+# Part headings, matched against a whole line near the top of a page (spaces removed).
+_OLD_HEADINGS = {
+    "summary": r"daswichtigsteinkürze|l'essentielenbref|l'essenzialeinbreve",
+    "detail": r"dievorlageimdetail|l'objetendétail|ilprogettoindettaglio",
+    "law": r"abstimmungstext|textesoumisauvote|testoinvotazione",
+    "parliament": r"dieberatungenimparlament|lesdélibérationsparlementaires|ledeliberazioniinparlamento",
+    "council": r"dieargumente(?:desbundesrates(?:unddesparlaments)?|vonbundesratundparlament)"
+               r"|lesargumentsduconseilfédéral(?:etduparlement)?"
+               r"|gliargomentidelconsigliofederale(?:edelparlamento)?",
+    "committee": r"dieargumentedes(?:initiativ|referendums)komitees|lesargumentsducomité(?:d'initiative|référendaire)"
+                 r"|gliargomentidelcomitato(?:d'iniziativa|referendario)",
+}
+
+
+def _old_heading(text):
+    """The part whose heading is a whole line of the page (spaces removed), or None. The text layer does not always
+    put the heading first, so every line is looked at; a heading must be the entire line, so a mention in the
+    running text does not count."""
+    lines = {norm(line).replace(" ", "") for line in text.splitlines()}
+    for part, pattern in _OLD_HEADINGS.items():
+        if any(re.fullmatch(pattern, line) for line in lines):
+            return part
+    return None
+
+
+def _parse_old_layout(pages, first_pages=6):
+    """Booklet in the older layout, or None when its contents entries are not found either."""
+    entries, laws, title_lines = [], [], []
+    for p in sorted(pages)[:first_pages]:
+        for line in pages[p].splitlines():
+            flat = norm(line)
+            block, law = _OLD_BLOCK.match(flat), _OLD_LAW.match(flat)
+            if block:
+                a = _number(block.group("a"))
+                b = _number(block.group("b")) if block.group("b") else a
+                entries.append({"title": " ".join(t for t in title_lines if t), "range": (a, b), "law": []})
+                title_lines = []
+            elif law:
+                a = _number(law.group("a"))
+                b = _number(law.group("b")) if law.group("b") else a
+                laws.append((len(entries) - 1, (a, b)))  # the entry read last, in case no range holds it
+                title_lines = []
+            elif flat:
+                title_lines.append(line.strip())
+    entries = [e for e in entries if e["range"][0] > first_pages // 2 and e["range"][0] <= e["range"][1]]
+    if not entries:
+        return None
+    for before, (a, b) in laws:  # a legal text belongs to the vote whose pages hold it, else to the entry before it
+        holder = [e for e in entries if e["range"][0] <= a <= e["range"][1]]
+        if holder:
+            holder[0]["law"].append((a, b))
+        elif 0 <= before < len(entries):
+            entries[before]["law"].append((a, b))
+    votes = []
+    for e in entries:
+        a, b = e["range"]
+        vote = Vote(title=e["title"], entry={"block": (a, b), "law": e["law"]})
+        votes.append(vote)
+        law_pages = sorted({n for x, y in e["law"] for n in range(x, y + 1)})
+        if law_pages and not _has(pages.get(law_pages[0], ""), _HEADINGS["law"]):
+            vote.problems.append(f"no law heading on page {law_pages[0]}")
+            law_pages = []
+        starts, seen = [], set()
+        for p in range(a, b + 1):
+            part = None if p in law_pages else _old_heading(pages.get(p, ""))
+            if part and part not in seen and not (part == "law" and law_pages):
+                starts.append((p, part))
+                seen.add(part)
+        if law_pages and law_pages[0] <= b:
+            starts.append((law_pages[0], "law"))
+        starts.sort()
+        parts = {}
+        for (page, part), nxt in zip(starts, [x for x, _ in starts[1:]] + [b + 1]):
+            parts[part] = [n for n in range(page, nxt) if part == "law" or n not in law_pages]
+        if law_pages:
+            parts["law"] = law_pages
+        if "summary" in parts and starts and starts[0][1] == "summary":
+            parts["summary"] = list(range(a, starts[0][0])) + parts["summary"]  # the vote's overview page
+        for part in ("summary", "detail", "council", "law"):
+            if not parts.get(part):
+                vote.problems.append(f"no {part} heading in pages {a}-{b}")
+        vote.parts = {k: parts.get(k, []) for k in PARTS}
+        vote.valid = {k for k in PARTS if parts.get(k)}
+        vote.ok = not vote.problems
+        if vote.ok:
+            vote.valid = set(PARTS)
     return Booklet(votes=votes)
 
 

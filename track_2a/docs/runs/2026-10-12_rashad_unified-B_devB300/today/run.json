@@ -1,0 +1,37 @@
+{
+ "person": "rashad",
+ "date": "2026-10-12",
+ "start_utc": "17:02",
+ "kind": "model run",
+ "code": "421d8c8 (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task B cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 10 step 9, optional)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": null,
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-12_rashad_unified-B_devB300/B-U",
+ "setup": "today's defaults: v3-topic-first, the whole reference, max_tokens 32, no schema",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none (today)",
+  "n_cases": 300,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "results": {
+  "macro_f1": 0.967,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.963,
+   "contradiction": 0.951
+  },
+  "parse_failures": 2,
+  "failed_calls": 0,
+  "mean_input_tokens": 1994,
+  "mean_time_ms": 1098,
+  "p95_time_ms": 2063
+ }
+}

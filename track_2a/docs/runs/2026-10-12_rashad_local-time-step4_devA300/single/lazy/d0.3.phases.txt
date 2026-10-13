@@ -1,0 +1,3 @@
+PHASES {"pid": 8, "role": "lane", "max_rss_mib": 1288.4, "seconds": {"pdf_read": 36.16, "booklet_parse": 36.638, "prepare": 130.016, "e5_load": 2.588, "embed": 83.809}, "counts": {"pdf_read": 1170, "booklet_parse": 22, "prepare": 158, "e5_load": 1, "embed": 25}}
+PHASES {"pid": 9, "role": "lane", "max_rss_mib": 1328.7, "seconds": {"pdf_read": 33.79, "booklet_parse": 32.699, "prepare": 142.13, "e5_load": 2.079, "embed": 97.323}, "counts": {"pdf_read": 1038, "booklet_parse": 22, "prepare": 142, "e5_load": 1, "embed": 22}}
+PHASES {"pid": 7, "role": "main", "max_rss_mib": 47.9, "seconds": {"main_wait_no_case": 51.096}, "counts": {"main_wait_no_case": 17}}
