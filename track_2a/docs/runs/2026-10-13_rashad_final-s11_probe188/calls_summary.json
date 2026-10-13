@@ -1,0 +1,39 @@
+{
+ "2026-10-13_rashad_final-s11_probe188/task-A": {
+  "cases": 94,
+  "raw": 94,
+  "failed_calls": 0,
+  "unreadable": 0,
+  "no_call": 0,
+  "retries": 0,
+  "http_429": 0,
+  "cache_hits": 0,
+  "paths": {
+   "route:council": 34,
+   "route:summary": 20,
+   "route:law": 16,
+   "route:detail": 10,
+   "route:committee": 10,
+   "fallback:embed-e5-small": 4
+  },
+  "backends": {
+   "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 94
+  }
+ },
+ "2026-10-13_rashad_final-s11_probe188/task-B": {
+  "cases": 94,
+  "raw": 94,
+  "failed_calls": 0,
+  "unreadable": 0,
+  "no_call": 0,
+  "retries": 0,
+  "http_429": 0,
+  "cache_hits": 0,
+  "paths": {
+   "task B": 94
+  },
+  "backends": {
+   "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 94
+  }
+ }
+}

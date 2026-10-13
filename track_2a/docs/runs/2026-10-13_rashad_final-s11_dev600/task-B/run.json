@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "kind": "model run",
+ "code": "bb2d08f (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1, also tagged session-11 at the time, built from it by the publish workflow; src/ unchanged since)",
+ "paired_with": null,
+ "highlight": true,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "notes": "../NOTES.md",
+ "format": "official, the published image pulled from ghcr.io, via make run, task A and task B in separate containers (session 11 FINISH)",
+ "start_utc": "02:21",
+ "cases": "dev, all 300 task B cases",
+ "variant": null,
+ "setup": "session 11 final defaults: v3-topic-first, references over 3,000 characters cut to the first line and 4 paragraphs by selector T (cut4-t), max_tokens 32, no schema; LLM_MIN_INTERVAL=1",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "cut4-t (final defaults)",
+  "n_cases": 300,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "task": "B",
+ "results": {
+  "macro_f1": 0.987,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.995,
+   "contradiction": 0.98
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 815,
+  "mean_output_tokens": 8.7,
+  "mean_time_ms": 1790,
+  "p95_time_ms": 4145
+ }
+}

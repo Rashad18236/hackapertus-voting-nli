@@ -317,8 +317,8 @@ committed; every Apertus call counts as tokens (a booklet's call in its first ca
 - **Apertus as parser (step 3, `src/ap_parse.py`):** **AP-part after the rules is a default**: when the rules find no
   part, the lane prepares every valid part and the fallback, the main process asks Apertus which part the opening
   names (one call, its tokens in the case's metrics) and sends that part's request; "none" goes to the fallback
-  (HYBRID RULE: +0.073 dev, +0.051 val over VW on 150 reworded openings each; no dev or val case needs it, 4 probe
-  cases do). AP-structure (contents read by Apertus, checked by the parser) agrees with the parser on 78.7 % of
+  (HYBRID RULE: +0.073 dev, +0.051 val over VW on 150 reworded openings each; no dev, val or probe case needs it in the
+  final runs: there the rules name a part for every claim). AP-structure (contents read by Apertus, checked by the parser) agrees with the parser on 78.7 % of
   votes (needs 95 %): off. AP-all is reported only (dev 0.960 vs 0.977, local time 0.822 vs 0.101 s at 0.3 s).
   Page images: accepted by the endpoint, heading not read.
 - **Fast server (step 4), adopted by the SAME-ANSWER RULE:** light-first lanes (`pipeline.LIGHT_FIRST`), lazy page

@@ -4,7 +4,7 @@
 same source ("Die Landesregierung" for the Federal Council, "Kommt die Vorlage durch" for "Wird die Abstimmung
 angenommen", …; `scripts/make_reworded.py`, `output/devA_reworded150/rewording.json`), so the label cannot change
 and the rules (`src/claim_router.py`) find no part in any of them. This is the situation of a claim whose opening the
-rules do not know (4 of the 94 probe cases).
+rules do not know (no dev, val or probe claim in the dataset; a reworded or new opening would be).
 
 **Arms** (interleaved, 1 request per second also between a case's own calls, 23:18 to 23:53 UTC; all 600 requests
 answered by one backend, blablador `vllm-0.23.1rc1`):

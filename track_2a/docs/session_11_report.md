@@ -6,7 +6,33 @@ request #18, never merged, no tag), run unattended by Claude Code for Rashad. De
 
 ## In short
 
-PENDING-SUMMARY
+**Finished:** steps 1 to 6 and FINISH. Nothing in the step list was dropped for time; run 4 (step 3) and val runs
+for AP-structure were not needed by their rules. The sealed test dates were never run, parsed, downloaded or opened;
+`data/test/`, the splits file and the scorer are unchanged; no key was printed, logged or committed; no booklet PDF or
+booklet text is committed by the new scripts. Every label comes from an answer of Apertus; Python wrote 1 label in the
+final runs (2,128 cases): the neutral fallback for 1 val task B answer it could not read; 0 failed calls.
+
+**Each step, before → after:**
+
+| Step | Before | After | Rule, outcome |
+|---|---|---|---|
+| 1 parser coverage (93 booklets 2016–2026) | 64 booklets complete, 178 votes pass, 2 cross-language disagreements; probe routed 83/94 | **88** complete, **244 of 249** votes pass, 0 disagreements; probe routed **90/94** | same answers (G1/G2): **adopted** |
+| 2 fallbacks (forced) | embedding fallback dev 0.900 / 0.672, val 0.875 / 0.593 | VW dev 0.927 / 0.766, val 0.873 / 0.716; BW lower | FALLBACK RULE: both **fail** (VW val −0.002, needs +0.02) |
+| 3 Apertus as parser | rules + Python parser | AP-part after the rules (unknown openings: dev 0.967 vs 0.894, val 0.926 vs 0.876) | HYBRID RULE: **AP-part adopted**; AP-structure fails (78.7 % < 95 %); AP-all reported only |
+| 4 local time, task A at 0.3 s per request | 0.202 s per case | **0.101 s** (light-first, lazy pages, shared onnxruntime threads) | SAME-ANSWER RULE: **adopted**; target 0.05 s not reached |
+| 5 memory, task A, 2 CPUs | needs 3 GiB (2 GiB: OOM) | **1.5 GiB** (one lane under 2.5 GiB) | SAME-ANSWER RULE: **adopted**; target 2 GiB reached |
+| 6 task B tokens | 1,994 input tokens per case (dev), 0.967 | **815**, 0.987 (selector T) | TASK B RULE on dev and val: **adopted** |
+
+PENDING-FINAL-FIRSTPAGE
+
+**Apertus as parser** (details in step 3 below):
+
+| Role | Accuracy | Macro-F1 / evidence effect | Tokens per case | In the final system? |
+|---|---|---|---|---|
+| AP-part (name the claim's part) | 79–85 % of reworded openings | unknown openings: +0.073 / +0.051 Macro-F1 over VW (dev / val) | +236 + 49 when asked | yes, only when the rules find no part (no dataset claim needs it) |
+| AP-structure (read the contents) | 78.7 % of passing votes all pages equal | parser off: 0.970 / 0.955 vs VW 0.886 / 0.687 | ≈ +268 + 29 | no (needs 95 %) |
+| AP-all (both, every case) | part 89 %, vote 93 % | dev 0.960 / 0.891 vs 0.977 / 0.980 | +502 + 77 | no; local time 0.822 vs 0.101 s at 0.3 s |
+| Page image | heading not read | — | 1,077 + 26 | no |
 
 ## Details, step by step
 
@@ -56,7 +82,7 @@ counts in the case's tokens (a booklet's contents call in its first case).
 |---|---|---|---|---|
 | AP-structure, 93 booklets (3a) | 78.7 % of passing current-layout votes with all four pages equal to the parser's (per field 0.79–0.84); older layout law page 30 % | — | 1,796 + 176 per booklet | no: needs ≥ 95 % (HYBRID RULE) |
 | AP-structure, parser off, dev 300 (run 3) | vote placed and checked for 277 of 300 | 0.970 / 0.955 (VW 0.886 / 0.687) | 1,478 + 43.1 (268 + 28.5) | no: part a fails |
-| AP-claim (AP-part), reworded openings, dev 150 (run 2) | 78.7 % of parts equal to the original opening's | 0.967 / 0.880 (VW 0.894 / 0.670) | 1,383 + 63.4 (236 + 49.0) | PENDING-APPART |
+| AP-claim (AP-part), reworded openings, dev 150 (run 2) | 78.7 % of parts equal to the original opening's | 0.967 / 0.880 (VW 0.894 / 0.670) | 1,383 + 63.4 (236 + 49.0) | **yes, after the rules**: val 0.926 / 0.840 against VW 0.876 / 0.650 (+0.051) |
 | AP-all, dev 300 (run 1) | part = rules' part for 89.0 %; vote placed for 93.0 % | 0.960 / 0.891 (today 0.977 / 0.980) | 1,655 + 90.9 (502 + 76.5) | never (the step's rule) |
 | AP-all, probe 94 (run 1) | part = rules' 89.4 %; vote placed 91.5 % | 0.951 / 0.877 (today 0.971 / 0.954) | 1,383 + 71.6 (346 + 57.4) | never |
 
@@ -117,6 +143,13 @@ selections, so G1 cannot hold.
 
 PENDING-FINISH
 
-**Dropped for time:** PENDING-DROPPED
+**Dropped for time:** nothing from the step list. Not built (each named in its step): shared reading of the first
+booklet (step 4), one e5 copy shared by the lanes and dropping page texts (step 5); not measured: E's, Q's and T's local
+time at 0.1 s (step 6).
 
-**Not verified:** PENDING-NOTVERIFIED
+**Not verified:** the organisers' hardware, memory limit and model server (local time depends on the server's speed;
+the measured CPUs have AVX-512 VNNI); the other teams' best values (REF SCORE uses ours); whether the organisers'
+proxy counts "in flight" as our fake model does; how AP-part does on claim openings written by others (tested on our
+own rewordings only); the peak memory includes the page cache, so it can exceed a limit a run still passes; task B
+with selector T now loads e5 and needs 1.5 GiB (1 GiB failed on the final image), while task A's 1.5 GiB was the
+target; the publish workflow and the clean-machine workflow results for the last push are in the status file.

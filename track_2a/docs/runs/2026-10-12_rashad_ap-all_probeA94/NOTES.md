@@ -12,7 +12,7 @@ and 2025-09-28, 6 booklets), 23:07 to 23:19 UTC; all 288 requests answered by on
 Fixes / breaks of AP-all against today: 1 / 3. 0 failed calls, 0 unreadable answers.
 
 Today routes 90 of 94 probe cases (session 10's code routed 83; step 1's parser fixes added 7) and 4 fall back
-(their claims' openings name no part the rules know). AP-all: Apertus's part equals the rules' for 84 of 94 claims
+(the rules name the committee, but in these votes of 2025-09-28 that part has no paragraphs). AP-all: Apertus's part equals the rules' for 84 of 94 claims
 (89.4 %), "none" twice; its contents reading placed the vote for 86 of 94 cases (8 went booklet-wide). As on dev,
 Apertus in the parsing roles costs Macro-F1 and evidence and adds tokens.
 
