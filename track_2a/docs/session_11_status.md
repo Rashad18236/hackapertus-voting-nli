@@ -46,10 +46,16 @@ Updated after every step. If the session is restarted with "continue", work goes
   all responses, same labels at 2 GiB and 1.5 GiB; 1 GiB fails (e5 load peak 1.16 GiB). Task B runs in 1 GiB.
 - Step 6a timings at 1.0 / 0.3 s: T 0.0077 / 0.0089 and H 0.0072 / 0.0082 pass (+0.005), E and Q fail at 0.3 s.
 
+- (02:04) Step 6: **T becomes task B's default** (TASK B RULE on dev 0.987 vs 0.967 and val 0.968 vs 0.954, −59 % / −58 %
+  input tokens, local time +0.002 s); E and Q fail on local time.
+- (02:14) Final defaults committed (`bb2d08f`), image `sha-bb2d08fea0f1` = `session-11` published.
+
 ## Running
 
-- Step 6 dev run (from 01:10): today, E, T, H on 300 dev task B cases; then val (today and the best) if one passes.
-- CPUs 2–3: AP-all's local time (replay of run 1).
+- FINISH (from 02:15): final runs through the image (dev 600, val 1,160, probe 188; task A and B in separate
+  containers). Dev task A: 0.980, evidence 0.985, 1,238 input tokens per case.
+- CPUs 2–3: memory grid of the final image. Then: new replay reference, local time at 1.0 / 0.3 / 0.1 s, REF SCORE,
+  reports, PDF.
 
 ## Next
 

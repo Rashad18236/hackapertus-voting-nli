@@ -93,7 +93,8 @@ claim (e5). (5) *Fallback:* no part, no vote, or any error → the 8 chunks of t
 
 User: `PART:` (which part, whose voice), `REFERENCE TEXT:` with paragraphs `[1] … [n]`, `VOTE:`, `CLAIM:`. Nothing
 is translated. `response_format: json_schema` forces `{"paragraphs": [≤ 3 numbers], "label": 0|1|2}`. Task B sends
-the same rule (`v3-topic-first`) and asks for `{"label": n}`; PENDING-TASKB-CONTEXT
+the same rule (`v3-topic-first`) and asks for `{"label": n}`; a reference over 3,000 characters is sent as its first
+line and the 4 paragraphs whose first 300 characters are most similar to the claim (e5).
 
 **Evidence.** Only what Apertus cited: the cited paragraphs verbatim with their page, then the two halves of each
 (cut at the sentence end nearest the middle) up to five items. Neutral answers and task B carry none.
@@ -105,7 +106,7 @@ the same rule (`v3-topic-first`) and asks for `{"label": n}`; PENDING-TASKB-CONT
 | Read input, answer every id; PDF text per page | ✓ (pypdf) | | |
 | Which part the claim names | ✓ (regular expressions) | | only when the rules find none |
 | Which vote; where its parts start | ✓ (contents, checked headings) | vote by meaning if the title match fails | (tried, not used: section 4) |
-| Which paragraphs | ✓ (the part) | parts over 8,000 characters; fallback; PENDING-WHO-B | |
+| Which paragraphs | ✓ (the part) | parts over 8,000 characters; fallback; task B references over 3,000 characters | |
 | **Label** | only the neutral fallback for a failed call or an unreadable answer: PENDING-PY-LABELS | | **✓ every label** |
 | Which paragraphs justify it; evidence | copies what Apertus cited, with its page | | ✓ cites them |
 
@@ -166,7 +167,39 @@ heading, one booklet without an arguments entry.
 | vote-wide: the vote's paragraphs, part named | 0.927 / 0.766 | 0.873 / 0.716 | 1,078 | no (val −0.002, needs +0.02) |
 | booklet-wide: the booklet's paragraphs | 0.857 / 0.647 | 0.856 / 0.627 | 939 | no (lower) |
 
-PENDING-EVAL-REST
+**Task B, fewer tokens** [TB-dev, TB-val]: a reference over 3,000 characters is cut to its first line (the
+ballot's title) and the 4 paragraphs most similar to the claim. Embedding whole paragraphs (E) costs local time
+(0.661 s per case at 0.3 s per request); comparing only each paragraph's first 300 characters (T) costs 0.0089 s
+(the whole reference: 0.0066 s). Task B Macro-F1, dev; val: whole reference 0.967 (2 unreadable); 0.954 (3) with
+1,994 input tokens per case; **T 0.987 (0); 0.968 (1) with 815** (−59 %); E 0.987 on dev. T is the default.
+
+**Local time** (the organisers' measure; image, 2 CPUs, fake model replaying the final answers) [FIN, STEP4]. A
+profile at 0.3 s per request showed the two lanes busy all the time: PDF reading (about 1.3 s per booklet, pure-Python
+pypdf) and e5 embedding of long parts (about 3 s each), and two lanes each running onnxruntime with every CPU. Three
+changes that keep every request and answer identical (G1, G2): cases needing no embedding first, pages read when
+first needed, onnxruntime threads shared between lanes: task A 0.202 → 0.101 s per case at 0.3 s per request.
+
+PENDING-LT-TABLE
+
+**Memory** [MEM]: each lane peaks at about 1.2 GiB, almost all of it loading e5; two lanes needed 3 GiB. Under a
+2.5 GiB limit the image now runs one lane: every response, with the same labels, at 2 GiB and 1.5 GiB (2 CPUs);
+1 GiB fails (e5's load peak). Task B needs under 0.1 GB. PENDING-MEM-FINAL
+
+**Versions tried in session 11** (each by a rule fixed before its run; a version that fails stays in the code, off):
+
+| Version | Rule, outcome |
+|---|---|
+| Parser fixes (older layout, fonts, per-part validity) | same answers on dev and val, coverage 64 → 88 booklets: **adopted** |
+| Vote-wide / booklet-wide fallback | val Macro-F1 −0.002 / −0.019 against the embedding fallback: not adopted |
+| AP-part after the rules | +0.073 / +0.051 (dev / val) over the best fallback on unknown openings: **adopted** |
+| AP-structure; AP-all | 78.7 % page agreement (needs 95 %); never a default: not adopted |
+| Light-first, lazy pages, shared CPUs | same answers, local time halved: **adopted** |
+| Quantised e5 for task A | changes 50 of 75 cut selections (not the same answers): not adopted |
+| One lane under 2.5 GiB; arena off; token-bounded batches | same answers, 2 GiB reached: **adopted**; the others cost time: not adopted |
+| Task B selectors E, Q, T, H, L | T passes on dev and val: **adopted**; E and Q fail on local time |
+
+**Probe: two unseen voting dates** (test rows of 2021-03-07 and 2025-09-28, opened in session 10).
+PENDING-PROBE
 
 ## 7. Limitations
 

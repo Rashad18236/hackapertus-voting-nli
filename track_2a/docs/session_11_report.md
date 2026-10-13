@@ -94,7 +94,24 @@ one e5 copy shared by the lanes, dropping page texts (about 6 MB per booklet).
 
 **Step 6, task B tokens.**
 
-PENDING-STEP6
+(`2026-10-13_rashad_taskb-selectors_{devB300,valB580}`). Cheaper selectors of B-cut4's 4 paragraphs
+for references over 3,000 characters (`src/taskb_context.py`): Q (e5's own 8-bit export), T (e5 on each paragraph's
+first 300 characters), L (character 4-grams and numbers, no model), H (L in the reference's language, else T).
+Agreement with E's paragraphs (mean shared of E's 3.81): Q 3.36, T 3.06, H 2.78, L 2.03. Local time per case of the
+image at 1.0 / 0.3 s (step 4 defaults): whole reference 0.0067 / 0.0066, E 0.011 / 0.661, Q 0.0099 / 0.440, T 0.0077 /
+0.0089, H 0.0072 / 0.0082, L 0.0065 / 0.0066; so T and H (the best two within +0.005 s) went to the dev run with E:
+
+| Task B, Macro-F1 / unreadable / input + output tokens | dev (300) | val (580) |
+|---|---|---|
+| today, whole reference | 0.967 / 2 / 1,994 + 8.3 | 0.954 / 3 / 1,957 + 9.0 |
+| E (B-cut4) | 0.987 / 0 / 883 + 8.7 | — |
+| **T** | **0.987 / 0 / 815 + 8.5** | **0.968 / 1 / 820 + 9.4** |
+| H | 0.993 / 0 / 923 + 8.5 | — |
+
+TASK B RULE (dev and val: Macro-F1 at most 0.005 lower, no more unreadable answers, input tokens ≥ 30 % lower, local
+time ≤ +0.005 s at 1.0 and 0.3 s): E fails on local time; T and H pass on dev; T (the higher REF SCORE on dev)
+passes on val: **T is task B's default** (`context_b = "cut4-t"`). Q for task A was not used: it changes 50 of 75 cut
+selections, so G1 cannot hold.
 
 **FINISH.**
 
