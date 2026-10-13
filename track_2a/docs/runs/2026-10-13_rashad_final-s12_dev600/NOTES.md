@@ -27,3 +27,5 @@ fake model replaying the final answers after the given delay; `local_time_*.json
 
 A repeat of task A at 0.3 s gave 0.113 s per case (single measurements vary by up to about 0.03 s).
 
+**Memory** (`memory_final.txt`): every response written at 4g, 2g, 1.5g, 1g, 768m and 512m, task A and B, 2 CPUs and 1;
+below 1.5 GiB the memory guard leaves e5 out (23 task A cases, 190 task B references; peak 90 / 51 MiB).

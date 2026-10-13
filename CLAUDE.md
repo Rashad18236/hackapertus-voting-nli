@@ -201,7 +201,10 @@ src/
   pipeline.py   session 10: two forked worker processes ("lanes", each owning whole booklets) prepare cases
                 while the main process sends them, one request at a time
   memo.py       session 10: compute-once caches safe with threads
-  ap_parse.py   session 11: Apertus in the parsing roles (AP-part: the claim's part; AP-structure: the contents)
+  ap_parse.py   session 11: Apertus in the parsing roles (AP-part: the claim's part; AP-structure: the contents);
+                session 12: AP-translate (a claim into the booklet's language, for the BM25 fallback)
+  rankers.py, static_embed.py  session 12: the ranker switch (e5, model S, BM25, fusions, none) and the memory
+                guard; model S (static-similarity-mrl-multilingual-v1, tokenizers + numpy, 256 dimensions)
   timing.py, deferral.py  session 11: phase timing (PROFILE_PHASES=1); light-first deferral of e5 cases in a lane
   llm.py        the only module that calls Apertus; records tokens and time per call; one kept connection
   nli.py        prompts and label parsing
@@ -240,8 +243,10 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 interleaved_analysis.py (task B arms of one run); session 10: official_score.py (REF SCORE),
                 local_time.py (local time the organisers' way), connection_time.py, make_probe.py,
                 make_ontopic.py, rule_check.py (TOKEN RULE, fixes/breaks), schema_check.py,
-                python_rule_offline.py, vote_language_check.py
-models/         local copies of the embedding models (git-ignored; the image downloads e5 at build time)
+                python_rule_offline.py, vote_language_check.py; session 12: ranker_check.py (rankers without the
+                endpoint), static_equivalence.py (model S against sentence-transformers, development machine only),
+                taskb_long_errors.py (task B errors on long references)
+models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
 
@@ -296,9 +301,53 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
+## Current stage: session 12 (2026-10-13 10:35 UTC to 2026-10-14 03:00 UTC)
 
-Branch `rashad/session-11` from `main` at `014f691` (draft PR #18, never merged, no tag); status
+Branch `rashad/session-12` from `main` at `37904b3` (draft PR #20, never merged, no tag); status
+`track_2a/docs/session_12_status.md`, decisions `docs/decisions/2026-10-13-1035_rashad_session-12.md`, report
+`track_2a/docs/session_12_report.md`. The last experimental session: every remaining idea with a real chance, in order
+of value. The instruction arrived cut off in step 3; the readings of steps 3 (third version) to 8 are in the decisions
+file, written before they ran. Rules as in session 11, plus: local models in the image are embedding models only (no
+translation model, no ctranslate2 or sentencepiece in the image or `requirements.txt`; translation is done by
+Apertus), input and output tokens reported separately in every run.
+
+- **Step 0:** `kaan/robustness-experiments` merged whole (BM25 / bm25-mt / hybrid retrievers, strategies, local
+  translation module; all off; `requirements-experiments.txt` not read by the image). Dataset README unchanged
+  (`fc2b276`): field table, no label definitions beyond the names.
+- **Step 1, model S** (`src/static_embed.py`): `sentence-transformers/static-similarity-mrl-multilingual-v1`
+  (Apache-2.0, commit `b68f412`), token vectors averaged and normalised with tokenizers and numpy, table cut to 256
+  dimensions at image build time (108 MB); equal to sentence-transformers on 50 claims (3e-8). Rankers without the
+  endpoint (`scripts/ranker_check.py`, `src/rankers.py`): first cited paragraph among the 8 best, cross-language, e5
+  0.980, S 0.993, S+BM25 0.985, BM25 0.945 → R = S. Through the image: task A local time at 1.0 / 0.3 / 0.1 s per
+  request e5 0.017 / 0.144 / 0.365, S 0.016 / 0.018 / 0.043 s per case; peak memory 2,286 → 200 MiB.
+- **Step 2, memory guard (default):** an embedding model whose need (`rankers.MIN_MEMORY`: e5 1.5 GiB, S 0.5 GiB) is
+  above the container's limit, or whose files are missing or fail to load, is not used for the run: a long part sends
+  its first 8 paragraphs, the fallback ranks by BM25, task B sends long references whole; counted (`ranker_guard`).
+  Both tasks write every response at 4g … 512m with 2 and 1 CPUs (`docs/runs/2026-10-13_rashad_memory-guard_grid48`).
+- **Step 3, task B selectors:** B-R (S) 0.973, H 0.993 (+13 % tokens), B-BM25 (Apertus translates) 0.967 against T's
+  0.987 on dev: none passes TASK B RULE 2; T stays.
+- **Step 4, S in task A:** dev 0.973 / 0.970 against 0.980 / 0.980 (2 breaks, 0 fixes): fails S RULE (a) by one case;
+  off (`--ranker S`). Step 8 (image without e5) therefore not done.
+- **Step 5, bm25-ap fallback (default):** BM25 on the claim, translated by Apertus (`AP-translate-v1`) when claim and
+  booklet differ in language; forced fallback dev 0.956 / 0.736 vs 0.900 / 0.672, val 0.957 / 0.755 vs 0.875 / 0.588.
+- **Step 6, AP-structure asked after the parser (default, `--ap-structure-a ask-after-parser`):** when the rules name a
+  part and the parser gives no valid part, the main process asks Apertus to read the contents (one call per booklet);
+  parser forced off: dev 0.946 / 0.925 vs 0.896 / 0.672, val 0.939 / 0.917 vs 0.872 / 0.593.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-828429cab766`;
+  `docs/runs/2026-10-13_rashad_final-s12_*`): dev task A 0.977 (evidence 0.980), task B 0.987; val 0.961 (0.960),
+  0.969; probe 0.971 (0.969), 0.977. Tokens per case (dev, input + output): A 1,240 + 14.7, B 815 + 8.7. Local time per
+  case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.017 / 0.160 (repeat 0.113) / 0.364 s, B 0.012 / 0.010 / 0.161 s; probe
+  task A at 0.3 s 0.237 → 0.028 s (its fallbacks no longer embed whole booklets). REF SCORE dev 0.903 / 0.845, val
+  0.913 / 0.907, probe 0.897 / 0.896 (1.0 / 0.3 s). Memory: both tasks write every response at 4g, 2g, 1.5g, 1g, 768m and 512m with 2 CPUs and with 1 (below 1.5 GiB without e5:
+  23 dev task A cases send their long part's first 8 paragraphs, 190 task B references go whole; peak 90 / 51 MiB). Python wrote 1 of 2,128 labels; the 8 fallback
+  cases (1 dev, 3 val, 4 probe) all went through bm25-ap. `cli.main()` resets the ranker state at its start and end
+  (test isolation under unittest; G1/G2 pass).
+- **New replay reference for G1/G2:** `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA` (also
+  `scripts/local_time.py`'s default table).
+
+## Previous stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
+
+Branch `rashad/session-11` from `main` at `014f691` (PR #18, merged into `main` on 2026-10-13 as `37904b3`); status
 `track_2a/docs/session_11_status.md`, decisions `docs/decisions/2026-10-12-2010_rashad_session-11.md`,
 report `track_2a/docs/session_11_report.md`. Goal: unseen booklets, Apertus as parser, a fast server, memory,
 task B tokens. Rules as in session 10 (sealed dates, who sets the label, the 8B on Public AI at one request per
@@ -344,7 +393,7 @@ committed; every Apertus call counts as tokens (a booklet's call in its first ca
   `scripts/local_time.py`'s default table); `scripts/prompt_snapshot.py` pairs a case's parsing calls
   (`ap_request_sha256`) and G1 compares them.
 
-## Previous stage: session 10 (2026-10-12 11:42 UTC; ended early, merged before session 11)
+## Earlier stage: session 10 (2026-10-12 11:42 UTC; ended early, merged before session 11)
 
 Branch `rashad/session-10` from `main` at `42b2a3c` (PR #17, merged into `main` on 2026-10-12 as `014f691`); status
 `track_2a/docs/session_10_status.md`, decisions `docs/decisions/2026-10-12-1142_rashad_session-10.md`,

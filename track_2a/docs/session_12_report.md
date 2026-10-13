@@ -149,7 +149,27 @@ passes; default. With it on, G1/G2 change only the 4 cases bm25-ap changes; no d
 Two faults found and fixed before the default changed: the mode switched AP-part off (fixed, tested), and an error in
 the bm25-ap fallback would have cost a case its call (it now goes on to embed-e5-small).
 
-FINAL_DETAILS
+**FINISH** (`2026-10-13_rashad_final-s12_{dev600,val1160,probe188}`, `2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA`).
+The final defaults were committed as `828429c`; the publish workflow built `sha-828429cab766`; the final runs pulled
+it from ghcr.io and ran it with `make run`, task A and B in separate containers, against Public AI at one request per
+second (14:38 to 15:18 UTC; every call from one backend; 0 failed calls; 1 unreadable answer, val task B). The 8 cases
+section-route cannot route (1 dev, 3 val, 4 probe) went through bm25-ap, 6 of them with a translation call; no case
+needed AP-structure or the memory guard. The new replay reference (two passes, because a translation shapes the
+fallback's reading request) reproduces every label and evidence of the 1,180 dev and val cases; G1/G2 now compare
+with it.
+
+Local time through the image (2 CPUs, fake model replaying the final answers), task A / task B per case: dev 0.017 /
+0.012 s at 1.0 s per request, 0.160 (repeat 0.113) / 0.010 s at 0.3 s, 0.364 / 0.161 s at 0.1 s; val 0.009 / 0.007
+and 0.010 / 0.007 s; probe 0.040 / 0.015 and 0.028 / 0.016 s (session 11: 0.237 s for probe task A at 0.3 s; its 4
+fallback cases embedded a whole booklet each). Memory grid of the final image (`final-s12_dev600/memory_final.txt`): both tasks write every response at 4g, 2g,
+1.5g, 1g, 768m and 512m, with 2 CPUs and with 1; below 1.5 GiB the guard leaves e5 out (23 dev task A cases send
+their long part's first 8 paragraphs, 190 task B references go whole; peak 90 MiB for task A, 51 MiB for task B);
+at 1.5 GiB and above nothing changes.
+
+The self-checks (`docs/self_checks.md`) pass, 17 of 17 (317 tests). They run the tests with `unittest`, which showed
+that ranker state left by one test reached the next (pytest's `conftest.py` had hidden it); `cli.main()` now resets
+that state at its start and end, with G1/G2 unchanged. The published image predates this commit; the image built from
+the branch afterwards sends the same requests.
 
 ## What did not work or was not done
 

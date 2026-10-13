@@ -41,11 +41,20 @@ Updated after every step. If the session is restarted with "continue", work goes
   G1/G2 differ only on the 4 dev/val cases that fall back (bm25-ap). Not adopted: B-R, H, B-BM25 (step 3), S (step 4).
   Step 8 not done (no default uses S). No separate probe run (the final runs include the probe).
 
+- (15:18) FINISH final runs through `sha-828429cab766` (`docs/runs/2026-10-13_rashad_final-s12_*`): dev A 0.977 /
+  0.980, B 0.987; val A 0.961 / 0.960, B 0.969; probe A 0.971 / 0.969, B 0.977; one backend, 0 failed calls,
+  1 unreadable answer.
+- (15:30) New replay reference `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA` (0 of 1,180 differ).
+- (16:30) Local time and REF SCORE: dev 0.903 / 0.845, val 0.913 / 0.907, probe 0.897 / 0.896 (1.0 / 0.3 s).
+- (17:05) Memory grid of the final image: every response at every limit (4g to 512m, 2 and 1 CPUs).
+- (17:05) Self-checks 17/17 (317 tests, after the ranker-state reset for unittest); technical report (6 pages) and
+  PDF, session report, README, CLAUDE.md.
+
 ## Running
 
-- FINISH: the image `session-12` from `828429c`; final runs dev / val / probe through it.
+- Nothing. Session 12 is finished; the pull request stays a draft (never merged, no tag).
 
 ## Next
 
-- FINISH: replay reference, local time 1.0 / 0.3 / 0.1, REF SCORE, memory grid of the final image, reports,
-  CLAUDE.md, technical report and PDF, self checks.
+- For the team: decide whether model S's local-time gain (0.144 → 0.018 s per case at 0.3 s per request) is worth one
+  dev case (`--ranker S`); see the session report.

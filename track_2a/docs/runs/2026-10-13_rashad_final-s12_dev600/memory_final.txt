@@ -1,0 +1,27 @@
+Memory grid of the final image (sha-828429cab766): scripts/local_time.py, fake model replaying the new reference after 0.1 s per request, all 300 dev cases of each task.
+task | CPUs | limit | exit | responses | memory guard | cases without e5 | peak MiB | local s per case
+A | 2 | 4g | 0 | 300 | no | 0 | 2288 | 0.326
+A | 2 | 2g | 0 | 300 | no | 0 | 1195 | 0.4324
+A | 2 | 1.5g | 0 | 300 | no | 0 | 1195 | 0.4367
+A | 2 | 1g | 0 | 300 | yes | 23 | 90 | 0.173
+A | 2 | 768m | 0 | 300 | yes | 23 | 90 | 0.1717
+A | 2 | 512m | 0 | 300 | yes | 23 | 90 | 0.1819
+A | 1 | 4g | 0 | 300 | no | 0 | 1195 | 0.6608
+A | 1 | 2g | 0 | 300 | no | 0 | 1195 | 0.6458
+A | 1 | 1.5g | 0 | 300 | no | 0 | 1195 | 0.6554
+A | 1 | 1g | 0 | 300 | yes | 23 | 90 | 0.1768
+A | 1 | 768m | 0 | 300 | yes | 23 | 91 | 0.1588
+A | 1 | 512m | 0 | 300 | yes | 23 | 90 | 0.1552
+B | 2 | 4g | 0 | 300 | no | 0 | 1164 | 0.148
+B | 2 | 2g | 0 | 300 | no | 0 | 1164 | 0.141
+B | 2 | 1.5g | 0 | 300 | no | 0 | 1164 | 0.1496
+B | 2 | 1g | 0 | 300 | yes | 190 | 51 | 0.0072
+B | 2 | 768m | 0 | 300 | yes | 190 | 51 | 0.0068
+B | 2 | 512m | 0 | 300 | yes | 190 | 51 | 0.0075
+B | 1 | 4g | 0 | 300 | no | 0 | 1164 | 0.3246
+B | 1 | 2g | 0 | 300 | no | 0 | 1164 | 0.331
+B | 1 | 1.5g | 0 | 300 | no | 0 | 1164 | 0.3208
+B | 1 | 1g | 0 | 300 | yes | 190 | 51 | 0.0069
+B | 1 | 768m | 0 | 300 | yes | 190 | 51 | 0.0068
+B | 1 | 512m | 0 | 300 | yes | 190 | 51 | 0.0066
+every response written at every limit: True
