@@ -1,0 +1,13 @@
+{
+ "booklet": "2024_09_22_de.pdf",
+ "page": 8,
+ "image_bytes": 53023,
+ "dpi": 72,
+ "accepted": true,
+ "expected_heading": "Im Detail",
+ "expected_in_answer": false,
+ "answer_characters": 93,
+ "input_tokens": 1077,
+ "output_tokens": 26,
+ "backend": "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840"
+}

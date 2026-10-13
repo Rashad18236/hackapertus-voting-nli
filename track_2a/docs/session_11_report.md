@@ -1,0 +1,79 @@
+# Session 11: unseen booklets, Apertus as parser, a fast server, memory, task B tokens
+
+2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC, branch `rashad/session-11` from `main` at `014f691` (draft pull
+request #18, never merged, no tag), run unattended by Claude Code for Rashad. Decisions:
+`docs/decisions/2026-10-12-2010_rashad_session-11.md`; status log: `docs/session_11_status.md`.
+
+## In short
+
+PENDING-SUMMARY
+
+## Details, step by step
+
+Every run folder is under `docs/runs/`; every decision with its reason is in the decisions file. Model runs: Public
+AI's `swiss-ai/apertus-v1.5-8b` (from `.env`), at most one request per second, one run at a time, every comparison
+one interleaved run with an arm "today"; every answer of the session came from one backend (blablador,
+`vllm-0.23.1rc1`). From 21:35 UTC model runs used CPUs 0–1 and timing measurements CPUs 2–3 (pinned), so both could
+go on at once.
+
+**Step 1, parser coverage** (`2026-10-12_rashad_parser-coverage_booklets93`; no model). Every federal booklet from
+2016 to 2026 in de, fr and it (93 PDFs, the sealed dates removed before any download), kept outside the repository.
+`scripts/parser_coverage.py` checks each booklet and, per date, the three languages against each other (same votes,
+same parts, start pages within one page). Causes fixed, most frequent first, each with a unit test on a synthetic
+page or PDF: the older contents layout used until mid-2018 (20 booklets), PDFs pypdf could not read because a font
+descriptor names two font programs (7), an arguments heading lost in the text layer, and per-part validity (a part
+that passes its own checks is used even when another part of its vote fails). Booklets complete 64 → 88 of 93; votes
+passing every check 178 → 244 of 249, all 249 with a usable part; cross-language disagreements 2 → 0; probe cases
+routed 83 → 90 of 94 (`2025_09_28_fr`'s first vote now found). Remaining: the joint 2017-09-24 pension vote has no
+detail heading in any language (3 booklets), one heading of `2018_09_23_it` is lost in its text layer, and
+`2025_09_28_fr` has no arguments entry (its parts are valid). G1/G2 pass; adopted.
+
+**Step 2, better fallbacks** (`2026-10-12_rashad_fallbacks_{devA300,valA300}`). VW (vote-wide: the 8 paragraphs of
+the vote's valid parts most similar to the claim, each with its part's name) and BW (booklet-wide: the 8 most similar
+paragraphs of the booklet), both with the routed prompt and L1's sentence under new version names, and a forced test
+in `scripts/paired_run.py` ("no part": the router returns nothing; "no vote": the vote match fails):
+
+| Forced, Macro-F1 / evidence / input + output tokens | dev (300) | val (balanced 300) |
+|---|---|---|
+| today, routed (not forced) | 0.977 / 0.980 / 1,238 + 14.5 | — |
+| today's fallback (embed-e5-small), "no part" | 0.900 / 0.672 / 1,868 + 15.8 | 0.875 / 0.593 / 1,827 + 15.8 |
+| VW, "no part" | 0.927 / 0.766 / 1,078 + 14.4 | 0.873 / 0.716 / 1,079 + 14.4 |
+| BW, "no vote" | 0.857 / 0.647 / 939 + 14.3 | 0.856 / 0.627 / 951 + 14.5 |
+
+FALLBACK RULE (val: Macro-F1 ≥ +0.02 and evidence ≥ +0.05 over today's fallback; not lower on dev): **VW fails**
+(−0.002 on val), **BW fails** (lower on dev and val). Both stay off; no routed case could change; the probe run
+"today against the new defaults" was not needed. Local work per fallback case (`fallback_local_time.json`): routed
+0.29 s, today's fallback 1.74 s, VW 1.31 s, BW 1.61 s.
+
+**Step 3, Apertus in the parsing roles.**
+
+PENDING-STEP3
+
+**Step 4, a fast server** (`2026-10-12_rashad_local-time-step4_devA300`; no model). Profile at 0.3 s per request:
+the two lanes need 145–155 s each for 90 s of requests; PDF reading 107 s and e5 embedding of long parts 177 s over
+both lanes. Found in the profile: two lanes each started onnxruntime with every CPU, so 4 spinning threads shared 2
+CPUs. Changes, each a switch, measured in alternating rounds (the model run beside it shifted single values by about
+±0.015 s): light-first (cases that need no e5 first; e5 loaded only when needed), lazy pages (a page read when first
+asked for; cache key = the PDF's SHA-256; one open reader per process) and SHARE_CPUS (each lane its share of the CPUs
+for onnxruntime). Local time per case at 0.3 s: today 0.202, light-first 0.177, lazy 0.184, SHARE_CPUS 0.124, all three
+**0.101**. G1/G2 pass with all three: **adopted** (SAME-ANSWER RULE). Not built: shared reading of the first booklet
+(the time to the first request is 3.1 s, 0.010 s per case). The target of 0.05 s at 0.3 s is not reached: what is
+left is PDF reading (about 1.3 s per booklet in pure-Python pypdf) and e5 embedding of long parts (about 3 s per
+part). Quantised e5 for task A was checked first: it changes the 8 paragraphs of 50 of 75 cut cases, so it cannot
+pass G1.
+
+**Step 5, memory.**
+
+PENDING-STEP5
+
+**Step 6, task B tokens.**
+
+PENDING-STEP6
+
+**FINISH.**
+
+PENDING-FINISH
+
+**Dropped for time:** PENDING-DROPPED
+
+**Not verified:** PENDING-NOTVERIFIED

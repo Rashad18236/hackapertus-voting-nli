@@ -1,0 +1,19 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "00:38",
+ "kind": "model check",
+ "code": "da1e5e0 (scripts/image_check.py)",
+ "task": "A",
+ "variant": "none (a check of the endpoint)",
+ "cases": "one page image: 2024_09_22_de.pdf page 8 (the start of a vote's detailed section), 72 dpi PNG",
+ "setup": "scripts/image_check.py: an OpenAI-style image part with the question 'What is the heading of this page?'",
+ "format": "accepted or not; whether the answer contains the expected heading; tokens; no booklet text recorded",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (blablador, vllm-0.23.1rc1)",
+ "notes": "NOTES.md",
+ "summary": "The endpoint accepted the image request (HTTP 200, 1,077 input + 26 output tokens), but the answer did not contain the page's heading 'Im Detail': the text model does not read the image. Recorded only.",
+ "results": {"accepted": true, "expected_in_answer": false, "input_tokens": 1077, "output_tokens": 26}
+}
