@@ -223,21 +223,32 @@ class MemoryGuard(unittest.TestCase):
         rankers.CASE["guard"] = None
         rankers._unusable.clear()
 
-    def test_low_memory_limit_means_no_model(self):
-        name, reason = rankers.run_guard("e5", rankers.MIN_MEMORY["e5-small"] - 1)
-        self.assertEqual(name, "none")
-        self.assertIn("memory limit", reason)
-
-    def test_missing_files_mean_no_model(self):
-        from unittest import mock
-        with mock.patch.object(rankers, "model_files", return_value=[Path("/nonexistent/model.onnx")]):
-            self.assertEqual(rankers.run_guard("S", None)[0], "none")
-
-    def test_enough_memory_and_files_keep_the_ranker(self):
+    def test_low_memory_limit_marks_the_model_for_the_whole_run(self):
         from unittest import mock
         with mock.patch.object(rankers, "model_files", return_value=[]):
-            self.assertEqual(rankers.run_guard("e5", 4 * rankers.GIB), ("e5", None))
-        self.assertEqual(rankers.run_guard("BM25", 1), ("BM25", None))  # no model, nothing to guard
+            marked = rankers.run_guard(rankers.MIN_MEMORY["e5-small"] - 1)
+        self.assertIn("memory limit", marked["e5-small"])
+        self.assertNotIn("static-s", marked)  # S needs less
+        self.assertEqual(rankers.effective("e5"), "none")
+        self.assertEqual(rankers.effective("S"), "S")
+
+    def test_missing_files_mark_the_model(self):
+        from unittest import mock
+        with mock.patch.object(rankers, "model_files", return_value=[Path("/nonexistent/model.onnx")]):
+            self.assertEqual(set(rankers.run_guard(None)), {"e5-small", "static-s"})
+
+    def test_enough_memory_and_files_mark_nothing(self):
+        from unittest import mock
+        with mock.patch.object(rankers, "model_files", return_value=[]):
+            self.assertEqual(rankers.run_guard(4 * rankers.GIB), {})
+            self.assertEqual(rankers.run_guard(None), {})
+
+    def test_task_b_selector_t_without_e5_sends_the_whole_reference(self):
+        rankers._unusable["e5-small"] = "memory limit test"
+        rankers.ACTIVE["name"] = "S"  # task A's ranker does not matter: T needs e5
+        reference = Rankers.long_reference()
+        self.assertEqual(taskb_context.cut_text(reference, "claim", "cut4-t"), reference)
+        self.assertEqual(rankers.CASE["guard"], "memory limit test")
 
     def test_a_model_that_fails_to_load_is_replaced_by_none(self):
         from unittest import mock

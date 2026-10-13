@@ -20,8 +20,8 @@ Rankers:
             booklet's chunks by BM25 alone (word overlap); a long task B reference is sent whole (src/cli.py).
 
 Step 2, the memory guard: no task may die for lack of memory or of a model file. run_guard() is asked once per run
-(src/cli.py): when the container's memory limit is below what the ranker's model needs (MIN_MEMORY), or its files are
-missing, the run uses "none". Where a model is used, an exception while loading or running it (MemoryError
+(src/cli.py): a model whose need (MIN_MEMORY) is above the container's memory limit, or whose files are missing, is
+never loaded in that run; a ranker that needs it works as "none", and task B sends such a long reference whole. Where a model is used, an exception while loading or running it (MemoryError
 included) is caught (failed()), and that process goes on without it from then on. Each case that went on without its
 model says so in its raw answer ("ranker_guard"), and the run log counts them.
 
@@ -102,17 +102,19 @@ def model_files(model):
     return []
 
 
-def run_guard(name, memory_limit):
-    """(the ranker for the whole run, the reason when it is "none" instead of `name`, else None)."""
-    model = uses_model(name)
-    if model is None:
-        return name, None
-    need = MIN_MEMORY.get(model)
-    if memory_limit is not None and need is not None and memory_limit < need:
-        return "none", f"memory limit {memory_limit / GIB:.2f} GiB is below the {need / GIB:.2f} GiB {model} needs"
-    if not all(Path(f).is_file() for f in model_files(model)):
-        return "none", f"{model}'s files are missing"
-    return name, None
+def run_guard(memory_limit, models=("e5-small", "static-s")):
+    """Asked once per run, before the worker processes start (they inherit the result): every model that cannot run in
+    this container (its MIN_MEMORY above the memory limit, or its files missing) is marked unusable for the whole run,
+    so no case ever loads it. Returns {model: reason} for the models marked."""
+    marked = {}
+    for model in models:
+        need = MIN_MEMORY.get(model)
+        if memory_limit is not None and need is not None and memory_limit < need:
+            marked[model] = f"memory limit {memory_limit / GIB:.2f} GiB is below the {need / GIB:.2f} GiB {model} needs"
+        elif not all(Path(f).is_file() for f in model_files(model)):
+            marked[model] = f"{model}'s files are missing"
+    _unusable.update(marked)
+    return marked
 
 
 def effective(name):

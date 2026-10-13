@@ -149,7 +149,7 @@ def no_ranking_model(mode, same_language=True):
     if _selector(mode, same_language) in ("L", "Q", "B"):
         return False
     if rankers.ACTIVE["name"] == "none":
-        return True
+        return True  # the run asked for no embedding model at all (--ranker none): the whole reference
     model = ranking_model(mode, same_language)
     if model in rankers._unusable:
         rankers.CASE["guard"] = rankers._unusable[model]

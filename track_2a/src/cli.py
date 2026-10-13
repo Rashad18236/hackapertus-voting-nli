@@ -36,7 +36,6 @@ Input and output (session 8):
 import argparse
 import codecs
 import contextlib
-import dataclasses
 import functools
 import json
 import logging
@@ -948,10 +947,8 @@ def main():
     logging.getLogger("pypdf").setLevel(logging.ERROR)  # font warnings are noise here
     # Session 12, step 2: the memory guard. Below the memory the ranker's model needs, or without its files, the whole
     # run uses no embedding model (src/rankers.py), so that no case is lost to an out-of-memory kill.
-    ranker, guard_reason = rankers.run_guard(settings.ranker, pipeline.cgroup_memory())
-    if guard_reason:
-        log.warning("Memory guard: %s; this run uses no embedding model", guard_reason)
-        settings = dataclasses.replace(settings, ranker=ranker)
+    for model, reason in rankers.run_guard(pipeline.cgroup_memory()).items():
+        log.warning("Memory guard: %s; this run does without %s", reason, model)
 
     env.load_env_file()
     lines = read_lines(args.input)
@@ -989,7 +986,7 @@ def main():
             if status != "ok":
                 failures[status] += 1
             counts["routing_failed"] += "route_error" in raw
-            counts["no_model"] += "ranker_guard" in raw or raw.get("ranker") == "none"
+            counts["no_model"] += "ranker_guard" in raw
             log.info("[%d/%d] %s -> %s%s", number, len(lines), case["id"], resp["label_name"],
                      "" if status == "ok" else f" (fallback: {status})")
             write_line(out, resp)
