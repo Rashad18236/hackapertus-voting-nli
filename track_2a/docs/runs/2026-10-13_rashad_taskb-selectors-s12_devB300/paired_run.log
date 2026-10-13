@@ -264,3 +264,42 @@
 [263/300] v1.1-row-1297-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
 [264/300] v1.1-row-1302-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
 [265/300] v1.1-row-1304-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[266/300] v1.1-row-1308-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[267/300] v1.1-row-1320-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[268/300] v1.1-row-1324-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[269/300] v1.1-row-1326-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[270/300] v1.1-row-1335-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[271/300] v1.1-row-1341-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[272/300] v1.1-row-1342-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[273/300] v1.1-row-1343-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[274/300] v1.1-row-1350-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[275/300] v1.1-row-1364-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[276/300] v1.1-row-1369-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[277/300] v1.1-row-1375-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[278/300] v1.1-row-1376-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[279/300] v1.1-row-1381-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[280/300] v1.1-row-1383-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[281/300] v1.1-row-1384-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[282/300] v1.1-row-1391-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[283/300] v1.1-row-1396-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[284/300] v1.1-row-1403-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[285/300] v1.1-row-1407-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[286/300] v1.1-row-1416-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[287/300] v1.1-row-1421-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[288/300] v1.1-row-1424-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[289/300] v1.1-row-1436-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[290/300] v1.1-row-1444-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[291/300] v1.1-row-1451-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[292/300] v1.1-row-1456-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[293/300] v1.1-row-1459-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[294/300] v1.1-row-1464-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[295/300] v1.1-row-1468-B | H: entailment | B-BM25: entailment | B-R: entailment | today: entailment
+[296/300] v1.1-row-1472-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+[297/300] v1.1-row-1474-B | today: contradiction | B-R: contradiction | B-BM25: contradiction | H: contradiction
+[298/300] v1.1-row-1477-B | B-R: contradiction | H: contradiction | today: contradiction | B-BM25: contradiction
+[299/300] v1.1-row-1478-B | H: contradiction | B-BM25: contradiction | B-R: contradiction | today: contradiction
+[300/300] v1.1-row-1481-B | B-BM25: contradiction | today: contradiction | H: contradiction | B-R: contradiction
+today: ok: 300; HTTP 429 answers: 0, retries: 0
+B-R: ok: 299, unparseable answer: 1; HTTP 429 answers: 0, retries: 0
+H: ok: 300; HTTP 429 answers: 0, retries: 0
+B-BM25: ok: 300; HTTP 429 answers: 0, retries: 0

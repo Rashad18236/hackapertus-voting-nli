@@ -1,0 +1,4 @@
+300 cases, 44 booklets parsed; arms: ['today', 'S', 'today-nopart', 'S-nopart', 'bm25ap-nopart']
+[1/300] v1.1-row-2-A | today: entailment | S: entailment | today-nopart: entailment | S-nopart: entailment | bm25ap-nopart: entailment
+[2/300] v1.1-row-4-A | S: entailment | today-nopart: entailment | S-nopart: entailment | bm25ap-nopart: entailment | today: entailment
+[3/300] v1.1-row-5-A | today-nopart: entailment | S-nopart: entailment | bm25ap-nopart: entailment | today: entailment | S: entailment
