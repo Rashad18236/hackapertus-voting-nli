@@ -64,14 +64,15 @@ class Route(unittest.TestCase):
 
 
 class Cli(unittest.TestCase):
-    def run_case(self, claim, answer):
+    def run_case(self, claim, answer, extra_args=(), more_answers=()):
         seen = []
         with mock.patch.object(cli.parse, "load_pages", return_value=booklet_pages()), \
              mock.patch.object(cli.Path, "is_file", return_value=True), \
              mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]):
-            code, out = run_cli([json.dumps(case(claim))], [answer], ["--context-a", "section-route"], seen)
+            code, out = run_cli([json.dumps(case(claim))], [answer, *more_answers],
+                                ["--context-a", "section-route", *extra_args], seen)
         self.assertEqual(code, 0)
-        return out[0], seen[0]
+        return out[0], seen[-1]
 
     def test_routed_case_cites_paragraphs(self):
         out, messages = self.run_case(COUNCIL_CLAIM, '{"paragraphs": [1], "label": 0}')
@@ -82,8 +83,16 @@ class Cli(unittest.TestCase):
         self.assertIn("zuständig sind.", out["evidence"][0]["text"])
 
     def test_unrouted_case_runs_as_embed_e5_small(self):
-        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}')
+        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"pages": [14], "label": 0}',
+                                      ["--ap-part-a", "off"])
         self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])  # embed-e5-small's prompt
+        self.assertEqual(out["evidence"][0]["page"], 14)
+
+    def test_unrouted_case_asks_apertus_first(self):
+        """Session 11 (default): the rules name no part, so Apertus is asked; "none" leaves it to embed-e5-small."""
+        out, messages = self.run_case("Die Schweiz hat 26 Kantone.", '{"part": "none", "statement": "x"}',
+                                      more_answers=['{"pages": [14], "label": 0}'])
+        self.assertIn("=== PAGE 14 ===\nchunk", messages[1]["content"])
         self.assertEqual(out["evidence"][0]["page"], 14)
 
 

@@ -47,7 +47,23 @@ FALLBACK RULE (val: Macro-F1 ≥ +0.02 and evidence ≥ +0.05 over today's fallb
 
 **Step 3, Apertus in the parsing roles.**
 
-PENDING-STEP3
+Apertus was tried in the two roles Python plays before the answer: naming the part a claim's opening refers to
+(AP-claim, one call per claim, `src/ap_parse.py`) and reading a booklet's contents (AP-structure, one call per
+booklet, cached; its entries go through the parser's own heading checks before any part is used). Every parsing call
+counts in the case's tokens (a booklet's contents call in its first case).
+
+| Role, run | Accuracy | Macro-F1 / evidence (vs the arm it replaces) | Tokens per case, input + output (of which parsing) | In the final system? |
+|---|---|---|---|---|
+| AP-structure, 93 booklets (3a) | 78.7 % of passing current-layout votes with all four pages equal to the parser's (per field 0.79–0.84); older layout law page 30 % | — | 1,796 + 176 per booklet | no: needs ≥ 95 % (HYBRID RULE) |
+| AP-structure, parser off, dev 300 (run 3) | vote placed and checked for 277 of 300 | 0.970 / 0.955 (VW 0.886 / 0.687) | 1,478 + 43.1 (268 + 28.5) | no: part a fails |
+| AP-claim (AP-part), reworded openings, dev 150 (run 2) | 78.7 % of parts equal to the original opening's | 0.967 / 0.880 (VW 0.894 / 0.670) | 1,383 + 63.4 (236 + 49.0) | PENDING-APPART |
+| AP-all, dev 300 (run 1) | part = rules' part for 89.0 %; vote placed for 93.0 % | 0.960 / 0.891 (today 0.977 / 0.980) | 1,655 + 90.9 (502 + 76.5) | never (the step's rule) |
+| AP-all, probe 94 (run 1) | part = rules' 89.4 %; vote placed 91.5 % | 0.951 / 0.877 (today 0.971 / 0.954) | 1,383 + 71.6 (346 + 57.4) | never |
+
+AP-all's local time: PENDING-APALL-LT. Step 3b (no model): with Apertus's restated statement (the claim without its
+opening, in the booklet's language) as the search text of cut parts, the 9 gold cases among the 18 cut
+cross-language dev and probe cases keep their gold paragraph among the 8 (net gain 0, needs ≥ 5), so run 4 was not
+run. Step 3d: the endpoint accepts an image part, but Apertus's answer does not name the page's printed heading.
 
 **Step 4, a fast server** (`2026-10-12_rashad_local-time-step4_devA300`; no model). Profile at 0.3 s per request:
 the two lanes need 145–155 s each for 90 s of requests; PDF reading 107 s and e5 embedding of long parts 177 s over

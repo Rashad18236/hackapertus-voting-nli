@@ -85,7 +85,7 @@ class Settings:
     short_prompt_a: bool = False  # P-short (session 10, step 5): routed cases get A-v5-short, the same rules in at most
                                   # 200 fixed tokens (L1's sentence included)
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
-    ap_part_a: str = "off"       # session 11, step 3 (off): Apertus names the claim's part: "after-rules" (only when the
+    ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
     ap_structure_a: str = "off"  # session 11, step 3 (off): Apertus reads the contents pages (one call per booklet):
                                  # "after-parser" (only when the parser gives no valid part for the vote) or "all";
