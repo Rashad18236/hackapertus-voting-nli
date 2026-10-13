@@ -44,8 +44,21 @@ MODEL_DIR = Path(os.environ.get("EMBED_MODEL_DIR", "/app/models/multilingual-e5-
 
 def select(pages, vote, claim_text, cross_language=False):
     """Return (prompt_text, shown): the selected chunks, and the full pages they come from
-    (evidence is the full text of the pages the model cites). Languages play no role."""
-    chunks = select_chunks(pages, claim_text)
+    (evidence is the full text of the pages the model cites). Languages play no role. Session 12: when src/rankers.py's
+    ACTIVE names another ranker, the same chunks are ranked by it ("none": BM25 alone, the word overlap)."""
+    from src import rankers
+    name = rankers.effective(rankers.ACTIVE["name"])
+    if name == "e5":
+        try:
+            chunks = select_chunks(pages, claim_text)
+            return excerpts_prompt_text(chunks), {n: pages[n] for n, _ in chunks}
+        except Exception as e:  # session 12, step 2: e5 cannot run here; BM25 alone
+            rankers.failed("e5-small", e)
+            name = "none"
+    every = chunk_pages(pages)
+    keep = rankers.best_or_without("BM25" if name == "none" else name, [t for _, t in every], claim_text, TOP_K,
+                                   without="BM25") if every else []
+    chunks = [every[i] for i in keep]
     return excerpts_prompt_text(chunks), {n: pages[n] for n, _ in chunks}
 
 

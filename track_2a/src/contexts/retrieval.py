@@ -36,7 +36,7 @@ import os
 import time
 from pathlib import Path
 
-from src import memo, parse
+from src import memo, parse, static_embed
 from src.contexts import embed_e5_small, vote_section
 
 CHUNK_CHARS = 1000  # as embed-e5-small
@@ -84,6 +84,10 @@ MODELS = {
     "e5-small": (lambda: embed_e5_small._get_embedder(), "query: ", "passage: "),  # one instance per run
     "e5-small-q8": (lambda: embed_e5_small._get_quantised_embedder(), "query: ", "passage: "),  # session 11, step 6
     "granite-97m-r2": (lambda: GraniteEmbedder(), "", ""),
+    # session 12, step 1: model S (src/static_embed.py), its first 256 dimensions; no prefixes (its model card).
+    # "static-s-1024" (all 1,024 dimensions) is for the offline comparison only; the image has the 256 file.
+    "static-s": (lambda: static_embed.get(), "", ""),
+    "static-s-1024": (lambda: static_embed.get(matrix_file="embedding_1024.npy"), "", ""),
 }
 
 _embedders = {}

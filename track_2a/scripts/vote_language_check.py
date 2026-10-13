@@ -4,6 +4,9 @@ Run from track_2a/ (dev and val booklets in output/booklets_dev):
 
     EMBED_MODEL_DIR=models/multilingual-e5-small python3 scripts/vote_language_check.py --out <file.json>
 
+Session 12: --ranker S runs the same test with model S (STATIC_MODEL_DIR=models/static-similarity-mrl-multilingual-v1)
+to set its own margin (section_route.VOTE_MARGIN_S). --out holds vote names: keep it outside the repository.
+
 section-route finds a case's vote by matching the vote name to the booklet's contents titles (src/booklet.py
 find_vote: fuzzy, same language). A vote name in another language than the booklet does not match, and the case
 falls back to embed-e5-small. Step 8 adds a second try by meaning (src/contexts/section_route.py vote_by_meaning:
@@ -39,7 +42,11 @@ BOOKLETS = ROOT / "output" / "booklets_dev"
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--ranker", default="e5", choices=("e5", "S"),
+                    help="session 12: the model that places a name by meaning (src/rankers.py); S sets VOTE_MARGIN_S")
     args = ap.parse_args()
+    from src import rankers
+    rankers.ACTIVE["name"] = args.ranker
     cases = []
     for name in ("dev", "val"):
         cases += [json.loads(l) for l in (ROOT / "data" / name / "cases.jsonl").read_text(encoding="utf-8").splitlines()

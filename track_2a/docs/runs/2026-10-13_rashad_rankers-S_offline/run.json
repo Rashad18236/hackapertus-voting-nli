@@ -1,0 +1,55 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "10:45",
+ "kind": "offline check",
+ "code": "rashad/session-12 (src/static_embed.py, src/rankers.py, scripts/ranker_check.py, scripts/static_equivalence.py)",
+ "task": "A+B",
+ "variant": "section-route (rankers of long parts), task B cut4",
+ "cases": "session 11 final runs' answers: dev 300 A / 300 B, val 580 / 580, probe 94 / 94",
+ "setup": "ranker comparison on the paragraphs Apertus cited; model S against sentence-transformers on 50 claims; vote-name margin for S",
+ "format": "no model calls; shares of cases",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "First cited paragraph among the 8 best, cross-language: e5 0.980, S 0.993, S+BM25 0.985, BM25 0.945; R = S (256 dimensions); S equals the reference library (3e-8).",
+ "results": {
+  "cross_language_at8": {
+   "e5": 0.9801,
+   "S": 0.9925,
+   "S-1024": 0.995,
+   "BM25": 0.9453,
+   "S+BM25": 0.9851,
+   "e5+BM25": 0.9751
+  },
+  "all_at8": {
+   "e5": 0.9866,
+   "S": 0.9933,
+   "S-1024": 0.995,
+   "BM25": 0.9616,
+   "S+BM25": 0.9883,
+   "e5+BM25": 0.9833
+  },
+  "all_at4": {
+   "e5": 0.9366,
+   "S": 0.9349,
+   "S-1024": 0.9366,
+   "BM25": 0.8364,
+   "S+BM25": 0.9132,
+   "e5+BM25": 0.9265
+  },
+  "cut_gold_covered": {
+   "e5": 44,
+   "S": 44,
+   "S-1024": 44,
+   "BM25": 42,
+   "S+BM25": 44,
+   "e5+BM25": 44
+  },
+  "cut_cases_with_gold": 44,
+  "R": "S",
+  "dims": 256
+ }
+}

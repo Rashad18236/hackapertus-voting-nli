@@ -1,0 +1,19 @@
+{
+ "sentences": 50,
+ "sentence_transformers": "5.1.1",
+ "revision": "b68f4122911bcffcd6e1f695f2d99cd6788972d8",
+ "256": {
+  "max_abs_difference": 2.9802322387695312e-08,
+  "min_cosine_ours_vs_reference": 0.9999998211860657,
+  "pairwise_order_equal": true,
+  "top8_neighbours_equal_for_every_sentence": true,
+  "equal": true
+ },
+ "1024": {
+  "max_abs_difference": 1.4901161193847656e-08,
+  "min_cosine_ours_vs_reference": 0.9999998807907104,
+  "pairwise_order_equal": true,
+  "top8_neighbours_equal_for_every_sentence": true,
+  "equal": true
+ }
+}

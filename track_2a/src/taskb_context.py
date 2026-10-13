@@ -25,20 +25,24 @@ import re
 from src import booklet, memo
 from src.contexts import retrieval, section_route
 
-MODES = ("full", "cut", "para", "cut4", "unified", "cut4-q", "cut4-t", "cut4-l", "cut4-h")
+MODES = ("full", "cut", "para", "cut4", "unified", "cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25")
 CUT_CHARS = 8000
 TOP_K = 8
 CUT4_CHARS = 3000
 CUT4_TOP_K = 4
 LIMITS = {"cut": (CUT_CHARS, TOP_K), "para": (CUT_CHARS, TOP_K), "cut4": (CUT4_CHARS, CUT4_TOP_K),
-          "unified": (CUT_CHARS, TOP_K), **{m: (CUT4_CHARS, CUT4_TOP_K) for m in ("cut4-q", "cut4-t", "cut4-l", "cut4-h")}}
+          "unified": (CUT_CHARS, TOP_K), **{m: (CUT4_CHARS, CUT4_TOP_K) for m in ("cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25")}}
 # Session 11, step 6 (off by default): B-cut4 with another way to pick its 4 paragraphs (the "selector"):
 #   cut4    E: e5 (multilingual-e5-small) on whole paragraphs, as session 10
 #   cut4-q  Q: the same model quantised to 8-bit integers (the model's own export, src/contexts/embed_e5_small.py)
 #   cut4-t  T: e5 on the first T_CHARS characters of each paragraph
 #   cut4-l  L: no model: shared character 4-grams and numbers between claim and paragraph
 #   cut4-h  H: L when claim and reference share a language, else H_MODEL (the fastest e5 variant, measured)
-SELECTORS = {"cut4": "E", "cut4-q": "Q", "cut4-t": "T", "cut4-l": "L", "cut4-h": "H"}
+#   cut4-r  R (session 12, step 3): the ranker src/rankers.py's ACTIVE names (B-R), on the paragraphs' whole text
+#   cut4-bm25  B (session 12, step 3): Kaan's BM25 on the claim; when claim and reference differ in language, on the
+#              claim translated by Apertus (src/cli.py makes that call, then passes the translation as the search text)
+SELECTORS = {"cut4": "E", "cut4-q": "Q", "cut4-t": "T", "cut4-l": "L", "cut4-h": "H", "cut4-r": "R",
+             "cut4-bm25": "B"}
 T_CHARS = 300
 H_MODEL = "cut4-t"
 PART_LINE = ("a passage from the booklet's section on the ballot named in VOTE; its first paragraph is the "
@@ -51,6 +55,13 @@ def split(reference_text):
     if not lines:
         return "", []
     return lines[0].strip(), booklet.page_paragraphs("\n".join(lines[1:]))
+
+
+def needs_translation(reference_text, mode, same_language):
+    """Session 12, step 3: B-BM25 (cut4-bm25) ranks a long cross-language reference with the claim translated by
+    Apertus (one call, made by src/cli.py in the main process)."""
+    return (mode == "cut4-bm25" and not same_language and is_long(reference_text, mode)
+            and len(split(reference_text)[1]) > LIMITS[mode][1])
 
 
 def is_long(reference_text, mode="cut"):
@@ -84,6 +95,10 @@ def selector_scores(selector, paragraphs, claim_text):
     """Similarity of the claim to each paragraph for selector Q, T or L (session 11, step 6)."""
     if selector == "L":
         return [lexical_score(claim_text, p) for p in paragraphs]
+    if selector in ("R", "B"):
+        from src import rankers
+        name = rankers.ACTIVE["name"] if selector == "R" else "BM25"
+        return rankers.scores(name, [section_route.display(p) for p in paragraphs], claim_text)
     model = "e5-small-q8" if selector == "Q" else "e5-small"
     texts = [section_route.display(p) for p in paragraphs]
     if selector == "T":
@@ -109,11 +124,46 @@ def lexical_score(claim_text, paragraph):
     return shared + len(numbers)
 
 
+def _selector(mode, same_language):
+    selector = SELECTORS.get(mode, "E")
+    if selector == "H":
+        selector = "L" if same_language else SELECTORS[H_MODEL]
+    return selector
+
+
+def ranking_model(mode, same_language=True):
+    """The embedding model ("e5-small", "static-s") this mode ranks a long reference's paragraphs with, or None."""
+    from src import rankers
+    selector = _selector(mode, same_language)
+    if selector in ("L", "Q", "B"):
+        return None  # L and B need no model; Q (8-bit e5, off) keeps its own error path (src/cli.py)
+    if selector == "R":
+        return rankers.uses_model(rankers.ACTIVE["name"])
+    return "e5-small"
+
+
+def no_ranking_model(mode, same_language=True):
+    """Session 12, step 2: whether this mode would rank with an embedding model that cannot run: the run's ranker is
+    "none" (memory guard), or the model failed earlier in this process."""
+    from src import rankers
+    if _selector(mode, same_language) in ("L", "Q", "B"):
+        return False
+    if rankers.ACTIVE["name"] == "none":
+        return True
+    model = ranking_model(mode, same_language)
+    if model in rankers._unusable:
+        rankers.CASE["guard"] = rankers._unusable[model]
+        return True
+    return False
+
+
 def cut_text(reference_text, claim_text, mode="cut", same_language=True):
     """B-cut's (or B-cut4's) reference text: unchanged if short; else the first line and the kept paragraphs,
     verbatim."""
     if not is_long(reference_text, mode):
         return reference_text
+    if len(split(reference_text)[1]) > LIMITS.get(mode, (CUT_CHARS, TOP_K))[1] and no_ranking_model(mode, same_language):
+        return reference_text  # session 12, step 2: no embedding model can run, so the reference is sent whole
     first, paragraphs = cut_paragraphs(reference_text, claim_text, mode, same_language)
     if not paragraphs:
         return reference_text
