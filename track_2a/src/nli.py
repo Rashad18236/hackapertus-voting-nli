@@ -275,6 +275,39 @@ def parse_label_and_pages(answer, key="pages"):
     return label, pages, ""
 
 
+# Robustness experiments (Kaan; off by default, src/strategies.py): prompts that rewrite the claim. They never
+# see the booklet; the rewritten claim is then judged with the normal prompts above.
+CLAIM_PROMPTS = {}
+CLAIM_PROMPTS["negate-claim"] = """You rewrite a CLAIM about a Swiss federal voting booklet into its negation: one claim that is true exactly when the original is false. Keep the language of the claim (German, French or Italian), keep its opening that names a source ("according to the summary", "the Federal Council holds", ...) unchanged, and negate only what is said about the subject. Change as few words as possible.
+
+Answer with one JSON object and nothing else, for example:
+{"claim": "Laut der Zusammenfassung zahlt der Bund keine 40 Millionen Franken."}"""
+CLAIM_PROMPTS["decompose-claim"] = """You split a CLAIM about a Swiss federal voting booklet into at most four shorter claims that together say exactly what the original says. Each short claim must state one fact, be understandable on its own, keep the language of the claim (German, French or Italian), and repeat the claim's opening that names a source ("according to the summary", "the Federal Council holds", ...). Do not add or drop anything. If the claim states only one fact, return it unchanged as the only item.
+
+Answer with one JSON object and nothing else, for example:
+{"claims": ["Laut der Zusammenfassung zahlt der Bund 40 Millionen Franken.", "Laut der Zusammenfassung zahlen die Kantone den Rest."]}"""
+CLAIM_SCHEMAS = {
+    "negate-claim": {"type": "object", "properties": {"claim": {"type": "string"}}, "required": ["claim"],
+                     "additionalProperties": False},
+    "decompose-claim": {"type": "object", "properties": {"claims": {"type": "array", "items": {"type": "string"},
+                                                                    "minItems": 1, "maxItems": 4}},
+                        "required": ["claims"], "additionalProperties": False},
+}
+
+
+def build_messages_claim(version, claim_text):
+    return [{"role": "system", "content": CLAIM_PROMPTS[version]}, {"role": "user", "content": f"CLAIM:\n{claim_text}"}]
+
+
+def parse_claims(answer, key):
+    """The rewritten claim(s) from a negate-claim ("claim") or decompose-claim ("claims") answer: a list of
+    non-empty strings, or [] when the answer cannot be read."""
+    obj = _first_json_object(answer or "")
+    value = obj.get(key) if obj else None
+    values = value if isinstance(value, list) else [value]
+    return [v.strip() for v in values if isinstance(v, str) and v.strip()]
+
+
 DEFAULT_PROMPT_B = "v3-topic-first"  # best on dev (session 2, Run A)
 
 

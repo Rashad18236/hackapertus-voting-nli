@@ -118,6 +118,7 @@ class NeverDropACase(unittest.TestCase):
                      mock.patch.object(cli.parse, "load_pages", return_value={1: "page one"}), \
                      mock.patch.object(cli.Path, "is_file", return_value=True), \
                      mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "page one")]), \
+                     mock.patch.object(embed_e5_small, "chunk_scores", return_value=([(1, "page one")], [1.0])), \
                      mock.patch.object(retrieval, "embedder", return_value=OneVectorEmbedder()):
                     resp, status, raw = cli.predict(a_case("s"), ".", cli.Settings(context_a=mode))
                 self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A)  # the default for every mode

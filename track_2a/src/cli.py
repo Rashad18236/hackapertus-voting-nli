@@ -44,7 +44,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from src import context, env, evidence, llm, nli, parse, taskb_context
+from src import context, env, evidence, langid, llm, nli, parse, strategies, taskb_context
 
 FALLBACK_LABEL = 1  # neutral; used whenever we cannot produce a real answer
 
@@ -74,6 +74,9 @@ class Settings:
     section_top_k_a: int = 0     # E1 (session 9, information only): if > 0, a routed case keeps only its k paragraphs
                                  # most similar to the claim (e5), in their order; 0 keeps section-route as it is
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
+    strategy_a: str = "off"      # robustness experiments (Kaan): "xlang", "negation" or "decompose" for routed task A
+    strategy_b: str = "off"      # cases, the same for task B; several model calls per case, see src/strategies.py
+    decompose_min_chars: int = strategies.DECOMPOSE_MIN_CHARS  # "decompose" splits only claims at least this long
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
                                           # ones and 11 of the 99 right ones; the best difference of the two shares)
@@ -98,6 +101,8 @@ def note_call(raw, call):
     """Record a model call's requests (1 plus retries), HTTP 429 answers and endpoint identity (src/llm.py) in raw.
     call is an llm.LLMResult or an llm.LLMError; both carry these three fields."""
     raw["attempts"], raw["http_429"], raw["endpoint"] = call.attempts, call.http_429, call.endpoint
+    if getattr(call, "elapsed_ms", None) is not None:
+        raw["model_ms"] = call.elapsed_ms  # the model's time; the case's time minus this is local time
     if getattr(call, "fallbacks", None):
         raw["llm_fallbacks"] = call.fallbacks  # session 9: response_format dropped or model name replaced
 
@@ -145,7 +150,9 @@ def predict_a(case, data_dir, start, raw, settings):
         log.warning("%s: routing failed (%s); running as %s", case_id, raw["route_error"],
                     context.fallback(settings.context_a))
     if routed is not None:
-        return predict_a_paragraphs(case_id, routed, messages, start, raw, settings, len(pages), vote, claim_text)
+        langs = languages(case, "booklet", " ".join(t for _, t in routed[1]), claim_text)
+        return predict_a_paragraphs(case_id, routed, messages, start, raw, settings, len(pages), vote, claim_text,
+                                    langs)
     try:
         cross_language = case["claim"].get("language") != case["booklet"].get("language")
         mode = context.fallback(settings.context_a)
@@ -193,7 +200,39 @@ def paragraph_prompt_version(settings):
     return version + "-L1" if settings.label_rule_a else version
 
 
-def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_total, vote="", claim_text=""):
+def languages(case, source_key, source_text, claim_text):
+    """(claim language, source language) from the request's fields, else detected from the texts (src/langid.py)."""
+    def field(key):
+        value = case.get(key) if isinstance(case, dict) else None
+        lang = value.get("language") if isinstance(value, dict) else None
+        return lang if lang in langid.LANGS else None
+    return field("claim") or langid.detect(claim_text), field(source_key) or langid.detect(source_text)
+
+
+def run_strategy(name, judge, claim_text, texts, langs, raw, settings):
+    """Robustness experiments: answer with strategy `name` (src/strategies.py). Returns the Outcome, or None after a
+    failed model call (raw records it; the caller then answers the normal way, adding the tokens already spent)."""
+    try:
+        outcome = strategies.run(name, judge, claim_text, texts, *langs, min_chars=settings.decompose_min_chars)
+    except strategies.StrategyFailed as e:
+        raw["strategy"] = {**e.record, "error": str(e), "input_tokens": e.input_tokens,
+                           "output_tokens": e.output_tokens}
+        return None
+    raw["strategy"] = outcome.record
+    note_call(raw, outcome.last_result)
+    raw["model_ms"] = sum(c.get("elapsed_ms") or 0 for c in outcome.record["calls"])
+    raw["answer"], raw["output_tokens"] = outcome.last_result.text, outcome.output_tokens
+    return outcome
+
+
+def spent_before(raw):
+    """Tokens of a strategy's calls before it failed (0, 0 when there was none)."""
+    s = raw.get("strategy") or {}
+    return s.get("input_tokens", 0), s.get("output_tokens", 0)
+
+
+def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_total, vote="", claim_text="",
+                         langs=(None, None)):
     """Task A for a routed case: one part of the vote as numbered paragraphs; the answer cites paragraphs,
     whose verbatim text and page become the evidence. Returns (response, status)."""
     variant = context.VARIANTS[settings.context_a]
@@ -201,6 +240,27 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
     raw["prompt_version"], raw["route"] = paragraph_prompt_version(settings), part
     raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
     raw["pages_total"], raw["context_pages"] = pages_total, sorted({page for page, _ in paragraphs})
+    if settings.strategy_a != "off":
+        def judge(claim, texts):
+            result = llm.chat(nli.build_messages_a_paragraphs(variant.PART_LINES[part], texts, vote, claim,
+                                                              paragraph_prompt_version(settings)),
+                              max_tokens=settings.max_tokens_a,
+                              json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
+            label, numbers, _ = nli.parse_label_and_pages(result.text, key="paragraphs")
+            return strategies.Judgement(label, numbers, result)
+        outcome = run_strategy(settings.strategy_a, judge, claim_text, [variant.display(t) for _, t in paragraphs],
+                               langs, raw, settings)
+        if outcome is not None:
+            if outcome.label is None:
+                raw["parse_reason"] = "unreadable answer"
+                return response(case_id, FALLBACK_LABEL, outcome.input_tokens, outcome.output_tokens,
+                                start), "unparseable answer"
+            items = (variant.evidence_items(paragraphs, outcome.numbers, halves=settings.evidence_halves_a)
+                     if outcome.label in (0, 2) else [])
+            status = "ok" if outcome.label == 1 or items else "no valid paragraphs for label 0/2"
+            return response(case_id, outcome.label, outcome.input_tokens, outcome.output_tokens, start,
+                            items), status
+    spent_in, spent_out = spent_before(raw)
     try:
         result = llm.chat(messages, max_tokens=settings.max_tokens_a,
                           json_schema=nli.ANSWER_SCHEMA_A_PARAGRAPHS if settings.schema_a else None)
@@ -214,8 +274,9 @@ def predict_a_paragraphs(case_id, routed, messages, start, raw, settings, pages_
     label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
     if label is None:
         raw["parse_reason"] = reason
-        return response(case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
-    input_tokens, output_tokens = result.input_tokens, result.output_tokens
+        return (response(case_id, FALLBACK_LABEL, result.input_tokens + spent_in, result.output_tokens + spent_out,
+                         start), "unparseable answer")
+    input_tokens, output_tokens = result.input_tokens + spent_in, result.output_tokens + spent_out
     if label == 1 and settings.second_look_a:
         second = second_look(routed, vote, claim_text, raw, settings)
         if second is not None:
@@ -306,6 +367,23 @@ def predict(case, data_dir=".", settings=None):
             messages, max_tokens = None, settings.max_tokens_b
             schema = nli.ANSWER_SCHEMA_B if settings.schema_b else None
             raw["prompt_version"] = settings.prompt_b
+    if settings.strategy_b != "off" and settings.context_b != "para":
+        text = taskb_context.cut_text(reference_text, claim_text) if settings.context_b == "cut" else reference_text
+
+        def judge(claim, lines):
+            result = llm.chat(nli.build_messages_b("\n".join(lines), claim, settings.prompt_b),
+                              max_tokens=settings.max_tokens_b,
+                              json_schema=nli.ANSWER_SCHEMA_B if settings.schema_b else None)
+            return strategies.Judgement(nli.parse_label(result.text)[0], [], result)
+        langs = languages(case, "reference", reference_text, claim_text)
+        outcome = run_strategy(settings.strategy_b, judge, claim_text, text.split("\n"), langs, raw, settings)
+        if outcome is not None:
+            label, status = outcome.label, "ok"
+            if label is None:
+                raw["parse_reason"] = "unreadable answer"
+                label, status = FALLBACK_LABEL, "unparseable answer"
+            return response(case_id, label, outcome.input_tokens, outcome.output_tokens, start), status, raw
+    spent_in, spent_out = spent_before(raw)
     try:
         result = llm.chat(messages or nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
                           max_tokens=max_tokens, json_schema=schema)
@@ -321,7 +399,7 @@ def predict(case, data_dir=".", settings=None):
     if label is None:
         raw["parse_reason"] = reason
         label, status = FALLBACK_LABEL, "unparseable answer"
-    return response(case_id, label, result.input_tokens, result.output_tokens, start), status, raw
+    return response(case_id, label, result.input_tokens + spent_in, result.output_tokens + spent_out, start), status, raw
 
 
 def read_lines(path):
@@ -373,13 +451,18 @@ def main():
                         help="development only: L2's similarity threshold")
     parser.add_argument("--evidence-a", default=defaults.evidence_a, choices=evidence.MODES,
                         help="development only: which task A evidence items to return")
+    parser.add_argument("--strategy-a", default=defaults.strategy_a, choices=strategies.STRATEGIES,
+                        help="development only: multi-call strategy for routed task A cases (src/strategies.py)")
+    parser.add_argument("--strategy-b", default=defaults.strategy_b, choices=strategies.STRATEGIES,
+                        help="development only: multi-call strategy for task B (src/strategies.py)")
     args = parser.parse_args()
     settings = Settings(prompt_b=args.prompt_b, schema_b=args.schema_b, max_tokens_b=args.max_tokens_b,
                         max_tokens_a=args.max_tokens_a, json_mode_a=args.json_mode_a,
                         schema_a=args.schema_a, context_a=args.context_a,
                         evidence_a=args.evidence_a, evidence_halves_a=args.evidence_halves_a,
                         context_b=args.context_b, label_rule_a=args.label_rule_a, second_look_a=args.second_look_a,
-                        second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a)
+                        second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
+                        strategy_a=args.strategy_a, strategy_b=args.strategy_b)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s", stream=sys.stderr)

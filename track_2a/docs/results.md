@@ -85,6 +85,22 @@ the notes of all runs follow below the tables. Per-label F1 is shown as E/N/C.
 | 2026-10-10 | 01:56 | rashad | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 2 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 4 | 0 | 1994 | 1812 | 3066 |
 | 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600`](runs/2026-10-10_rashad_stability-3_dev600/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | A | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (section-route, A-v4-section-route + json_schema, cited-pieces evidence without halves); LLM_MIN_INTERVAL=1 | 0.966 (E 0.985, N 0.966, C 0.947) | 0.930 (187/201) | 0 | 0 | 1210 | 2395 | 5139 |
 | 2026-10-10 | 09:56 | rashad | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | 7edbae4 (Docker image hackapertus-voting-nli:stability) | official, Docker image via make run (stability point 3 of 3, session 9 A4) | B | dev, all 600 cases (300 task A, 300 task B), one file | swiss-ai/apertus-v1.5-8b / Public AI (every answer from one backend: vllm fingerprint ...dd237840, blablador.fz-juelich.de) | stability point 1's settings: the image built at 7edbae4 (v3-topic-first, plain output, max_tokens 32, whole reference); LLM_MIN_INTERVAL=1 | 0.963 (E 0.985, N 0.958, C 0.946) | not scored for task B | 1 | 0 | 1994 | 1637 | 2595 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/base`](runs/2026-10-12_kaan_strategies_dev600/base/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/xlang`, `2026-10-12_kaan_strategies_dev600/negation`, `2026-10-12_kaan_strategies_dev600/decompose` | A | dev, all 300 task A cases (600-case run: data/dev/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | today's defaults (section-route, A-v4-section-route-L1, B-cut, v3-topic-first) | 0.983 (E 0.980, N 0.995, C 0.975) | 0.985 (198/201) | 0 | 0 | 1238 | 1320 | 2163 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/base/task-B`](runs/2026-10-12_kaan_strategies_dev600/base/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_strategies_dev600/negation/task-B`, `2026-10-12_kaan_strategies_dev600/decompose/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | today's defaults (section-route, A-v4-section-route-L1, B-cut, v3-topic-first) | 0.967 (E 0.985, N 0.963, C 0.951) | not scored for task B | 0 | 0 | 1231 | 936 | 1391 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/decompose`](runs/2026-10-12_kaan_strategies_dev600/decompose/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/xlang`, `2026-10-12_kaan_strategies_dev600/negation` | A | dev, all 300 task A cases (600-case run: data/dev/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b decompose: claims of at least 180 chars split by Apertus into at most 4 parts, each judged; any C gives C, all E give E, else N | 0.963 (E 0.949, N 0.975, C 0.965) | 0.965 (194/201) | 0 | 0 | 1861 | 3206 | 12644 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/decompose/task-B`](runs/2026-10-12_kaan_strategies_dev600/decompose/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_strategies_dev600/negation/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b decompose: claims of at least 180 chars split by Apertus into at most 4 parts, each judged; any C gives C, all E give E, else N | 0.937 (E 0.944, N 0.944, C 0.924) | not scored for task B | 0 | 0 | 1842 | 2257 | 6384 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/negation`](runs/2026-10-12_kaan_strategies_dev600/negation/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/xlang`, `2026-10-12_kaan_strategies_dev600/decompose` | A | dev, all 300 task A cases (600-case run: data/dev/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b negation: today's call, Apertus writes the negated claim, negation judged; a neutral answer takes the negation's implied label | 0.987 (E 0.980, N 1.000, C 0.980) | 0.990 (199/201) | 0 | 0 | 2642 | 6037 | 8080 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/negation/task-B`](runs/2026-10-12_kaan_strategies_dev600/negation/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_strategies_dev600/decompose/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b negation: today's call, Apertus writes the negated claim, negation judged; a neutral answer takes the negation's implied label | 0.960 (E 0.976, N 0.952, C 0.951) | not scored for task B | 0 | 0 | 2636 | 3424 | 4632 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/xlang`](runs/2026-10-12_kaan_strategies_dev600/xlang/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/negation`, `2026-10-12_kaan_strategies_dev600/decompose` | A | dev, all 300 task A cases (600-case run: data/dev/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b xlang: cross-language tournament (local MT m2m100_418M; both sides must agree, else a tie-break call with today's request) | 0.980 (E 0.980, N 0.990, C 0.969) | 0.980 (197/201) | 0 | 0 | 2060 | 4908 | 9377 |
+| 2026-10-12 | 13:13 | kaan | [`2026-10-12_kaan_strategies_dev600/xlang/task-B`](runs/2026-10-12_kaan_strategies_dev600/xlang/task-B/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (four arms, rotating order, 2 s between requests); paired with `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/negation/task-B`, `2026-10-12_kaan_strategies_dev600/decompose/task-B` | B | dev, all 300 task B cases (600-case run) | swiss-ai/apertus-v1.5-8b / Public AI | --strategy-a/-b xlang: cross-language tournament (local MT m2m100_418M; both sides must agree, else a tie-break call with today's request) | 0.970 (E 0.985, N 0.969, C 0.956) | not scored for task B | 0 | 0 | 2106 | 5081 | 9098 |
+| 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/bm25`](runs/2026-10-12_kaan_retrievers_devA300/bm25/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25 (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.827 (E 0.836, N 0.821, C 0.824) | 0.507 (102/201) | 0 | 0 | 2396 | 2245 | 2840 |
+| 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/bm25-mt`](runs/2026-10-12_kaan_retrievers_devA300/bm25-mt/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25-mt (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | **0.963** (E 0.967, N 0.964, C 0.959) | 0.771 (155/201) | 0 | 0 | 2505 | 2095 | 3196 |
+| 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/embed-e5-small`](runs/2026-10-12_kaan_retrievers_devA300/embed-e5-small/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a embed-e5-small (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.900 (E 0.941, N 0.873, C 0.884) | 0.682 (137/201) | 0 | 0 | 1868 | 2240 | 3546 |
+| 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/hybrid`](runs/2026-10-12_kaan_retrievers_devA300/hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.936 (E 0.971, N 0.928, C 0.910) | 0.766 (154/201) | 0 | 0 | 2362 | 2317 | 3750 |
+| 2026-10-12 | 16:23 | kaan | [`2026-10-12_kaan_retrievers_devA300/vote-section-hybrid`](runs/2026-10-12_kaan_retrievers_devA300/vote-section-hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (five arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/hybrid` | A | dev, all 300 task A cases | swiss-ai/apertus-v1.5-8b / Public AI | --context-a vote-section-hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces) | 0.920 (E 0.966, N 0.899, C 0.893) | 0.741 (149/201) | 0 | 0 | 2362 | 2281 | 3920 |
+| 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/bm25-mt`](runs/2026-10-12_kaan_retrievers_valA580/bm25-mt/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/hybrid` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a bm25-mt (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | **0.923** (E 0.952, N 0.923, C 0.893) | 0.706 (283/401) | 0 | 0 | 2522 | 2419 | 3100 |
+| 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/embed-e5-small`](runs/2026-10-12_kaan_retrievers_valA580/embed-e5-small/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/bm25-mt`, `2026-10-12_kaan_retrievers_valA580/hybrid` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a embed-e5-small (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | 0.871 (E 0.923, N 0.867, C 0.823) | 0.589 (236/401) | 0 | 0 | 1856 | 2070 | 2706 |
+| 2026-10-12 | 17:41 | kaan | [`2026-10-12_kaan_retrievers_valA580/hybrid`](runs/2026-10-12_kaan_retrievers_valA580/hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | official, interleaved (three arms, rotating order, 2 s between requests); routing off: the retriever alone; paired with `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/bm25-mt` | A | val, all 580 task A cases (data/val/cases.jsonl) | swiss-ai/apertus-v1.5-8b / Public AI | --context-a hybrid (prompt A-v3-excerpts, top 8 chunks of at most 1,000 chars, evidence cited-pieces); val confirmation of 2026-10-12_kaan_retrievers_devA300 | **0.926** (E 0.957, N 0.920, C 0.900) | 0.713 (286/401) | 0 | 0 | 2381 | 2341 | 3446 |
 
 ## Task B runs
 
@@ -115,6 +131,10 @@ Runs that started before 2026-10-08 13:25 UTC are marked "old endpoint behaviour
 | 2026-10-09 | 21:22 | [`2026-10-09_rashad_final-defaults_dev600/task-B`](runs/2026-10-09_rashad_final-defaults_dev600/task-B/) | current | v3-topic-first | B-cut (session 9 default) for references over 8,000 characters | 300 | no | 32 | **0.967** (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 2021 | 3774 | – |
 | 2026-10-10 | 01:56 | [`2026-10-10_rashad_stability-2_dev600/task-B`](runs/2026-10-10_rashad_stability-2_dev600/task-B/) | current | v3-topic-first | none: stability point 2 (point 1's image and settings) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1994 | 1812 | 3066 | – |
 | 2026-10-10 | 09:56 | [`2026-10-10_rashad_stability-3_dev600/task-B`](runs/2026-10-10_rashad_stability-3_dev600/task-B/) | current | v3-topic-first | none: stability point 3 (point 1's image and settings) | 300 | no | 32 | 0.963 (E 0.985, N 0.958, C 0.946) | 0 | 1994 | 1637 | 2595 | – |
+| 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/base/task-B`](runs/2026-10-12_kaan_strategies_dev600/base/task-B/) | current | v3-topic-first | none (today's defaults, B-cut) | 300 | no | 32 | 0.967 (E 0.985, N 0.963, C 0.951) | 0 | 1231 | 936 | 1391 | – |
+| 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/decompose/task-B`](runs/2026-10-12_kaan_strategies_dev600/decompose/task-B/) | current | v3-topic-first | strategy decompose | 300 | no | 32 | 0.937 (E 0.944, N 0.944, C 0.924) | 0 | 1842 | 2257 | 6384 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
+| 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/negation/task-B`](runs/2026-10-12_kaan_strategies_dev600/negation/task-B/) | current | v3-topic-first | strategy negation | 300 | no | 32 | 0.960 (E 0.976, N 0.952, C 0.951) | 0 | 2636 | 3424 | 4632 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
+| 2026-10-12 | 13:13 | [`2026-10-12_kaan_strategies_dev600/xlang/task-B`](runs/2026-10-12_kaan_strategies_dev600/xlang/task-B/) | current | v3-topic-first | strategy xlang | 300 | no | 32 | 0.970 (E 0.985, N 0.969, C 0.956) | 0 | 2106 | 5081 | 9098 | `2026-10-12_kaan_strategies_dev600/base/task-B` |
 
 ## Stopped runs and parts of other runs (no row of their own)
 
@@ -140,6 +160,11 @@ check, the best evidence score a model could reach by citing it.
 | 2026-10-08 | – | kaan | [`2026-10-08_kaan_retrieval-check_embed-e5-small`](runs/2026-10-08_kaan_retrieval-check_embed-e5-small/) | embedding branch working tree (parent 3fa8f58) | embed-e5-small: top 8 chunks of ≤ 1,000 chars, claim as query | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
 | 2026-10-08 | 15:46 | rashad | [`2026-10-08_rashad_retrieval-check_embed-e5-small-merge`](runs/2026-10-08_rashad_retrieval-check_embed-e5-small-merge/) | 9081b8b (merge with session 3) | embed-e5-small: same, re-run on the merged code (reproduction check) | 0.741 | 0.612 | 0.856 | 5,386 / 128,537 |
 | 2026-10-08 | 19:16 | rashad | [`2026-10-08_rashad_search-grid_devA201`](runs/2026-10-08_rashad_search-grid_devA201/) | df3028f | vote-section-embed-e5-small-k12: grid of 72 settings (2 models x booklet/section x k 4/8/12 x neighbours 0/1 x cross rule same/double/section); chosen: e5-small, vote section, k 12, no neighbours, rule same - missed the targets (evidence ceiling) | 0.846 (same language 0.896, cross-language 0.821) | 0.672 | 0.856 | 8,610 / 128,537 |
+| 2026-10-12 | – | kaan | [`2026-10-12_kaan_retrieval-check_devA201/bm25`](runs/2026-10-12_kaan_retrieval-check_devA201/bm25/) | kaan/robustness-experiments working tree (parent 42b2a3c) | bm25: top 8 chunks of ≤ 1,000 chars (embed-e5-small's chunks); ranking by the variant | 0.547 (same language 0.821, cross-language 0.410) | 0.443 | 0.856 | 6,728 / 128,537 |
+| 2026-10-12 | – | kaan | [`2026-10-12_kaan_retrieval-check_devA201/bm25-mt`](runs/2026-10-12_kaan_retrieval-check_devA201/bm25-mt/) | kaan/robustness-experiments working tree (parent 42b2a3c) | bm25-mt: top 8 chunks of ≤ 1,000 chars (embed-e5-small's chunks); ranking by the variant | 0.851 (same language 0.821, cross-language 0.866) | 0.682 | 0.856 | 7,238 / 128,537 |
+| 2026-10-12 | – | kaan | [`2026-10-12_kaan_retrieval-check_devA201/embed-e5-small`](runs/2026-10-12_kaan_retrieval-check_devA201/embed-e5-small/) | kaan/robustness-experiments working tree (parent 42b2a3c) | embed-e5-small: top 8 chunks of ≤ 1,000 chars (embed-e5-small's chunks); ranking by the variant | 0.741 (same language 0.851, cross-language 0.687) | 0.612 | 0.856 | 5,386 / 128,537 |
+| 2026-10-12 | – | kaan | [`2026-10-12_kaan_retrieval-check_devA201/hybrid`](runs/2026-10-12_kaan_retrieval-check_devA201/hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | hybrid: top 8 chunks of ≤ 1,000 chars (embed-e5-small's chunks); ranking by the variant | 0.866 (same language 0.866, cross-language 0.866) | 0.672 | 0.856 | 6,796 / 128,537 |
+| 2026-10-12 | – | kaan | [`2026-10-12_kaan_retrieval-check_devA201/vote-section-hybrid`](runs/2026-10-12_kaan_retrieval-check_devA201/vote-section-hybrid/) | kaan/robustness-experiments working tree (parent 42b2a3c) | vote-section-hybrid: top 8 chunks of ≤ 1,000 chars (embed-e5-small's chunks); ranking by the variant | 0.876 (same language 0.866, cross-language 0.881) | 0.682 | 0.856 | 6,853 / 128,537 |
 
 ## Other analyses (no model calls, except where marked "model check")
 
@@ -160,7 +185,7 @@ check, the best evidence score a model could reach by citing it.
 
 ## Runs by person
 
-- **kaan** (2): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`
+- **kaan** (23): `2026-10-08_kaan_retrieval-check_embed-e5-small`, `s3-A300-embed-e5-small`, `2026-10-12_kaan_retrieval-check_devA201/bm25`, `2026-10-12_kaan_retrieval-check_devA201/bm25-mt`, `2026-10-12_kaan_retrieval-check_devA201/embed-e5-small`, `2026-10-12_kaan_retrieval-check_devA201/hybrid`, `2026-10-12_kaan_retrieval-check_devA201/vote-section-hybrid`, `2026-10-12_kaan_strategies_dev600/base`, `2026-10-12_kaan_strategies_dev600/base/task-B`, `2026-10-12_kaan_strategies_dev600/decompose`, `2026-10-12_kaan_strategies_dev600/decompose/task-B`, `2026-10-12_kaan_strategies_dev600/negation`, `2026-10-12_kaan_strategies_dev600/negation/task-B`, `2026-10-12_kaan_strategies_dev600/xlang`, `2026-10-12_kaan_strategies_dev600/xlang/task-B`, `2026-10-12_kaan_retrievers_devA300/bm25`, `2026-10-12_kaan_retrievers_devA300/bm25-mt`, `2026-10-12_kaan_retrievers_devA300/embed-e5-small`, `2026-10-12_kaan_retrievers_devA300/hybrid`, `2026-10-12_kaan_retrievers_devA300/vote-section-hybrid`, `2026-10-12_kaan_retrievers_valA580/bm25-mt`, `2026-10-12_kaan_retrievers_valA580/embed-e5-small`, `2026-10-12_kaan_retrievers_valA580/hybrid`
 - **rashad** (86): `baseline-v0`, `contract-v2-dev`, `s2-A-v3-topic-first_attempt1`, `s2-A-v3-topic-first`, `s2-C-v4-topic-first-examples`, `s2-A300-A-v3-fulldoc`, `s2-A300-A-v3-fulldoc-reparsed`, `s2-A60-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-reparsed`, `s2-A240-A-v3-fulldoc`, `s2-A60-A-v3-fulldoc-max256`, `s2-A60-A-v3-fulldoc-max256-reparsed`, `s2-A60-A-v3-fulldoc-jsonmode_attempt1`, `s2-A60-A-v3-fulldoc-jsonmode_attempt2_stopped`, `s3-E1-A60/fulldoc-prompt`, `s3-E1-A60/fulldoc-schema`, `s3-E2-A300/fulldoc-schema`, `s3-E2-A300/section-schema`, `2026-10-08_rashad_retrieval-check_embed-e5-small-merge`, `2026-10-08_rashad_embed-vs-section_devA300/embed-e5-small`, `2026-10-08_rashad_embed-vs-section_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small`, `2026-10-08_rashad_evidence-padding-e3_devA300/embed-e5-small_all-labels`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section`, `2026-10-08_rashad_evidence-padding-e3_devA300/vote-section_all-labels`, `2026-10-08_rashad_thinking-equivalence_devA20/embed-e5-small`, `2026-10-08_rashad_thinking-equivalence_devA20/vote-section`, `2026-10-08_rashad_e3-embed-errors_devA300`, `2026-10-08_rashad_search-grid_devA201`, `2026-10-08_rashad_evidence-cited-pieces-e4_devA300`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-a`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-b`, `2026-10-08_rashad_evidence-forms-e4_devA300/form-c`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/embed-e5-small`, `2026-10-08_rashad_section-k12-vs-embed-thinking_devA300/vote-section-embed-e5-small-k12`, `2026-10-08_rashad_evidence-loss-e4_devA201`, `2026-10-08_rashad_route-check_devA300`, `2026-10-08_rashad_section-route-vs-embed_devA300/embed-e5-small`, `2026-10-08_rashad_section-route-vs-embed_devA300/section-route`, `2026-10-09_rashad_route-check_valA580`, `2026-10-09_rashad_section-route-vs-embed_valA300/embed-e5-small`, `2026-10-09_rashad_section-route-vs-embed_valA300/section-route`, `2026-10-09_rashad_unseen-booklets_15`, `2026-10-09_rashad_evidence-check_devA300`, `2026-10-09_rashad_router-stress_300`, `2026-10-09_rashad_hygiene`, `2026-10-09_rashad_speed-memory_dev44`, `2026-10-09_rashad_v3-topic-first_devB300-run1`, `2026-10-09_rashad_v3-topic-first_devB300-run2`, `2026-10-09_rashad_v3-schema_devB300`, `2026-10-09_rashad_taskb-4arm_devB300/A-v3-plain`, `2026-10-09_rashad_taskb-4arm_devB300/B-v3-schema`, `2026-10-09_rashad_taskb-4arm_devB300/C-v5-min`, `2026-10-09_rashad_taskb-4arm_devB300/D-v5-ballot`, `2026-10-09_rashad_prompt-snapshot_devAB-valA`, `2026-10-09_rashad_container-speed_devA300`, `2026-10-09_rashad_stability-1_dev600`, `2026-10-09_rashad_stability-1_dev600/task-B`, `2026-10-09_rashad_taskb-context_devB300/B-current`, `2026-10-09_rashad_taskb-context_devB300/B-cut`, `2026-10-09_rashad_taskb-context_devB300/B-para`, `2026-10-09_rashad_analysis-offline_devA-valA-devB`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-current`, `2026-10-09_rashad_taskb-cut-confirm_valB580/B-cut`, `2026-10-09_rashad_label-errors_devA300/A-current`, `2026-10-09_rashad_label-errors_devA300/L1`, `2026-10-09_rashad_label-errors_devA300/L2`, `2026-10-09_rashad_label-errors-confirm_valA580/A-current`, `2026-10-09_rashad_label-errors-confirm_valA580/L1`, `2026-10-09_rashad_label-errors-confirm_valA580/L2`, `2026-10-09_rashad_context-curve_devA100/embed-e5-small`, `2026-10-09_rashad_context-curve_devA100/full`, `2026-10-09_rashad_context-curve_devA100/section-k1`, `2026-10-09_rashad_context-curve_devA100/section-k2`, `2026-10-09_rashad_context-curve_devA100/section-k4`, `2026-10-09_rashad_context-curve_devA100/section-route`, `2026-10-09_rashad_closed-book_devA300/closed-book`, `2026-10-09_rashad_closed-book_devA300/section-route`, `2026-10-09_rashad_llm-router_dev300-stress300`, `2026-10-09_rashad_final-defaults_dev600`, `2026-10-09_rashad_final-defaults_dev600/task-B`, `2026-10-09_rashad_prompt-snapshot-final_devAB-valA`, `2026-10-10_rashad_stability-2_dev600`, `2026-10-10_rashad_stability-2_dev600/task-B`, `2026-10-10_rashad_stability-3_dev600`, `2026-10-10_rashad_stability-3_dev600/task-B`
 
 ## Notes per run
@@ -983,6 +1008,107 @@ point's requests were last sent eight hours before).
 
 Task B's `run.json` is in `task-B/`.
 
+### Strategies on dev: cross-language tournament, negation check, claim decomposition (one interleaved run, 600 cases)
+
+**Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small MT_MODEL_DIR=models/m2m100_418M-ct2
+python3 scripts/paired_run.py --cases data/dev/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-12_kaan_strategies_dev600 --min-interval 2 --arm '{"name":"base"}' --arm '{"name":"xlang",
+"strategy_a":"xlang","strategy_b":"xlang"}' --arm '{"name":"negation","strategy_a":"negation","strategy_b":"negation"}'
+--arm '{"name":"decompose","strategy_a":"decompose","strategy_b":"decompose"}'`; 13:13 to 16:22 UTC, four arms
+rotating, `swiss-ai/apertus-v1.5-8b` on Public AI. 600 responses per arm, 0 HTTP 429, 0 retries; one xlang call
+(row 980 A) failed to connect and that case was answered the normal way, as designed. Scores: the starter's
+`evaluate.py` at `559b598` (`official_score.txt` per arm); tables and offline rules: `scripts/strategy_analysis.py`
+(`analysis.json`).
+
+| | base | xlang | negation | decompose |
+|---|---|---|---|---|
+| Task A Macro-F1 (right of 300) | 0.9833 (295) | 0.9799 (294) | **0.9867** (296) | 0.9632 (289) |
+| Task A evidence | 0.9851 | 0.9801 | **0.9900** | 0.9652 |
+| Task B Macro-F1 (right of 300) | 0.9666 (290) | **0.9699** (291) | 0.9597 (288) | 0.9370 (281) |
+| Calls per case A / B | 1.0 / 1.0 | 1.70 / 1.76 | 2.99 / 3.0 | 1.72 / 1.73 |
+| Mean input tokens A / B | 1,238 / 1,231 | 2,060 / 2,106 | 2,642 / 2,636 | 1,861 / 1,842 |
+| Mean local time A / B (ms) | 39 / 2 | 2,205 / 2,080 | 58 / 6 | 25 / 51 |
+| Flips A (wrong→right / right→wrong) | – | 0 / 1 | 1 / 0 | 0 / 6 |
+| Flips B | – | 2 / 1 | 0 / 2 | 0 / 9 |
+| REF SCORE estimate (base = best team) | 0.984 | 0.774 | 0.833 | 0.858 |
+
+Local time = case time minus the model's time (what the organisers' T counts); the tournament's is the local
+translation (mean 3.2 s per translated case).
+
+**Offline rules** (from the saved sub-answers, no new calls): xlang "agree else neutral" 0.937 / 0.915, "side S
+only" 0.960 / 0.954, "side C only" 0.956 / 0.927 (A / B), all below what ran. Negation "consistent else neutral"
+0.932 / 0.946. Decompose "majority of parts" 0.980 / 0.960 (better than "any part contradicted", still below base).
+
+**Negation consistency as an error detector.** Task B: all 10 of base's wrong answers are among the 23 cases
+where the claim's and the negation's labels are inconsistent (13 of those 23 are right); none among the 275
+consistent. Task A: 4 of the 5 wrong answers among 19 inconsistent cases. The check finds errors but its rule
+does not fix them.
+
+### Retrievers with the model, routing off: all 300 dev task A cases (one interleaved run, five arms)
+
+**Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small MT_MODEL_DIR=models/m2m100_418M-ct2
+python3 scripts/paired_run.py --cases output/robustness/devA300.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-13_kaan_retrievers_devA300 (renamed, see below) --min-interval 2 --arm '{"name":"embed-e5-small","context_a":
+"embed-e5-small"}' --arm '{"name":"bm25","context_a":"bm25"}' --arm '{"name":"bm25-mt","context_a":"bm25-mt"}' --arm
+'{"name":"hybrid","context_a":"hybrid"}' --arm '{"name":"vote-section-hybrid","context_a":"vote-section-hybrid"}'`;
+16:23 to 17:39 UTC. `output/robustness/devA300.jsonl` = the 300 task A lines of `data/dev/cases.jsonl`. The folder
+was named with the machine's local date (13 October, Hong Kong time) and renamed to the UTC date during the run;
+the predictions and raw answers were written in full, but paired_run's final `run.log` write failed on the old
+path, so each arm's `run.log` was rebuilt from its raw answers (0 failed calls, 0 unparseable answers in every arm).
+
+Every arm is a retriever alone, as a case that routing cannot handle would get it: top 8 chunks of at most 1,000
+characters, prompt `A-v3-excerpts`, evidence `cited-pieces`. Scores: the starter's `evaluate.py` at `559b598`.
+
+| Arm | Right of 300 | Macro-F1 | Evidence | Mean input tokens | Mean / p95 time (ms) |
+|---|---|---|---|---|---|
+| embed-e5-small (today's fallback) | 270 | 0.900 | 0.682 (137/201) | 1,868 | 2,240 / 3,546 |
+| bm25 | 248 | 0.827 | 0.507 (102/201) | 2,396 | 2,245 / 2,840 |
+| **bm25-mt** | **289** | **0.963** | **0.771 (155/201)** | 2,505 | 2,095 / 3,196 |
+| hybrid | 281 | 0.936 | 0.766 (154/201) | 2,362 | 2,317 / 3,750 |
+| vote-section-hybrid | 276 | 0.920 | 0.741 (149/201) | 2,362 | 2,281 / 3,920 |
+
+For comparison, `section-route` (routing on) in the same evening's strategies run: 295 right, 0.983, evidence 0.985.
+
+**Paired against embed-e5-small** (cases only one arm got right; two-sided sign test): bm25-mt 25 vs 6 (p = 0.0009),
+hybrid 17 vs 6 (p = 0.035). bm25-mt against hybrid: 13 vs 5 (p = 0.096).
+
+**Where bm25-mt gains** (right of the group, embed-e5-small → bm25-mt): gold neutral 86/99 → 95/99, cross-language
+176/200 → 192/200, law claims 30/39 → 37/39, detail claims 37/43 → 42/43, summary claims 58/67 → 63/67. For a claim
+the booklet does not cover, e5 still finds chunks that sound related and the model then calls them support or
+contradiction; exact words on the translated claim find nothing convincing, so the model answers neutral.
+
+Offline (R0) hybrid had the higher hit rate (0.866 against 0.851), but with the model bm25-mt answers better; the
+hit rate counts the gold passage among 8 chunks, not what else the 8 chunks contain.
+
+### Retrievers with the model on val, routing off: all 580 val task A cases (confirmation, three arms)
+
+**Command** (from `track_2a/`): `EMBED_MODEL_DIR=models/multilingual-e5-small MT_MODEL_DIR=models/m2m100_418M-ct2
+python3 scripts/paired_run.py --cases data/val/cases.jsonl --data-dir output/data_dev --out-dir
+docs/runs/2026-10-12_kaan_retrievers_valA580 --min-interval 2 --arm '{"name":"embed-e5-small","context_a":
+"embed-e5-small"}' --arm '{"name":"bm25-mt","context_a":"bm25-mt"}' --arm '{"name":"hybrid","context_a":"hybrid"}'`;
+17:41 to 18:49 UTC. The val booklet missing locally (`2025_02_09_fr.pdf`) was fetched first with
+`scripts/fetch_dev_booklets.py --cases data/val/cases.jsonl`. 0 failed calls, 0 unparseable answers, 0 HTTP 429;
+embed-e5-small had one answer citing no valid page (counted by the scorer as given). The two arms that gained at
+least 0.01 on dev against embed-e5-small (bm25-mt +0.064, hybrid +0.037) are confirmed here; vote-section-hybrid
+(+0.020 on dev, below hybrid) was left out to save calls.
+
+| Arm | Right of 580 | Macro-F1 | Evidence | Mean input tokens | Mean / p95 time (ms) |
+|---|---|---|---|---|---|
+| embed-e5-small (today's fallback) | 505 | 0.871 | 0.589 (236/401) | 1,856 | 2,070 / 2,706 |
+| **bm25-mt** | 535 | **0.923** | 0.706 (283/401) | 2,522 | 2,419 / 3,100 |
+| **hybrid** | **537** | **0.926** | **0.713 (286/401)** | 2,381 | 2,341 / 3,446 |
+
+Paired (cases only one arm got right; two-sided sign test): bm25-mt vs embed-e5-small 51 vs 21 (p = 0.0005),
+hybrid vs embed-e5-small 48 vs 16 (p = 0.0001), bm25-mt vs hybrid 19 vs 21 (p = 0.87, no difference).
+
+By group (right of the group; e5 / bm25-mt / hybrid): gold neutral 160 / 167 / 162 of 179; gold entailment or
+contradiction 345 / 368 / 375 of 401; same language 175 / 188 / 181 of 196; cross-language 330 / 347 / 356 of 384.
+
+**Verdict.** On cases nobody looked at, both new retrievers beat today's fallback by about 0.05 Macro-F1 and 0.12
+evidence, and are equal to each other. On dev bm25-mt was ahead of hybrid (13 vs 5, p = 0.096). bm25-mt needs no
+embedding of the booklet (today's fallback embeds the whole booklet on its first case: the slowest local step),
+only the translation of one claim.
+
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 
 - Before run 1, `scripts/canary_taskb.py` re-sent the 30 canary cases (`docs/canary_taskb.json`) with exactly the baseline request (v3-topic-first, max_tokens 32, no response_format, temperature 0, `swiss-ai/apertus-v1.5-8b` on Public AI).
@@ -1023,6 +1149,30 @@ Task B's `run.json` is in `task-B/`.
 - CPU seconds to embed (process CPU time over all threads, 4 cores, measured per page while filling the cache): e5 24.0 s per whole booklet, 10.3 s for the vote section of a first case; Granite 32.4 s and 15.8 s. Embedding one claim: e5 0.071 s, Granite 0.043 s. Restricting the search to the vote section cuts the first-case cost to about a third, which addresses the p95 time seen in E3.
 - At equal settings without neighbours, Granite finds the passage more often than e5 (vote section, k 8: 0.801 against 0.761; k 12: 0.896 against 0.846), but at the same k it picks longer chunks, so it sends more characters (k 12 on the vote section: 10,272, 11.4 % of the booklet, over the limit; k 8 on the whole booklet: 6,777 against 5,386), and it costs more CPU per booklet (32.4 s against 24.0 s). Under the 10 % limit e5 at k 12 on the vote section is best. Granite is therefore not recommended and not added to the Dockerfile.
 - Cross-language cases gain most from a larger context: the rule "double" lifts cross-language hit rates by up to 0.18 (less than 0.01 when the context is already large) at the cost of more characters; "section" fixes cross-language cases at 0.858 (the section holds the passage) but sends about a third of the booklet.
+
+### R0: retrievers offline on the 201 dev task A cases with a gold passage (no model calls)
+
+**Command** (from `track_2a/`, for each variant): `EMBED_MODEL_DIR=models/multilingual-e5-small
+MT_MODEL_DIR=models/m2m100_418M-ct2 python3 scripts/retrieval_check.py --variant <name> --per-case
+output/robustness/r0_<name>.jsonl`; per-case results in each subfolder's `per_case.jsonl`. "Hit" = at least one of
+the 8 sent chunks matches the gold passage (partial ratio ≥ 90 after normalising); "ceiling" = a sent page would
+pass the evidence check.
+
+| Variant | Hit | Same language (67) | Cross-language (134) | Evidence ceiling | Mean chars sent |
+|---|---|---|---|---|---|
+| embed-e5-small (today's fallback) | 0.741 | 0.851 | 0.687 | 0.612 | 5,386 |
+| bm25 | 0.547 | 0.821 | 0.410 | 0.443 | 6,728 |
+| bm25-mt (claim translated first) | 0.851 | 0.821 | 0.866 | 0.682 | 7,238 |
+| hybrid (e5 + bm25-mt, RRF) | 0.866 | 0.866 | 0.866 | 0.672 | 6,796 |
+| vote-section-hybrid | **0.876** | 0.866 | **0.881** | 0.682 | 6,853 |
+
+embed-e5-small reproduces the recorded 0.741 (`2026-10-08_kaan_retrieval-check_embed-e5-small`), so the
+measurement matches. By claim type (router's part, hit rate e5 → vote-section-hybrid): committee 0.74 → 0.93,
+council 0.68 → 0.79, detail 0.88 → 0.96, law 0.84 → 1.00, summary 0.71 → 0.85.
+
+Plain BM25 fails across languages (0.410), as expected: a German claim shares few words with a French booklet.
+Translating the claim locally fixes that (0.866 cross-language) and is the largest single gain; fusing with e5
+adds a little on same-language cases.
 
 ### 2026-10-08, Part 1: why E3's embedding arm was wrong (search miss or reading error), no model calls
 

@@ -1,0 +1,148 @@
+{
+  "cases": 600,
+  "responses": 300,
+  "issues": {
+    "missing or duplicate response": 300
+  },
+  "tasks": {
+    "A": {
+      "cases": 300,
+      "macro_f1": 0.0,
+      "threshold": 0.6,
+      "passes_threshold": false,
+      "accuracy": 0.0,
+      "per_class": {
+        "entailment": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 102
+        },
+        "neutral": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 99
+        },
+        "contradiction": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 99
+        }
+      },
+      "evidence_score": 0.0,
+      "evidence": {
+        "cases": 201,
+        "found": 0,
+        "without_gold_passage": 0
+      }
+    },
+    "B": {
+      "cases": 300,
+      "macro_f1": 0.9699269594296928,
+      "threshold": 0.75,
+      "passes_threshold": true,
+      "accuracy": 0.97,
+      "per_class": {
+        "entailment": {
+          "precision": 0.9805825242718447,
+          "recall": 0.9901960784313726,
+          "f1": 0.9853658536585366,
+          "support": 102
+        },
+        "neutral": {
+          "precision": 1.0,
+          "recall": 0.9393939393939394,
+          "f1": 0.96875,
+          "support": 99
+        },
+        "contradiction": {
+          "precision": 0.9326923076923077,
+          "recall": 0.9797979797979798,
+          "f1": 0.9556650246305419,
+          "support": 99
+        }
+      }
+    }
+  },
+  "languages": {
+    "A de->de": {
+      "cases": 34,
+      "macro_f1": 0.0
+    },
+    "A de->fr": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "A de->it": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "A fr->de": {
+      "cases": 34,
+      "macro_f1": 0.0
+    },
+    "A fr->fr": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "A fr->it": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "A it->de": {
+      "cases": 34,
+      "macro_f1": 0.0
+    },
+    "A it->fr": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "A it->it": {
+      "cases": 33,
+      "macro_f1": 0.0
+    },
+    "B de->de": {
+      "cases": 34,
+      "macro_f1": 1.0
+    },
+    "B de->fr": {
+      "cases": 33,
+      "macro_f1": 0.9696342305037957
+    },
+    "B de->it": {
+      "cases": 33,
+      "macro_f1": 0.9393312002007654
+    },
+    "B fr->de": {
+      "cases": 34,
+      "macro_f1": 0.9121739130434783
+    },
+    "B fr->fr": {
+      "cases": 33,
+      "macro_f1": 1.0
+    },
+    "B fr->it": {
+      "cases": 33,
+      "macro_f1": 0.9696342305037957
+    },
+    "B it->de": {
+      "cases": 34,
+      "macro_f1": 0.9696342305037957
+    },
+    "B it->fr": {
+      "cases": 33,
+      "macro_f1": 0.9696342305037957
+    },
+    "B it->it": {
+      "cases": 33,
+      "macro_f1": 1.0
+    }
+  },
+  "usage_mean_per_case": {
+    "input_tokens": 1053.1833333333334,
+    "output_tokens": 7.336666666666667,
+    "inference_time_ms": 2540.5266666666666
+  }
+}

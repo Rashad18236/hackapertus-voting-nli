@@ -113,8 +113,9 @@ def _get_embedder():
     return _embedder
 
 
-def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
-    """Return the top_k chunks most similar to the claim, as [(page, text)] in page order."""
+def chunk_scores(pages, claim_text, embedder=None):
+    """(chunks, scores): every chunk of the pages as [(page, text)] in page order, and its cosine similarity to
+    the claim. Shared by select_chunks and the hybrid variants (src/contexts/bm25.py)."""
     embedder = embedder or _get_embedder()
     key = hashlib.sha256(parse.booklet_prompt_text(pages).encode("utf-8")).hexdigest()
     if key not in _chunk_cache:
@@ -122,9 +123,16 @@ def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
         _chunk_cache[key] = (chunks, embedder.embed([f"passage: {text}" for _, text in chunks]))
     chunks, vectors = _chunk_cache[key]
     if not chunks:
-        return []
+        return [], []
     query = embedder.embed([f"query: {claim_text}"])[0]
-    scores = vectors @ query  # cosine similarity, since all vectors have length 1
+    return chunks, vectors @ query  # cosine similarity, since all vectors have length 1
+
+
+def select_chunks(pages, claim_text, embedder=None, top_k=TOP_K):
+    """Return the top_k chunks most similar to the claim, as [(page, text)] in page order."""
+    chunks, scores = chunk_scores(pages, claim_text, embedder)
+    if not chunks:
+        return []
     best = sorted(range(len(chunks)), key=lambda i: -scores[i])[:top_k]
     return [chunks[i] for i in sorted(best)]  # chunk order = page order
 

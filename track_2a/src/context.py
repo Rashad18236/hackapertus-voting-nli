@@ -18,6 +18,12 @@ replaced by "_"):
   the answer cites paragraphs. Falls back to embed-e5-small when it cannot route.
 - "closed-book" (contexts/closed_book.py, session 9, E2; information only): no booklet text, only the
   claim and the vote's name.
+- "bm25", "bm25-mt", "hybrid", "vote-section-hybrid" (contexts/bm25.py and one file each; robustness
+  experiments, Kaan): the same chunks as embed-e5-small ranked by BM25 keywords, BM25 on the claim translated
+  into the booklet's language (local MT, src/translate.py), or a fusion of e5 and that BM25 ranking, over the
+  whole booklet or the vote's pages.
+- "section-route-hybrid", "section-route-bm25-mt" (contexts/section_route_hybrid.py, section_route_bm25_mt.py):
+  section-route with vote-section-hybrid or bm25-mt as its FALLBACK instead of embed-e5-small.
 
 Every variant runs locally: no Apertus call, no tokens. Apertus alone makes
 the entailment decision; a variant only chooses what it reads.
@@ -37,13 +43,14 @@ and a test. Never change what an existing name does; changed behaviour gets a
 new name, so every recorded run names exactly what ran.
 """
 
-from src.contexts import (closed_book, embed_e5_small, embed_granite_97m_r2, full, section_route, vote_section,
-                          vote_section_embed_e5_small, vote_section_embed_e5_small_k12,
-                          vote_section_embed_granite_97m_r2)
+from src.contexts import (bm25, bm25_mt, closed_book, embed_e5_small, embed_granite_97m_r2, full, hybrid,
+                          section_route, section_route_bm25_mt, section_route_hybrid, vote_section, vote_section_embed_e5_small,
+                          vote_section_embed_e5_small_k12, vote_section_embed_granite_97m_r2, vote_section_hybrid)
 
 VARIANTS = {v.NAME: v for v in (full, vote_section, embed_e5_small, vote_section_embed_e5_small, embed_granite_97m_r2,
                                 vote_section_embed_granite_97m_r2, vote_section_embed_e5_small_k12, section_route,
-                                closed_book)}
+                                closed_book, bm25, bm25_mt, hybrid, vote_section_hybrid, section_route_hybrid,
+                                section_route_bm25_mt)}
 MODES = tuple(VARIANTS)
 
 
