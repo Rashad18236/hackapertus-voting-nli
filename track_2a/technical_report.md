@@ -24,7 +24,17 @@ The central experiment, full booklet against selected context, decided the desig
 dev cases [E1-curve] the whole booklet scored 0.858 with 37,586 input tokens per case, the part of the vote that
 the claim names (`section-route`) 0.989 with 1,248; without any booklet text Apertus scores 0.435 [E2-cb].
 
-PENDING-FINAL-TABLE
+| Final defaults, published image [FIN] | dev | val | probe (2 unseen dates) |
+|---|---|---|---|
+| Task A Macro-F1 (weight 0.30 of the score) | **0.980** | **0.959** | **0.971** |
+| Task A evidence (0.12) | **0.985** | **0.955** | **0.954** |
+| Task A tokens per case, input + output (K, 0.09) | 1,238 + 14.5 | 1,206 + 14.5 | 1,136 + 14.5 |
+| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.018 / 0.155 s (repeat: 0.108) | 0.008 / 0.010 s | 0.026 / 0.237 s |
+| Task B Macro-F1 (0.28) | **0.987** | **0.968** | **0.977** |
+| Task B tokens per case, input + output (K, 0.06) | 815 + 8.7 | 820 + 9.3 | 789 + 8.9 |
+| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.010 / 0.009 s | 0.007 / 0.007 s | 0.015 / 0.015 s |
+| Labels written by Python (neutral fallback) | 0 of 600 | 1 of 1,160 | 0 of 188 |
+| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.909 / 0.851** | **0.908 / 0.906** | **0.897 / 0.825** |
 
 **Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15): TODO, results after the organisers' evaluation.
 
@@ -64,9 +74,8 @@ cases.jsonl ─► src/cli.py ─► src/pipeline.py: worker processes ("lanes")
   onnxruntime; under a 2.5 GiB memory limit one lane. Results do not depend on order, timing or memory: every cache
   is keyed by content, and a check replays the saved answers of all 1,180 dev and val requests and finds every
   request, label and evidence unchanged (G1, G2).
-- `src/llm.py`: the only module that calls a model: OpenAI-style `chat/completions` to `BASE_URL` with `API_KEY`,
-  model from `MODEL`, temperature 0, one kept connection. One retry for HTTP 5xx, timeouts and a lost connection,
-  two for HTTP 429; if the endpoint refuses `response_format` or the model name, one fallback each.
+- `src/llm.py`: the only module that calls a model (`chat/completions` at `BASE_URL`, temperature 0, one kept
+  connection, retries for 5xx, timeouts and 429).
 
 ### 3.1 How document context is prepared and supplied to the model
 
@@ -86,10 +95,9 @@ claim (e5). (5) *Fallback:* no part, no vote, or any error → the 8 chunks of t
 
 **What the prompt contains.** System: the instruction and the decision rule (`A-v4-section-route-L1`):
 
-> Decide in this order: 1. Does the reference text deal with the subject of the claim at all? If not, the
-> label is 1 (neutral). 2. If it does: 0 (entailment) if the reference text supports the claim;
-> 2 (contradiction) only if the reference text states something that cannot be true together with the
-> claim; otherwise 1 (neutral: insufficient information). Missing information is never a contradiction. […]
+> Decide in this order: 1. Does the reference text deal with the subject of the claim at all? If not, the label is
+> 1 (neutral). 2. If it does: 0 if it supports the claim; 2 only if it states something that cannot be true together
+> with the claim; otherwise 1. Missing information is never a contradiction. […]
 
 User: `PART:` (which part, whose voice), `REFERENCE TEXT:` with paragraphs `[1] … [n]`, `VOTE:`, `CLAIM:`. Nothing
 is translated. `response_format: json_schema` forces `{"paragraphs": [≤ 3 numbers], "label": 0|1|2}`. Task B sends
@@ -107,7 +115,7 @@ line and the 4 paragraphs whose first 300 characters are most similar to the cla
 | Which part the claim names | ✓ (regular expressions) | | only when the rules find none |
 | Which vote; where its parts start | ✓ (contents, checked headings) | vote by meaning if the title match fails | (tried, not used: section 4) |
 | Which paragraphs | ✓ (the part) | parts over 8,000 characters; fallback; task B references over 3,000 characters | |
-| **Label** | only the neutral fallback for a failed call or an unreadable answer: PENDING-PY-LABELS | | **✓ every label** |
+| **Label** | only the neutral fallback for a failed call or an unreadable answer: 1 of 2,128 final labels (a val task B answer), 0 in task A | | **✓ every label** |
 | Which paragraphs justify it; evidence | copies what Apertus cited, with its page | | ✓ cites them |
 
 ## 4. Use of Apertus
@@ -116,8 +124,6 @@ line and the 4 paragraphs whose first 300 characters are most similar to the cla
   `swiss-ai/apertus-v1.5-8b` on Public AI. Which model and server the evaluation uses is not known to us.
 - **How:** inference only, zero-shot, temperature 0; one call per case, plus one when the rules do not know a claim's
   opening; answer budget 128 tokens (task A), 32 (task B). No fine-tuning. Reached only through `BASE_URL`.
-- **Labels:** the dataset README defines them ("May be `Entailment` (`0`), `Unrelated / Neutral` (`1`) or
-  `Contradiction` (`2`)"); the prompts use the official guide's wording, which agrees.
 - **Apertus as parser** (session 11). We tried Apertus in the two roles Python plays before the answer; every
   parsing call counts in the case's tokens, a booklet's call in its first case:
 
@@ -134,9 +140,8 @@ line and the 4 paragraphs whose first 300 characters are most similar to the cla
 
 - **Dataset:** `OSTswiss/MNLIoverSwissVotingBooklets` v1.1 (commit `9ff08597`, MIT): 1,488 rows, 335 exact
   duplicates; each row gives one task A and one task B case.
-- **Splits** (by voting date, seed 42, duplicates removed): test 5 dates, 267 rows; dev 300 rows; val the 580
-  remaining rows of the dev dates (never used to change a rule). **Probe:** the 94 test rows of two of the five test
-  dates (2021-03-07, 2025-09-28), opened in session 10; the other three stay sealed.
+- **Splits** (by voting date, duplicates removed): test 5 dates (267 rows); dev 300 rows; val 580 rows of the dev
+  dates (never used to change a rule); **probe:** the 94 test rows of 2021-03-07 and 2025-09-28; three dates sealed.
 - **Booklets:** the Federal Chancellery's PDFs, downloaded by script and not committed. For parser coverage, every
   federal booklet from 2016 to 2026 in de, fr and it (93 PDFs; the sealed dates never downloaded). Swiss copyright
   law exempts official reports of authorities (Art. 5 URG). No personal data.
@@ -152,10 +157,9 @@ switched off. Changes that should not change answers are adopted only if every r
 
 **Parser coverage** (93 booklets 2016–2026; no labels needed: the three languages of a date must agree)
 [COV]: booklets whose votes all pass 64 → **88**; votes passing every check 178 → **244 of 249** (all 249 with a
-usable part); dates where the languages disagree 2 → 0; probe cases routed 83 → **90 of 94**. Causes fixed, most
-frequent first: the contents layout used until mid-2018 (20 booklets), unreadable fonts (7), a lost heading, one
-failed part failing the whole vote. Left: one joint vote of 2017 without a detail heading (3 booklets), one lost
-heading, one booklet without an arguments entry.
+usable part); dates where the languages disagree 2 → 0; probe cases routed 83 → **90 of 94**. Fixed, most frequent
+first: the contents layout used until mid-2018 (20 booklets), unreadable fonts (7), a lost heading, one failed part
+failing its whole vote.
 
 **Fallback levels, forced** [FB-dev, FB-val]: every case put into a fallback situation by a test-only switch
 ("no part": the router returns nothing; "no vote": the vote match fails). Macro-F1 / evidence, dev; val:
@@ -179,27 +183,32 @@ pypdf) and e5 embedding of long parts (about 3 s each), and two lanes each runni
 changes that keep every request and answer identical (G1, G2): cases needing no embedding first, pages read when
 first needed, onnxruntime threads shared between lanes: task A 0.202 → 0.101 s per case at 0.3 s per request.
 
-PENDING-LT-TABLE
+| Final image, dev, local time per case | 1.0 s per request | 0.3 s | 0.1 s |
+|---|---|---|---|
+| Task A | 0.018 s | 0.155 s (repeat 0.108 s) | 0.316 s |
+| Task B | 0.010 s | 0.009 s | 0.130 s |
+
+Measured the same way and on the same CPUs, session 10's image needs 0.223 s per case for task A at 0.3 s and this
+image 0.129 s; single measurements vary by up to ±0.03 s. What is left is the time to the first request (about
+3.5 s: container, Python, the first booklet), PDF reading and long parts' embedding, which with a fast model no
+longer hide behind the requests.
 
 **Memory** [MEM]: each lane peaks at about 1.2 GiB, almost all of it loading e5; two lanes needed 3 GiB. Under a
 2.5 GiB limit the image now runs one lane: every response, with the same labels, at 2 GiB and 1.5 GiB (2 CPUs);
-1 GiB fails (e5's load peak). Task B needs under 0.1 GB. PENDING-MEM-FINAL
+1 GiB fails (e5's load peak). Task B needs under 0.1 GB. On the final image, task B (whose selector loads e5 for long references) also needs 1.5 GiB.
 
 **Versions tried in session 11** (each by a rule fixed before its run; a version that fails stays in the code, off):
 
 | Version | Rule, outcome |
 |---|---|
-| Parser fixes (older layout, fonts, per-part validity) | same answers on dev and val, coverage 64 → 88 booklets: **adopted** |
-| Vote-wide / booklet-wide fallback | val Macro-F1 −0.002 / −0.019 against the embedding fallback: not adopted |
-| AP-part after the rules | +0.073 / +0.051 (dev / val) over the best fallback on unknown openings: **adopted** |
-| AP-structure; AP-all | 78.7 % page agreement (needs 95 %); never a default: not adopted |
-| Light-first, lazy pages, shared CPUs | same answers, local time halved: **adopted** |
-| Quantised e5 for task A | changes 50 of 75 cut selections (not the same answers): not adopted |
-| One lane under 2.5 GiB; arena off; token-bounded batches | same answers, 2 GiB reached: **adopted**; the others cost time: not adopted |
-| Task B selectors E, Q, T, H, L | T passes on dev and val: **adopted**; E and Q fail on local time |
+| Parser fixes; light-first, lazy pages, shared CPUs; one lane under 2.5 GiB | same answers (G1, G2), the measure improves: **adopted** |
+| AP-part after the rules; task B selector T | their rules on dev and val: **adopted** |
+| Vote-wide / booklet-wide fallback; AP-structure; quantised e5 (task A); E, Q (task B); arena off | fail their rules: off |
 
 **Probe: two unseen voting dates** (test rows of 2021-03-07 and 2025-09-28, opened in session 10).
-PENDING-PROBE
+Through the final image [FIN-probe]: task A **0.971**, evidence **0.954** (62 of 65), task B **0.977**; REF SCORE
+0.897 / 0.825. Session 10's image: 0.960, 0.908, 0.971. 90 of 94 task A cases are routed (83 before step 1's parser
+fixes); the 4 others are claims about a committee in votes that have none, answered by the fallback.
 
 ## 7. Limitations
 
@@ -207,9 +216,8 @@ PENDING-PROBE
   probe (two unseen dates) lands at val's level; three test dates and the private set are unseen.
 - **`section-route` depends on the booklet layout** (2016–2026 checked: 244 of 249 votes pass). A claim whose opening
   neither the rules nor Apertus place, or a vote the parser cannot read, falls back (answered, less accurate).
-- **Endpoint and speed.** Public AI served the same model name from two backends that answer differently; our
-  scores hold for the one that answered. With a fast model (0.3 s per request) PDF reading and embedding no longer
-  hide behind the requests (section 6).
+- **Endpoint and speed.** Our scores hold for the backend that answered (Public AI served two); with a fast model,
+  PDF reading and embedding no longer hide behind the requests.
 - **Not political advice.** The system checks a claim against the booklet's text only. Its answers are not
   voting recommendations. Every task A label 0 or 2 comes with the booklet page and the verbatim text it rests on.
 
@@ -217,11 +225,11 @@ PENDING-PROBE
 
 - **Published image:** `docker pull ghcr.io/rashad18236/hackapertus-voting-nli:latest` (built from `main` by
   `.github/workflows/publish-image.yml`, which also runs it on a fresh runner without internet); then the
-  organisers' command with `BASE_URL` and `API_KEY` (README). This report's numbers: PENDING-IMAGE.
+  organisers' command with `BASE_URL` and `API_KEY` (README). This report's final numbers come from `sha-bb2d08fea0f1` (the `session-11` tag of the branch).
 - **From source:** `make run` builds the image and answers `examples/cases.jsonl`.
-- **Hardware:** CPU only; 2 CPUs and 4 GB measured; PENDING-MEMORY
-- **Determinism:** temperature 0, local steps deterministic, caches keyed by content; a fake model
-  (`scripts/stub_llm.py`) replays saved answers by request hash (G1, G2), plus unit, contract and pipeline tests.
+- **Hardware:** CPU only; 2 CPUs and 4 GB measured (peak 2.3 GiB with two worker processes); the image also answers
+  every case with 1.5 GiB (one worker process under 2.5 GiB) [MEM].
+- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 273 tests.
 
 ## License
 
@@ -233,6 +241,9 @@ Code: Apache-2.0 (the repository's `LICENSE`). Report text: Creative Commons Att
   `gitlab.com/ifsoftware/hackapertus-starter`. Apertus v1.5, Swiss AI Initiative.
 - Wang, L. et al. (2024). *Multilingual E5 Text Embeddings: A Technical Report.* arXiv:2402.05672
   (`intfloat/multilingual-e5-small`, MIT). pypdf (BSD-3), rapidfuzz (MIT), onnxruntime (MIT), requests (Apache-2.0).
-- Runs (`docs/runs/` + name): PENDING-REFS COV `2026-10-12_rashad_parser-coverage_booklets93`; FB-dev / FB-val
+- Runs (`docs/runs/` + name): FIN `2026-10-13_rashad_final-s11_{dev600,val1160}`, FIN-probe
+  `2026-10-13_rashad_final-s11_probe188`; STEP4 `2026-10-12_rashad_local-time-step4_devA300`; MEM
+  `2026-10-13_rashad_memory-step5_devA300`; TB-dev / TB-val `2026-10-13_rashad_taskb-selectors_{devB300,valB580}`;
+  AP runs `2026-10-1*_rashad_ap-*`; replay reference `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`; COV `2026-10-12_rashad_parser-coverage_booklets93`; FB-dev / FB-val
   `2026-10-12_rashad_fallbacks_{devA300,valA300}`; from 2026-10-09: E1-curve `context-curve_devA100`, E2-cb
   `closed-book_devA300`.

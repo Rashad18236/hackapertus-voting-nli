@@ -23,7 +23,30 @@ final runs (2,128 cases): the neutral fallback for 1 val task B answer it could 
 | 5 memory, task A, 2 CPUs | needs 3 GiB (2 GiB: OOM) | **1.5 GiB** (one lane under 2.5 GiB) | SAME-ANSWER RULE: **adopted**; target 2 GiB reached |
 | 6 task B tokens | 1,994 input tokens per case (dev), 0.967 | **815**, 0.987 (selector T) | TASK B RULE on dev and val: **adopted** |
 
-PENDING-FINAL-FIRSTPAGE
+**Final defaults through the published image** (`sha-bb2d08fea0f1`, the `session-11` tag; task A and B in separate
+containers; every answer from one backend), session 10's final image → session 11's (different runs):
+
+| | dev | val | probe |
+|---|---|---|---|
+| Task A Macro-F1 / evidence | 0.983 / 0.980 → **0.980 / 0.985** | 0.959 / 0.955 → **0.959 / 0.955** | 0.960 / 0.908 → **0.971 / 0.954** |
+| Task B Macro-F1 | 0.967 → **0.987** | 0.961 → **0.968** | 0.971 → **0.977** |
+| Task A tokens per case (input + output) | 1,238 + 14.5 → 1,238 + 14.5 | 1,206 + 14.5 → 1,206 + 14.5 | 1,232 + 14.4 → 1,136 + 14.5 |
+| Task B tokens per case | 1,994 + 8.4 → **815 + 8.7** | 1,957 + 9.0 → **820 + 9.3** | 1,831 + 8.3 → **789 + 8.9** |
+| Task A local time per case, 1.0 / 0.3 s per request | 0.017 / 0.154 → 0.018 / 0.155 (repeat 0.108) | 0.012 / 0.034 → 0.008 / 0.010 | 0.038 / 0.248 → 0.026 / 0.237 |
+| Task B local time per case, 1.0 / 0.3 s | 0.010 / 0.0068 → 0.010 / 0.009 | 0.0069 / 0.0052 → 0.007 / 0.007 | 0.014 / 0.014 → 0.015 / 0.015 |
+| **REF SCORE**, 1.0 / 0.3 s | 0.870 / 0.824 → **0.909 / 0.851** | 0.873 / 0.888 → **0.908 / 0.906** | 0.850 / 0.777 → **0.897 / 0.825** |
+
+Task A at 0.3 s per request varies by up to ±0.03 s between single measurements; measured on the same CPUs under the
+same conditions, session 10's image needs 0.223 s and session 11's 0.129 s (dev). Local time at 0.1 s per request
+(dev): task A 0.316 s, task B 0.130 s per case. Memory (final image): task A answers every case at 1.5 GiB with 2 or 1
+CPUs (session 10's code needed 3 GiB with 2 CPUs); task B now needs 1.5 GiB (selector T loads e5); 1 GiB fails for
+both. New replay reference: `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`.
+
+**Defaults changed, each by its rule:** parser fixes and per-part validity (step 1, G1/G2); AP-part after the rules
+(step 3, HYBRID RULE); light-first lanes, lazy page reading, onnxruntime threads shared between lanes (step 4,
+SAME-ANSWER RULE); one lane under a 2.5 GiB memory limit (step 5, SAME-ANSWER RULE); task B selector T (step 6, TASK B
+RULE). **The probe before and after:** task A 0.960 / 0.908 → 0.971 / 0.954 (routed 83 → 90 of 94), task B 0.971 →
+0.977.
 
 **Apertus as parser** (details in step 3 below):
 
@@ -141,7 +164,23 @@ selections, so G1 cannot hold.
 
 **FINISH.**
 
-PENDING-FINISH
+The final defaults (`bb2d08f`) through the published image `sha-bb2d08fea0f1` (pulled from ghcr.io, `make run`, task A
+and task B in separate containers, one request per second; `2026-10-13_rashad_final-s11_{dev600,val1160,probe188}`):
+dev task A 0.980 / 0.985, task B 0.987; val 0.959 / 0.955, 0.968; probe 0.971 / 0.954, 0.977; 0 failed calls, 1
+unreadable answer (val task B). Local time of the same image (`local_time_*.json`; 2 CPUs pinned, 4 GB, fake model
+replaying the final answers): dev task A 0.018 / 0.155 / 0.316 s per case at 1.0 / 0.3 / 0.1 s (a repeat at 0.3 s:
+0.108 s), task B 0.010 / 0.009 / 0.130 s; val and probe at 1.0 / 0.3 s in their folders. REF SCORE (`ref_score.json`):
+dev 0.909 / 0.851, val 0.908 / 0.906, probe 0.897 / 0.825. Memory grid of the final image (`memory_final.txt`): task A
+1.5 GiB with 2 or 1 CPUs, task B 1.5 GiB; 1 GiB fails. New replay reference
+`2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA` (1,180 requests; the replay reproduces the final runs
+exactly; also `scripts/local_time.py`'s default table). Checks: 273 tests pass (1 skipped), `build_docs.py --check`
+passes, `technical_report.pdf` has 6 pages; publish-image and clean-machine green on the final defaults' commit.
+
+**For Rashad.** After a merge into `main`: check that `publish-image` ran on `main` and that
+`ghcr.io/rashad18236/hackapertus-voting-nli:latest` pulls without logging in; that is the tag to submit. Before the
+deadline: team name, members and project name in `technical_report.md` and the README. If the organisers' container
+may get less than 1.5 GiB of memory, task B's selector T would need a model-free fallback (selector L passes the
+local-time bound; not run on val).
 
 **Dropped for time:** nothing from the step list. Not built (each named in its step): shared reading of the first
 booklet (step 4), one e5 copy shared by the lanes and dropping page texts (step 5); not measured: E's, Q's and T's local

@@ -334,7 +334,15 @@ committed; every Apertus call counts as tokens (a booklet's call in its first ca
   variants in alternating rounds. New scripts: `parser_coverage.py`, `ap_structure_check.py`, `ap_claim_search.py`,
   `ap_summary.py`, `ap_replay_table.py`, `make_reworded.py`, `fallback_local_time.py`, `taskb_selectors.py`,
   `image_check.py`; `src/timing.py` (PROFILE_PHASES=1), `src/deferral.py`.
-PENDING-CLAUDE-FINAL
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-bb2d08fea0f1`,
+  the `session-11` tag; `docs/runs/2026-10-13_rashad_final-s11_*`): dev task A 0.980 (evidence 0.985), task B 0.987;
+  val 0.959 (0.955), 0.968; probe 0.971 (0.954), 0.977. Tokens per case (dev, input + output): A 1,238 + 14.5,
+  B 815 + 8.7. Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.018 / 0.155 (repeat 0.108) / 0.316 s,
+  B 0.010 / 0.009 / 0.130 s. REF SCORE dev 0.909 / 0.851, val 0.908 / 0.906, probe 0.897 / 0.825 (1.0 / 0.3 s).
+  Memory: both tasks answer every case at 1.5 GiB; 1 GiB fails. Python wrote 1 of 2,128 labels.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA` (also
+  `scripts/local_time.py`'s default table); `scripts/prompt_snapshot.py` pairs a case's parsing calls
+  (`ap_request_sha256`) and G1 compares them.
 
 ## Previous stage: session 10 (2026-10-12 11:42 UTC; ended early, merged before session 11)
 

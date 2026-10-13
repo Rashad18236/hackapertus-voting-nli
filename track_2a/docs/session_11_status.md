@@ -50,18 +50,20 @@ Updated after every step. If the session is restarted with "continue", work goes
   input tokens, local time +0.002 s); E and Q fail on local time.
 - (02:14) Final defaults committed (`bb2d08f`), image `sha-bb2d08fea0f1` = `session-11` published.
 
+- (03:50) FINISH: final runs through `sha-bb2d08fea0f1` (= `session-11`): dev A 0.980 / 0.985, B 0.987; val A 0.959 /
+  0.955, B 0.968; probe A 0.971 / 0.954, B 0.977; 1 Python label (val B). Local time dev A 0.018 / 0.155 (repeat 0.108) /
+  0.316 s, B 0.010 / 0.009 / 0.130 s at 1.0 / 0.3 / 0.1 s. REF SCORE dev 0.909 / 0.851, val 0.908 / 0.906, probe
+  0.897 / 0.825. Memory: 1.5 GiB for both tasks. New replay reference `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`
+  (reproduces the final runs exactly). 273 tests pass; technical report 6 pages; both workflows green on `bb2d08f`.
+
 ## Running
 
-- FINISH (from 02:15): final runs through the image (dev 600, val 1,160, probe 188; task A and B in separate
-  containers). Dev task A: 0.980, evidence 0.985, 1,238 input tokens per case.
-- CPUs 2–3: memory grid of the final image. Then: new replay reference, local time at 1.0 / 0.3 / 0.1 s, REF SCORE,
-  reports, PDF.
+- Nothing.
 
 ## Next
 
-- Step 6 decision and val; FINISH: push, final runs through the image `session-11`, local time at 1.0 / 0.3 / 0.1 s,
-  memory, REF SCORE, new replay reference, reports.
+- Rashad: merge decision for PR #18; team name, members, project name in the report and README.
 
 ## Numbers so far
 
-- Parser coverage: 88 of 93 booklets complete (64 before); probe routed 90 of 94 (83 before).
+- See `docs/session_11_report.md` (first page).
