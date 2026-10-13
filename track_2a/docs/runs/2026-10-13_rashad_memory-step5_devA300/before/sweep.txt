@@ -1,0 +1,13 @@
+A cpus 2 mem 4g: ok |   wall 118.177 s, in flight 30.218 s, local 87.96 s = 0.2932 s per case | peak 2285 MiB
+A cpus 2 mem 3g: ok |   wall 116.357 s, in flight 30.211 s, local 86.146 s = 0.2872 s per case | peak 2288 MiB
+A cpus 2 mem 2g: exit 137; 24 responses missing |   wall 42.018 s, in flight 27.79 s, local 14.227 s = 0.0474 s per case | peak 2048 MiB
+A cpus 1 mem 4g: ok |   wall 215.207 s, in flight 30.241 s, local 184.966 s = 0.6166 s per case | peak 1193 MiB
+A cpus 1 mem 3g: ok |   wall 216.306 s, in flight 30.25 s, local 186.056 s = 0.6202 s per case | peak 1192 MiB
+A cpus 1 mem 2g: ok |   wall 217.675 s, in flight 30.254 s, local 187.421 s = 0.6247 s per case | peak 1193 MiB
+A cpus 1 mem 1.5g: ok |   wall 219.464 s, in flight 30.262 s, local 189.202 s = 0.6307 s per case | peak 1192 MiB
+A cpus 1 mem 1g: exit 137; 24 responses missing |   wall 75.472 s, in flight 27.83 s, local 47.642 s = 0.1588 s per case | peak 1024 MiB
+B cpus 2 mem 4g: ok |   wall 32.22 s, in flight 30.251 s, local 1.969 s = 0.0066 s per case | peak 49 MiB
+B cpus 2 mem 2g: ok |   wall 32.203 s, in flight 30.258 s, local 1.945 s = 0.0065 s per case | peak 49 MiB
+B cpus 2 mem 1.5g: ok |   wall 32.213 s, in flight 30.25 s, local 1.963 s = 0.0065 s per case | peak 49 MiB
+B cpus 2 mem 1g: ok |   wall 32.241 s, in flight 30.269 s, local 1.972 s = 0.0066 s per case | peak 49 MiB
+MEMSWEEP-DONE

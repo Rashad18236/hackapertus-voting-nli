@@ -1,0 +1,17 @@
+arena cpus 2 mem 4g: ok |   wall 134.513 s, in flight 30.213 s, local 104.3 s = 0.3477 s per case | peak 1992 MiB
+arena cpus 2 mem 2g: ok |   wall 135.703 s, in flight 30.221 s, local 105.481 s = 0.3516 s per case | peak 2005 MiB
+arena cpus 2 mem 1.5g: ok |   wall 248.741 s, in flight 30.216 s, local 218.525 s = 0.7284 s per case | peak 1536 MiB
+arena cpus 2 mem 1g: exit 137; 24 responses missing |   wall 41.055 s, in flight 27.806 s, local 13.248 s = 0.0442 s per case | peak 1024 MiB
+arena+bt cpus 2 mem 4g: ok |   wall 129.607 s, in flight 30.229 s, local 99.378 s = 0.3313 s per case | peak 2033 MiB
+arena+bt cpus 2 mem 2g: ok |   wall 138.222 s, in flight 30.223 s, local 107.999 s = 0.36 s per case | peak 2048 MiB
+arena+bt cpus 2 mem 1.5g: ok |   wall 239.638 s, in flight 30.228 s, local 209.41 s = 0.698 s per case | peak 1536 MiB
+arena+bt cpus 2 mem 1g: exit 137; 24 responses missing |   wall 42.086 s, in flight 27.801 s, local 14.285 s = 0.0476 s per case | peak 1024 MiB
+lanes cpus 2 mem 4g: ok |   wall 122.771 s, in flight 30.219 s, local 92.551 s = 0.3085 s per case | peak 2295 MiB
+lanes cpus 2 mem 2g: ok |   wall 157.27 s, in flight 30.258 s, local 127.012 s = 0.4234 s per case | peak 1194 MiB
+lanes cpus 2 mem 1.5g: ok |   wall 156.517 s, in flight 30.267 s, local 126.25 s = 0.4208 s per case | peak 1195 MiB
+lanes cpus 2 mem 1g: exit 137; 24 responses missing |   wall 81.569 s, in flight 27.828 s, local 53.741 s = 0.1791 s per case | peak 1024 MiB
+all cpus 2 mem 4g: ok |   wall 135.697 s, in flight 30.225 s, local 105.472 s = 0.3516 s per case | peak 2310 MiB
+all cpus 2 mem 2g: ok |   wall 177.974 s, in flight 30.29 s, local 147.683 s = 0.4923 s per case | peak 1194 MiB
+all cpus 2 mem 1.5g: ok |   wall 178.749 s, in flight 30.269 s, local 148.48 s = 0.4949 s per case | peak 1195 MiB
+all cpus 2 mem 1g: exit 137; 24 responses missing |   wall 78.042 s, in flight 27.843 s, local 50.199 s = 0.1673 s per case | peak 1024 MiB
+MEMVARIANTS-DONE

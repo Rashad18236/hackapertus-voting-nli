@@ -87,7 +87,7 @@ def cgroup_memory():
 
 # Session 11, step 5: the lanes' number from the container's memory limit (each lane that embeds holds its own copy
 # of e5). None leaves the number to the CPUs alone, as in session 10.
-MEMORY_FOR_TWO_LANES = None  # bytes; below it one lane
+MEMORY_FOR_TWO_LANES = 2684354560  # bytes (2.5 GiB; session 11, step 5, adopted); below it one lane
 MEMORY_FOR_ONE_LANE = None   # bytes; below it no lane (every case in turn in the main process)
 
 

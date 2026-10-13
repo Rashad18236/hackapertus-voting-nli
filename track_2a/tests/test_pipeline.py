@@ -96,10 +96,19 @@ class RunWithFakeSteps(unittest.TestCase):
         self.assertEqual(out, [2, 1])
 
     def test_default_workers(self):
-        with mock.patch.object(pipeline, "available_cpus", return_value=1):
+        with mock.patch.object(pipeline, "available_cpus", return_value=1), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=None):
             self.assertEqual(pipeline.default_workers(), 1)
-        with mock.patch.object(pipeline, "available_cpus", return_value=4):
+        with mock.patch.object(pipeline, "available_cpus", return_value=4), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=None):
             self.assertEqual(pipeline.default_workers(), 2)
+
+    def test_one_lane_under_the_memory_threshold(self):
+        """Session 11, step 5: two lanes each load e5 (1.2 GiB at its peak); under 2.5 GiB one lane."""
+        with mock.patch.object(pipeline, "available_cpus", return_value=2):
+            for memory, lanes in ((2 * 2**30, 1), (int(1.5 * 2**30), 1), (3 * 2**30, 2), (None, 2)):
+                with self.subTest(memory=memory), mock.patch.object(pipeline, "cgroup_memory", return_value=memory):
+                    self.assertEqual(pipeline.default_workers(), lanes)
 
     def test_each_lane_is_its_own_process_and_gets_its_cases(self):
         items = [(i, {"id": i, "booklet": i % 3}) for i in range(9)]
