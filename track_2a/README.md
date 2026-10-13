@@ -39,18 +39,23 @@ Requirements: `runtime, hardware, API keys, model weights`
 - **Runtime:** Docker (the image is `linux/amd64`, Python 3.12). `make run` builds the image and answers
   `examples/cases.jsonl`; predictions go to `output/predictions.jsonl`.
 - **Hardware:** CPU only, no GPU. Worker processes prepare the next cases while a request is in flight, so most
-  local work overlaps with the model's latency. Memory (session 11, `docs/runs/2026-10-13_rashad_memory-step5_devA300`):
-  task A uses two worker processes from a 2.5 GiB memory limit on (peak about 2.3 GB) and one below it, which runs
-  down to 1.5 GiB; task B needs under 0.1 GB. Measured with 2 CPUs; local time per case in `technical_report.md`.
+  local work overlaps with the model's latency. Memory: task A uses two worker processes from a 2.5 GiB memory limit
+  on (peak about 2.3 GB) and one below it; with e5, both tasks need 1.5 GiB (peak about 1.2 GB). Below that a memory
+  guard (session 12, `docs/runs/2026-10-13_rashad_memory-guard_grid48`) runs without the embedding model, so both
+  tasks answer every case down to at least 512 MiB, with 2 CPUs or 1 (a long part then sends its first 8 paragraphs,
+  a long task B reference is sent whole). Local time per case in `technical_report.md`.
 - **API keys:** the model is called through `BASE_URL` with `API_KEY` (an OpenAI-compatible endpoint serving
   Apertus v1.5; the model name comes from `MODEL`, default `swiss-ai/Apertus-v1.5-8B`). Export them, or put
   them in a local `.env` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`; see `.env.example`). No key is in the
   image or the repository.
-- **Model weights:** the only local model, `intfloat/multilingual-e5-small` (MIT), is downloaded when the
-  image is built and baked into it; nothing is downloaded at run time. It only chooses which text Apertus reads:
-  long parts of a booklet (task A) and, for a task B reference over 3,000 characters, the 4 paragraphs sent with its
-  first line (session 11). Apertus makes every entailment decision, and names the part of the booklet a claim refers
-  to when our rules do not know the claim's opening.
+- **Model weights:** two local embedding models, downloaded when the image is built and baked into it; nothing is
+  downloaded at run time. `intfloat/multilingual-e5-small` (MIT) chooses which text Apertus reads: long parts of a
+  booklet (task A) and, for a task B reference over 3,000 characters, the 4 paragraphs sent with its first line.
+  `sentence-transformers/static-similarity-mrl-multilingual-v1` (Apache-2.0, "model S", its table cut to 256
+  dimensions) is in the image but used only when asked (`--ranker S`; session 12: it failed its rule by one case).
+  Apertus makes every entailment decision, names the part of the booklet a claim refers to when our rules do not know
+  the claim's opening, and translates a claim into the booklet's language when the case falls back to keyword search
+  (BM25) across languages. No translation model is in the image.
 
 **Your own cases and booklets.** Write one JSON request per line, as in `examples/cases.jsonl`: `id`, `vote`,
 `claim` (`text`, `language`), and either `booklet` (`path` relative to the cases file's folder, e.g.
