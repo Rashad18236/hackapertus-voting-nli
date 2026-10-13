@@ -180,6 +180,41 @@ class TaskAFallbackBM25(unittest.TestCase):
         self.assertIn("error", raw["ap_calls"][0])
 
 
+class AskStructure(unittest.TestCase):
+    """Step 6 (ask-after-parser, off by default): the parser gives no valid part, Apertus reads the contents."""
+
+    def test_no_valid_part_asks_apertus_then_routes_or_falls_back(self):
+        from unittest import mock
+        from src import cli, llm
+        from tests.test_cli import fake_chat
+        from tests.test_section_route import COUNCIL_CLAIM, VOTE, booklet_pages, case
+        from src import booklet as booklet_module
+        pages = booklet_pages()
+        empty = booklet_module.Booklet(votes=[])  # the parser finds no vote at all
+        seen = []
+        entries = ('{"votes": [{"title": "Volksinitiative «Für mehr Velowege»", "summary": 4, "detail": 8, '
+                   '"arguments": 12, "law": 16}]}')
+        with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
+                mock.patch.object(cli.Path, "is_file", return_value=True), \
+                mock.patch.object(embed_e5_small, "select_chunks", return_value=[(14, "chunk")]), \
+                mock.patch.object(section_route, "parsed_booklet", return_value=empty), \
+                mock.patch.object(llm, "chat", fake_chat([entries, '{"paragraphs": [1], "label": 0}'], seen)):
+            resp, status, raw = cli.predict(case(COUNCIL_CLAIM), ".", cli.Settings(ap_structure_a="ask-after-parser"))
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(raw["ap_calls"][0]["version"], "AP-structure-v1")
+        self.assertTrue(raw["ap_structure"]["vote_found"])
+        self.assertEqual(resp["metrics"]["input_tokens"], 100)
+        if raw.get("route") == "council":  # Apertus's entries passed the parser's checks
+            self.assertIn("PART:", seen[1][1]["content"])
+        else:  # else the case ran as its fallback, still with a model call
+            self.assertIn("=== PAGE 14 ===", seen[1][1]["content"])
+
+    def test_the_default_never_asks(self):
+        from src import cli
+        self.assertEqual(cli.Settings().ap_structure_a, "off")
+        self.assertFalse(cli.ap_in_prepare(cli.Settings(ap_structure_a="ask-after-parser")))
+
+
 class MemoryGuard(unittest.TestCase):
     """Step 2: no embedding model under a low memory limit, without its files, or when it fails to load."""
 

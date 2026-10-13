@@ -209,6 +209,10 @@ def prepare_a(case, data_dir, start, raw, settings):
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
                         routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
                                                   "json_schema": paragraph_schema(settings)})
+    if settings.ap_structure_a == "ask-after-parser" and "route_error" not in raw:
+        asked = ask_structure_prepared(case, pages, vote, claim_text, start, raw, settings)
+        if asked is not None:
+            return asked
     if ask_part_after_rules(settings) and "route_error" not in raw:
         candidates = part_candidates(pages, vote, claim_text, raw, settings)
         if candidates:
@@ -297,7 +301,7 @@ def complete_a_translate(p, start, settings):
 
 FALLBACK_LEVELS = ("embed", "vw", "bw", "vw+bw", "bm25-ap")
 AP_PART_MODES = ("off", "after-rules", "all")
-AP_STRUCTURE_MODES = ("off", "after-parser", "all")
+AP_STRUCTURE_MODES = ("off", "after-parser", "all", "ask-after-parser")
 
 
 def ap_on(settings):
@@ -307,7 +311,7 @@ def ap_on(settings):
 def ap_in_prepare(settings):
     """Apertus called while a case is prepared (ap_route; the sequential path): AP-structure, or AP-part for every
     claim. AP-part after the rules alone is asked when the case is completed (ask_part_after_rules)."""
-    return settings.ap_structure_a != "off" or settings.ap_part_a == "all"
+    return settings.ap_structure_a in ("after-parser", "all") or settings.ap_part_a == "all"
 
 
 def ask_part_after_rules(settings):
@@ -360,6 +364,68 @@ def complete_a_ask_part(p, start, settings):
         p.raw["prompt_version"], p.raw["route"] = paragraph_prompt_version(settings), part
         p.raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
         p.raw["context_pages"] = sorted({page for page, _ in paragraphs})
+        q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
+                     messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
+                     chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
+    else:
+        p.raw.update(fallback.raw)
+        q = Prepared(**{**fallback.__dict__, "raw": p.raw})
+    if q.kind == "done":
+        return q.done
+    return COMPLETE[q.kind](q, start, settings)
+
+
+def ask_structure_prepared(case, pages, vote, claim_text, start, raw, settings):
+    """Session 12, step 6 (off by default; --ap-structure-a ask-after-parser): the rules name the claim's part, but the
+    parser gives no valid part for the vote (vote not found, or none of its parts passed its checks). The lane
+    prepares the fallback as usual and hands the booklet's page texts to the main process, which asks Apertus to
+    read the contents (AP-structure, one call per booklet; its tokens count in that booklet's first such case) and
+    routes to the named part if Apertus's entries pass the parser's heading checks (complete_a_ask_structure).
+    Unlike session 11's after-parser mode, no case is moved to the sequential path. None when it does not apply."""
+    from src import claim_router
+    variant = context.VARIANTS[settings.context_a] if settings.context_a == "section-route" else None
+    if variant is None:
+        return None
+    part = claim_router.route(claim_text)
+    if part is None:
+        return None
+    found = variant.find(variant.parsed_booklet(pages), vote)
+    if found is not None and found.valid:
+        return None
+    fallback_raw = {}
+    fallback = fallback_prepared(case, pages, vote, claim_text, start, fallback_raw, settings, found)
+    page_texts = {n: pages[n] for n in sorted(pages)}
+    return Prepared(case["id"], raw, kind="A-ask-structure", vote=vote, claim_text=claim_text,
+                    ask=(page_texts, part, fallback))
+
+
+def complete_a_ask_structure(p, start, settings):
+    """Step 6: Apertus reads the contents; the case is routed to its part if that part passes the parser's checks in
+    Apertus's reading, else completed as its fallback."""
+    from src import ap_parse
+    page_texts, part, fallback = p.ask
+    variant = context.VARIANTS["section-route"]
+    entries, call = ap_parse.structure(page_texts)
+    if call.get("first"):  # the booklet's one call: its tokens count in this case (later cases reuse the reading)
+        tokens = p.raw.setdefault("ap_tokens", [0, 0])
+        tokens[0] += call.get("input_tokens", 0)
+        tokens[1] += call.get("output_tokens", 0)
+        p.raw.setdefault("ap_calls", []).append(call)
+    routed = None
+    try:
+        ap_booklet = ap_parse.booklet_from_entries(page_texts, entries) if entries else None
+        ap_found = variant.find(ap_booklet, p.vote) if ap_booklet is not None else None
+        p.raw["ap_structure"] = {"entries": len(entries or []), "vote_found": ap_found is not None,
+                                 "valid": sorted(ap_found.valid) if ap_found is not None else [],
+                                 "booklet_call": "this case" if call.get("first") else "an earlier case"}
+        routed = variant.route_part(page_texts, ap_found, part, p.claim_text) if ap_found is not None else None
+    except Exception as e:  # Apertus's reading must never cost the case its call
+        p.raw["ap_structure_error"] = f"{type(e).__name__}: {e}"
+    if routed is not None:
+        _, paragraphs = routed
+        p.raw["prompt_version"], p.raw["route"] = paragraph_prompt_version(settings), part
+        p.raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
+        p.raw["pages_total"], p.raw["context_pages"] = len(page_texts), sorted({page for page, _ in paragraphs})
         q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
                      messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
                      chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
@@ -691,7 +757,8 @@ def complete_b_translate(p, start, settings):
 
 
 COMPLETE = {"B": complete_b, "A-pages": complete_a_pages, "A-paragraphs": complete_a_paragraphs,
-            "A-ask-part": complete_a_ask_part, "B-translate": complete_b_translate, "A-translate": complete_a_translate}
+            "A-ask-part": complete_a_ask_part, "B-translate": complete_b_translate, "A-translate": complete_a_translate,
+            "A-ask-structure": complete_a_ask_structure}
 
 
 def prepare(case, data_dir=".", settings=None):
