@@ -31,5 +31,12 @@
   "mean_time_ms": 2354,
   "p95_time_ms": 7524,
   "mean_output_tokens": 8.7
+ },
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "B-cut4 (E: e5 on whole paragraphs)",
+  "n_cases": 300,
+  "strict_json": false,
+  "max_tokens": 32
  }
 }
