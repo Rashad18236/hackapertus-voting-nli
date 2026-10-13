@@ -38,18 +38,23 @@ Updated after every step. If the session is restarted with "continue", work goes
   0.0066 / 0.0067; H 0.0072 / 0.0082 / 0.059; E 0.011 / 0.661. Agreement with E's 4 paragraphs (mean of 3.81): Q 3.36,
   T 3.06, H 2.78, L 2.03.
 
+- (00:38) Step 3 run 3 (parser off, dev 300): AP-structure 0.970 / 0.955 vs VW 0.886 / 0.687; not adoptable (part a
+  78.7 % < 95 %). Step 3d image check: accepted, heading not read.
+- (01:09) Step 3, AP-part on 150 reworded val openings: 0.926 / 0.840 vs VW 0.876 / 0.650 (+0.051): **AP-part after the
+  rules adopted** (b223653; G1/G2 pass, no dev or val case asks).
+- (01:29) Step 5: before, task A needed 3 GiB with 2 CPUs (2 GiB: OOM); **one lane under 2.5 GiB adopted** (b9c1189):
+  all responses, same labels at 2 GiB and 1.5 GiB; 1 GiB fails (e5 load peak 1.16 GiB). Task B runs in 1 GiB.
+- Step 6a timings at 1.0 / 0.3 s: T 0.0077 / 0.0089 and H 0.0072 / 0.0082 pass (+0.005), E and Q fail at 0.3 s.
+
 ## Running
 
-- Step 3 run 3 (from 23:53): dev 300 with the parser off: today's fallback, VW, AP-structure (slow: whole-booklet
-  embedding). Then (`chain3`) the image check and the AP-part val confirmation (150 reworded val cases), then
-  (`chain4`) step 6 dev run: today, E, H, L on 300 dev task B cases.
-- CPUs 2–3: step 6a Q and T timings, then step 5 memory sweep (today's defaults) and memory variants, then AP-all's
-  local time.
+- Step 6 dev run (from 01:10): today, E, T, H on 300 dev task B cases; then val (today and the best) if one passes.
+- CPUs 2–3: AP-all's local time (replay of run 1).
 
 ## Next
 
-- Step 3: runs 2–3, image check (3d), HYBRID RULE decisions; step 5 memory fixes; step 6 dev run (today, E, the
-  selectors within +0.005 s local time) and val; FINISH.
+- Step 6 decision and val; FINISH: push, final runs through the image `session-11`, local time at 1.0 / 0.3 / 0.1 s,
+  memory, REF SCORE, new replay reference, reports.
 
 ## Numbers so far
 
