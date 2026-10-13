@@ -301,9 +301,32 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 12 (2026-10-13 10:35 UTC to 2026-10-14 03:00 UTC)
+## Current stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 09:00 UTC)
 
-Branch `rashad/session-12` from `main` at `37904b3` (draft PR #20, never merged, no tag); status
+Branch `rashad/session-13` from `main` at `c85a119` (PR #20 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report
+`track_2a/docs/session_13_report.md`. Experiments stop on 14 October at 08:00 UTC, everything pushed by 09:00 UTC; steps
+in the order given, what is not reached is written down as not done. Rules as in session 12, plus: Python may decide
+WHEN to ask Apertus again, never WHAT the label is (mapping a word or enum Apertus chose to 0/1/2 is allowed); evidence
+only text Apertus cited or text next to it on its real page; no new local models; every comparison one interleaved run
+with an arm "today" (session 12's defaults), input and output tokens separately; PAIRED RULE (val +0.005, dev not
+below −0.004, sign test p ≤ 0.10 on dev+val, input tokens ≤ +4 %, no more unreadable answers, local time ≤ +0.002 s,
+on-topic neutral share ≥ today's − 0.05); G1/G2 against `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA`.
+
+- **Step 0:** PR #20 merged into `main` as `c85a119` (merge commit; it was a draft, so it was marked ready first);
+  PR #19 (`kaan/robustness-experiments`, an ancestor of `main`) closed; publish-image on `main` green (`latest`,
+  `sha-c85a119b409a`).
+- **Step 1:** task A prompts A1–A5 (`A-v6-says`, `A-v6-residual`, `A-v6-mismatch`, `A-v6-opposite`, `A-v6-words`)
+  and A6, a second look after a neutral answer that cites paragraphs (`A-v6-second-look`, `--second-look-a6`), against
+  the 15 val errors answered neutral.
+- **Step 2:** task B prompts B1 (`v7-same-ballot`), B2 (`v7-unrelated`), B4 (`v7-claim-first`), B3 (selector T with the
+  reference's first line) against the 9 val errors answered contradiction.
+- **Step 3:** evidence page hedge H (offline). **Step 4:** report section "How Apertus is used". **Step 5:**
+  `docs/organiser_questions.md`. **Step 6:** model S on val (only if step 2's val run ends before 04:00 UTC).
+
+## Previous stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
+
+Branch `rashad/session-12` from `main` at `37904b3` (PR #20, merged into `main` on 2026-10-13 as `c85a119`, no tag); status
 `track_2a/docs/session_12_status.md`, decisions `docs/decisions/2026-10-13-1035_rashad_session-12.md`, report
 `track_2a/docs/session_12_report.md`. The last experimental session: every remaining idea with a real chance, in order
 of value. The instruction arrived cut off in step 3; the readings of steps 3 (third version) to 8 are in the decisions
@@ -345,7 +368,7 @@ Apertus), input and output tokens reported separately in every run.
 - **New replay reference for G1/G2:** `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
+## Earlier stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
 
 Branch `rashad/session-11` from `main` at `014f691` (PR #18, merged into `main` on 2026-10-13 as `37904b3`); status
 `track_2a/docs/session_11_status.md`, decisions `docs/decisions/2026-10-12-2010_rashad_session-11.md`,
