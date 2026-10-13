@@ -1,0 +1,15 @@
+580 cases, 45 booklets parsed; arms: ['today', 'A5-words', 'A3-mismatch', 'today+A6']
+[1/580] v1.1-row-0-A | today: entailment | A5-words: entailment | today+A6: entailment | A3-mismatch: entailment
+[2/580] v1.1-row-1-A | A5-words: entailment | A3-mismatch: entailment | today: entailment | today+A6: entailment
+[3/580] v1.1-row-3-A | A3-mismatch: entailment | today+A6: entailment | A5-words: entailment | today: entailment
+[4/580] v1.1-row-7-A | today+A6: entailment | today: entailment | A3-mismatch: entailment | A5-words: entailment
+[5/580] v1.1-row-10-A | today: entailment | A5-words: entailment | today+A6: entailment | A3-mismatch: entailment
+[6/580] v1.1-row-11-A | A5-words: entailment | A3-mismatch: entailment | today: entailment | today+A6: entailment
+[7/580] v1.1-row-12-A | A3-mismatch: entailment | today+A6: entailment | A5-words: entailment | today: entailment
+[8/580] v1.1-row-13-A | today+A6: entailment | today: entailment | A3-mismatch: contradiction | A5-words: contradiction
+[9/580] v1.1-row-15-A | today: entailment | A5-words: entailment | today+A6: entailment | A3-mismatch: entailment
+[10/580] v1.1-row-17-A | A5-words: entailment | A3-mismatch: contradiction | today: contradiction | today+A6: contradiction
+[11/580] v1.1-row-19-A | A3-mismatch: entailment | today+A6: entailment | A5-words: entailment | today: entailment
+[12/580] v1.1-row-24-A | today+A6: entailment | today: entailment | A3-mismatch: entailment | A5-words: entailment
+[13/580] v1.1-row-25-A | today: entailment | A5-words: entailment | today+A6: entailment | A3-mismatch: entailment
+[14/580] v1.1-row-29-A | A5-words: entailment | A3-mismatch: entailment | today: entailment | today+A6: entailment

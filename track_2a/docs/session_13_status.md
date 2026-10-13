@@ -38,9 +38,14 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   gold page) dev 116 → 119, val 223 → 236, probe 44 → 46; text hit dev 197 → 198; nothing worse. Joins the combination.
   Rule 3 would cost about 40 % of today's evidence score (passages often start a page before the cited paragraph).
 
+- (20:45) G1 with the default ranker set to S: 0 of 300 dev task B requests change (74 task A requests do): step 6
+  runs on val task A only (decisions file). `scripts/prompt_snapshot.py` replays A6's second look (for G1/G2 if A6 is
+  adopted).
+
 ## Running
 
-- Step 1 dev run (until about 21:40).
+- Step 1 dev run (until about 21:42); local time, today against `--ranker S` (step 6), three alternating rounds on
+  CPUs 2–3.
 
 ## Next
 

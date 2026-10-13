@@ -1,0 +1,249 @@
+{
+ "task": "A",
+ "run": "docs/runs/2026-10-13_rashad_final-s12_val1160/task-A",
+ "prompt": "ERR-type-v1",
+ "summary": {
+  "errors": 23,
+  "by_error": {
+   "reading": 13,
+   "routing": 10
+  },
+  "by_gold_given": {
+   "2->0": 6,
+   "2->1": 13,
+   "0->1": 2,
+   "0->2": 2
+  },
+  "reading_types": {
+   "scope": 5,
+   "direction_or_negation": 6,
+   "number_or_date": 2
+  },
+  "calls": 13
+ },
+ "rows": [
+  {
+   "id": "v1.1-row-1259-A",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "route:committee",
+   "same_language": false,
+   "type": "scope",
+   "input_tokens": 1131,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1053-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:council",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 1166,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1467-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 949,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1226-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 921,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-235-A",
+   "gold": 0,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:committee",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1036-A",
+   "gold": 2,
+   "given": 0,
+   "error": "routing",
+   "prepared": "fallback (pages sent)",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1347-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:committee",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 1104,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1210-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "scope",
+   "input_tokens": 909,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1457-A",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 862,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-1312-A",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": true,
+   "type": "scope",
+   "input_tokens": 812,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1151-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": true,
+   "type": "scope",
+   "input_tokens": 836,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1309-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "scope",
+   "input_tokens": 834,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1404-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 804,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1318-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 797,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1287-A",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": true,
+   "type": "number_or_date",
+   "input_tokens": 879,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-17-A",
+   "gold": 0,
+   "given": 2,
+   "error": "routing",
+   "prepared": "route:detail",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-186-A",
+   "gold": 0,
+   "given": 2,
+   "error": "routing",
+   "prepared": "route:detail",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1174-A",
+   "gold": 2,
+   "given": 0,
+   "error": "routing",
+   "prepared": "route:law",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1025-A",
+   "gold": 2,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:law",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-341-A",
+   "gold": 0,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:detail",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1159-A",
+   "gold": 2,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:law",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1200-A",
+   "gold": 2,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:law",
+   "same_language": false
+  },
+  {
+   "id": "v1.1-row-1351-A",
+   "gold": 2,
+   "given": 1,
+   "error": "routing",
+   "prepared": "route:law",
+   "same_language": false
+  }
+ ]
+}

@@ -31,7 +31,7 @@ answers, so the snapshot of a replay run is the same as without --replay.
 
 table: {request_sha256: saved answer} from a snapshot and the raw answers of saved runs (by case id).
 
-compare: G1, every request hash (session 11: also of a case's parsing calls) and every path equal the reference; G2, every case's label and evidence
+compare: G1, every request hash (session 11: also of a case's parsing calls; session 13: of A6's second look) and every path equal the reference; G2, every case's label and evidence
 equal the reference's (metrics ignored). Exit 1 on any difference. --allow-evidence-change lists evidence
 differences without failing on them (labels must still be equal).
 """
@@ -115,10 +115,11 @@ def run(args):
             problems.append(f"{name}: CLI exit code {code}")
         # Session 11: a case may first make parsing calls (raw["ap_calls"], e.g. AP-part), then its answer call;
         # the calls come in the order the cases were completed, which is the order of the raw answers.
-        expected = sum(len(r.get("ap_calls", [])) + ("answer" in r) for r in called)
+        # Session 13: a routed case may make a second look after its answer call (raw["second_look_a6"], A6).
+        expected = sum(len(r.get("ap_calls", [])) + ("answer" in r) + a6_sent(r) for r in called)
         if expected != len(calls):
             problems.append(f"{name}: {expected} calls expected from the raw answers but {len(calls)} model calls")
-        hashes, ap_hashes, position = {}, {}, 0
+        hashes, ap_hashes, a6_hashes, position = {}, {}, {}, 0
         for raw in called:
             ap_calls = raw.get("ap_calls", [])
             ap_hashes[raw["id"]] = [c["request_sha256"] for c in calls[position:position + len(ap_calls)]]
@@ -131,11 +132,16 @@ def run(args):
                         claim not in "".join(m.get("content", "") for m in call["payload"]["messages"]):
                     problems.append(f"{name}: call {call['number']} does not contain the claim of {raw['id']}")
                 hashes[raw["id"]] = call["request_sha256"]
+            if a6_sent(raw) and position < len(calls):
+                a6_hashes[raw["id"]] = calls[position]["request_sha256"]
+                position += 1
         for raw in raws:
             snapshot[raw["id"]] = {"task": raw.get("task"), "set": name, "request_sha256": hashes.get(raw["id"]),
                                    "path": path_taken(raw)}
             if ap_hashes.get(raw["id"]):
                 snapshot[raw["id"]]["ap_request_sha256"] = ap_hashes[raw["id"]]
+            if a6_hashes.get(raw["id"]):
+                snapshot[raw["id"]]["a6_request_sha256"] = a6_hashes[raw["id"]]
         missing = sorted(set(cases) - {r["id"] for r in raws})
         if missing:
             problems.append(f"{name}: no raw answer for {len(missing)} cases, e.g. {missing[:3]}")
@@ -154,20 +160,33 @@ def run(args):
     return 1 if problems else 0
 
 
+def a6_sent(raw):
+    """Session 13: 1 if the case sent A6's second look (it has an answer or a failed call), else 0."""
+    look = raw.get("second_look_a6") or {}
+    return int("answer" in look or "error" in look)
+
+
 def table(args):
     snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
     answers, table_, clashes = {}, {}, []
     ap_answers = {}  # session 11: the answers of a case's parsing calls, in order
+    a6_answers = {}  # session 13: the answer of a case's second look (A6)
     for run_dir in args.runs:
         for raw in load_jsonl(Path(run_dir) / "raw_answers.jsonl"):
             if "answer" in raw:
                 answers[raw["id"]] = raw["answer"]
             if raw.get("ap_calls"):
                 ap_answers[raw["id"]] = [c.get("answer") for c in raw["ap_calls"]]
+            if (raw.get("second_look_a6") or {}).get("answer") is not None:
+                a6_answers[raw["id"]] = raw["second_look_a6"]["answer"]
     for case_id, saved in sorted(ap_answers.items()):
         for key, answer in zip((snapshot.get(case_id) or {}).get("ap_request_sha256", []), saved):
             if answer is not None:
                 table_.setdefault(key, answer)
+    for case_id, answer in sorted(a6_answers.items()):
+        key = (snapshot.get(case_id) or {}).get("a6_request_sha256")
+        if key:
+            table_.setdefault(key, answer)
     for case_id, answer in sorted(answers.items()):
         entry = snapshot.get(case_id)
         if not entry or not entry["request_sha256"]:
@@ -190,7 +209,8 @@ def compare(args):
     g1 = [f"{i}: {s_ref.get(i)} -> {s_new.get(i)}" for i in sorted(set(s_ref) | set(s_new))
           if (s_ref.get(i) or {}).get("request_sha256") != (s_new.get(i) or {}).get("request_sha256")
           or (s_ref.get(i) or {}).get("path") != (s_new.get(i) or {}).get("path")
-          or (s_ref.get(i) or {}).get("ap_request_sha256", []) != (s_new.get(i) or {}).get("ap_request_sha256", [])]
+          or (s_ref.get(i) or {}).get("ap_request_sha256", []) != (s_new.get(i) or {}).get("ap_request_sha256", [])
+          or (s_ref.get(i) or {}).get("a6_request_sha256") != (s_new.get(i) or {}).get("a6_request_sha256")]
     labels, evidence = [], []
     for name in SETS:
         p_ref = {p["id"]: p for p in load_jsonl(ref / name / "predictions.jsonl")}

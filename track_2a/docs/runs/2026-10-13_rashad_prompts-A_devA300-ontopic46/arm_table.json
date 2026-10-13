@@ -1,0 +1,471 @@
+{
+ "run": "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-13_rashad_prompts-A_devA300-ontopic46",
+ "task": "A",
+ "expected": "output/devA/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 300,
+   "macro_f1": 0.9833,
+   "f1": {
+    "entailment": 0.9804,
+    "neutral": 0.995,
+    "contradiction": 0.9746
+   },
+   "evidence": {
+    "score": 0.9851,
+    "found": 198,
+    "cases": 201
+   },
+   "input_tokens": 1240.4,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 1
+   },
+   "ontopic": {
+    "cases": 46,
+    "neutral": 32,
+    "share": 0.6957,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A"
+    ]
+   }
+  },
+  "A1-says": {
+   "cases": 300,
+   "macro_f1": 0.9018,
+   "f1": {
+    "entailment": 0.9749,
+    "neutral": 0.8427,
+    "contradiction": 0.8879
+   },
+   "evidence": {
+    "score": 0.9701,
+    "found": 195,
+    "cases": 201
+   },
+   "input_tokens": 1291.2,
+   "output_tokens": 75.6,
+   "unreadable": 6,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 0
+   },
+   "fixes": 5,
+   "breaks": 29,
+   "sign_test_p": 1.0,
+   "sign_test_p_two_sided": 0.0,
+   "fix_ids": [
+    "v1.1-row-85-A",
+    "v1.1-row-232-A",
+    "v1.1-row-1016-A",
+    "v1.1-row-1138-A",
+    "v1.1-row-1167-A"
+   ],
+   "break_ids": [
+    "v1.1-row-27-A",
+    "v1.1-row-170-A",
+    "v1.1-row-216-A",
+    "v1.1-row-247-A",
+    "v1.1-row-469-A",
+    "v1.1-row-500-A",
+    "v1.1-row-510-A",
+    "v1.1-row-517-A",
+    "v1.1-row-538-A",
+    "v1.1-row-608-A",
+    "v1.1-row-629-A",
+    "v1.1-row-656-A",
+    "v1.1-row-666-A",
+    "v1.1-row-682-A",
+    "v1.1-row-711-A",
+    "v1.1-row-770-A",
+    "v1.1-row-793-A",
+    "v1.1-row-836-A",
+    "v1.1-row-844-A",
+    "v1.1-row-854-A",
+    "v1.1-row-901-A",
+    "v1.1-row-932-A",
+    "v1.1-row-935-A",
+    "v1.1-row-946-A",
+    "v1.1-row-953-A",
+    "v1.1-row-965-A",
+    "v1.1-row-980-A",
+    "v1.1-row-981-A",
+    "v1.1-row-988-A"
+   ],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 13,
+    "share": 0.2826,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-31-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-85-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-116-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-170-ot-A",
+     "v1.1-row-232-ot-A",
+     "v1.1-row-237-ot-A",
+     "v1.1-row-260-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-412-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1014-ot-A",
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-1056-ot-A",
+     "v1.1-row-1063-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1138-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A",
+     "v1.1-row-1326-ot-A",
+     "v1.1-row-1341-ot-A",
+     "v1.1-row-1369-ot-A",
+     "v1.1-row-1459-ot-A",
+     "v1.1-row-1464-ot-A",
+     "v1.1-row-1474-ot-A"
+    ]
+   }
+  },
+  "A2-residual": {
+   "cases": 300,
+   "macro_f1": 0.9733,
+   "f1": {
+    "entailment": 0.9706,
+    "neutral": 0.99,
+    "contradiction": 0.9592
+   },
+   "evidence": {
+    "score": 0.9801,
+    "found": 197,
+    "cases": 201
+   },
+   "input_tokens": 1258.4,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 2
+   },
+   "fixes": 1,
+   "breaks": 4,
+   "sign_test_p": 0.9688,
+   "sign_test_p_two_sided": 0.375,
+   "fix_ids": [
+    "v1.1-row-1016-A"
+   ],
+   "break_ids": [
+    "v1.1-row-76-A",
+    "v1.1-row-1161-A",
+    "v1.1-row-1177-A",
+    "v1.1-row-1468-A"
+   ],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 27,
+    "share": 0.587,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-31-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-260-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A",
+     "v1.1-row-1341-ot-A",
+     "v1.1-row-1459-ot-A"
+    ]
+   }
+  },
+  "A3-mismatch": {
+   "cases": 300,
+   "macro_f1": 0.9801,
+   "f1": {
+    "entailment": 0.9754,
+    "neutral": 0.9949,
+    "contradiction": 0.97
+   },
+   "evidence": {
+    "score": 0.99,
+    "found": 199,
+    "cases": 201
+   },
+   "input_tokens": 1337.1,
+   "output_tokens": 26.1,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 0
+   },
+   "fixes": 1,
+   "breaks": 2,
+   "sign_test_p": 0.875,
+   "sign_test_p_two_sided": 1.0,
+   "fix_ids": [
+    "v1.1-row-1016-A"
+   ],
+   "break_ids": [
+    "v1.1-row-31-A",
+    "v1.1-row-688-A"
+   ],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 19,
+    "share": 0.413,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-31-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-85-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-170-ot-A",
+     "v1.1-row-232-ot-A",
+     "v1.1-row-260-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-412-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-1056-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A",
+     "v1.1-row-1326-ot-A",
+     "v1.1-row-1341-ot-A",
+     "v1.1-row-1384-ot-A",
+     "v1.1-row-1459-ot-A",
+     "v1.1-row-1464-ot-A"
+    ]
+   }
+  },
+  "A4-opposite": {
+   "cases": 300,
+   "macro_f1": 0.9635,
+   "f1": {
+    "entailment": 0.9754,
+    "neutral": 0.9688,
+    "contradiction": 0.9463
+   },
+   "evidence": {
+    "score": 0.9851,
+    "found": 198,
+    "cases": 201
+   },
+   "input_tokens": 1334.1,
+   "output_tokens": 53.3,
+   "unreadable": 2,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 0
+   },
+   "fixes": 2,
+   "breaks": 8,
+   "sign_test_p": 0.9893,
+   "sign_test_p_two_sided": 0.1094,
+   "fix_ids": [
+    "v1.1-row-1016-A",
+    "v1.1-row-1138-A"
+   ],
+   "break_ids": [
+    "v1.1-row-31-A",
+    "v1.1-row-566-A",
+    "v1.1-row-614-A",
+    "v1.1-row-666-A",
+    "v1.1-row-798-A",
+    "v1.1-row-944-A",
+    "v1.1-row-953-A",
+    "v1.1-row-1230-A"
+   ],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 28,
+    "share": 0.6087,
+    "not_neutral_ids": [
+     "v1.1-row-31-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-237-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A",
+     "v1.1-row-1341-ot-A",
+     "v1.1-row-1384-ot-A",
+     "v1.1-row-1464-ot-A"
+    ]
+   }
+  },
+  "A5-words": {
+   "cases": 300,
+   "macro_f1": 0.9834,
+   "f1": {
+    "entailment": 0.9804,
+    "neutral": 0.9949,
+    "contradiction": 0.9749
+   },
+   "evidence": {
+    "score": 0.99,
+    "found": 199,
+    "cases": 201
+   },
+   "input_tokens": 1251.4,
+   "output_tokens": 16.4,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 0
+   },
+   "fixes": 1,
+   "breaks": 1,
+   "sign_test_p": 0.75,
+   "sign_test_p_two_sided": 1.0,
+   "fix_ids": [
+    "v1.1-row-1016-A"
+   ],
+   "break_ids": [
+    "v1.1-row-500-A"
+   ],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 25,
+    "share": 0.5435,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-31-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-85-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-232-ot-A",
+     "v1.1-row-260-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A",
+     "v1.1-row-1341-ot-A",
+     "v1.1-row-1459-ot-A"
+    ]
+   }
+  },
+  "today+A6": {
+   "cases": 300,
+   "macro_f1": 0.9867,
+   "f1": {
+    "entailment": 0.9804,
+    "neutral": 1.0,
+    "contradiction": 0.9798
+   },
+   "evidence": {
+    "score": 0.99,
+    "found": 199,
+    "cases": 201
+   },
+   "input_tokens": 1242.1,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 0
+   },
+   "fixes": 1,
+   "breaks": 0,
+   "sign_test_p": 0.5,
+   "sign_test_p_two_sided": 1.0,
+   "fix_ids": [
+    "v1.1-row-1016-A"
+   ],
+   "break_ids": [],
+   "ontopic": {
+    "cases": 46,
+    "neutral": 30,
+    "share": 0.6522,
+    "not_neutral_ids": [
+     "v1.1-row-9-ot-A",
+     "v1.1-row-68-ot-A",
+     "v1.1-row-95-ot-A",
+     "v1.1-row-109-ot-A",
+     "v1.1-row-154-ot-A",
+     "v1.1-row-232-ot-A",
+     "v1.1-row-263-ot-A",
+     "v1.1-row-331-ot-A",
+     "v1.1-row-347-ot-A",
+     "v1.1-row-367-ot-A",
+     "v1.1-row-430-ot-A",
+     "v1.1-row-994-ot-A",
+     "v1.1-row-1026-ot-A",
+     "v1.1-row-1074-ot-A",
+     "v1.1-row-1144-ot-A",
+     "v1.1-row-1223-ot-A"
+    ]
+   },
+   "second_look_a6": {
+    "calls": 3,
+    "calls_on_scored_cases": 1,
+    "per_100_cases": 0.33,
+    "unreadable": 0,
+    "failed": 0,
+    "changed": 1,
+    "fixes": 1,
+    "breaks": 0
+   }
+  }
+ }
+}

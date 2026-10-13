@@ -9,7 +9,7 @@ Run from track_2a/ after scoring each arm with the starter's evaluate.py (offici
 Per arm, on the cases of --expected only (an on-topic case is scored only in its own row):
 Macro-F1 and per-label F1 (the starter's official_score.json), evidence (task A), mean input and output tokens per
 case (response metrics: all calls of the case), unreadable answers (raw answers with a parse_reason), failed calls,
-fixes and breaks against "today" with a one-sided sign test (exact binomial), the error row the session follows
+fixes and breaks against "today" with a one-sided sign test (exact binomial; the two-sided p too), the error row the session follows
 (task A: gold contradiction answered neutral; task B: gold neutral answered contradiction, split by whether claim and
 reference share a language, from --cases), the on-topic neutral share (--ontopic), A6's second looks
 (raw "second_look_a6") and, with --focus, which of session 12's errors of that kind (answered neutral in task A,
@@ -60,7 +60,9 @@ def arm_numbers(folder, task, gold, today_pred, ontopic, focus, languages):
     if today_pred is not None:
         fixes = [i for i in ids if today_pred[i]["label"] != gold[i] and preds[i]["label"] == gold[i]]
         breaks = [i for i in ids if today_pred[i]["label"] == gold[i] and preds[i]["label"] != gold[i]]
-        out.update(fixes=len(fixes), breaks=len(breaks), sign_test_p=round(sign_test(len(fixes), len(breaks)), 4),
+        one = sign_test(len(fixes), len(breaks))
+        two = min(1.0, 2 * min(one, sign_test(len(breaks), len(fixes))))
+        out.update(fixes=len(fixes), breaks=len(breaks), sign_test_p=round(one, 4), sign_test_p_two_sided=round(two, 4),
                    fix_ids=fixes, break_ids=breaks)
     if ontopic:
         on = [i for i in ontopic if i in preds]
