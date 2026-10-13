@@ -209,10 +209,11 @@ class AskStructure(unittest.TestCase):
         else:  # else the case ran as its fallback, still with a model call
             self.assertIn("=== PAGE 14 ===", seen[1][1]["content"])
 
-    def test_the_default_never_asks(self):
+    def test_the_default_asks_from_the_main_process(self):
         from src import cli
-        self.assertEqual(cli.Settings().ap_structure_a, "off")
-        self.assertFalse(cli.ap_in_prepare(cli.Settings(ap_structure_a="ask-after-parser")))
+        self.assertEqual(cli.Settings().ap_structure_a, "ask-after-parser")  # session 12, step 6 (adopted)
+        self.assertFalse(cli.ap_in_prepare(cli.Settings()))  # the worker processes are kept
+        self.assertTrue(cli.ask_part_after_rules(cli.Settings()))  # and AP-part after the rules too
 
 
 class FallbackRobustness(unittest.TestCase):

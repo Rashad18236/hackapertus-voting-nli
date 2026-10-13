@@ -1,0 +1,99 @@
+{
+ "cases": 300,
+ "same_backend_cases": 300,
+ "backends": {
+  "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 300
+ },
+ "arms": {
+  "today-noparser": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.8716,
+    "neutral_recall": 0.9167,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1826.8,
+    "output_tokens": 15.6,
+    "evidence": 0.5931
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.8716,
+    "neutral_recall": 0.9167,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1826.8,
+    "output_tokens": 15.6,
+    "evidence": 0.5931
+   }
+  },
+  "AP-ask-noparser": {
+   "all": {
+    "cases": 300,
+    "macro_f1": 0.9391,
+    "neutral_recall": 0.9896,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1621.5,
+    "output_tokens": 43.4,
+    "evidence": 0.9167
+   },
+   "same_backend": {
+    "cases": 300,
+    "macro_f1": 0.9391,
+    "neutral_recall": 0.9896,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "input_tokens": 1621.5,
+    "output_tokens": 43.4,
+    "evidence": 0.9167
+   },
+   "token_rule": {
+    "macro_f1 at most 0.005 lower": true,
+    "no more unreadable answers": true,
+    "input tokens at least 10 % lower": true,
+    "evidence at most 0.010 lower": true,
+    "neutral recall at least 0.98": true
+   },
+   "fixes_breaks": {
+    "fixes": 25,
+    "breaks": 5,
+    "sign_test_p": 0.0003,
+    "fixed": [
+     "v1.1-row-1002-A",
+     "v1.1-row-1107-A",
+     "v1.1-row-1228-A",
+     "v1.1-row-1245-A",
+     "v1.1-row-1254-A",
+     "v1.1-row-1299-A",
+     "v1.1-row-1322-A",
+     "v1.1-row-1325-A",
+     "v1.1-row-1360-A",
+     "v1.1-row-1418-A",
+     "v1.1-row-1460-A",
+     "v1.1-row-169-A",
+     "v1.1-row-182-A",
+     "v1.1-row-268-A",
+     "v1.1-row-394-A",
+     "v1.1-row-396-A",
+     "v1.1-row-476-A",
+     "v1.1-row-532-A",
+     "v1.1-row-621-A",
+     "v1.1-row-681-A",
+     "v1.1-row-745-A",
+     "v1.1-row-773-A",
+     "v1.1-row-823-A",
+     "v1.1-row-923-A",
+     "v1.1-row-995-A"
+    ],
+    "broken": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1053-A",
+     "v1.1-row-1086-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-341-A"
+    ]
+   }
+  }
+ }
+}

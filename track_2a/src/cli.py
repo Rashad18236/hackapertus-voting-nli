@@ -87,9 +87,12 @@ class Settings:
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
-    ap_structure_a: str = "off"  # session 11, step 3 (off): Apertus reads the contents pages (one call per booklet):
-                                 # "after-parser" (only when the parser gives no valid part for the vote) or "all";
-                                 # its entries are used only where they pass the parser's heading checks
+    ap_structure_a: str = "ask-after-parser"  # Apertus reads the contents pages (one call per booklet); its entries are
+                                 # used only where they pass the parser's heading checks. Session 12, step 6 (adopted,
+                                 # STRUCTURE RULE: parser forced off, dev 0.946 vs 0.896, val 0.939 vs 0.872):
+                                 # "ask-after-parser", asked from the main process only when the rules name a part and
+                                 # the parser gives no valid part for the vote. Session 11 (off): "after-parser" and
+                                 # "all" (both prepare every case in turn); "off"
     fallback_a: str = "bm25-ap"  # what a case that section-route cannot route gets. Session 12, step 5 (adopted, FALLBACK
                                  # RULE: forced fallback dev 0.956 vs 0.900, val 0.957 vs 0.875): "bm25-ap", BM25 on the
                                  # claim (translated by Apertus when it is in another language than the booklet), an
