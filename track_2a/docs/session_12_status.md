@@ -31,15 +31,21 @@ Updated after every step. If the session is restarted with "continue", work goes
 - (13:00) Step 2 (`docs/runs/2026-10-13_rashad_memory-guard_grid48`): memory guard on by default; both tasks write
   every response from 4g to 512m with 2 and 1 CPUs.
 
+- (13:56) Step 5 val (`docs/runs/2026-10-13_rashad_bm25ap-fallback_valA300`): bm25-ap 0.957 / 0.755 against
+  0.875 / 0.588 (forced): **passes the FALLBACK RULE; default.**
+- (14:28) Step 6 dev and val (`docs/runs/2026-10-13_rashad_ap-structure-ask_{devA300,valA300}`): AP-structure asked
+  after the parser, parser forced off: dev 0.946 / 0.925 vs 0.896 / 0.672, val 0.939 / 0.917 vs 0.872 / 0.593:
+  **passes the STRUCTURE RULE; default.** Fixes found on the way: AP-part kept with it; a bm25-ap error goes on to
+  embed-e5-small.
+- (14:35) Final defaults committed (`828429c`): memory guard, bm25-ap fallback, AP-structure asked after the parser;
+  G1/G2 differ only on the 4 dev/val cases that fall back (bm25-ap). Not adopted: B-R, H, B-BM25 (step 3), S (step 4).
+  Step 8 not done (no default uses S). No separate probe run (the final runs include the probe).
+
 ## Running
 
-- Step 6 dev run (`docs/runs/2026-10-13_rashad_ap-structure-ask_devA300`, from 12:46): forced "no parser", today vs
-  AP-structure asked after the parser.
-- Then step 5 val (`docs/runs/2026-10-13_rashad_bm25ap-fallback_valA300`), forced fallback on the val sample.
-- Memory grid with S (information) on CPUs 2-3.
+- FINISH: the image `session-12` from `828429c`; final runs dev / val / probe through it.
 
 ## Next
 
-- Step 6 val if it passes on dev; probe run (exploring).
-- FINISH: final defaults (memory guard; bm25-ap and AP-structure-ask if confirmed), image `session-12`, final runs
-  dev / val / probe, local time, REF SCORE, memory grid, replay reference, reports, CLAUDE.md, technical report.
+- FINISH: replay reference, local time 1.0 / 0.3 / 0.1, REF SCORE, memory grid of the final image, reports,
+  CLAUDE.md, technical report and PDF, self checks.
