@@ -1,0 +1,18 @@
+580 cases, 0 booklets parsed; arms: ['today', 'B2-unrelated', 'B3-title']
+[1/580] v1.1-row-0-B | today: entailment | B2-unrelated: entailment | B3-title: entailment
+[2/580] v1.1-row-1-B | B2-unrelated: entailment | B3-title: entailment | today: entailment
+[3/580] v1.1-row-3-B | B3-title: entailment | today: entailment | B2-unrelated: entailment
+[4/580] v1.1-row-7-B | today: entailment | B2-unrelated: entailment | B3-title: neutral (unparseable answer)
+[5/580] v1.1-row-10-B | B2-unrelated: entailment | B3-title: entailment | today: entailment
+[6/580] v1.1-row-11-B | B3-title: entailment | today: entailment | B2-unrelated: entailment
+[7/580] v1.1-row-12-B | today: entailment | B2-unrelated: entailment | B3-title: entailment
+[8/580] v1.1-row-13-B | B2-unrelated: entailment | B3-title: entailment | today: entailment
+[9/580] v1.1-row-15-B | B3-title: entailment | today: entailment | B2-unrelated: entailment
+[10/580] v1.1-row-17-B | today: entailment | B2-unrelated: entailment | B3-title: entailment
+[11/580] v1.1-row-19-B | B2-unrelated: entailment | B3-title: entailment | today: entailment
+[12/580] v1.1-row-24-B | B3-title: entailment | today: entailment | B2-unrelated: entailment
+[13/580] v1.1-row-25-B | today: entailment | B2-unrelated: entailment | B3-title: entailment
+[14/580] v1.1-row-29-B | B2-unrelated: entailment | B3-title: entailment | today: entailment
+[15/580] v1.1-row-32-B | B3-title: entailment | today: entailment | B2-unrelated: entailment
+[16/580] v1.1-row-37-B | today: entailment | B2-unrelated: entailment | B3-title: entailment
+[17/580] v1.1-row-43-B | B2-unrelated: entailment | B3-title: entailment | today: entailment

@@ -1,0 +1,42 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "22:35",
+ "kind": "model run",
+ "code": "3572cc8 (scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task B cases",
+ "format": "official scorer; interleaved, 4 arms, 1 request per second (session 13 step 2; B1 void after the format check)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "task B",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_prompts-B_devB300/today",
+  "2026-10-13_rashad_prompts-B_devB300/B3-title",
+  "2026-10-13_rashad_prompts-B_devB300/B4-claim-first"
+ ],
+ "setup": "B2, v7-unrelated: v3-topic-first with its decision block replaced (--prompt-b v7-unrelated)",
+ "task_b": {
+  "prompt_version": "v7-unrelated",
+  "change": "prompt v7-unrelated (B2)",
+  "n_cases": 300,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "results": {
+  "macro_f1": 0.983,
+  "f1": {
+   "entailment": 0.985,
+   "neutral": 0.99,
+   "contradiction": 0.974
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 841,
+  "mean_time_ms": 925,
+  "p95_time_ms": 1473,
+  "mean_output_tokens": 7.6
+ }
+}

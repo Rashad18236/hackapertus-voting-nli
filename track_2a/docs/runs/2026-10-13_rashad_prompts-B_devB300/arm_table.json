@@ -1,0 +1,116 @@
+{
+ "run": "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-13_rashad_prompts-B_devB300",
+ "task": "B",
+ "expected": "output/devB/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 300,
+   "macro_f1": 0.9867,
+   "f1": {
+    "entailment": 0.9854,
+    "neutral": 0.9949,
+    "contradiction": 0.9798
+   },
+   "input_tokens": 815.3,
+   "output_tokens": 8.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 1,
+    "same_language": 1,
+    "cross_language": 0
+   }
+  },
+  "B2-unrelated": {
+   "cases": 300,
+   "macro_f1": 0.9832,
+   "f1": {
+    "entailment": 0.9854,
+    "neutral": 0.99,
+    "contradiction": 0.9744
+   },
+   "input_tokens": 841.3,
+   "output_tokens": 7.6,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 0,
+    "same_language": 0,
+    "cross_language": 0
+   },
+   "fixes": 1,
+   "breaks": 2,
+   "sign_test_p": 0.875,
+   "sign_test_p_two_sided": 1.0,
+   "fix_ids": [
+    "v1.1-row-688-B"
+   ],
+   "break_ids": [
+    "v1.1-row-1100-B",
+    "v1.1-row-1253-B"
+   ]
+  },
+  "B3-title": {
+   "cases": 300,
+   "macro_f1": 0.98,
+   "f1": {
+    "entailment": 0.9754,
+    "neutral": 0.9849,
+    "contradiction": 0.9798
+   },
+   "input_tokens": 839.6,
+   "output_tokens": 8.8,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 1,
+    "same_language": 1,
+    "cross_language": 0
+   },
+   "fixes": 0,
+   "breaks": 2,
+   "sign_test_p": 1.0,
+   "sign_test_p_two_sided": 0.5,
+   "fix_ids": [],
+   "break_ids": [
+    "v1.1-row-5-B",
+    "v1.1-row-412-B"
+   ]
+  },
+  "B4-claim-first": {
+   "cases": 300,
+   "macro_f1": 0.9799,
+   "f1": {
+    "entailment": 0.9804,
+    "neutral": 0.9851,
+    "contradiction": 0.9744
+   },
+   "input_tokens": 851.3,
+   "output_tokens": 39.3,
+   "unreadable": 5,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 0,
+    "same_language": 0,
+    "cross_language": 0
+   },
+   "fixes": 1,
+   "breaks": 3,
+   "sign_test_p": 0.9375,
+   "sign_test_p_two_sided": 0.625,
+   "fix_ids": [
+    "v1.1-row-688-B"
+   ],
+   "break_ids": [
+    "v1.1-row-478-B",
+    "v1.1-row-1014-B",
+    "v1.1-row-1015-B"
+   ]
+  }
+ }
+}

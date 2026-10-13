@@ -1,0 +1,17 @@
+{"id": "v1.1-row-0-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 728, "output_tokens": 7, "inference_time_ms": 3809}}
+{"id": "v1.1-row-1-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1014, "output_tokens": 7, "inference_time_ms": 1107}}
+{"id": "v1.1-row-3-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 662, "output_tokens": 7, "inference_time_ms": 426}}
+{"id": "v1.1-row-7-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1251, "output_tokens": 7, "inference_time_ms": 1125}}
+{"id": "v1.1-row-10-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 909, "output_tokens": 7, "inference_time_ms": 451}}
+{"id": "v1.1-row-11-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 985, "output_tokens": 7, "inference_time_ms": 416}}
+{"id": "v1.1-row-12-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 660, "output_tokens": 7, "inference_time_ms": 924}}
+{"id": "v1.1-row-13-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1136, "output_tokens": 7, "inference_time_ms": 412}}
+{"id": "v1.1-row-15-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1212, "output_tokens": 7, "inference_time_ms": 286}}
+{"id": "v1.1-row-17-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 756, "output_tokens": 32, "inference_time_ms": 2434}}
+{"id": "v1.1-row-19-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 791, "output_tokens": 7, "inference_time_ms": 475}}
+{"id": "v1.1-row-24-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 967, "output_tokens": 7, "inference_time_ms": 481}}
+{"id": "v1.1-row-25-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 661, "output_tokens": 7, "inference_time_ms": 790}}
+{"id": "v1.1-row-29-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 691, "output_tokens": 7, "inference_time_ms": 825}}
+{"id": "v1.1-row-32-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 820, "output_tokens": 7, "inference_time_ms": 565}}
+{"id": "v1.1-row-37-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 671, "output_tokens": 7, "inference_time_ms": 931}}
+{"id": "v1.1-row-43-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1151, "output_tokens": 7, "inference_time_ms": 364}}
