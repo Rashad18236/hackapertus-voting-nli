@@ -32,12 +32,19 @@ Updated after every step. If the session is restarted with "continue", work goes
   task A local time at 0.3 s 0.202 → 0.101 s per case (`docs/runs/2026-10-12_rashad_local-time-step4_devA300`).
 - Step 2 local work per fallback case: routed 0.29 s, today's fallback 1.74 s, VW 1.31 s, BW 1.61 s.
 
+- (23:53) Step 3 run 2 (150 reworded dev openings): AP-part 0.967 / 0.880 vs VW 0.894 / 0.670 vs today 0.906 / 0.700;
+  **passes the HYBRID RULE on dev** (+0.073); AP-part rebuilt for the worker processes (off; G1/G2 pass, 271 tests).
+- (00:10) Step 6a timings (task B, local time per case at 1.0 / 0.3 / 0.1 s): full 0.0067 / 0.0066 / 0.0067; L 0.0065 /
+  0.0066 / 0.0067; H 0.0072 / 0.0082 / 0.059; E 0.011 / 0.661. Agreement with E's 4 paragraphs (mean of 3.81): Q 3.36,
+  T 3.06, H 2.78, L 2.03.
+
 ## Running
 
-- Step 3 run 2 (from 23:19): 150 reworded dev cases, today / VW / AP-part; then run 3 (parser off: today's fallback,
-  VW, AP-structure). Model runs on CPUs 0–1.
-- CPUs 2–3: step 6a local time (full, L, H), then step 5 memory sweep, then step 6a (E, T, Q), then AP-all's local
-  time (replay of run 1).
+- Step 3 run 3 (from 23:53): dev 300 with the parser off: today's fallback, VW, AP-structure (slow: whole-booklet
+  embedding). Then (`chain3`) the image check and the AP-part val confirmation (150 reworded val cases), then
+  (`chain4`) step 6 dev run: today, E, H, L on 300 dev task B cases.
+- CPUs 2–3: step 6a Q and T timings, then step 5 memory sweep (today's defaults) and memory variants, then AP-all's
+  local time.
 
 ## Next
 
