@@ -46,9 +46,9 @@ answer from one backend), session 11's final image → session 12's (different r
 | Task B Macro-F1 | 0.987 → **0.987** | 0.968 → **0.969** | 0.977 → **0.977** |
 | Task A tokens per case (input + output) | 1,238 + 14.5 → 1,240 + 14.7 | 1,206 + 14.5 → 1,211 + 14.7 | 1,136 + 14.5 → 1,169 + 16.5 |
 | Task B tokens per case | 815 + 8.7 → 815 + 8.7 | 820 + 9.3 → 820 + 9.4 | 789 + 8.9 → 789 + 8.6 |
-| Task A local time per case, 1.0 / 0.3 s per request | 0.018 / 0.155 (repeat 0.108) → LT_DEV_A | 0.008 / 0.010 → LT_VAL_A | 0.026 / 0.237 → LT_PROBE_A |
-| Task B local time per case, 1.0 / 0.3 s | 0.010 / 0.009 → LT_DEV_B | 0.007 / 0.007 → LT_VAL_B | 0.015 / 0.015 → LT_PROBE_B |
-| **REF SCORE**, 1.0 / 0.3 s | 0.909 / 0.851 → REF_DEV | 0.908 / 0.906 → REF_VAL | 0.897 / 0.825 → REF_PROBE |
+| Task A local time per case, 1.0 / 0.3 s per request | 0.018 / 0.155 (repeat 0.108) → 0.017 / 0.160 s (repeat: 0.113) | 0.008 / 0.010 → 0.009 / 0.010 s | 0.026 / 0.237 → 0.040 / 0.028 s |
+| Task B local time per case, 1.0 / 0.3 s | 0.010 / 0.009 → 0.012 / 0.010 s | 0.007 / 0.007 → 0.007 / 0.007 s | 0.015 / 0.015 → 0.015 / 0.016 s |
+| **REF SCORE**, 1.0 / 0.3 s | 0.909 / 0.851 → **0.903 / 0.845** | 0.908 / 0.906 → **0.913 / 0.907** | 0.897 / 0.825 → **0.897 / 0.896** |
 
 Against session 11's final runs, one dev task A label changed with an identical request (row 1161, the endpoint's own
 variation) and the fallback cases changed path; on val one fallback case moved from neutral to entailment (gold:
