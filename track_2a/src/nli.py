@@ -259,6 +259,141 @@ PROMPTS_A["A-v4-second-look-cited"] = PROMPTS_A["A-v4-second-look"].replace(
 assert PROMPTS_A["A-v4-second-look-cited"] != PROMPTS_A["A-v4-second-look"]
 
 
+# Session 13, step 1 (all off by default): five rewrites of the routed prompt against contradictions answered neutral
+# (15 of session 12's 23 val errors), word for word from the session 13 instruction. HEADER_A is the first paragraph of
+# A-v4-section-route; ACCORDING the sentence on "according to ..." claims with the label as a number.
+HEADER_A = PROMPTS_A["A-v4-section-route"].split("\n\n", 1)[0]
+ACCORDING = ('A claim of the form "according to the text / the committee / the Federal Council, X" is 1 when the text '
+             'does not deal with X.')
+_ANSWER_A = PROMPTS_A["A-v4-section-route"][PROMPTS_A["A-v4-section-route"].index("First give the numbers"):]
+
+# A1: what the claim says and what the text says on that point, then paragraphs and label.
+PROMPTS_A["A-v6-says"] = HEADER_A + """
+
+Work in this order:
+1. "claim_says": what the claim asserts, in at most 12 words, in the language of the reference text.
+2. "text_says": what the reference text says on exactly that point, in at most 15 words, in its own language. If the text does not deal with that point, write the single word "nothing".
+3. "paragraphs": the numbers of the paragraphs that justify your answer, at most three, most relevant first (an empty list if the text says nothing).
+4. "label": 1 (neutral) if text_says is "nothing"; 0 (entailment) if the text says the same as the claim; 2 (contradiction) if the text gives a different number, share, date, actor, direction or outcome for the same thing. Missing information is never 2. A different value is never 1.
+""" + ACCORDING + """
+
+Answer with one JSON object and nothing else, fields in this order, for example:
+{"claim_says": "...", "text_says": "...", "paragraphs": [2, 5], "label": 0}"""
+
+# A2: neutral only when the text does not deal with the point, or deals with it without settling it.
+RULE_A_RESIDUAL = """Decide in this order:
+1. Does the reference text deal with the point the claim makes? If it says nothing about that point, the label is 1 (neutral). """ + ACCORDING + """
+2. If it does deal with that point:
+   0 (entailment): the text states the same as the claim, in its own words.
+   2 (contradiction): the text states a different number, share, date, actor, direction or outcome for the same thing, or the opposite of the claim.
+   1 (neutral) only if the text deals with the subject but does not settle the point either way.
+Missing information is never 2. A different value is never 1."""
+PROMPTS_A["A-v6-residual"] = HEADER_A + "\n\n" + RULE_A_RESIDUAL + "\n\n" + _ANSWER_A
+
+# A3: A2's rules, then what differs between claim and text, then the label.
+PROMPTS_A["A-v6-mismatch"] = HEADER_A + "\n\n" + RULE_A_RESIDUAL + """
+
+First give the paragraphs that justify your answer, at most three, most relevant first. Then "mismatch": what, if anything, differs between the claim and the text on the same point: "none" (the text says the same), "number", "date", "actor", "direction", "negation", "scope", or "not_covered" (the text does not deal with the point). Then the label: none -> 0, not_covered -> 1, anything else -> 2.
+
+Answer with one JSON object and nothing else, for example:
+{"paragraphs": [2, 5], "mismatch": "none", "label": 0}"""
+
+# A4: A2's rules, then the claim reversed and which of the two the text states; no label field (Python maps the word).
+PROMPTS_A["A-v6-opposite"] = HEADER_A + "\n\n" + RULE_A_RESIDUAL + """
+
+First give the paragraphs that justify your answer, at most three, most relevant first. Then "opposite_claim": the claim with its central point reversed (the other number, the other actor, the opposite direction or outcome), at most 15 words, in the language of the reference text. Then "text_states": "claim" if the text states what the claim says, "opposite" if the text states what the opposite claim says, "neither" if the text deals with neither.
+
+Answer with one JSON object and nothing else, for example:
+{"paragraphs": [2, 5], "opposite_claim": "...", "text_states": "claim"}"""
+
+# A5: today's prompt (A-v4-section-route-L1) with the contradiction line first and every label as a word.
+_RULE_A_WORDS = """Decide in this order:
+1. Does the reference text deal with the subject of the claim at all? If not, the label is "not_covered".
+2. If it does:
+   "contradicted" only if the reference text states something that cannot be true together with the claim;
+   "supported" if the reference text supports the claim;
+   otherwise "not_covered" (insufficient information).
+Missing information is never "contradicted". A claim of the form "according to the text / the committee / the Federal Council, X" is "not_covered" when the reference text does not deal with X.
+""" + L1_SENTENCE.replace("is a contradiction.", 'is "contradicted".')
+assert _RULE_A_WORDS.endswith('is "contradicted".')
+PROMPTS_A["A-v6-words"] = PROMPTS_A["A-v4-section-route-L1"].replace(_RULE_B + "\n" + L1_SENTENCE, _RULE_A_WORDS).replace(
+    "(for label 1, an empty list)", '(for "not_covered", an empty list)').replace(
+    '{"paragraphs": [2, 5], "label": 0}', '{"paragraphs": [2, 5], "label": "contradicted"}')
+assert "1 (neutral)" not in PROMPTS_A["A-v6-words"] and '"label": "contradicted"}' in PROMPTS_A["A-v6-words"]
+
+_PARAGRAPHS_PROPERTY = ANSWER_SCHEMA_A_PARAGRAPHS["properties"]["paragraphs"]
+
+
+def _schema(**properties):
+    """A strict answer schema: the fields in the order given, all required, nothing else."""
+    return {"type": "object", "properties": properties, "required": list(properties), "additionalProperties": False}
+
+
+MISMATCHES = ["none", "number", "date", "actor", "direction", "negation", "scope", "not_covered"]
+# Per routed version of session 13: its answer schema, the field the label is read from, the words Apertus chooses
+# from (mapped to 0/1/2; None: the field holds 0, 1 or 2) and the answer budget.
+ROUTED_VERSIONS = {
+    "A-v6-says": {"schema": _schema(claim_says={"type": "string", "maxLength": 120},
+                                    text_says={"type": "string", "maxLength": 150},
+                                    paragraphs=_PARAGRAPHS_PROPERTY,
+                                    label={"type": "integer", "enum": [0, 1, 2]}),
+                  "field": "label", "words": None, "max_tokens": 256},
+    "A-v6-residual": {"schema": ANSWER_SCHEMA_A_PARAGRAPHS, "field": "label", "words": None, "max_tokens": 128},
+    "A-v6-mismatch": {"schema": _schema(paragraphs=_PARAGRAPHS_PROPERTY,
+                                        mismatch={"type": "string", "enum": MISMATCHES},
+                                        label={"type": "integer", "enum": [0, 1, 2]}),
+                      "field": "label", "words": None, "max_tokens": 128},
+    "A-v6-opposite": {"schema": _schema(paragraphs=_PARAGRAPHS_PROPERTY,
+                                        opposite_claim={"type": "string", "maxLength": 150},
+                                        text_states={"type": "string", "enum": ["claim", "opposite", "neither"]}),
+                      "field": "text_states", "words": {"claim": 0, "opposite": 2, "neither": 1}, "max_tokens": 256},
+    "A-v6-words": {"schema": _schema(paragraphs=_PARAGRAPHS_PROPERTY,
+                                     label={"type": "string", "enum": ["contradicted", "supported", "not_covered"]}),
+                   "field": "label", "words": {"supported": 0, "not_covered": 1, "contradicted": 2}, "max_tokens": 128},
+}
+
+# A6 (session 13, step 1; off by default): a second look after a neutral answer that cites paragraphs. The excerpt is
+# the cited paragraphs with their neighbours (src/cli.py second_look_a6); Apertus's finding is mapped to the label.
+PROMPTS_A["A-v6-second-look"] = """You compare a CLAIM with a short EXCERPT from an official Swiss federal voting booklet (numbered paragraphs; the excerpt and the claim may be in different languages). Use only the excerpt.
+"finding": "same" if the excerpt states what the claim says; "different" if the excerpt gives a different number, share, date, actor, direction or outcome for the same thing, or the opposite; "nothing" if the excerpt does not deal with the point the claim makes.
+
+Answer with one JSON object and nothing else:
+{"finding": "same"}"""
+ANSWER_SCHEMA_A6 = _schema(finding={"type": "string", "enum": ["same", "different", "nothing"]})
+FINDING_LABELS = {"same": 0, "different": 2, "nothing": 1}
+
+
+def build_messages_excerpt(numbered, claim_text, version="A-v6-second-look"):
+    """Messages for A6: the EXCERPT as numbered paragraphs ([(number, text)], numbers as first shown), then CLAIM."""
+    excerpt = "\n".join(f"[{n}] {text}" for n, text in numbered)
+    return [{"role": "system", "content": PROMPTS_A[version]},
+            {"role": "user", "content": f"EXCERPT:\n{excerpt}\n\nCLAIM:\n{claim_text}"}]
+
+
+def parse_word(answer, field, words):
+    """(label or None, reason) from the word Apertus chose in `field` (e.g. A6's finding), mapped by `words`."""
+    obj = _first_json_object(answer or "")
+    if obj is None:
+        return None, "no JSON object"
+    value = obj.get(field)
+    label = words.get(value.strip().lower()) if isinstance(value, str) else None
+    if label is None:
+        return None, f"invalid {field} {value!r}"
+    return label, ""
+
+
+def parse_routed_answer(answer, version):
+    """(label or None, paragraph numbers, reason) of a routed answer. Session 13's versions read the label from
+    their own field (mapping the word Apertus chose); every other version as parse_label_and_pages."""
+    spec = ROUTED_VERSIONS.get(version)
+    if spec is None or spec["words"] is None:
+        return parse_label_and_pages(answer, key="paragraphs")
+    label, reason = parse_word(answer, spec["field"], spec["words"])
+    if label is None:
+        return None, [], reason
+    return label, _numbers(_first_json_object(answer).get("paragraphs")), ""
+
+
 def build_messages_a_paragraphs(part_line, paragraph_texts, vote, claim_text, version="A-v4-section-route"):
     """Messages for a routed part: PART line, numbered paragraphs (as shown), VOTE and CLAIM."""
     numbered = "\n".join(f"[{i}] {text}" for i, text in enumerate(paragraph_texts, start=1))
@@ -312,17 +447,21 @@ def parse_label_and_pages(answer, key="pages"):
     label = _read_label(obj.get("label"))
     if label is None:
         return None, [], f"invalid label {obj.get('label')!r}"
-    pages = []
-    raw_pages = obj.get(key)
-    if isinstance(raw_pages, list):
-        for p in raw_pages:
+    return label, _numbers(obj.get(key)), ""
+
+
+def _numbers(raw_numbers):
+    """The page or paragraph numbers of an answer, as ints as given (digit strings accepted), possibly empty."""
+    numbers = []
+    if isinstance(raw_numbers, list):
+        for p in raw_numbers:
             if isinstance(p, bool):
                 continue
             if isinstance(p, int):
-                pages.append(p)
+                numbers.append(p)
             elif isinstance(p, str) and p.strip().isdigit():
-                pages.append(int(p.strip()))
-    return label, pages, ""
+                numbers.append(int(p.strip()))
+    return numbers
 
 
 # Robustness experiments (Kaan; off by default, src/strategies.py): prompts that rewrite the claim. They never
@@ -356,6 +495,46 @@ def parse_claims(answer, key):
     value = obj.get(key) if obj else None
     values = value if isinstance(value, list) else [value]
     return [v.strip() for v in values if isinstance(v, str) and v.strip()]
+
+
+# Session 13, step 2 (all off by default): three task B prompts against unrelated passages answered contradiction (9 of
+# session 12's 18 val errors), word for word from the session 13 instruction. B1 names both ballots first; B2 is
+# v3-topic-first with its decision block replaced; B4 is v3-topic-first with its answer block replaced.
+PROMPTS_B["v7-same-ballot"] = """You check a CLAIM against a REFERENCE TEXT from an official Swiss federal voting booklet. The first line of the reference text names the ballot it is about. The reference text and the claim may be in different languages (German, French or Italian). Use only the reference text, never outside knowledge.
+
+Work in this order:
+1. "passage_ballot": the ballot the reference text is about, at most 8 words, in the language of the reference text.
+2. "claim_ballot": the ballot the claim is about, at most 8 words, in the language of the reference text.
+3. "same_ballot": true only if the claim is about the ballot the reference text is about.
+4. "label": 1 (neutral) if same_ballot is false. Otherwise 0 (entailment) if the reference text supports the claim; 2 (contradiction) only if the reference text states something that cannot be true together with the claim; otherwise 1 (neutral: insufficient information). Missing information is never a contradiction. """ + ACCORDING + """
+
+Answer with one JSON object and nothing else, fields in this order:
+{"passage_ballot": "...", "claim_ballot": "...", "same_ballot": true, "label": 0}"""
+
+_DECIDE_B = PROMPTS_B["v3-topic-first"][PROMPTS_B["v3-topic-first"].index("Decide in this order:"):
+                                        PROMPTS_B["v3-topic-first"].index("\n\nAnswer with one JSON object")]
+PROMPTS_B["v7-unrelated"] = PROMPTS_B["v3-topic-first"].replace(_DECIDE_B, """Decide in this order:
+1. Is the reference text about the same ballot and the same point as the claim? If it is about another ballot or another subject, or does not deal with the point the claim makes, the label is 1 (unrelated). When unsure whether it deals with the point, the label is 1.
+2. Only if it deals with the point: 0 (entailment) if the reference text supports the claim; 2 (contradiction) only if the reference text states something that cannot be true together with the claim.
+A text about a different ballot never contradicts the claim, even when the subjects are similar and even when the claim says "according to the text". Missing information is never a contradiction.""")
+assert PROMPTS_B["v7-unrelated"] != PROMPTS_B["v3-topic-first"]
+
+PROMPTS_B["v7-claim-first"] = PROMPTS_B["v3-topic-first"].replace(_ANSWER_B, """First "claim_says": what the claim asserts, in at most 12 words, in the language of the reference text. Then the label.
+
+Answer with one JSON object and nothing else, fields in this order:
+{"claim_says": "...", "label": 0}""")
+assert PROMPTS_B["v7-claim-first"] != PROMPTS_B["v3-topic-first"]
+
+# Per session 13 task B version: its answer schema and budget (B2 keeps today's: no schema, 32 tokens). The label is
+# read from "label" as today (parse_label).
+B_VERSIONS = {
+    "v7-same-ballot": {"schema": _schema(passage_ballot={"type": "string", "maxLength": 80},
+                                         claim_ballot={"type": "string", "maxLength": 80},
+                                         same_ballot={"type": "boolean"},
+                                         label={"type": "integer", "enum": [0, 1, 2]}), "max_tokens": 160},
+    "v7-claim-first": {"schema": _schema(claim_says={"type": "string", "maxLength": 120},
+                                         label={"type": "integer", "enum": [0, 1, 2]}), "max_tokens": 128},
+}
 
 
 DEFAULT_PROMPT_B = "v3-topic-first"  # best on dev (session 2, Run A)

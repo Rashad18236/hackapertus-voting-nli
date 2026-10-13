@@ -5,6 +5,8 @@
 - "cited-then-retrieved" (session 4): the same items first, then the other
   pages the model was shown, most similar to the claim first (e5-small, a
   page's best chunk), until there are five items.
+- H (session 13, step 3; off by default, Settings.evidence_hedge_a): for routed answers, today's items, then the
+  paragraph before the first cited one when that one opens its page, then the whole cited page (see hedge()).
 - "cited-pieces" (session 6, default): only the pages the model cited, each split into
   the pipeline's pieces of at most 1,000 characters (as the embedding chunks,
   src/contexts/embed_e5_small.py). Each piece is its own item with its page.
@@ -66,3 +68,35 @@ def pieces(shown, cited_pages, max_items=MAX_ITEMS, piece_chars=PIECE_CHARS):
                     return items
                 items.append({"page": page, "text": texts[i]})
     return items
+
+
+def hedge(items, paragraphs, cited, page_texts=None, max_items=MAX_ITEMS):
+    """H (session 13, step 3; off by default): a routed answer's evidence with two more items for the page check
+    that the organisers have not settled (the quote's page, any gold page, or the first gold page).
+
+    items: today's items (kept first, in their order); paragraphs: the routed part as sent, [(page, text)];
+    cited: the paragraph numbers as the answer gave them; page_texts: {page: text} of the part's pages.
+    1. If the first cited paragraph is the first paragraph of its page and the part continues from an earlier page
+       (the part's paragraph before it lies on an earlier page), that earlier paragraph, with its own page.
+    2. If slots remain, the whole text of the first cited paragraph's page (at most 5,000 characters, its page).
+    At most max_items items; a text already present is left out; every item's text lies on its page."""
+    items = list(items)[:max_items]
+    valid = [n for n in cited if isinstance(n, int) and not isinstance(n, bool) and 1 <= n <= len(paragraphs)]
+    if not valid:
+        return items
+    present = {item["text"] for item in items}
+
+    def add(page, text):
+        if len(items) < max_items and text and text not in present:
+            items.append({"page": page, "text": text})
+            present.add(text)
+    index = valid[0] - 1
+    page = paragraphs[index][0]
+    if index > 0 and paragraphs[index - 1][0] < page:
+        before_page, before_text = paragraphs[index - 1]
+        add(before_page, before_text[:parse.MAX_ITEM_CHARS])
+    whole = (page_texts or {}).get(page)
+    if whole and whole.strip():
+        add(page, whole.strip()[:parse.MAX_ITEM_CHARS])
+    return items
+

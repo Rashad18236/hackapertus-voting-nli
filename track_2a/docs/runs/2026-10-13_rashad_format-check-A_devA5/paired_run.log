@@ -1,0 +1,13 @@
+5 cases, 4 booklets parsed; arms: ['today', 'A1-says', 'A2-residual', 'A3-mismatch', 'A4-opposite', 'A5-words', 'today+A6']
+[1/5] v1.1-row-2-A | today: entailment | A1-says: entailment | A2-residual: entailment | A3-mismatch: entailment | A4-opposite: entailment | A5-words: entailment | today+A6: entailment
+[2/5] v1.1-row-844-A | A1-says: contradiction | A2-residual: neutral | A3-mismatch: neutral | A4-opposite: neutral | A5-words: neutral | today+A6: neutral | today: neutral
+[3/5] v1.1-row-994-A | A2-residual: contradiction | A3-mismatch: contradiction | A4-opposite: contradiction | A5-words: contradiction | today+A6: contradiction | today: contradiction | A1-says: contradiction
+[4/5] v1.1-row-1016-A | A3-mismatch: contradiction | A4-opposite: contradiction | A5-words: contradiction | today+A6: contradiction | today: neutral | A1-says: contradiction | A2-residual: contradiction
+[5/5] v1.1-row-1161-A | A4-opposite: contradiction | A5-words: contradiction | today+A6: contradiction | today: neutral | A1-says: contradiction | A2-residual: neutral | A3-mismatch: contradiction
+today: ok: 5; HTTP 429 answers: 0, retries: 0
+A1-says: ok: 5; HTTP 429 answers: 0, retries: 0
+A2-residual: ok: 5; HTTP 429 answers: 0, retries: 0
+A3-mismatch: ok: 5; HTTP 429 answers: 0, retries: 0
+A4-opposite: ok: 5; HTTP 429 answers: 0, retries: 0
+A5-words: ok: 5; HTTP 429 answers: 0, retries: 0
+today+A6: ok: 5; HTTP 429 answers: 0, retries: 0
