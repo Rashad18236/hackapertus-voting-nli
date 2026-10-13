@@ -1,1 +1,4 @@
 300 cases, 45 booklets parsed; arms: ['today-noparser', 'AP-ask-noparser']
+[1/300] v1.1-row-0-A | today-noparser: entailment | AP-ask-noparser: entailment
+[2/300] v1.1-row-1-A | AP-ask-noparser: entailment | today-noparser: entailment
+[3/300] v1.1-row-3-A | today-noparser: entailment | AP-ask-noparser: entailment
