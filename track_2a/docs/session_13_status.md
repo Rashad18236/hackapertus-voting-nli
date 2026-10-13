@@ -17,7 +17,7 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   "Contained in main via PR #20 (merged kaan/robustness-experiments in session 12)."
 - (19:59) Step 0: publish-image on `main` (run 74, `c85a119`) succeeded: tags `latest` and `sha-c85a119b409a`.
   `origin/main` contains `668114f`.
-- (20:15) Branch `rashad/session-13` from `origin/main`; publish workflow builds `session-13`; CLAUDE.md's current
+- (20:00) Branch `rashad/session-13` from `origin/main`; publish workflow builds `session-13`; CLAUDE.md's current
   stage is session 13 (session 12 "merged as PR #20").
 
 - (20:05) Step 1 code: prompts A1–A5 (`--prompt-a`), A6 (`--second-look-a6`), all off; pytest 332 passed; G1/G2 pass.
@@ -32,9 +32,15 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (20:26) Step 4 groundwork: `scripts/error_types.py` offline part on session 12's val task A errors: 23 errors,
   13 reading, 10 routing (gold passage not in what Apertus read); of the 15 answered neutral, 9 reading, 6 routing.
 
+- (20:30) G1/G2 with the H code (off): pass. With H on: G1 identical, 0 labels differ, evidence differs in 414 dev
+  and val cases (as rebuilt offline).
+- (20:36) **Step 3 done: H passes its rule** (`docs/runs/2026-10-13_rashad_evidence-pages_offline`): rule 3 (first
+  gold page) dev 116 → 119, val 223 → 236, probe 44 → 46; text hit dev 197 → 198; nothing worse. Joins the combination.
+  Rule 3 would cost about 40 % of today's evidence score (passages often start a page before the cited paragraph).
+
 ## Running
 
-- Step 1 dev run (until about 21:40); step 3 offline scoring (val, probe); G1/G2 with H off and on.
+- Step 1 dev run (until about 21:40).
 
 ## Next
 

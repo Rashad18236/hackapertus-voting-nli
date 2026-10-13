@@ -1,0 +1,375 @@
+{
+ "rules": [
+  "text hit",
+  "rule 1 (quote's page)",
+  "rule 2 (any gold page)",
+  "rule 3 (first gold page)"
+ ],
+ "sets": {
+  "dev": {
+   "gold_0_2_cases": 201,
+   "gold_pages_not_found": 0,
+   "counts": {
+    "today": {
+     "text hit": 197,
+     "rule 1 (quote's page)": 197,
+     "rule 2 (any gold page)": 192,
+     "rule 3 (first gold page)": 116
+    },
+    "H": {
+     "text hit": 198,
+     "rule 1 (quote's page)": 198,
+     "rule 2 (any gold page)": 193,
+     "rule 3 (first gold page)": 119
+    }
+   },
+   "evidence_changed_by_H": 138,
+   "notes": {
+    "ok": 198,
+    "cases whose rules differ": [
+     [
+      "v1.1-row-94-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-188-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1167-A",
+      {
+       "text hit": false,
+       "rule 1 (quote's page)": false,
+       "rule 2 (any gold page)": false,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      }
+     ],
+     [
+      "v1.1-row-1424-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ]
+    ],
+    "not routed or no evidence": 3
+   }
+  },
+  "val": {
+   "gold_0_2_cases": 401,
+   "gold_pages_not_found": 0,
+   "counts": {
+    "today": {
+     "text hit": 385,
+     "rule 1 (quote's page)": 385,
+     "rule 2 (any gold page)": 379,
+     "rule 3 (first gold page)": 223
+    },
+    "H": {
+     "text hit": 385,
+     "rule 1 (quote's page)": 385,
+     "rule 2 (any gold page)": 379,
+     "rule 3 (first gold page)": 236
+    }
+   },
+   "evidence_changed_by_H": 276,
+   "notes": {
+    "ok": 385,
+    "cases whose rules differ": [
+     [
+      "v1.1-row-175-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1009-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1013-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1055-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1060-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1076-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1137-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1164-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1239-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1259-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1430-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1475-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-1476-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ]
+    ],
+    "not routed or no evidence": 16
+   }
+  },
+  "probe": {
+   "gold_0_2_cases": 65,
+   "gold_pages_not_found": 0,
+   "counts": {
+    "today": {
+     "text hit": 63,
+     "rule 1 (quote's page)": 63,
+     "rule 2 (any gold page)": 63,
+     "rule 3 (first gold page)": 44
+    },
+    "H": {
+     "text hit": 63,
+     "rule 1 (quote's page)": 63,
+     "rule 2 (any gold page)": 63,
+     "rule 3 (first gold page)": 46
+    }
+   },
+   "evidence_changed_by_H": 50,
+   "notes": {
+    "ok": 61,
+    "cases whose rules differ": [
+     [
+      "v1.1-row-193-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ],
+     [
+      "v1.1-row-354-A",
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": false
+      },
+      {
+       "text hit": true,
+       "rule 1 (quote's page)": true,
+       "rule 2 (any gold page)": true,
+       "rule 3 (first gold page)": true
+      }
+     ]
+    ],
+    "not routed or no evidence": 4
+   }
+  }
+ },
+ "verdict": {
+  "at_least_as_good_under_every_rule": true,
+  "rule_3_gain": 18,
+  "adopt_if_also_G1_G2": true
+ }
+}
