@@ -50,3 +50,34 @@ real answers is measured in FINISH (`memory_final.txt` of the final runs).
 
 The local time under the guard is lower (no embedding); at 1.5 GiB and 2 GiB task A runs one lane (session 11,
 `pipeline.MEMORY_FOR_TWO_LANES`).
+
+**The same grid with model S** (information; S is not a default: it failed step 4 by one case): task A `--ranker S`,
+task B `--context-b cut4-r --ranker S`. No guard acts at any limit (S needs 0.5 GiB); every response is written, and
+the answers at every limit equal the 4 GB run's.
+
+| Task | CPUs | Memory limit | Exit | Responses | Peak memory (MiB) | Local time per case (s) |
+|---|---|---|---|---|---|---|
+| A | 2 | 4g | 0 | 300 of 300 | 200 | 0.0402 |
+| A | 2 | 2g | 0 | 300 of 300 | 126 | 0.1489 |
+| A | 2 | 1.5g | 0 | 300 of 300 | 126 | 0.1568 |
+| A | 2 | 1g | 0 | 300 of 300 | 126 | 0.1745 |
+| A | 2 | 768m | 0 | 300 of 300 | 126 | 0.1931 |
+| A | 2 | 512m | 0 | 300 of 300 | 125 | 0.1866 |
+| A | 1 | 4g | 0 | 300 of 300 | 125 | 0.1883 |
+| A | 1 | 2g | 0 | 300 of 300 | 126 | 0.1697 |
+| A | 1 | 1.5g | 0 | 300 of 300 | 126 | 0.171 |
+| A | 1 | 1g | 0 | 300 of 300 | 124 | 0.1722 |
+| A | 1 | 768m | 0 | 300 of 300 | 125 | 0.1525 |
+| A | 1 | 512m | 0 | 300 of 300 | 125 | 0.1653 |
+| B | 2 | 4g | 0 | 300 of 300 | 83 | 0.0073 |
+| B | 2 | 2g | 0 | 300 of 300 | 82 | 0.0072 |
+| B | 2 | 1.5g | 0 | 300 of 300 | 82 | 0.0078 |
+| B | 2 | 1g | 0 | 300 of 300 | 82 | 0.0078 |
+| B | 2 | 768m | 0 | 300 of 300 | 82 | 0.007 |
+| B | 2 | 512m | 0 | 300 of 300 | 82 | 0.0075 |
+| B | 1 | 4g | 0 | 300 of 300 | 81 | 0.0077 |
+| B | 1 | 2g | 0 | 300 of 300 | 81 | 0.0083 |
+| B | 1 | 1.5g | 0 | 300 of 300 | 82 | 0.008 |
+| B | 1 | 1g | 0 | 300 of 300 | 81 | 0.0079 |
+| B | 1 | 768m | 0 | 300 of 300 | 82 | 0.0075 |
+| B | 1 | 512m | 0 | 300 of 300 | 82 | 0.0081 |

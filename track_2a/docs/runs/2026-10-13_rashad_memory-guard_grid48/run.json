@@ -6,7 +6,7 @@
  "code": "c3cbaac (image sha-c3cbaac54b15); guard restructured in 6baf3a4 with the same behaviour for these settings",
  "task": "A+B",
  "variant": "section-route / task B cut4-t (today's defaults)",
- "cases": "dev, all 300 task A and all 300 task B cases, at 6 memory limits x 2 CPU counts",
+ "cases": "dev, all 300 task A and all 300 task B cases, at 6 memory limits x 2 CPU counts; the same grid with model S (information)",
  "setup": "scripts/local_time.py through the image: --memory 4g 2g 1.5g 1g 768m 512m, --cpus 2 and 1, fake model 0.1 s per request",
  "format": "responses written, exit code, peak memory; no model calls",
  "paired_with": null,
@@ -207,6 +207,150 @@
    "local_per_case_s": 0.0071,
    "cases_without_model": 300,
    "guard": true
+  },
+  "S_A_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 200,
+   "local_per_case_s": 0.0402
+  },
+  "S_A_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.1489
+  },
+  "S_A_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.1568
+  },
+  "S_A_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.1745
+  },
+  "S_A_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.1931
+  },
+  "S_A_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 125,
+   "local_per_case_s": 0.1866
+  },
+  "S_A_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 125,
+   "local_per_case_s": 0.1883
+  },
+  "S_A_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.1697
+  },
+  "S_A_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 126,
+   "local_per_case_s": 0.171
+  },
+  "S_A_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 124,
+   "local_per_case_s": 0.1722
+  },
+  "S_A_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 125,
+   "local_per_case_s": 0.1525
+  },
+  "S_A_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 125,
+   "local_per_case_s": 0.1653
+  },
+  "S_B_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 83,
+   "local_per_case_s": 0.0073
+  },
+  "S_B_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0072
+  },
+  "S_B_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0078
+  },
+  "S_B_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0078
+  },
+  "S_B_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.007
+  },
+  "S_B_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0075
+  },
+  "S_B_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 81,
+   "local_per_case_s": 0.0077
+  },
+  "S_B_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 81,
+   "local_per_case_s": 0.0083
+  },
+  "S_B_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.008
+  },
+  "S_B_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 81,
+   "local_per_case_s": 0.0079
+  },
+  "S_B_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0075
+  },
+  "S_B_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "peak_mib": 82,
+   "local_per_case_s": 0.0081
   }
  }
 }
