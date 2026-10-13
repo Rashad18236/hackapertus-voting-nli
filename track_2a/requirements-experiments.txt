@@ -1,0 +1,4 @@
+# Robustness experiments only (Kaan): local machine translation for the cross-language tournament and bm25-mt
+# (src/translate.py). Not in requirements.txt, so the Docker image is unchanged until a variant is adopted.
+ctranslate2==4.8.2
+sentencepiece==0.2.2

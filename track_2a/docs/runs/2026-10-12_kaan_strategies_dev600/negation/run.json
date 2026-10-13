@@ -1,0 +1,39 @@
+{
+ "person": "kaan",
+ "date": "2026-10-12",
+ "start_utc": "13:13",
+ "kind": "model run",
+ "code": "kaan/robustness-experiments working tree (parent 42b2a3c)",
+ "variant": "negation",
+ "format": "official, interleaved (four arms, rotating order, 2 s between requests)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI",
+ "setup": "--strategy-a/-b negation: today's call, Apertus writes the negated claim, negation judged; a neutral answer takes the negation's implied label",
+ "task": "A",
+ "cases": "dev, all 300 task A cases (600-case run: data/dev/cases.jsonl)",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-12_kaan_strategies_dev600/base",
+  "2026-10-12_kaan_strategies_dev600/xlang",
+  "2026-10-12_kaan_strategies_dev600/decompose"
+ ],
+ "results": {
+  "macro_f1": 0.987,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 1.0,
+   "contradiction": 0.98
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 2642,
+  "mean_time_ms": 6037,
+  "p95_time_ms": 8080,
+  "evidence": {
+   "score": 0.99,
+   "found": 199,
+   "cases": 201
+  }
+ }
+}
