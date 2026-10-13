@@ -928,3 +928,15 @@ Started 2026-10-12 20:10 UTC by Claude Code for Rashad, unattended, on branch `r
 - **FINISH: the final runs used the image `sha-bb2d08fea0f1` (the `session-11` tag at the time); later pushes change only documentation, so their builds of `session-11` contain the same `src/`.** The runs must name one fixed image.
 - **The new replay reference is `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA` (also `scripts/local_time.py`'s default table).** It reproduces the final runs' 1,180 dev and val answers exactly.
 - **The probe's 4 task A fallbacks are claims the rules route to the committee of a vote that has no committee part (2025-09-28); AP-part does not apply to them, and earlier notes saying they were unknown openings were corrected.** Checked on the final run: the rules name a part for every dev, val and probe claim.
+
+# Session 12: every remaining idea with a real chance, in order of value
+
+Started 2026-10-13 10:35 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-12` from `main` at
+`37904b3` (PR #18 merged). The last experimental session. One line per decision with its reason; where the
+instruction was unclear, the reading taken.
+
+- **The session's replay reference for G1/G2 is `2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA`.** Rashad's instruction.
+- **The publish workflow also builds from `rashad/session-12` and tags `session-12`.** As in sessions 10 and 11: the final runs go through an image built from this branch; `latest` stays `main`-only.
+- **The instruction arrived cut off in step 3 ("H: session 11's selector …; B"); the rest of step 3, steps 4–8 and FINISH were not received.** Readings taken for the missing parts are recorded below where each step starts, and the order follows the instruction's own priorities ("in order of value") and its references (steps 4 and 8 depend on R; session 11's open costs: e5 for long parts, e5's memory peak, AP-structure blocked only by its page bar).
+- **Step 0: Kaan's branch is merged whole (`git merge --no-ff`, no conflict: it already contained `main` at `37904b3`).** Everything in it is off by default (new context names, `src/strategies.py` without hooks in `src/cli.py`, `src/translate.py` imported lazily); `requirements-experiments.txt` is not read by the Dockerfile, so ctranslate2 and sentencepiece stay out of the image and of `requirements.txt`, as the session's rules require.
+- **Step 0: the dataset README (checked 2026-10-13 10:40 UTC) is unchanged since session 9: repository commit `fc2b276`, last modified 2026-10-08 12:40 UTC, a field table but no label definitions beyond the names.** Word for word, `entailment_label`: "The entailment class of the `claim` relative to the `reference_string` and voting booklet as a whole. May be `Entailment` (`0`), `Unrelated / Neutral` (`1`) or `Contradiction` (`2`)." The prompts keep the official guide's wording.
