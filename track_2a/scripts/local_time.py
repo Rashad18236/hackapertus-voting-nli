@@ -47,7 +47,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import stub_llm  # noqa: E402
 
-REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-13_rashad_prompt-snapshot-final-s11_devAB-valA/replay_table.json"
+REPLAY_DEFAULT = ROOT / "docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA/replay_table.json"
 
 
 def union_length(intervals, lo, hi):
