@@ -80,7 +80,17 @@ pass G1.
 
 **Step 5, memory.**
 
-PENDING-STEP5
+(`2026-10-13_rashad_memory-step5_devA300`; no model). The main process holds 48 MiB; each
+lane peaks at about 1.19 GiB, almost all of it from loading e5 (1.16 GiB at its peak, 0.80 GiB once loaded;
+onnxruntime's arena adds 0.34 GiB after long batches); task B peaks at 49 MiB. The image under `--memory` ×
+`--cpus` (fake model, a limit passes if every response is written with the labels of the 4g run): **before**, task A
+needs **3 GiB with 2 CPUs** (2 GiB: OOM, 24 responses missing) and 1.5 GiB with 1 CPU; task B runs in 1 GiB. Fixes
+at 2 CPUs: the arena off fits 2 GiB with two lanes (peak 2,005 MiB, 43 MiB of margin) but costs 0.06 s per case at
+every limit; token-bounded batches add nothing; **one lane under a 2.5 GiB limit** answers every case with the same
+labels at 2 GiB and 1.5 GiB (peak 1.17 GiB; local time at 0.1 s per request 0.42 s against 0.29 s with two lanes).
+**Adopted** (SAME-ANSWER RULE: identical answers, G1/G2 pass, peak memory under limits improves): one lane under
+2.5 GiB; lowest working limit **1.5 GiB** with 2 or 1 CPUs; 1 GiB stays out of reach (e5's load peak). Not built:
+one e5 copy shared by the lanes, dropping page texts (about 6 MB per booklet).
 
 **Step 6, task B tokens.**
 

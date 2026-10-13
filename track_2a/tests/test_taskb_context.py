@@ -103,8 +103,9 @@ class CliModes(unittest.TestCase):
         self.assertEqual(seen["schema"], cli.nli.ANSWER_SCHEMA_A_PARAGRAPHS)
         self.assertIn("[1] " + TITLE, seen["messages"][1]["content"])
 
-    def test_default_is_the_whole_reference(self):
-        self.assertEqual(cli.Settings().context_b, "full")  # session 10, step 2 (session 9, phase C: cut)
+    def test_default_is_selector_t(self):
+        # session 11, step 6 (TASK B RULE); session 10: the whole reference; session 9, phase C: cut
+        self.assertEqual(cli.Settings().context_b, "cut4-t")
 
     def test_cut_uses_task_b_prompt_and_schema(self):
         text = reference(12, 900, "cli-cut")
@@ -173,8 +174,13 @@ class Selectors(unittest.TestCase):
             taskb_context.cut_paragraphs(text, "La Confédération paie 1,2 milliard.", "cut4-h", same_language=False)
         self.assertEqual([c.args[0] for c in scores.call_args_list], ["L", "T"])
 
-    def test_the_default_is_unchanged(self):
-        self.assertEqual(cli.Settings().context_b, "full")
+    def test_t_is_the_default_and_needs_the_model_only_for_long_references(self):
+        settings = cli.Settings()
+        self.assertEqual(settings.context_b, "cut4-t")
+        short = {"id": "s-B", "reference": {"text": "x" * 100, "language": "de"}, "claim": {"text": "c", "language": "de"}}
+        long = {"id": "l-B", "reference": {"text": "x" * 4000, "language": "de"}, "claim": {"text": "c", "language": "de"}}
+        self.assertFalse(cli.needs_local_model(short, settings))
+        self.assertTrue(cli.needs_local_model(long, settings))
 
 
 class _Ones:

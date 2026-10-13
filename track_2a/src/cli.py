@@ -62,7 +62,7 @@ class Settings:
     context_a: str = "section-route"  # which booklet text task A sends: see context.MODES (session 7: won the
                                       # paired runs on dev, 0.953 vs embed-e5-small 0.834, and on val, 0.956 vs 0.865;
                                       # cases it cannot route run as embed-e5-small)
-    context_b: str = "full"      # task B context: full, cut (B-cut) or para (B-para); see taskb_context. Session 9,
+    context_b: str = "cut4-t"    # task B context (session 11, step 6, adopted: TASK B RULE): full, cut, para, cut4, cut4-q/t/l/h; session 9,
                                  # phase C: B-cut kept Macro-F1 (dev 0.967 vs 0.967, val 0.961 vs 0.957) with 37-38 %
                                  # fewer input tokens. Session 10, step 2: back to the whole reference. B-cut embeds the
                                  # paragraphs of every long reference (about 225 s of local work on 300 dev cases); with
