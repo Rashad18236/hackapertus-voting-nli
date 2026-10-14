@@ -69,8 +69,17 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   0.9867 [0.973, 0.997] each time; one backend, 0 cache hits); 10 task A answers cite other paragraphs and 20 task B
   answers differ in trailing text, labels equal (`stability.json` in run 3's folder).
 
+- (17:56) Final dev600 done (`docs/runs/2026-10-15_rashad_final-s15_dev600`): task A 0.977 (evidence 0.990), task B
+  0.987; the same 600 labels as the stability runs. All model calls of the session are done. `check_format.py`: all
+  six final prediction files pass; Python wrote 1 of 1,948 final labels (val task B).
+- (18:07) New replay reference `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` (two passes): all
+  1,198 calls replayed (1,180 answers, 15 A6 second looks, 3 translations); replay against the final runs: 0 label
+  and 0 evidence differences on 1,180 cases. `scripts/local_time.py`'s default table now points to it.
+- (18:08) Self-checks 17 of 17 pass.
+
 ## Running
 
-- The queue: the final dev600 run at 17:41 (30 minutes after run 3).
+- Local time of the final image with the new reference (`lt_final.sh`, CPUs 2–3): dev at 1.0 / 0.3 / 0.1 s (twice at
+  1.0 and 0.3), val and probe at 1.0 and 0.3 s; then REF SCORE.
 
 ## Next
