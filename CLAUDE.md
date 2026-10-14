@@ -249,7 +249,8 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 endpoint), static_equivalence.py (model S against sentence-transformers, development machine only),
                 taskb_long_errors.py (task B errors on long references); session 13: arm_table.py (PAIRED RULE
                 numbers per arm), taskb_b3_picks.py, evidence_pages.py (three page rules, hedge H), error_types.py (routing or
-                reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role)
+                reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role); session 15:
+                a6b_rule.py (A6b RULE), stability.py (repeat runs: labels that changed, bootstrap intervals, backends)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -329,8 +330,18 @@ flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-fin
   claim). Dev 0.970 against 0.987, +7.0 % input tokens, 1 fix / 6 breaks (claims that misstate their own ballot are
   answered "not about the ballot"): fails (b), (d) on dev, no val run (`docs/runs/2026-10-14_rashad_B6_devB300`).
 - **No default changed beyond step 1:** no combination run; final defaults = S, H, two lanes, A6 on.
-- **Step 5:** stability of the final defaults (three dev runs through the branch image, at least 30 minutes apart;
-  `scripts/stability.py`). Not started.
+- **Step 5: stability.** Three runs of all 600 dev cases through the final image, each 30 minutes after the previous
+  one ended (`docs/runs/2026-10-14_rashad_stability-s15-run{1,2,3}_dev600`, `scripts/stability.py`): **0 of 600 labels
+  ever changed** (A 0.9767 [0.958, 0.991], B 0.9867 [0.973, 0.997], 95 % bootstrap; one backend, 0 cache hits); 10 task
+  A answers cited other paragraphs and 20 task B answers differed in trailing text, labels equal.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd`, tag
+  `session-15`; `docs/runs/2026-10-15_rashad_final-s15_*`, run on 14 October): dev task A 0.977 (evidence 0.990), task B
+  0.987; val 0.981 (0.988), 0.968; probe 0.990 (1.000), 0.977. Tokens per case (dev, input + output): A 1,259 + 14.9, B
+  815 + 9.0. Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.020 / 0.027 / 0.062 s, B 0.012 / 0.021 /
+  0.172 s. REF SCORE dev 0.904 / 0.893, val 0.908 / 0.907, probe 0.901 / 0.902 (1.0 / 0.3 s). Python wrote 1 of 1,948
+  labels. Memory grid of the final image: every response at every limit (`..._memory-grid-final-s15_grid24`).
+- **New replay reference for G1/G2:** `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` (also
+  `scripts/local_time.py`'s default table).
 
 ## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
 

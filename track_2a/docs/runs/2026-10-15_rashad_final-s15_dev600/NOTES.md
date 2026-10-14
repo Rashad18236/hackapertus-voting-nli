@@ -17,3 +17,18 @@ looks: "different" in rows 1016 and 1161 (both fixes), "nothing" in rows 629, 84
 454 + 8 tokens each. Against session 14's final image (A6 off): task A 0.970 → 0.977, evidence 0.980 → 0.990. Paths
 (task A): council 102, summary 67, committee 48, detail 43, law 39, fallback bm25-ap 1. One backend (blablador
 `vllm-0.23.1rc1`); 0 failed calls, 0 cache hits. `apertus_roles.json`: calls and tokens per Apertus role.
+
+**Local time and REF SCORE** (`scripts/local_time.py` through the same image, 2 CPUs pinned to CPUs 2–3, 4 GB, the fake
+model replaying the new reference's answers, 0 replay misses; 18:08 to 19:07 UTC, no model run at the same time; the
+`local_time_*.json` files here, `ref_score.json`):
+
+| Delay per request | Task A local time per case (measurements) | Task B (measurements) | Peak memory A / B (MiB) | REF SCORE |
+|---|---|---|---|---|
+| 1.0 s | 0.0198 s (0.0199, 0.0196) | 0.0119 s (0.0105, 0.0133) | 206 / 1,674 | **0.904** |
+| 0.3 s | 0.0267 s (0.0228, 0.0305) | 0.0212 s (0.0195, 0.0228) | 363 / 1,650 | **0.893** |
+| 0.1 s | 0.0616 s | 0.172 s | 206 / 1,164 | 0.864 |
+
+REF SCORE parts at 1.0 / 0.3 s: task A T 1.000 / 1.000, K 0.471, S_A 0.907; task B T 0.420 / 0.236, K 0.971, S_B 0.899 /
+0.872. Session 14's final image: 0.900 / 0.898; the difference is task A's Macro-F1 and evidence (A6, +0.007 and
++0.010) and task B's local time at 0.3 s (0.013 s then, 0.021 s now; task B's code is unchanged since session 11, so
+this is the machine's window).

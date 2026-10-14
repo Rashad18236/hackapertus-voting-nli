@@ -17,27 +17,28 @@ system decides whether the source supports (entailment, 0), does not settle (neu
 (contradiction, 2) the claim. The source is a passage (task B) or a whole booklet PDF (task A).
 **Apertus v1.5 makes every decision.** Everything else is local and runs on CPU in the Docker image: reading the
 PDF, choosing the part of the booklet Apertus reads, and turning the paragraphs Apertus cites into evidence quoted
-verbatim with their 1-based PDF page. Apertus also names the part a claim refers to when the rules do not know the
-claim's opening, reads a booklet's contents when our parser cannot split it, and translates a claim for the keyword
-search of the fallback (section 4).
+verbatim with their 1-based PDF page. Apertus also names a claim's part when the rules cannot, reads a
+booklet's contents when our parser cannot, translates a claim for the fallback's keyword search, and takes a second
+look at cited paragraphs after a neutral answer (section 4).
 
 The central experiment, full booklet against selected context, decided the design: on 100 dev cases [E1-curve]
 the whole booklet scored 0.858 with 37,586 input tokens per case, the part the claim names (`section-route`) 0.989
 with 1,248; without booklet text Apertus scores 0.435 [E2-cb].
 
-| Final defaults, published image [FIN] | dev (session 14 image) | val (session 13 image) | probe (session 13 image) |
-|---|---|---|---|
-| Task A Macro-F1 (weight 0.30 of the score) | **0.970** | **0.969** | **0.981** |
-| Task A evidence (0.12) | **0.980** | **0.965** | **0.985** |
-| Task A tokens per case, input + output (K, 0.09) | 1,251 + 14.7 | 1,225 + 14.7 | 1,172 + 16.6 |
-| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.021 / 0.022 s | 0.008 / 0.007 s | 0.035 / 0.027 s |
+| Final defaults through the published image [FIN] | dev | val | probe |
+|----------------------------|----------|----------|----------|
+| Task A Macro-F1 (weight 0.30 of the score) | **0.977** | **0.981** | **0.990** |
+| Task A evidence (0.12) | **0.990** | **0.988** | **1.000** |
+| Task A tokens per case, input + output (K, 0.09) | 1,259 + 14.9 | 1,233 + 14.9 | 1,177 + 16.6 |
+| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.020 / 0.027 s | 0.010 / 0.010 s | 0.039 / 0.035 s |
 | Task B Macro-F1 (0.28) | **0.987** | **0.968** | **0.977** |
-| Task B tokens per case, input + output (K, 0.06) | 815 + 8.9 | 820 + 9.4 | 789 + 8.9 |
-| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.012 / 0.013 s | 0.006 / 0.007 s | 0.014 / 0.015 s |
+| Task B tokens per case, input + output (K, 0.06) | 815 + 9.0 | 820 + 9.3 | 789 + 8.3 |
+| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.012 / 0.021 s | 0.009 / 0.010 s | 0.020 / 0.019 s |
 | Labels written by Python (neutral fallback) | 0 of 600 | 1 of 1,160 | 0 of 188 |
-| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.900 / 0.898** | **0.917 / 0.912** | **0.903 / 0.901** |
+| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.904 / 0.893** | **0.908 / 0.907** | **0.901 / 0.902** |
 
-The session 14 image (`sha-228822b2e6fa`) differs from session 13's only in when cases are prepared (two lanes under a low memory limit); it sends the same requests, so val and probe keep session 13's final runs. Its dev local time was measured in a slower window: session 13's own image measured there gave task B 0.016 / 0.043 s (section 6).
+All from the session 15 image `sha-7ae78ad87cfd` (A6 on); dev local time: mean of two. Three more dev runs gave the same
+600 labels (§ 6).
 
 **Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15): TODO, results after the organisers' evaluation.
 
@@ -104,7 +105,9 @@ the booklet's language by Apertus (one call), and the reading call gets the clai
 User: `PART:` (which part, whose voice), `REFERENCE TEXT:` with paragraphs `[1] … [n]`, `VOTE:`, `CLAIM:` as given.
 `response_format: json_schema` forces `{"paragraphs": [≤ 3 numbers], "label": 0|1|2}`. Task B sends the same rule
 (`v3-topic-first`) for `{"label": n}`; a reference over 3,000 characters is sent as its first line and the 4
-paragraphs whose first 300 characters are most similar to the claim (e5).
+paragraphs whose first 300 characters are most similar to the claim (e5). **A6** (task A, since session 15): when the
+answer is neutral but cites paragraphs, one more request sends only the cited paragraphs with their neighbours and the
+claim (`A-v6-second-look`) and asks for `{"finding": "same" | "different" | "nothing"}` (→ 0 / 2 / 1).
 
 **Evidence.** The paragraphs Apertus cited, verbatim with their page, then their halves, then (H, session 13) the
 paragraph before the first cited one when that one opens its page, and the cited page's whole text; at most five
@@ -116,17 +119,17 @@ The organisers (`docs/official_contract.md`): "Use only **Apertus v1.5** models 
 "Every remote model call must use `BASE_URL`; local parsing, OCR, or embeddings may run locally."
 **Apertus makes every judgement; Python only decides what Apertus reads.** Python and the local embedding model read
 the PDF, pick the part, and copy what Apertus cites; they never set or change a label (the only Python label is the
-neutral fallback for an unreadable answer: 1 of 2,128 final labels). Model `swiss-ai/apertus-v1.5-8b` on Public AI, zero-shot,
+neutral fallback for an unreadable answer: 1 of 1,948 final labels). Model `swiss-ai/apertus-v1.5-8b` on Public AI, zero-shot,
 temperature 0, answers constrained by `json_schema`, only through `BASE_URL`; no fine-tuning.
 
 ::: {.compact}
 | Role of Apertus (final dev run [FIN]) | Called when | Calls per 100 cases (A / B) | Tokens per call, in + out |
 |----------------------------------|-----------------------------|-----------|------------------|
-| **Label** and the paragraphs it rests on | every case | 100 / 100 | 1,251 + 14.5 (A); 815 + 8.9 (B) |
+| **Label** and the paragraphs it rests on | every case | 100 / 100 | 1,251 + 14.6 (A); 815 + 9.0 (B) |
 | AP-part: the part a claim's opening names | the rules know no part for the opening | 0 / – | ≈ 236 + 49 |
 | AP-structure: read the booklet's contents | the parser finds no valid part | 0 / – | ≈ 1,825 + 192 per booklet |
 | AP-translate: the claim into the booklet's language | fallback across languages | 0.33 / – | 141 + 55 |
-| A6: a second look at the cited paragraphs and their neighbours (finding same / different / nothing → 0 / 2 / 1) | the label is neutral but cites paragraphs | 1.6 / – | 479 + 8 |
+| A6: a second look at the cited paragraphs and their neighbours (finding same / different / nothing → 0 / 2 / 1) | the label is neutral but cites paragraphs | 1.7 / – | 454 + 8 |
 
 | Ablation, task A dev (minimum Macro-F1 0.60; task B 0.75) | Macro-F1 | Evidence | Input tokens per case |
 |------------------------------------------------|--------|--------|-------------------------|
@@ -134,14 +137,13 @@ temperature 0, answers constrained by `json_schema`, only through `BASE_URL`; no
 | 8 chunks found by embedding, the early baseline [E5] | 0.834 | 0.662 | 1,868 |
 | the whole booklet, 100 cases [E1-curve] | 0.858 | — | 37,586 |
 | Apertus does all parsing too (part and contents, every case) [AP-all] | 0.960 | 0.891 | 1,655 (+34 %; local time 8×) |
-| **the part the claim names (routed) [FIN]** | **0.970** | **0.980** | 1,251 |
+| **the part the claim names (routed), with A6 [FIN]** | **0.977** | **0.990** | 1,259 |
 :::
 
-**Errors** (session 12's final val answers, `scripts/error_types.py`): of 23 task A errors, **10 are routing errors**
-(the gold passage was not in what Apertus read; 8 in long law and detail parts cut to 8 paragraphs) and **13 reading
-errors**; all 18 task B errors are reading errors. Asked offline once per reading error (gold label given), Apertus
-names their kind: task A direction or negation 6, scope 5, number or date 2; task B another ballot or topic 6,
-number or date 6, scope 4, other 2.
+**Errors** (session 12's val answers, `scripts/error_types.py`): of 23 task A errors, **10 are routing errors** (gold
+passage not read; 8 in long parts cut to 8 paragraphs) and **13 reading errors** (direction or negation 6, scope 5,
+number or date 2, as Apertus names them offline); all 18 task B errors are reading errors (another ballot or topic 6,
+number or date 6, scope 4, other 2).
 
 ::: {.compact}
 | Tried, not adopted (each by a rule fixed before its interleaved run; all in the code, off) | Result against today (Macro-F1, dev unless marked) | Why not |
@@ -150,15 +152,13 @@ number or date 6, scope 4, other 2.
 | K4: the part cut to its 4 most similar paragraphs | dev 0.990 (−35 % tokens); val 0.944 vs 0.959 | fails on val |
 | claim decomposition / tournament across languages / two-call negation | A 0.963 / 0.980 / 0.987 vs 0.983; B 0.937 / 0.970 / 0.960 vs 0.967 | lower, 1.7–3 calls per case |
 | L2 (second look with the 3 most similar paragraphs) | dev +0.010, val +0.003 | below its +0.015 bar |
-| vote-wide / booklet-wide fallback; B-para; B-cut4 | 0.927 / 0.857 (forced); 0.963 vs 0.967; −55 % tokens | fail their rules |
+| task B as numbered paragraphs (B-para); B-cut4 | 0.963 vs 0.967; −55 % tokens but slower | fail their rules |
 | task B selectors B-R / H / B-BM25 | 0.973 / 0.993 (+13 % tokens) / 0.967 vs 0.987 | fail their rules |
-| Apertus does all parsing (AP-all) | 0.960 / 0.891 vs 0.977 / 0.980 | lower, +34 % tokens |
 | Python rule "neutral with a citation → contradiction" | val +0.014 offline; on-topic neutral 3 of 3 wrong | Python may not set a label |
 | session 13 prompts A1–A5 against contradictions answered neutral | dev 0.902–0.983 vs 0.983; on-topic neutral 13–28 of 46 vs 32 | fail on dev |
-| B1 (ballots first) / B3 (T with the reference's title) / B4 (claim first) | B1 void (unreadable); 0.980 / 0.980 vs 0.987 (B4: 5 unreadable) | lower or unreadable |
-| A6b: A6's second look told "related but not settled" is "nothing" | the same finding in all 19 second looks; on-topic flips 3 vs 3 | no fewer on-topic flips |
-| B1 retried with the format fixed (6 words, 40 characters, 64 tokens) | 0.892 vs 0.987; 19 unreadable; +13 % tokens | lower, unreadable |
-| B6: after an answer 2, one question "is the claim about the ballot in the title?" | 0.970 vs 0.987; 1 fix, 6 breaks; +7 % tokens | lower: a claim that misstates its ballot is called "not about it" |
+| B1 (ballots first; session 15: shorter fields) / B3 (T with the title) / B4 (claim first) | B1 void, retry 0.892 (19 unreadable); 0.980 / 0.980 vs 0.987 | lower or unreadable |
+| A6b: A6 told that "related but not settled" is "nothing" | same finding in all 19 second looks | on-topic flips 3 vs 3 |
+| B6: after an answer 2, "is the claim about the ballot in the title?" | 0.970 vs 0.987; 1 fix, 6 breaks; +7 % tokens | misstated ballots called "not about it" |
 
 :::
 
@@ -178,6 +178,14 @@ number or date 6, scope 4, other 2.
 compare** (every case answered by all versions back to back; all session 11 and 12 answers came from one backend).
 Rules were fixed before the runs; a version that fails stays in the code, switched off.
 
+**Endpoint drift and stability** [STAB]. Public AI's 8B changed its answers to the same requests twice on 8–9 October,
+served two backends, and answers a repeated request from a cache for about ten minutes. To measure the noise of the
+final defaults, the final image answered all 600 dev cases three times, each run 30 minutes after the previous one
+(past the cache): **0 of 600 labels changed** (task A 0.977, task B 0.987 each time; one backend; 10 task A answers cited
+other paragraphs, 20 task B answers carried trailing text). Session 9's three runs over 16.5 hours changed 2 of 600.
+Run-to-run noise is far below the sampling error of 300 cases: 95 % bootstrap intervals (2,000 resamples) task A
+[0.958, 0.991], task B [0.973, 0.997]; differences of that size between dev, val and the test set are sampling noise.
+
 **Parser coverage** [COV] (93 booklets 2016–2026; the three languages of a date must agree): booklets whose votes all
 pass 64 → **88**, votes passing every check 178 → **244 of 249**, probe cases routed 83 → **90 of 94** (session 11).
 
@@ -186,46 +194,45 @@ switch ("no part": the router returns nothing, AP-part off; "no vote": the vote 
 vote's parts passes its checks). Macro-F1 / evidence, dev; val (balanced 300); each line against the arm of its own
 interleaved run:
 
+::: {.compact}
 | Situation, version | dev | val | Tokens (dev) | Adopted? |
 |---|---|---|---|---|
-| routed (today, not forced) | 0.977 / 0.980 | — | 1,238 + 14.5 | |
-| no part: e5's 8 chunks of the booklet (before session 12) | 0.900 / 0.672 | 0.875 / 0.588 | 1,868 + 15.8 | replaced |
+| routed (not forced, session 12) | 0.977 / 0.980 | — | 1,238 + 14.5 | |
 | **no part: BM25 chunks, Apertus translates across languages** | **0.956 / 0.736** | **0.957 / 0.755** | 2,591 + 44.3 | **yes** |
-| no parser: e5's chunks (before session 12) | 0.896 / 0.672 | 0.872 / 0.593 | 1,868 + 15.8 | replaced |
 | **no parser: Apertus reads the contents** | **0.946 / 0.925** | **0.939 / 0.917** | 1,564 + 42.8 | **yes** |
+:::
 
-Not adopted: vote-wide (0.927 / 0.873) and booklet-wide paragraphs (0.857 / 0.856); model S's chunks (0.913, dev).
+Both replaced e5's 8 chunks of the booklet (no part 0.900 / 0.672, no parser 0.896 / 0.672 on dev). Not adopted:
+vote-wide (0.927 / 0.873) and booklet-wide paragraphs (0.857 / 0.856); model S's chunks (0.913, dev).
 
-**Task B, fewer tokens** [TB-dev, TB-val]: a reference over 3,000 characters is cut to its first line and the 4
-paragraphs whose first 300 characters are most similar to the claim (T): Macro-F1 dev 0.987, val 0.968 with 815
-input tokens per case, against 0.967, 0.954 with 1,994 for the whole reference.
+**Task B, fewer tokens** [TB-dev, TB-val]: selector T (section 3.1) scores dev 0.987, val 0.968 with 815 input tokens
+per case, against 0.967, 0.954 with 1,994 for the whole reference.
 
 **Local time** (the organisers' measure; image, 2 CPUs, fake model replaying the final answers) [FIN]. What is local in
 task A is PDF reading (about 1.3 s per booklet, pure-Python pypdf) and the ranking of long parts. With e5 (until
 session 12) the ranking took about 3 s per long part and stopped hiding behind fast requests; model S (session 13)
 ranks in milliseconds:
 
-| Final image, local time per case | 1.0 s per request | 0.3 s | 0.1 s |
+::: {.compact}
+| Local time per case, dev | 1.0 s per request | 0.3 s | 0.1 s |
 |---|---|---|---|
-| Task A, dev, model S, 4 GB (session 14; mean of 2) | 0.021 s | 0.022 s | 0.060 s |
-| Task A, dev, model S, 1 GB: two lanes (session 14) / one lane (session 13's code) | 0.019 s / 0.020 s | 0.024 s / 0.019 s | **0.063 s / 0.211 s** |
-| Task A, dev, model S (session 13, another window) | 0.016 s | 0.017 s (repeat 0.015 s) | 0.025 s |
-| Task A, dev, e5 (session 12's final image) | 0.017 s | 0.160 s (repeat 0.113 s) | 0.364 s |
-| Task B, dev (e5 for selector T; session 14, mean of 2 / session 13) | 0.012 / 0.008 s | 0.013 / 0.009 s | 0.161 / 0.132 s |
+| Task A, model S, 4 GB (final image, session 15; mean of 2) | 0.020 s | 0.027 s | 0.062 s |
+| Task A, model S, 1 GB: two lanes (session 14) / one lane (session 13's code) | 0.019 s / 0.020 s | 0.024 s / 0.019 s | **0.063 s / 0.211 s** |
+| Task A, e5 (session 12's final image) | 0.017 s | 0.160 s (repeat 0.113 s) | 0.364 s |
+| Task B (e5 for selector T; session 15, mean of 2 / session 13) | 0.012 / 0.008 s | 0.021 / 0.009 s | 0.172 / 0.132 s |
+:::
 
-Single measurements vary by up to about ±0.03 s at 0.3 s and with the machine's state: in session 14's window session
-13's image gave task B 0.016 / 0.043 s, so the two sessions' rows differ by the window, not the code. Under a 1 GB limit
-task A now keeps two lanes (session 14, step 2: the one-lane limit was set for e5, model S needs far less); its 1 GB
-column compares both versions in the same rounds (`lanes-S_devA300`, uncompiled `src/` in both).
+Single measurements vary by up to about ±0.03 s at 0.3 s and with the machine's state: task B's code is unchanged since
+session 11, yet its two sessions' rows differ. The 1 GB row compares both lane versions in the same rounds
+(`lanes-S_devA300`).
 
-**Memory** [GRID, GUARD]: with model S, task A peaks at about 0.2–0.4 GB (session 12 with e5: 2,287 MiB) and keeps two
-lanes down to 512 MiB (twice its highest forced two-lane peak, 230 MiB, rounded up to the grid); task B peaks at
-1.2–1.7 GB (e5 for selector T), one lane under 2.5 GiB, no e5 below 1.5 GiB (long references go whole). Through the
-final image, both tasks write every response at 4g, 2g, 1.5g, 1g, 768m and 512m, with 2 CPUs and with 1.
+**Memory** [GRID, GUARD]: task A peaks at about 0.2–0.4 GB (with e5 in session 12: 2,287 MiB) and keeps two lanes down to
+512 MiB; task B peaks at 1.2–1.7 GB (e5), one lane under 2.5 GiB, no e5 below 1.5 GiB (long references go whole). The
+final image writes every response of both tasks at 4g, 2g, 1.5g, 1g, 768m and 512m, with 2 CPUs and with 1.
 
 **Probe: two unseen voting dates** (test rows of 2021-03-07 and 2025-09-28, opened in session 10).
-Through session 13's final image (the same requests as session 14's) [FIN]: task A **0.981**, evidence **0.985** (64 of 65), task B **0.977**; REF SCORE
-**0.903 / 0.901**. Session 12's image: 0.971, 0.969, 0.977. 90 of 94 task A cases are routed; the 4 others are claims
+Through the final image [FIN]: task A **0.990**, evidence **1.000** (65 of 65), task B **0.977**; REF SCORE
+**0.901 / 0.902**. Session 13's image (A6 off): 0.981, 0.985, 0.977. 90 of 94 task A cases are routed; the 4 others are claims
 about a committee in votes that have none, answered by the BM25 fallback.
 
 ## 7. Limitations
@@ -240,27 +247,22 @@ about a committee in votes that have none, answered by the BM25 fallback.
   session 14) and passed every other condition in both runs (val +0.014 and +0.012, probe +0.010, 19 fixes against 2
   breaks on 1,254 real cases). The team adopts it on the strength of val and probe and records the on-topic result as
   its known weakness: a passage on the claim's subject that does not settle the claim can be answered 'different'."
-  (Counted from the runs: 19 against 2 includes session 13's dev run, 1,554 cases; on the 1,254 val and probe cases
-  18 against 2.)
-- **Evidence pages.** If the official run checks the *first* page of the gold passage, about 40 % of our hits would
-  not count (the passage often starts a page before the paragraph Apertus cites); H recovers part of it (§ 4 of the
-  session 13 report; `docs/organiser_questions.md`).
+  (From the run files: 19 against 2 includes session 13's dev run; on the 1,254 val and probe cases, 18 against 2.)
+- **Task B: claims about another ballot.** 8 of the final val run's 19 task B errors are unrelated passages called
+  contradictions; three attempts to catch them (B1, its retry, B6) cost more than they fixed (section 4).
+- **Evidence pages.** If the official run checks the gold passage's *first* page, about 40 % of our hits would not
+  count (the passage often starts a page earlier); H recovers part of it (`docs/organiser_questions.md`).
 - **Not political advice.** The system checks a claim against the booklet's text only. Its answers are not
   voting recommendations. Every task A label 0 or 2 comes with the booklet page and the verbatim text it rests on.
 
 ## 8. Reproducibility
 
-- **Published image:** `ghcr.io/rashad18236/hackapertus-voting-nli:latest` (built from `main` and tested on a fresh
-  runner by `.github/workflows/publish-image.yml`), run with the organisers' command (README); this report's numbers
-  come from `sha-228822b2e6fa` (session 14 branch: dev) and `sha-54032b4a7970` (session 13: val, probe; same requests).
+- **Published image:** `ghcr.io/rashad18236/hackapertus-voting-nli:latest` (built from `main` by the publish workflow,
+  tested on a fresh runner), run with the organisers' command (README); final numbers from `sha-7ae78ad87cfd`.
 - **From source:** `make run` builds the image and answers `examples/cases.jsonl`.
-- **Hardware:** CPU only; 2 CPUs and 4 GB measured (peak 0.2–0.4 GiB task A, 1.2–1.7 GiB task B); the image answers
-  every case down to 512 MiB, with 2 CPUs or 1: below 1.5 GiB task B without e5 [GRID, GUARD].
-- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 349 tests.
-
-## License
-
-Code: Apache-2.0 (the repository's `LICENSE`). Report text: Creative Commons Attribution 4.0 (CC-BY-4.0).
+- **Hardware:** CPU only; measured with 2 CPUs and 4 GB; every case answered down to 512 MiB, 2 CPUs or 1 [GRID].
+- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 357 tests.
+- **License:** code Apache-2.0 (the repository's `LICENSE`); report text CC-BY-4.0.
 
 ## References
 
@@ -268,9 +270,8 @@ Code: Apache-2.0 (the repository's `LICENSE`). Report text: Creative Commons Att
   `gitlab.com/ifsoftware/hackapertus-starter`. Apertus v1.5, Swiss AI Initiative.
 - Wang, L. et al. (2024). *Multilingual E5 Text Embeddings.* arXiv:2402.05672 (MIT). Model S:
   `static-similarity-mrl-multilingual-v1` (Apache-2.0). Robertson, S., Zaragoza, H. (2009). *BM25 and Beyond.*
-- Runs (`docs/runs/`, dated 2026-10-08 to 14): FIN `final-s14_dev600`, `final-s13_*`; S14 `A6-confirm_valA580-probeA94-
-  ontopic46`, `lanes-S_devA300`; S13 `prompts-A_*`, `prompts-B_*`, `S-val_valA580`, `combination-H-S_valA580`,
-  `evidence-pages_offline`, `error-types_valAB`; GRID `memory-grid-final-s14_grid24`; S12 `S-and-fallbacks_devA300`, `bm25ap-fallback_valA300`, `ap-structure-ask_*`;
-  GUARD `memory-guard_grid48`; TB `taskb-selectors_*`; COV `parser-coverage_booklets93`; FB `fallbacks_*`; E1-curve
-  `context-curve_devA100`; E2-cb `closed-book_devA300`; E5 `section-route-vs-embed_devA300`; AP-all
-  `ap-all_devA300`.
+- Runs (`docs/runs/`, dated 2026-10-08 to 15): FIN `final-s15_*`; STAB `stability-s15-run{1,2,3}_dev600`; GRID
+  `memory-grid-final-s15_grid24`; GUARD `memory-guard_grid48`; TB `taskb-selectors_*`; COV `parser-coverage_booklets93`;
+  FB `fallbacks_*`; S12 `S-and-fallbacks_devA300`, `bm25ap-fallback_valA300`, `ap-structure-ask_*`; E1-curve
+  `context-curve_devA100`; E2-cb `closed-book_devA300`; E5 `section-route-vs-embed_devA300`; AP-all `ap-all_devA300`;
+  not adopted (section 4): `prompts-A_*`, `prompts-B_*`, `A6b_*`, `B1f_devB300`, `B6_devB300`.

@@ -77,9 +77,14 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   and 0 evidence differences on 1,180 cases. `scripts/local_time.py`'s default table now points to it.
 - (18:08) Self-checks 17 of 17 pass.
 
-## Running
+- (19:08) Local time of the final image (CPUs 2–3, new reference's table): dev task A 0.020 / 0.027 / 0.062 s, task B
+  0.012 / 0.021 / 0.172 s at 1.0 / 0.3 / 0.1 s (dev 1.0 and 0.3 s: mean of two); val A 0.010 / 0.010, B 0.009 / 0.010 s;
+  probe A 0.039 / 0.035, B 0.020 / 0.019 s. REF SCORE dev 0.904 / 0.893, val 0.908 / 0.907, probe 0.901 / 0.902.
+- (19:15) Technical report updated (summary table, role table, negative results, endpoint-drift paragraph, Limitations,
+  A6 in section 3.1); PDF 6 pages. Session report written. pytest 356 passed, 1 skipped (pypdf 6.17.0);
+  `build_docs.py --check` passes.
 
-- Local time of the final image with the new reference (`lt_final.sh`, CPUs 2–3): dev at 1.0 / 0.3 / 0.1 s (twice at
-  1.0 and 0.3), val and probe at 1.0 and 0.3 s; then REF SCORE.
+## Closed
 
-## Next
+Every step of the instruction is done; nothing was dropped for time. Final defaults: model S, hedge H, two lanes, A6 on
+(published image `sha-7ae78ad87cfd`). Report: `docs/session_15_report.md`.

@@ -15,3 +15,9 @@ Session 13's final image on the same cases (A6 off): task A 0.969 (evidence 0.96
 answered "different" 9 times (rows 950, 1053, 1151, 1210, 1226, 1309, 1318, 1404, 1467) and "nothing" once (row 991),
 as in sessions 14 and 15's interleaved runs. Paths (task A): council 175, summary 139, committee 102, law 87, detail 74,
 fallback bm25-ap 3. Every call from one backend (blablador `vllm-0.23.1rc1`); 0 failed calls, 0 cache hits.
+
+**Local time and REF SCORE** (as for dev600: the same image, CPUs 2–3, 4 GB, the new reference's table, which holds val
+task A's answers; task B's 580 val requests are replay misses answered by the fake model's fixed answer, as in session
+13; one measurement per delay; `local_time_*.json`, `ref_score.json`): task A 0.0095 / 0.0099 s, task B 0.0092 / 0.0095 s
+per case at 1.0 / 0.3 s per request; **REF SCORE 0.908 / 0.907** (S_A 0.910, S_B 0.904 / 0.901; session 13's final
+image: 0.917 / 0.912, mostly task B's local time, 0.006 / 0.007 s then).

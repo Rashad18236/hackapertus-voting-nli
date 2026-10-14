@@ -8,7 +8,19 @@ when to ask again).
 
 ## In short
 
-STEP-5-AND-FINISH-SUMMARY
+**Finished:** steps 0 to 5 and FINISH; nothing was dropped for time (the last model call ended at 17:56 UTC;
+experiments stop at 02:00).
+
+**Final defaults through the published image** `sha-7ae78ad87cfd` (session 14's defaults plus A6; dev, val and probe
+all run again): dev task A **0.977** (evidence 0.990), task B **0.987**; val **0.981** (0.988), **0.968**; probe
+**0.990** (1.000), **0.977**. Tokens per case (dev, input + output): A 1,259 + 14.9, B 815 + 9.0. REF SCORE at 1.0 / 0.3 s
+per request: dev **0.904 / 0.893**, val **0.908 / 0.907**, probe **0.901 / 0.902**. Python wrote 1 of 1,948 labels.
+
+**Stability (step 5):** three runs of all 600 dev cases, 30 minutes apart, and the final dev run: **0 labels ever
+changed**; 95 % bootstrap intervals task A [0.958, 0.991], task B [0.973, 0.997].
+
+**Left for the team:** A6's on-topic weakness (rows 85, 232, 1026 still flip; A6b did not change a single finding);
+task B's "another ballot" errors (8 of val's 19), which three attempts could not remove without losing more elsewhere.
 
 **Defaults changed:** **A6 is on** (step 1, a team decision): after a task A answer "neutral" that cites paragraphs,
 Apertus looks once more at the cited paragraphs and their neighbours and answers same / different / nothing (→ 0 / 2 /
@@ -117,6 +129,75 @@ breaks (rows 1063, 1074, 1144, 1223, 1263, 1472) are gold contradictions whose c
 but states its opposite, and Apertus answers "not about the ballot named in the title". In every dev case the vote field
 repeats the title. **Fails (b) −0.017 and (d) +7.0 % on dev: no val run, not adopted.**
 
-STEP-5-SECTION
+## Step 5: stability of the final defaults
 
-FINISH-SECTION
+**Set-up** (decisions file, written before the runs): the final image `sha-7ae78ad87cfd` (session 14's defaults plus A6),
+all 600 dev cases with the organisers' command, task A and task B in separate containers, the real endpoint, 1 request
+per second; three runs, each starting at least 30 minutes after the previous one ended (the gateway's cache keeps an
+answer for about ten minutes), the first 30 minutes after the B6 run's last dev requests. The final val and probe runs
+filled the gaps (other requests); the final dev600 run came 30 minutes after run 3 and counts as a fourth repeat.
+
+| Run (UTC) | Task A Macro-F1 [95 % bootstrap interval] | Evidence | Task B Macro-F1 [95 % bootstrap interval] | Backend (calls) | Cache hits |
+|---|---|---|---|---|---|
+| 1 (15:23–15:40) | 0.9767 [0.958, 0.991] | 0.990 | 0.9867 [0.973, 0.997] | blablador `vllm-0.23.1rc1…dd237840` (606) | 0 |
+| 2 (16:10–16:28) | 0.9767 [0.958, 0.991] | 0.990 | 0.9867 [0.973, 0.997] | the same (606) | 0 |
+| 3 (16:58–17:11) | 0.9767 [0.958, 0.991] | 0.990 | 0.9867 [0.973, 0.997] | the same (606) | 0 |
+| final dev600 (17:41–17:56) | 0.9767 | 0.990 | 0.9867 | the same (606) | 0 |
+
+**Labels that ever changed: 0 of 600** over the three runs (and 0 in the final dev600 run); the largest Macro-F1
+difference between two runs is 0. The bootstrap intervals (`scripts/analysis_offline.py`'s method: 2,000 resamples of
+the 300 cases, seed 42; `scripts/stability.py`) are the same in every run because the labels are. The answers are not
+byte-identical: 10 task A answers cite different paragraphs in one of the runs (same label; the evidence text differs in
+9 cases, the evidence score stays 0.990), and 20 task B answers differ only in trailing whitespace or a "**Reasoning:**"
+text after the JSON (task B has no schema). The "today" arms of steps 2–4 (task A 13:30, task B 14:11 and 14:38) gave
+the same 600 labels too; against session 14's final dev run (11:01, A6 off) only task A rows 1016 and 1161 differ, A6's
+two dev fixes.
+
+**Reading (the technical report's endpoint-drift paragraph):** over about 3.7 hours on one backend the endpoint gave the
+same labels to the same requests, so run-to-run noise is below one case per task on dev. The intervals (about 0.03 wide
+for task A, 0.024 for task B) are the sampling error of 300 cases: differences of that size between dev, val and the
+official test set are expected from sampling alone. Session 9's three runs over 16.5 hours changed 2 of 600 labels.
+
+## FINISH
+
+**Adoption:** A6 (step 1) only; A6b, B1f and B6 failed their rules, so there was no combination run.
+
+**Final runs** through `ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd` (the `session-15` tag at the time,
+digest `sha256:a89c507afff1…`), `make run`, task A and B in separate containers, CPUs 0–1, the real endpoint, 1 request
+per second; folders `2026-10-15_rashad_final-s15_*` as the instruction names them (run on 14 October, between and after
+the stability runs; every call from one backend, 0 failed calls, 0 cache hits):
+
+| Set | Task A Macro-F1 | Evidence | Task A tokens (in + out) | Task B Macro-F1 | Task B tokens | Python's labels | REF SCORE 1.0 / 0.3 s |
+|---|---|---|---|---|---|---|---|
+| dev (600) | **0.9767** | 0.990 (199 / 201) | 1,259 + 14.9 | **0.9867** | 815 + 9.0 | 0 | **0.904 / 0.893** |
+| val (1,160) | **0.9812** | 0.988 (396 / 401) | 1,233 + 14.9 | **0.9675** | 820 + 9.3 | 1 (task B) | **0.908 / 0.907** |
+| probe (188) | **0.9903** | 1.000 (65 / 65) | 1,177 + 16.6 | **0.9769** | 789 + 8.3 | 0 | **0.901 / 0.902** |
+
+Against session 13's final image (A6 off; the last runs of val and probe): val task A 0.969 → 0.981 (evidence 0.965 →
+0.988), probe 0.981 → 0.990 (0.985 → 1.000); task B unchanged (0.968, 0.977). A6 asked 16 second looks in 974 task A
+cases (1.6 per 100; 314–592 + 8 tokens each): 12 answered "different" (11 fixes, 1 break: val row 950) and 4 "nothing".
+
+**Local time** (`scripts/local_time.py`, the same image, CPUs 2–3, 4 GB, the new reference's answers): dev task A
+0.020 / 0.027 / 0.062 s and task B 0.012 / 0.021 / 0.172 s per case at 1.0 / 0.3 / 0.1 s per request (dev at 1.0 and
+0.3 s the mean of two); val A 0.010 / 0.010 s, B 0.009 / 0.010 s; probe A 0.039 / 0.035 s, B 0.020 / 0.019 s. Task B's
+code is unchanged since session 11, yet its dev local time at 0.3 s was 0.013 s in session 14 and 0.021 s now: the
+machine's window, as before. A6 does not change task A's local time (same image with A6 on and off at 0.1 s: 0.084 /
+0.077 against 0.077 / 0.092 s).
+
+**Memory grid of the final image** (`2026-10-14_rashad_memory-grid-final-s15_grid24`): every response at every limit
+(4g … 512m, 2 and 1 CPUs, both tasks); task A two lanes with 2 CPUs at every limit, peak 206–242 MiB; task B as in
+session 14.
+
+**New replay reference for G1/G2:** `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` (two passes;
+1,198 calls replayed: 1,180 answers, 15 A6 second looks, 3 translations; 0 label and 0 evidence differences against the
+final runs), also `scripts/local_time.py`'s default table.
+
+**Checks:** pytest 356 passed, 1 skipped (pypdf 6.17.0); `scripts/build_docs.py --check`; `scripts/self_checks.py` 17 of 17;
+`scripts/check_format.py` on all six final prediction files: no problem, no warning; the branch's workflows (tests, image, publish, pull-and-run) are checked after the final push (status log). Technical report: role table (A6 1.7 per 100 dev cases, 454 + 8 tokens), negative results (A6b, B1 retry,
+B6), summary table, the endpoint-drift paragraph, Limitations (A6's weakness, task B's other-ballot errors); PDF 6
+pages.
+
+## Not done
+
+Nothing of the instruction was left out. Not asked and not done: a val run for B1f or B6 (both failed on dev, so the
+rule did not call for one); (f) for any arm (only for an arm that passes (a)–(e)).

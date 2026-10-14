@@ -2886,6 +2886,12 @@ answered "different" 9 times (rows 950, 1053, 1151, 1210, 1226, 1309, 1318, 1404
 as in sessions 14 and 15's interleaved runs. Paths (task A): council 175, summary 139, committee 102, law 87, detail 74,
 fallback bm25-ap 3. Every call from one backend (blablador `vllm-0.23.1rc1`); 0 failed calls, 0 cache hits.
 
+**Local time and REF SCORE** (as for dev600: the same image, CPUs 2–3, 4 GB, the new reference's table, which holds val
+task A's answers; task B's 580 val requests are replay misses answered by the fake model's fixed answer, as in session
+13; one measurement per delay; `local_time_*.json`, `ref_score.json`): task A 0.0095 / 0.0099 s, task B 0.0092 / 0.0095 s
+per case at 1.0 / 0.3 s per request; **REF SCORE 0.908 / 0.907** (S_A 0.910, S_B 0.904 / 0.901; session 13's final
+image: 0.917 / 0.912, mostly task B's local time, 0.006 / 0.007 s then).
+
 ### Stability run 2 of 3 (session 15, step 5): all 600 dev cases through the final image
 
 **What ran.** The final image `ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd` (the `session-15` tag at the
@@ -2916,6 +2922,11 @@ is the test rows of 2021-03-07 and 2025-09-28 (opened in session 10); the sealed
 
 Session 13's final image (A6 off): task A 0.981 (evidence 0.985), task B 0.977. Paths (task A): council 34, summary 20,
 law 16, detail 10, committee 10, fallback bm25-ap 4. One backend; 0 failed calls, 0 cache hits.
+
+**Local time and REF SCORE** (as for dev600; the probe's requests are not in the replay table, so all are answered by
+the fake model's fixed answer, as in session 13; one measurement per delay; `local_time_*.json`, `ref_score.json`):
+task A 0.0387 / 0.0351 s, task B 0.0198 / 0.0191 s per case at 1.0 / 0.3 s per request; **REF SCORE 0.901 / 0.902**
+(session 13's final image: 0.903 / 0.901).
 
 ### Stability run 3 of 3 (session 15, step 5), and the three runs compared: no label changed
 
@@ -2966,6 +2977,21 @@ looks: "different" in rows 1016 and 1161 (both fixes), "nothing" in rows 629, 84
 454 + 8 tokens each. Against session 14's final image (A6 off): task A 0.970 → 0.977, evidence 0.980 → 0.990. Paths
 (task A): council 102, summary 67, committee 48, detail 43, law 39, fallback bm25-ap 1. One backend (blablador
 `vllm-0.23.1rc1`); 0 failed calls, 0 cache hits. `apertus_roles.json`: calls and tokens per Apertus role.
+
+**Local time and REF SCORE** (`scripts/local_time.py` through the same image, 2 CPUs pinned to CPUs 2–3, 4 GB, the fake
+model replaying the new reference's answers, 0 replay misses; 18:08 to 19:07 UTC, no model run at the same time; the
+`local_time_*.json` files here, `ref_score.json`):
+
+| Delay per request | Task A local time per case (measurements) | Task B (measurements) | Peak memory A / B (MiB) | REF SCORE |
+|---|---|---|---|---|
+| 1.0 s | 0.0198 s (0.0199, 0.0196) | 0.0119 s (0.0105, 0.0133) | 206 / 1,674 | **0.904** |
+| 0.3 s | 0.0267 s (0.0228, 0.0305) | 0.0212 s (0.0195, 0.0228) | 363 / 1,650 | **0.893** |
+| 0.1 s | 0.0616 s | 0.172 s | 206 / 1,164 | 0.864 |
+
+REF SCORE parts at 1.0 / 0.3 s: task A T 1.000 / 1.000, K 0.471, S_A 0.907; task B T 0.420 / 0.236, K 0.971, S_B 0.899 /
+0.872. Session 14's final image: 0.900 / 0.898; the difference is task A's Macro-F1 and evidence (A6, +0.007 and
++0.010) and task B's local time at 0.3 s (0.013 s then, 0.021 s now; task B's code is unchanged since session 11, so
+this is the machine's window).
 
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 
