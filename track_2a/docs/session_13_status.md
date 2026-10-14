@@ -74,11 +74,20 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (00:08) S as the default in the working tree: G1 changes only the 74 task A requests of long parts, G2 labels only
   there; 346 tests pass.
 
+- (00:23) Combination (`docs/runs/2026-10-14_rashad_combination-H-S_valA580`): H+S 0.969 against 0.959 on val task A,
+  equal to S alone: kept. S becomes the default (commit `54032b4`; e5 stays for task B).
+- (00:25) Final image `sha-54032b4a7970` (also `session-13`) pulled; final runs started.
+- (00:57) Memory grid of the final image (`docs/runs/2026-10-14_rashad_memory-grid-final-s13_grid24`): every
+  response at every limit; task A peak 2,287 → 206 MiB; image size unchanged (2,216 MB).
+- (01:01) Final runs done (`docs/runs/2026-10-14_rashad_final-s13_*`, one backend, 0 failed calls): dev A 0.973 /
+  0.985, B 0.987; val A 0.969 / 0.965, B 0.968; probe A 0.981 / 0.985, B 0.977; Python wrote 1 of 2,128 labels.
+- (01:03) `latest` pulls without a login: digest `sha256:a6213d70ea55…`, the same image as `sha-c85a119b409a`
+  (`main` = `c85a119`).
+
 ## Running
 
-- Combination run (until about 00:22).
+- New replay reference (make_ref), then local time of the final image and REF SCORE.
 
 ## Next
 
-- Commit S as the default (if the combination keeps it); FINISH: image, final runs, memory grid, local time, REF SCORE,
-  replay reference, reports.
+- Reports, technical report and PDF, CLAUDE.md, self-checks, PR description.

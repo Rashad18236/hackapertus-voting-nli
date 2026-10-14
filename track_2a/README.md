@@ -49,10 +49,11 @@ Requirements: `runtime, hardware, API keys, model weights`
   them in a local `.env` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`; see `.env.example`). No key is in the
   image or the repository.
 - **Model weights:** two local embedding models, downloaded when the image is built and baked into it; nothing is
-  downloaded at run time. `intfloat/multilingual-e5-small` (MIT) chooses which text Apertus reads: long parts of a
-  booklet (task A) and, for a task B reference over 3,000 characters, the 4 paragraphs sent with its first line.
-  `sentence-transformers/static-similarity-mrl-multilingual-v1` (Apache-2.0, "model S", its table cut to 256
-  dimensions) is in the image but used only when asked (`--ranker S`; session 12: it failed its rule by one case).
+  downloaded at run time. They only choose which text Apertus reads. `sentence-transformers/static-similarity-mrl-multilingual-v1`
+  (Apache-2.0, "model S", its table cut to 256 dimensions; tokenizers and numpy, no neural network at run time) keeps
+  the 8 paragraphs of a long booklet part that are most similar to the claim (task A; the default since session 13,
+  `--ranker e5` for the earlier model). `intfloat/multilingual-e5-small` (MIT) picks, for a task B reference over
+  3,000 characters, the 4 paragraphs sent with its first line.
   Apertus makes every entailment decision, names the part of the booklet a claim refers to when our rules do not know
   the claim's opening, and translates a claim into the booklet's language when the case falls back to keyword search
   (BM25) across languages. No translation model is in the image.
