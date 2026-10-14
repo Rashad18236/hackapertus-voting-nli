@@ -90,6 +90,7 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (02:05) Local time of the final image and REF SCORE: dev 0.915 / 0.911, val 0.917 / 0.912, probe 0.903 / 0.901 at
   1.0 / 0.3 s per request; task A dev local time 0.016 / 0.017 / 0.025 s at 1.0 / 0.3 / 0.1 s.
 - (02:15) Reports, technical report (section 4, PDF 6 pages), CLAUDE.md, README; self-checks; pushed; PR description.
+- (02:20) `scripts/check_format.py` on the six final prediction files (2,128 responses): no errors.
 
 ## Running
 

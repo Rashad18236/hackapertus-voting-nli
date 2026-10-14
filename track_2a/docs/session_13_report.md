@@ -193,8 +193,9 @@ and keep local time low at fast models (0.016 against 0.126 s per case at 0.1 s 
 val runs exactly (0 of 1,180 labels or evidence differ); it is G1/G2's anchor and `scripts/local_time.py`'s default.
 
 **Checks:** 347 tests (pytest: 346 passed, 1 skipped; unittest the same after one test pinned its ranker); self-checks;
-`scripts/build_docs.py --check`; pypdf 6.17.0; `.env.example` unchanged (no new variable). `latest` pulls without a
-login: digest `sha256:a6213d70ea55…`, the same image as `sha-c85a119b409a`, i.e. `main` at `c85a119`.
+`scripts/build_docs.py --check`; `scripts/check_format.py` on the six final prediction files (2,128 responses): no
+errors; pypdf 6.17.0; `.env.example` unchanged (no new variable). `latest` pulls without a login: digest
+`sha256:a6213d70ea55…`, the same image as `sha-c85a119b409a`, i.e. `main` at `c85a119`.
 
 **Not done:** nothing from the instruction. Left for the team: A6 (val +0.014, misses its rule by one on-topic case),
 B2 (val +0.007, removes the targeted error, fails on breaks and one unreadable answer), and the one-lane memory limit
