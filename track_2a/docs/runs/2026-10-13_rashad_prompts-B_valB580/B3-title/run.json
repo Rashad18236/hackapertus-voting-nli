@@ -1,0 +1,41 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "23:04",
+ "kind": "model run",
+ "code": "ce49c13 (scripts/paired_run.py, in-process)",
+ "cases": "val, all 580 task B cases",
+ "format": "official scorer; interleaved, 3 arms, 1 request per second (session 13 step 2, val)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "task B",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_prompts-B_valB580/today",
+  "2026-10-13_rashad_prompts-B_valB580/B2-unrelated"
+ ],
+ "setup": "B3: selector T with each paragraph embedded after the reference's first line (--context-b cut4-tf)",
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "selector cut4-tf (B3)",
+  "n_cases": 580,
+  "strict_json": false,
+  "max_tokens": 32
+ },
+ "results": {
+  "macro_f1": 0.966,
+  "f1": {
+   "entailment": 0.976,
+   "neutral": 0.966,
+   "contradiction": 0.955
+  },
+  "parse_failures": 1,
+  "failed_calls": 0,
+  "mean_input_tokens": 840,
+  "mean_time_ms": 1010,
+  "p95_time_ms": 1905,
+  "mean_output_tokens": 9.5
+ }
+}

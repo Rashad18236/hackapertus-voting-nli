@@ -1,0 +1,40 @@
+{
+  "cases": 300,
+  "responses": 300,
+  "issues": {},
+  "tasks": {
+    "B": {
+      "cases": 300,
+      "macro_f1": 0.9799419193624637,
+      "threshold": 0.75,
+      "passes_threshold": true,
+      "accuracy": 0.98,
+      "per_class": {
+        "entailment": {
+          "precision": 0.9803921568627451,
+          "recall": 0.9803921568627451,
+          "f1": 0.9803921568627451,
+          "support": 102
+        },
+        "neutral": {
+          "precision": 0.9705882352941176,
+          "recall": 1.0,
+          "f1": 0.9850746268656716,
+          "support": 99
+        },
+        "contradiction": {
+          "precision": 0.9895833333333334,
+          "recall": 0.9595959595959596,
+          "f1": 0.9743589743589743,
+          "support": 99
+        }
+      }
+    }
+  },
+  "languages": {},
+  "usage_mean_per_case": {
+    "input_tokens": 851.3066666666666,
+    "output_tokens": 39.27,
+    "inference_time_ms": 2380.64
+  }
+}

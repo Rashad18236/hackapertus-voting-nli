@@ -1,0 +1,226 @@
+{
+ "task": "B",
+ "run": "docs/runs/2026-10-13_rashad_final-s12_val1160/task-B",
+ "prompt": "ERR-type-v1",
+ "summary": {
+  "errors": 18,
+  "by_error": {
+   "reading": 18
+  },
+  "by_gold_given": {
+   "2->0": 4,
+   "2->1": 3,
+   "0->2": 1,
+   "0->1": 2,
+   "1->2": 8
+  },
+  "reading_types": {
+   "scope": 4,
+   "direction_or_negation": 1,
+   "number_or_date": 6,
+   "other_ballot_or_topic": 6,
+   "other": 1
+  },
+  "calls": 18
+ },
+ "rows": [
+  {
+   "id": "v1.1-row-1151-B",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "scope",
+   "input_tokens": 679,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1312-B",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "scope",
+   "input_tokens": 638,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-1404-B",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "direction_or_negation",
+   "input_tokens": 614,
+   "output_tokens": 11
+  },
+  {
+   "id": "v1.1-row-1457-B",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 700,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-1174-B",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 4766,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-1175-B",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 5595,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-186-B",
+   "gold": 0,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "scope",
+   "input_tokens": 825,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-341-B",
+   "gold": 0,
+   "given": 1,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 567,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-396-B",
+   "gold": 0,
+   "given": 1,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 873,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-503-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 982,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-602-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "other",
+   "input_tokens": 1052,
+   "output_tokens": 7
+  },
+  {
+   "id": "v1.1-row-696-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "number_or_date",
+   "input_tokens": 834,
+   "output_tokens": 9
+  },
+  {
+   "id": "v1.1-row-747-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 977,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-923-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 1341,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-941-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 868,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-991-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": true,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 1016,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-992-B",
+   "gold": 1,
+   "given": 2,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "other_ballot_or_topic",
+   "input_tokens": 985,
+   "output_tokens": 12
+  },
+  {
+   "id": "v1.1-row-1405-B",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "reference as sent",
+   "same_language": false,
+   "type": "scope",
+   "input_tokens": 710,
+   "output_tokens": 7
+  }
+ ]
+}

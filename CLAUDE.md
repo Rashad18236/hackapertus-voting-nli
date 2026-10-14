@@ -222,7 +222,8 @@ src/
                 session 6 section_route.py (default since session 7: the part the claim names,
                 as numbered paragraphs; falls back to embed-e5-small)
   evidence.py   task A evidence settings: cited-pieces (default since session 6: 1,000-character pieces
-                of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used)
+                of the cited pages), cited (whole cited pages), cited-then-retrieved (off, not used); session 13: hedge()
+                (H, default: the paragraph before the first cited one and the cited page's whole text)
 examples/       cases.jsonl for make run (one task A, one task B request, from dev)
 data/           raw dataset, dev/ and test/ splits, splits.json; val/ (session 7: 580 task A cases from
                 rows in neither dev nor test, and a balanced 300-case sample); session 10: probe/ (the test
@@ -245,7 +246,9 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 make_ontopic.py, rule_check.py (TOKEN RULE, fixes/breaks), schema_check.py,
                 python_rule_offline.py, vote_language_check.py; session 12: ranker_check.py (rankers without the
                 endpoint), static_equivalence.py (model S against sentence-transformers, development machine only),
-                taskb_long_errors.py (task B errors on long references)
+                taskb_long_errors.py (task B errors on long references); session 13: arm_table.py (PAIRED RULE
+                numbers per arm), taskb_b3_picks.py, evidence_pages.py (three page rules, hedge H), error_types.py (routing or
+                reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -301,9 +304,52 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 12 (2026-10-13 10:35 UTC to 2026-10-14 03:00 UTC)
+## Current stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 09:00 UTC)
 
-Branch `rashad/session-12` from `main` at `37904b3` (draft PR #20, never merged, no tag); status
+Branch `rashad/session-13` from `main` at `c85a119` (PR #20 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report
+`track_2a/docs/session_13_report.md`. Experiments stop on 14 October at 08:00 UTC, everything pushed by 09:00 UTC; steps
+in the order given, what is not reached is written down as not done. Rules as in session 12, plus: Python may decide
+WHEN to ask Apertus again, never WHAT the label is (mapping a word or enum Apertus chose to 0/1/2 is allowed); evidence
+only text Apertus cited or text next to it on its real page; no new local models; every comparison one interleaved run
+with an arm "today" (session 12's defaults), input and output tokens separately; PAIRED RULE (val +0.005, dev not
+below −0.004, sign test p ≤ 0.10 on dev+val, input tokens ≤ +4 %, no more unreadable answers, local time ≤ +0.002 s,
+on-topic neutral share ≥ today's − 0.05); G1/G2 against `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA`.
+
+- **Step 0:** PR #20 merged into `main` as `c85a119` (merge commit; it was a draft, so it was marked ready first);
+  PR #19 (`kaan/robustness-experiments`, an ancestor of `main`) closed; publish-image on `main` green (`latest`,
+  `sha-c85a119b409a`).
+- **Step 1 (nothing adopted):** task A prompts A1–A5 (`--prompt-a A-v6-says|residual|mismatch|opposite|words`) and
+  A6, a second look after a neutral answer that cites paragraphs (`--second-look-a6`, `A-v6-second-look`; the
+  flag `--second-look-a` already names L2). Dev: today 0.983, A1 0.902, A2 0.973, A3 0.980, A4 0.964, A5 0.983,
+  today+A6 0.987; on-topic neutral 32 of 46 today, 13–30 for the arms. All fail on dev (A5 and A6 the on-topic
+  condition; A6 by one case: 2 neutrals flipped, at most 1 allowed). Val (report only): today 0.959, A5 0.971, A3 0.970,
+  A6 0.973 (9 fixes, 1 break); they fix 7, 9 and 8 of session 12's 15 val errors answered neutral.
+- **Step 2 (nothing adopted):** B1 (`v7-same-ballot`) void after the format check (an answer cut at the schema's
+  80-character limit, then whitespace: unreadable); B3 (`--context-b cut4-tf`, 71 % of long references change a pick)
+  and B4 (`v7-claim-first`, 5 unreadable) fail on dev; **B2 (`v7-unrelated`)** val 0.974 vs 0.968, fixes 8 of the 9 val
+  errors answered contradiction, but fails (c) (9 / 6, p = 0.30) and (e) (2 unreadable vs 1).
+- **Step 3 (adopted): evidence page hedge H** (`--evidence-hedge-a`, default): routed evidence adds the paragraph
+  before the first cited one when that one opens its page, then the cited page's whole text. Rule 3 (first gold page)
+  dev 116 → 119, val 223 → 236, probe 44 → 46 of 201 / 401 / 65; nothing worse; labels and requests unchanged.
+- **Step 4:** technical report section 4 "How Apertus is used" (roles, ablation, errors, negative results);
+  `scripts/error_types.py`: session 12's 23 val task A errors = 10 routing + 13 reading; Apertus (offline, 31 calls)
+  names the reading errors' kinds. **Step 5:** `docs/organiser_questions.md`.
+- **Step 6 (adopted): model S is the default ranker** (val task A 0.961 → 0.969, REF SCORE at 1.0 / 0.3 s 0.924 /
+  0.917 → 0.927 / 0.919; `--ranker e5` for the earlier model); e5 stays for task B's selector T. Combination H+S 0.969
+  vs 0.959 (val task A): kept. Task A peak memory 2,287 → 206 MiB; image size unchanged.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-54032b4a7970`, tag
+  `session-13`; `docs/runs/2026-10-14_rashad_final-s13_*`): dev task A 0.973 (evidence 0.985), task B 0.987; val 0.969
+  (0.965), 0.968; probe 0.981 (0.985), 0.977. Tokens per case (dev, input + output): A 1,251 + 14.8, B 815 + 8.8.
+  Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.016 / 0.017 / 0.025 s (session 12 with e5: 0.017 /
+  0.160 / 0.364), B 0.008 / 0.009 / 0.132 s. REF SCORE dev 0.915 / 0.911, val 0.917 / 0.912, probe 0.903 / 0.901 (1.0 / 0.3 s).
+  Python wrote 1 of 2,128 labels.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA` (also
+  `scripts/local_time.py`'s default table).
+
+## Previous stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
+
+Branch `rashad/session-12` from `main` at `37904b3` (PR #20, merged into `main` on 2026-10-13 as `c85a119`, no tag); status
 `track_2a/docs/session_12_status.md`, decisions `docs/decisions/2026-10-13-1035_rashad_session-12.md`, report
 `track_2a/docs/session_12_report.md`. The last experimental session: every remaining idea with a real chance, in order
 of value. The instruction arrived cut off in step 3; the readings of steps 3 (third version) to 8 are in the decisions
@@ -345,7 +391,7 @@ Apertus), input and output tokens reported separately in every run.
 - **New replay reference for G1/G2:** `docs/runs/2026-10-13_rashad_prompt-snapshot-final-s12_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
+## Earlier stage: session 11 (2026-10-12 20:10 UTC to 2026-10-13 10:30 UTC)
 
 Branch `rashad/session-11` from `main` at `014f691` (PR #18, merged into `main` on 2026-10-13 as `37904b3`); status
 `track_2a/docs/session_11_status.md`, decisions `docs/decisions/2026-10-12-2010_rashad_session-11.md`,

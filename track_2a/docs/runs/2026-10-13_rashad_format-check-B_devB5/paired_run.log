@@ -1,0 +1,11 @@
+5 cases, 0 booklets parsed; arms: ['today', 'B1-same-ballot', 'B2-unrelated', 'B3-title', 'B4-claim-first']
+[1/5] v1.1-row-500-B | today: neutral | B1-same-ballot: contradiction | B2-unrelated: neutral | B3-title: neutral | B4-claim-first: neutral
+[2/5] v1.1-row-501-B | B1-same-ballot: neutral | B2-unrelated: neutral | B3-title: neutral | B4-claim-first: neutral | today: neutral
+[3/5] v1.1-row-994-B | B2-unrelated: contradiction | B3-title: contradiction | B4-claim-first: contradiction | today: contradiction | B1-same-ballot: contradiction
+[4/5] v1.1-row-2-B | B3-title: entailment | B4-claim-first: entailment | today: entailment | B1-same-ballot: neutral (unparseable answer) | B2-unrelated: entailment
+[5/5] v1.1-row-4-B | B4-claim-first: entailment | today: entailment | B1-same-ballot: entailment | B2-unrelated: entailment | B3-title: entailment
+today: ok: 5; HTTP 429 answers: 0, retries: 0
+B1-same-ballot: ok: 4, unparseable answer: 1; HTTP 429 answers: 0, retries: 0
+B2-unrelated: ok: 5; HTTP 429 answers: 0, retries: 0
+B3-title: ok: 5; HTTP 429 answers: 0, retries: 0
+B4-claim-first: ok: 5; HTTP 429 answers: 0, retries: 0

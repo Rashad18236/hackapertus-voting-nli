@@ -85,6 +85,14 @@ class Settings:
     short_prompt_a: bool = False  # P-short (session 10, step 5): routed cases get A-v5-short, the same rules in at most
                                   # 200 fixed tokens (L1's sentence included)
     second_look_a: bool = False  # L2 (session 9, phase D): a second call after a neutral answer, see second_look()
+    prompt_a: str = ""           # session 13, step 1: the routed prompt version (nli.ROUTED_VERSIONS: A-v6-says,
+                                 # A-v6-residual, A-v6-mismatch, A-v6-opposite, A-v6-words); "" = today's (A-v4-section-route-L1)
+    evidence_hedge_a: bool = True   # H (session 13, step 3, adopted: H RULE): routed evidence adds the paragraph before the
+                                    # first cited one (when that one opens its page) and the cited page's whole text; see
+                                    # evidence.hedge(). Rule 3 (first gold page) dev 116 -> 119, val 223 -> 236, probe 44 ->
+                                    # 46; nothing worse under any page rule; labels and requests unchanged
+    second_look_a6: bool = False  # A6 (session 13, step 1): a neutral answer that cites paragraphs gets one more call
+                                  # (A-v6-second-look) with the cited paragraphs and their neighbours; see second_look_a6()
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
     ap_structure_a: str = "ask-after-parser"  # Apertus reads the contents pages (one call per booklet); its entries are
@@ -98,8 +106,10 @@ class Settings:
                                  # claim (translated by Apertus when it is in another language than the booklet), an
                                  # error going on to embed-e5-small; "embed" (embed-e5-small, before session 12); session
                                  # 11's levels "vw" (vote-wide), "bw" (booklet-wide), "vw+bw" (off)
-    ranker: str = "e5"           # session 12, step 1: which local ranker keeps a long part's, the fallback's and (cut4-r) a
-                                 # long task B reference's most similar pieces: see src/rankers.py ("e5" is today's code)
+    ranker: str = "S"            # which local ranker keeps a long part's, the fallback's and (cut4-r) a long task B
+                                 # reference's most similar pieces: see src/rankers.py. Session 13, step 6 (adopted, S RULE:
+                                 # val task A 0.961 -> 0.969, REF SCORE at 0.3 s 0.917 -> 0.919, at 1.0 s 0.924 -> 0.927):
+                                 # "S" (model S); "e5" until session 12. Task B's selector T still uses e5
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
                                           # ones and 11 of the 99 right ones; the best difference of the two shares)
@@ -159,6 +169,7 @@ class Prepared:
     routed: tuple = None         # A-paragraphs: (part, [(page, verbatim text)]) as sent
     seconds: float = 0.0
     ask: tuple = None            # A-ask-part (session 11): (language, {part: routed}, fallback Prepared)
+    page_texts: dict = None      # A-paragraphs with H (session 13, step 3): {page: text} of the routed part's pages
 
 
 def finished(case_id, raw, resp, status):
@@ -211,8 +222,8 @@ def prepare_a(case, data_dir, start, raw, settings):
         raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
         raw["pages_total"], raw["context_pages"] = len(pages), sorted({page for page, _ in paragraphs})
         return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
-                        routed=routed, chat_args={"max_tokens": settings.max_tokens_a,
-                                                  "json_schema": paragraph_schema(settings)})
+                        routed=routed, chat_args=paragraph_chat_args(settings),
+                        page_texts=part_page_texts(pages, paragraphs, settings))
     if settings.ap_structure_a == "ask-after-parser" and "route_error" not in raw:
         asked = ask_structure_prepared(case, pages, vote, claim_text, start, raw, settings)
         if asked is not None:
@@ -225,6 +236,17 @@ def prepare_a(case, data_dir, start, raw, settings):
             return Prepared(case_id, raw, kind="A-ask-part", vote=vote, claim_text=claim_text,
                             ask=(case["booklet"].get("language") or "", candidates, fallback))
     return fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found)
+
+
+def part_page_texts(pages, paragraphs, settings):
+    """H (session 13, step 3; off by default): {page: text} of the routed part's pages, for its whole-page item.
+    None when H is off, so the default path carries nothing more."""
+    if not settings.evidence_hedge_a:
+        return None
+    try:
+        return {page: pages[page] for page in sorted({page for page, _ in paragraphs})}
+    except Exception:  # a page that cannot be read gives no whole-page item
+        return None
 
 
 def fallback_prepared(case, pages, vote, claim_text, start, raw, settings, found=None):
@@ -376,7 +398,7 @@ def complete_a_ask_part(p, start, settings):
         p.raw["context_pages"] = sorted({page for page, _ in paragraphs})
         q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
                      messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
-                     chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
+                     chat_args=paragraph_chat_args(settings))
     else:
         p.raw.update(fallback.raw)
         q = Prepared(**{**fallback.__dict__, "raw": p.raw})
@@ -438,7 +460,7 @@ def complete_a_ask_structure(p, start, settings):
         p.raw["pages_total"], p.raw["context_pages"] = len(page_texts), sorted({page for page, _ in paragraphs})
         q = Prepared(p.case_id, p.raw, kind="A-paragraphs", vote=p.vote, claim_text=p.claim_text, routed=routed,
                      messages=paragraph_messages(routed, p.vote, p.claim_text, settings),
-                     chat_args={"max_tokens": settings.max_tokens_a, "json_schema": paragraph_schema(settings)})
+                     chat_args=paragraph_chat_args(settings), page_texts=part_page_texts(page_texts, paragraphs, settings))
     else:
         p.raw.update(fallback.raw)
         q = Prepared(**{**fallback.__dict__, "raw": p.raw})
@@ -521,8 +543,7 @@ def wide_prepared(case_id, raw, wide, pages, vote, claim_text, settings):
     raw["paragraphs_sent"] = [[page, len(text)] for page, text in paragraphs]
     raw["pages_total"], raw["context_pages"] = len(pages), sorted({page for page, _ in paragraphs})
     return Prepared(case_id, raw, kind="A-paragraphs", messages=messages, vote=vote, claim_text=claim_text,
-                    routed=(level, paragraphs), chat_args={"max_tokens": settings.max_tokens_a,
-                                                           "json_schema": paragraph_schema(settings)})
+                    routed=(level, paragraphs), chat_args=paragraph_chat_args(settings, version))
 
 
 def complete_a_pages(p, start, settings):
@@ -555,14 +576,28 @@ def paragraph_messages(routed, vote, claim_text, settings):
                                            vote, claim_text, paragraph_prompt_version(settings))
 
 
-def paragraph_schema(settings):
-    """The answer schema of a routed case: the coupled one with CS (session 10, step 6), else the plain one."""
+def paragraph_schema(settings, version=None):
+    """The answer schema of a routed case: a session 13 version's own, the coupled one with CS (session 10, step 6),
+    else the plain one."""
     if not settings.schema_a:
         return None
+    spec = nli.ROUTED_VERSIONS.get(version or paragraph_prompt_version(settings))
+    if spec is not None:
+        return spec["schema"]
     return nli.ANSWER_SCHEMA_A_COUPLED if settings.coupled_schema_a else nli.ANSWER_SCHEMA_A_PARAGRAPHS
 
 
+def paragraph_chat_args(settings, version=None):
+    """llm.chat's arguments for a routed case: the answer budget (a session 13 version's own, else max_tokens_a) and
+    the schema."""
+    spec = nli.ROUTED_VERSIONS.get(version or paragraph_prompt_version(settings))
+    return {"max_tokens": spec["max_tokens"] if spec is not None else settings.max_tokens_a,
+            "json_schema": paragraph_schema(settings, version)}
+
+
 def paragraph_prompt_version(settings):
+    if settings.prompt_a:  # session 13, step 1: one of the rewritten routed prompts
+        return settings.prompt_a
     if settings.short_prompt_a:  # session 10, step 5: P-short (L1's sentence included)
         return "A-v5-short"
     version = context.VARIANTS[settings.context_a].PROMPT_VERSION
@@ -583,11 +618,18 @@ def complete_a_paragraphs(p, start, settings):
 
     note_call(p.raw, result)
     p.raw["answer"], p.raw["output_tokens"] = result.text, result.output_tokens
-    label, numbers, reason = nli.parse_label_and_pages(result.text, key="paragraphs")
+    label, numbers, reason = nli.parse_routed_answer(result.text, p.raw.get("prompt_version"))
     if label is None:
         p.raw["parse_reason"] = reason
         return response(p.case_id, FALLBACK_LABEL, result.input_tokens, result.output_tokens, start), "unparseable answer"
     input_tokens, output_tokens = result.input_tokens, result.output_tokens
+    if label == 1 and numbers and settings.second_look_a6:
+        second = second_look_a6(p, numbers, settings)
+        if second is not None:
+            result2, label2 = second
+            input_tokens, output_tokens = input_tokens + result2.input_tokens, output_tokens + result2.output_tokens
+            if label2 is not None:  # Apertus's second answer is final; evidence from the first answer's paragraphs
+                label = label2
     if label == 1 and numbers and settings.second_look_cited_a:
         second = second_look_cited(p, numbers, settings)
         if second is not None:
@@ -603,8 +645,57 @@ def complete_a_paragraphs(p, start, settings):
             if label2 in (0, 2):  # only an entailment or contradiction replaces the first neutral answer
                 label, numbers, paragraphs = label2, numbers2, shown2
     items = variant.evidence_items(paragraphs, numbers, halves=settings.evidence_halves_a) if label in (0, 2) else []
+    if items and settings.evidence_hedge_a and paragraphs is p.routed[1]:  # H: the part as sent, the first answer's numbers
+        items = evidence.hedge(items, paragraphs, numbers, p.page_texts)
     status = "ok" if label == 1 or items else "no valid paragraphs for label 0/2"
     return response(p.case_id, label, input_tokens, output_tokens, start, items), status
+
+
+A6_MAX_CHARS = 2000  # session 13: the excerpt of a second look (A6) holds at most this many characters
+
+
+def a6_excerpt(paragraphs, numbers, max_chars=A6_MAX_CHARS):
+    """A6's excerpt: the cited paragraphs (numbers valid for the part as sent) with the paragraph before and after
+    each, in number order, numbered as first shown: [(number, text)]. The cited paragraphs are taken first (in the
+    answer's order), then their neighbours (before, then after), each only while the total stays within max_chars;
+    a cited paragraph longer than that alone is cut to its first max_chars characters."""
+    cited = [n for n in dict.fromkeys(numbers) if isinstance(n, int) and 1 <= n <= len(paragraphs)]
+    order = cited + [m for n in cited for m in (n - 1, n + 1) if 1 <= m <= len(paragraphs) and m not in cited]
+    chosen, total = {}, 0
+    for n in dict.fromkeys(order):
+        text = paragraphs[n - 1]
+        if not chosen and len(text) > max_chars:
+            text = text[:max_chars]
+        if total + len(text) <= max_chars:
+            chosen[n], total = text, total + len(text)
+    return sorted(chosen.items())
+
+
+def second_look_a6(p, numbers, settings):
+    """A6 (session 13, step 1; off by default): the first answer was neutral but cited paragraphs. One more call
+    (prompt A-v6-second-look): the cited paragraphs with their neighbours from the part as sent (a6_excerpt) and the
+    claim; Apertus's finding same / different / nothing becomes 0 / 2 / 1 and is final. Returns (result, label or
+    None when the answer cannot be read), or None when there is nothing to send or the call fails (the first answer
+    stays). Never a third call. Recorded in raw["second_look_a6"]."""
+    variant = context.VARIANTS[settings.context_a]
+    part, paragraphs = p.routed
+    excerpt = a6_excerpt([variant.display(t) for _, t in paragraphs], numbers)
+    if not excerpt:
+        return None
+    p.raw["second_look_a6"] = {"cited": numbers, "sent": [[n, len(t)] for n, t in excerpt]}
+    try:
+        result = llm.chat(nli.build_messages_excerpt(excerpt, p.claim_text), max_tokens=settings.max_tokens_a,
+                          json_schema=nli.ANSWER_SCHEMA_A6 if settings.schema_a else None)
+    except llm.LLMError as e:
+        p.raw["second_look_a6"].update(error=str(e), attempts=e.attempts)
+        return None
+    label, reason = nli.parse_word(result.text, "finding", nli.FINDING_LABELS)
+    p.raw["second_look_a6"].update(answer=result.text, input_tokens=result.input_tokens,
+                                   output_tokens=result.output_tokens, attempts=result.attempts,
+                                   endpoint=result.endpoint)
+    if label is None:
+        p.raw["second_look_a6"]["parse_reason"] = reason
+    return result, label
 
 
 def second_look_cited(p, numbers, settings):
@@ -686,7 +777,7 @@ def prepare_b(case, start, raw, settings):
                         "invalid request (missing reference.text or claim.text)")
 
     raw["prompt_version"] = settings.prompt_b
-    messages, max_tokens, schema = None, settings.max_tokens_b, nli.ANSWER_SCHEMA_B if settings.schema_b else None
+    messages, (max_tokens, schema) = None, b_answer_args(settings)
     if settings.context_b != "full":  # session 9, phase C: cut or numbered long passages
         raw["context_b"] = settings.context_b
         try:
@@ -713,12 +804,19 @@ def prepare_b(case, start, raw, settings):
             model = taskb_context.ranking_model(settings.context_b, same_language_b(case))
             if model:  # session 12, step 2: later cases skip the model at once
                 rankers.failed(model, e)
-            messages, max_tokens = None, settings.max_tokens_b
-            schema = nli.ANSWER_SCHEMA_B if settings.schema_b else None
+            messages, (max_tokens, schema) = None, b_answer_args(settings)
             raw["prompt_version"] = settings.prompt_b
     return Prepared(case_id, raw, kind="B",
                     messages=messages or nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
                     chat_args={"max_tokens": max_tokens, "json_schema": schema})
+
+
+def b_answer_args(settings):
+    """(max_tokens, json_schema) of a task B request: a session 13 version's own (nli.B_VERSIONS), else today's."""
+    spec = nli.B_VERSIONS.get(settings.prompt_b)
+    if spec is not None:
+        return spec["max_tokens"], spec["schema"]
+    return settings.max_tokens_b, nli.ANSWER_SCHEMA_B if settings.schema_b else None
 
 
 def complete_b(p, start, settings):
@@ -922,6 +1020,12 @@ def main():
                         help="development only: SL, a second call after a neutral answer that cites paragraphs (step 6)")
     parser.add_argument("--short-prompt-a", action=argparse.BooleanOptionalAction, default=defaults.short_prompt_a,
                         help="development only: P-short, the routed prompt in fewer words (session 10, step 5)")
+    parser.add_argument("--prompt-a", default=defaults.prompt_a, choices=[""] + sorted(nli.ROUTED_VERSIONS),
+                        help="session 13: routed prompt version (default: today's A-v4-section-route-L1)")
+    parser.add_argument("--evidence-hedge-a", action=argparse.BooleanOptionalAction, default=defaults.evidence_hedge_a,
+                        help="session 13, H: routed evidence adds the paragraph before and the whole cited page")
+    parser.add_argument("--second-look-a6", action=argparse.BooleanOptionalAction, default=defaults.second_look_a6,
+                        help="session 13, A6: a second look after a neutral answer that cites paragraphs")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
                         help="development only: L2, a second call after a neutral answer (session 9, D)")
     parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
@@ -951,6 +1055,8 @@ def main():
                         second_look_threshold=args.second_look_threshold, section_top_k_a=args.section_top_k_a,
                         short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
                         second_look_cited_a=args.second_look_cited_a, fallback_a=args.fallback_a,
+                        prompt_a=args.prompt_a, second_look_a6=args.second_look_a6,
+                        evidence_hedge_a=args.evidence_hedge_a,
                         ap_part_a=args.ap_part_a, ap_structure_a=args.ap_structure_a, ranker=args.ranker)
     if args.input.resolve() == args.output.resolve():
         parser.error("Input and output must be different files.")

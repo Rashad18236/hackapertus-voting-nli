@@ -1,0 +1,5 @@
+{"id": "v1.1-row-500-B", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 558, "output_tokens": 46, "inference_time_ms": 2667}}
+{"id": "v1.1-row-501-B", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 947, "output_tokens": 45, "inference_time_ms": 2782}}
+{"id": "v1.1-row-994-B", "label": 2, "label_name": "contradiction", "evidence": [], "metrics": {"input_tokens": 1341, "output_tokens": 44, "inference_time_ms": 2640}}
+{"id": "v1.1-row-2-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 731, "output_tokens": 42, "inference_time_ms": 2797}}
+{"id": "v1.1-row-4-B", "label": 0, "label_name": "entailment", "evidence": [], "metrics": {"input_tokens": 1028, "output_tokens": 42, "inference_time_ms": 2456}}

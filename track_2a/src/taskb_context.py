@@ -25,13 +25,15 @@ import re
 from src import booklet, memo
 from src.contexts import retrieval, section_route
 
-MODES = ("full", "cut", "para", "cut4", "unified", "cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25")
+MODES = ("full", "cut", "para", "cut4", "unified", "cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25",
+         "cut4-tf")
 CUT_CHARS = 8000
 TOP_K = 8
 CUT4_CHARS = 3000
 CUT4_TOP_K = 4
 LIMITS = {"cut": (CUT_CHARS, TOP_K), "para": (CUT_CHARS, TOP_K), "cut4": (CUT4_CHARS, CUT4_TOP_K),
-          "unified": (CUT_CHARS, TOP_K), **{m: (CUT4_CHARS, CUT4_TOP_K) for m in ("cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25")}}
+          "unified": (CUT_CHARS, TOP_K), **{m: (CUT4_CHARS, CUT4_TOP_K) for m in ("cut4-q", "cut4-t", "cut4-l", "cut4-h", "cut4-r", "cut4-bm25",
+                                                       "cut4-tf")}}
 # Session 11, step 6 (off by default): B-cut4 with another way to pick its 4 paragraphs (the "selector"):
 #   cut4    E: e5 (multilingual-e5-small) on whole paragraphs, as session 10
 #   cut4-q  Q: the same model quantised to 8-bit integers (the model's own export, src/contexts/embed_e5_small.py)
@@ -41,8 +43,10 @@ LIMITS = {"cut": (CUT_CHARS, TOP_K), "para": (CUT_CHARS, TOP_K), "cut4": (CUT4_C
 #   cut4-r  R (session 12, step 3): the ranker src/rankers.py's ACTIVE names (B-R), on the paragraphs' whole text
 #   cut4-bm25  B (session 12, step 3): Kaan's BM25 on the claim; when claim and reference differ in language, on the
 #              claim translated by Apertus (src/cli.py makes that call, then passes the translation as the search text)
+#   cut4-tf  TF (B3, session 13, step 2): T with each paragraph embedded as "<first line of the reference>: <its first
+#            T_CHARS characters>", so every paragraph carries the ballot's title
 SELECTORS = {"cut4": "E", "cut4-q": "Q", "cut4-t": "T", "cut4-l": "L", "cut4-h": "H", "cut4-r": "R",
-             "cut4-bm25": "B"}
+             "cut4-bm25": "B", "cut4-tf": "TF"}
 T_CHARS = 300
 H_MODEL = "cut4-t"
 PART_LINE = ("a passage from the booklet's section on the ballot named in VOTE; its first paragraph is the "
@@ -82,7 +86,7 @@ def cut_paragraphs(reference_text, claim_text, mode="cut", same_language=True):
             paragraphs = [text for _, text in section_route.most_similar([(0, p) for p in paragraphs], claim_text,
                                                                          top_k)]
         else:
-            scores = selector_scores(selector, paragraphs, claim_text)
+            scores = selector_scores(selector, paragraphs, claim_text, first)
             best = sorted(sorted(range(len(paragraphs)), key=lambda i: -scores[i])[:top_k])
             paragraphs = [paragraphs[i] for i in best]
     return first, paragraphs
@@ -91,8 +95,9 @@ def cut_paragraphs(reference_text, claim_text, mode="cut", same_language=True):
 _q_vectors = {}  # (selector, SHA-256 of the paragraphs) -> vectors
 
 
-def selector_scores(selector, paragraphs, claim_text):
-    """Similarity of the claim to each paragraph for selector Q, T or L (session 11, step 6)."""
+def selector_scores(selector, paragraphs, claim_text, first=""):
+    """Similarity of the claim to each paragraph for selector Q, T, TF or L (session 11, step 6; TF session 13).
+    first: the reference's first line (TF only)."""
     if selector == "L":
         return [lexical_score(claim_text, p) for p in paragraphs]
     if selector in ("R", "B"):
@@ -103,6 +108,8 @@ def selector_scores(selector, paragraphs, claim_text):
     texts = [section_route.display(p) for p in paragraphs]
     if selector == "T":
         texts = [t[:T_CHARS] for t in texts]
+    if selector == "TF":
+        texts = [f"{first}: {t[:T_CHARS]}" for t in texts]
     key = (selector, hashlib.sha256("\n\n".join(texts).encode("utf-8")).hexdigest())
     vectors = memo.once(_q_vectors, key, lambda: retrieval.embedder(model).embed([f"passage: {t}" for t in texts]))
     return list(vectors @ retrieval.query_vector(model, claim_text))

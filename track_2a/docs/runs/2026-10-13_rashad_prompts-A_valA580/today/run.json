@@ -1,0 +1,40 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "21:40",
+ "kind": "model run",
+ "code": "3572cc8 (scripts/paired_run.py, in-process)",
+ "cases": "val, all 580 task A cases",
+ "format": "official scorer; interleaved, 4 arms, 1 request per second (session 13 step 1, val; for the report only)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and second look from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_prompts-A_valA580/A5-words",
+  "2026-10-13_rashad_prompts-A_valA580/A3-mismatch",
+  "2026-10-13_rashad_prompts-A_valA580/today+A6"
+ ],
+ "setup": "today's defaults (session 12): A-v4-section-route-L1 + json_schema",
+ "results": {
+  "macro_f1": 0.959,
+  "f1": {
+   "entailment": 0.974,
+   "neutral": 0.957,
+   "contradiction": 0.946
+  },
+  "evidence": {
+   "score": 0.96,
+   "found": 385,
+   "cases": 401
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1211,
+  "mean_time_ms": 839,
+  "p95_time_ms": 1666,
+  "mean_output_tokens": 14.7
+ }
+}

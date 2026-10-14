@@ -3,7 +3,7 @@
 import unittest
 from unittest import mock
 
-from src import context, nli
+from src import context, nli, rankers
 from src.contexts import embed_e5_small
 
 
@@ -32,7 +32,9 @@ class Select(unittest.TestCase):
         self.assertTrue(text.startswith("=== PAGE 1 ===\nintro"))
 
     def test_embedding_mode_shows_chunks_but_keeps_whole_pages_for_evidence(self):
-        with mock.patch.object(embed_e5_small, "select_chunks", return_value=[(2, "about the tax")]):
+        # the e5 path by name: pin the ranker (an earlier test in the same process may have left model S active)
+        with mock.patch.object(embed_e5_small, "select_chunks", return_value=[(2, "about the tax")]), \
+             mock.patch.dict(rankers.ACTIVE, {"name": "e5"}):
             text, shown = context.select(self.PAGES, "any vote", "tax", "embed-e5-small")
         self.assertEqual(text, "=== PAGE 2 ===\nabout the tax")
         self.assertEqual(shown, {2: self.PAGES[2]})

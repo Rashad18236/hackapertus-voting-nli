@@ -1,0 +1,43 @@
+{
+ "person": "rashad",
+ "date": "2026-10-13",
+ "start_utc": "20:09",
+ "kind": "model run",
+ "code": "907753c working tree (src/cli.py, src/nli.py: the step 1 code committed as 92984cd; scripts/paired_run.py in-process)",
+ "cases": "dev, all 300 task A cases, plus the 46 cases of the on-topic neutral set (data/ontopic_neutral/; scored separately; mean tokens and times include them)",
+ "format": "official scorer on dev; interleaved, 7 arms, 1 request per second (session 13 step 1)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and second look from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": [
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/A1-says",
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/A2-residual",
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/A3-mismatch",
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/A4-opposite",
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/A5-words",
+  "2026-10-13_rashad_prompts-A_devA300-ontopic46/today+A6"
+ ],
+ "setup": "today's defaults (session 12): A-v4-section-route-L1 + json_schema",
+ "results": {
+  "macro_f1": 0.983,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.995,
+   "contradiction": 0.975
+  },
+  "evidence": {
+   "score": 0.985,
+   "found": 198,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1167,
+  "mean_time_ms": 765,
+  "p95_time_ms": 1706,
+  "mean_output_tokens": 14.4
+ }
+}

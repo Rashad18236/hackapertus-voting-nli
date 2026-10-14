@@ -12,3 +12,7 @@ th { background: #eee; }
 code { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
 pre { font-size: 10pt; line-height: 1.15; margin: 3pt 0; white-space: pre-wrap; }
 blockquote { margin: 2pt 10pt; font-style: italic; }
+/* Session 13: compact tables inside ::: {.compact} blocks (section 4 must stay within one page). */
+.compact table { font-size: 8.5pt; margin: 2pt 0; }
+.compact th, .compact td { padding: 0.5pt 3pt; }
+.compact p { font-size: 9.5pt; }
