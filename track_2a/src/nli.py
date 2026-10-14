@@ -535,9 +535,18 @@ Answer with one JSON object and nothing else, fields in this order:
 {"claim_says": "...", "label": 0}""")
 assert PROMPTS_B["v7-claim-first"] != PROMPTS_B["v3-topic-first"]
 
+# Session 15, step 3 (off by default): B1 retried with only its format fixed: both ballot fields at most 6 words and
+# 40 characters, a 64-token budget (B1's answer ran into its 80-character cap and out of budget in session 13).
+PROMPTS_B["v7-same-ballot-f"] = PROMPTS_B["v7-same-ballot"].replace("at most 8 words", "at most 6 words")
+assert PROMPTS_B["v7-same-ballot-f"].count("at most 6 words") == 2
+
 # Per session 13 task B version: its answer schema and budget (B2 keeps today's: no schema, 32 tokens). The label is
 # read from "label" as today (parse_label).
 B_VERSIONS = {
+    "v7-same-ballot-f": {"schema": _schema(passage_ballot={"type": "string", "maxLength": 40},
+                                           claim_ballot={"type": "string", "maxLength": 40},
+                                           same_ballot={"type": "boolean"},
+                                           label={"type": "integer", "enum": [0, 1, 2]}), "max_tokens": 64},
     "v7-same-ballot": {"schema": _schema(passage_ballot={"type": "string", "maxLength": 80},
                                          claim_ballot={"type": "string", "maxLength": 80},
                                          same_ballot={"type": "boolean"},
@@ -548,6 +557,30 @@ B_VERSIONS = {
 
 
 DEFAULT_PROMPT_B = "v3-topic-first"  # best on dev (session 2, Run A)
+
+
+# B6 (session 15, step 4; off by default, `--second-look-b6`): after a task B answer 2 (contradiction), one more request
+# with only the reference's first line (the ballot's title), the case's vote field and the claim. Apertus's
+# "same_ballot" false makes the label 1; true keeps the first answer (Python only decides when to ask).
+B6_VERSION = "B6-same-ballot-v1"
+B6_QUESTION = 'Is the claim about the ballot named in the title? Answer in JSON: {"same_ballot": true|false}.'
+ANSWER_SCHEMA_B6 = _schema(same_ballot={"type": "boolean"})
+
+
+def build_messages_b6(title, vote, claim_text):
+    """B6's one user message: the reference's title, the vote field, the claim, and the question."""
+    return [{"role": "user", "content": f"TITLE: {title}\nVOTE: {vote}\nCLAIM: {claim_text}\n\n{B6_QUESTION}"}]
+
+
+def parse_same_ballot(answer):
+    """(True / False / None, reason) from B6's answer: the boolean Apertus gave in "same_ballot"."""
+    obj = _first_json_object(answer or "")
+    if obj is None:
+        return None, "no JSON object"
+    value = obj.get("same_ballot")
+    if not isinstance(value, bool):
+        return None, f"same_ballot is {value!r}"
+    return value, ""
 
 
 def build_messages_b(reference_text, claim_text, version=DEFAULT_PROMPT_B):

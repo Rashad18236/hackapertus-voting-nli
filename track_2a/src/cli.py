@@ -95,6 +95,8 @@ class Settings:
                                  # answer that cites paragraphs gets one more call (A-v6-second-look) with the cited
                                  # paragraphs and their neighbours; see second_look_a6()
     second_look_a6_prompt: str = "A-v6-second-look"  # session 15, step 2: A6's prompt; "A-v6-second-look-b" is A6b
+    second_look_b6: bool = False  # B6 (session 15, step 4): after a task B answer 2, one call on the ballot (title,
+                                  # vote, claim); "same_ballot" false makes the label 1; see second_look_b6()
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
     ap_structure_a: str = "ask-after-parser"  # Apertus reads the contents pages (one call per booklet); its entries are
@@ -172,6 +174,7 @@ class Prepared:
     seconds: float = 0.0
     ask: tuple = None            # A-ask-part (session 11): (language, {part: routed}, fallback Prepared)
     page_texts: dict = None      # A-paragraphs with H (session 13, step 3): {page: text} of the routed part's pages
+    title: str = ""              # B with B6 (session 15, step 4): the reference's first line (the ballot's title)
 
 
 def finished(case_id, raw, resp, status):
@@ -813,7 +816,14 @@ def prepare_b(case, start, raw, settings):
             raw["prompt_version"] = settings.prompt_b
     return Prepared(case_id, raw, kind="B",
                     messages=messages or nli.build_messages_b(reference_text, claim_text, settings.prompt_b),
-                    chat_args={"max_tokens": max_tokens, "json_schema": schema})
+                    chat_args={"max_tokens": max_tokens, "json_schema": schema}, vote=case.get("vote") or "",
+                    claim_text=claim_text, title=first_line(reference_text) if settings.second_look_b6 else "")
+
+
+def first_line(text):
+    """The first non-empty line of a reference text (its ballot's title), stripped, as taskb_context.split gives it."""
+    lines = text.strip().splitlines()
+    return lines[0].strip() if lines else ""
 
 
 def b_answer_args(settings):
@@ -840,7 +850,39 @@ def complete_b(p, start, settings):
     if label is None:
         p.raw["parse_reason"] = reason
         label, status = FALLBACK_LABEL, "unparseable answer"
-    return response(p.case_id, label, result.input_tokens, result.output_tokens, start), status
+    input_tokens, output_tokens = result.input_tokens, result.output_tokens
+    if label == 2 and status == "ok" and settings.second_look_b6:
+        second = second_look_b6(p, settings)
+        if second is not None:
+            result2, same = second
+            input_tokens, output_tokens = input_tokens + result2.input_tokens, output_tokens + result2.output_tokens
+            if same is False:  # Apertus says the claim is about another ballot: neutral
+                label = 1
+    return response(p.case_id, label, input_tokens, output_tokens, start), status
+
+
+B6_MAX_TOKENS = 16  # session 15: B6's answer is {"same_ballot": false}, about 8 tokens
+
+
+def second_look_b6(p, settings):
+    """B6 (session 15, step 4; off by default): the first answer was 2 (contradiction). One more call with only the
+    reference's first line (the ballot's title), the vote field and the claim; Apertus's "same_ballot" (true / false)
+    is returned. Returns (result, True / False / None when the answer cannot be read), or None when the call fails
+    (the first answer stays). Never a third call; never in task A. Recorded in raw["second_look_b6"]."""
+    p.raw["second_look_b6"] = {"version": nli.B6_VERSION}
+    try:
+        result = llm.chat(nli.build_messages_b6(p.title, p.vote, p.claim_text), max_tokens=B6_MAX_TOKENS,
+                          json_schema=nli.ANSWER_SCHEMA_B6)
+    except llm.LLMError as e:
+        p.raw["second_look_b6"].update(error=str(e), attempts=e.attempts)
+        return None
+    same, reason = nli.parse_same_ballot(result.text)
+    p.raw["second_look_b6"].update(answer=result.text, input_tokens=result.input_tokens,
+                                   output_tokens=result.output_tokens, attempts=result.attempts,
+                                   endpoint=result.endpoint)
+    if same is None:
+        p.raw["second_look_b6"]["parse_reason"] = reason
+    return result, same
 
 
 def same_language_b(case):
@@ -1044,6 +1086,8 @@ def main():
     parser.add_argument("--second-look-a6-prompt", default=defaults.second_look_a6_prompt,
                         choices=nli.SECOND_LOOK_A6_VERSIONS,
                         help="development only: A6's second-look prompt (session 15, step 2: A-v6-second-look-b is A6b)")
+    parser.add_argument("--second-look-b6", action=argparse.BooleanOptionalAction, default=defaults.second_look_b6,
+                        help="development only: B6, a second look on the ballot after a task B answer 2 (session 15)")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
                         help="development only: L2, a second call after a neutral answer (session 9, D)")
     parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
@@ -1074,7 +1118,7 @@ def main():
                         short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
                         second_look_cited_a=args.second_look_cited_a, fallback_a=args.fallback_a,
                         prompt_a=args.prompt_a, second_look_a6=args.second_look_a6,
-                        second_look_a6_prompt=args.second_look_a6_prompt,
+                        second_look_a6_prompt=args.second_look_a6_prompt, second_look_b6=args.second_look_b6,
                         evidence_hedge_a=args.evidence_hedge_a,
                         ap_part_a=args.ap_part_a, ap_structure_a=args.ap_structure_a, ranker=args.ranker)
     if args.input.resolve() == args.output.resolve():

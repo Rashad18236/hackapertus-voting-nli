@@ -22,7 +22,13 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   login: digest `sha256:e3e61af166c0…`, the same image as `sha-4f1950002ca0`, revision label `4f19500` = `main`.
 - (13:29) Step 2 code: A6b (`--second-look-a6-prompt A-v6-second-look-b`, off); test. Decisions for steps 0–2 written; G1/G2 with
   the A6b code identical to step 1's. Technical report: A6's role row, its negative-results row removed, the team's sentence in Limitations.
+- (13:30) Step 2 run started (`docs/runs/2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46`: today (A6), A6b;
+  1,020 cases, CPUs 0–1, 1 request per second).
+- (13:36) Steps 3–4 code: `v7-same-ballot-f` (B1 with the format fixed) and B6 (`--second-look-b6`), both off; tests;
+  pytest 356 passed, 1 skipped; G1/G2 identical to step 1's snapshot. Decisions for steps 3 and 4 written.
 
 ## Running
+
+- Step 2 run (started 13:30).
 
 ## Next
