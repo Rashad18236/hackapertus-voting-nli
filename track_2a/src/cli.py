@@ -91,8 +91,10 @@ class Settings:
                                     # first cited one (when that one opens its page) and the cited page's whole text; see
                                     # evidence.hedge(). Rule 3 (first gold page) dev 116 -> 119, val 223 -> 236, probe 44 ->
                                     # 46; nothing worse under any page rule; labels and requests unchanged
-    second_look_a6: bool = False  # A6 (session 13, step 1): a neutral answer that cites paragraphs gets one more call
-                                  # (A-v6-second-look) with the cited paragraphs and their neighbours; see second_look_a6()
+    second_look_a6: bool = True  # A6 (session 13, step 1; default since session 15, step 1, a team decision): a neutral
+                                 # answer that cites paragraphs gets one more call (A-v6-second-look) with the cited
+                                 # paragraphs and their neighbours; see second_look_a6()
+    second_look_a6_prompt: str = "A-v6-second-look"  # session 15, step 2: A6's prompt; "A-v6-second-look-b" is A6b
     ap_part_a: str = "after-rules"  # session 11, step 3 (adopted, HYBRID RULE): Apertus names the claim's part: "after-rules" (only when the
                                  # rules find none; its "none" goes on to the fallback) or "all" (for every claim)
     ap_structure_a: str = "ask-after-parser"  # Apertus reads the contents pages (one call per booklet); its entries are
@@ -672,7 +674,7 @@ def a6_excerpt(paragraphs, numbers, max_chars=A6_MAX_CHARS):
 
 
 def second_look_a6(p, numbers, settings):
-    """A6 (session 13, step 1; off by default): the first answer was neutral but cited paragraphs. One more call
+    """A6 (session 13, step 1; on by default since session 15): the first answer was neutral but cited paragraphs. One more call
     (prompt A-v6-second-look): the cited paragraphs with their neighbours from the part as sent (a6_excerpt) and the
     claim; Apertus's finding same / different / nothing becomes 0 / 2 / 1 and is final. Returns (result, label or
     None when the answer cannot be read), or None when there is nothing to send or the call fails (the first answer
@@ -683,8 +685,11 @@ def second_look_a6(p, numbers, settings):
     if not excerpt:
         return None
     p.raw["second_look_a6"] = {"cited": numbers, "sent": [[n, len(t)] for n, t in excerpt]}
+    if settings.second_look_a6_prompt != "A-v6-second-look":
+        p.raw["second_look_a6"]["prompt_version"] = settings.second_look_a6_prompt
     try:
-        result = llm.chat(nli.build_messages_excerpt(excerpt, p.claim_text), max_tokens=settings.max_tokens_a,
+        result = llm.chat(nli.build_messages_excerpt(excerpt, p.claim_text, settings.second_look_a6_prompt),
+                          max_tokens=settings.max_tokens_a,
                           json_schema=nli.ANSWER_SCHEMA_A6 if settings.schema_a else None)
     except llm.LLMError as e:
         p.raw["second_look_a6"].update(error=str(e), attempts=e.attempts)
@@ -1036,6 +1041,9 @@ def main():
                         help="session 13, H: routed evidence adds the paragraph before and the whole cited page")
     parser.add_argument("--second-look-a6", action=argparse.BooleanOptionalAction, default=defaults.second_look_a6,
                         help="session 13, A6: a second look after a neutral answer that cites paragraphs")
+    parser.add_argument("--second-look-a6-prompt", default=defaults.second_look_a6_prompt,
+                        choices=nli.SECOND_LOOK_A6_VERSIONS,
+                        help="development only: A6's second-look prompt (session 15, step 2: A-v6-second-look-b is A6b)")
     parser.add_argument("--second-look-a", action=argparse.BooleanOptionalAction, default=defaults.second_look_a,
                         help="development only: L2, a second call after a neutral answer (session 9, D)")
     parser.add_argument("--second-look-threshold", type=float, default=defaults.second_look_threshold,
@@ -1066,6 +1074,7 @@ def main():
                         short_prompt_a=args.short_prompt_a, coupled_schema_a=args.coupled_schema_a,
                         second_look_cited_a=args.second_look_cited_a, fallback_a=args.fallback_a,
                         prompt_a=args.prompt_a, second_look_a6=args.second_look_a6,
+                        second_look_a6_prompt=args.second_look_a6_prompt,
                         evidence_hedge_a=args.evidence_hedge_a,
                         ap_part_a=args.ap_part_a, ap_structure_a=args.ap_structure_a, ranker=args.ranker)
     if args.input.resolve() == args.output.resolve():

@@ -37,7 +37,8 @@ def run(settings, answers):
 
 class Prompts(unittest.TestCase):
     def test_today_is_unchanged_by_default(self):
-        self.assertEqual((cli.Settings().prompt_a, cli.Settings().second_look_a6), ("", False))
+        # session 15, step 1 (team decision): A6 is on by default; the prompts A1-A5 stay off
+        self.assertEqual((cli.Settings().prompt_a, cli.Settings().second_look_a6), ("", True))
         _, raw, seen = run(cli.Settings(), ['{"paragraphs": [1], "label": 0}'])
         self.assertEqual(raw["prompt_version"], "A-v4-section-route-L1")
         self.assertEqual(seen[0][0][0]["content"], nli.PROMPTS_A["A-v4-section-route-L1"])
@@ -100,8 +101,25 @@ class Prompts(unittest.TestCase):
 
 
 class SecondLookA6(unittest.TestCase):
-    def test_off_by_default_no_second_call(self):
-        resp, raw, seen = run(cli.Settings(), ['{"paragraphs": [2], "label": 1}'])
+    def test_a6b_changes_only_the_second_look_prompt(self):
+        """Session 15, step 2: A6b (A-v6-second-look-b) sends the same first request and the same excerpt as A6, with
+        its own system prompt; schema and mapping are A6's."""
+        a6 = run(cli.Settings(), ['{"paragraphs": [2], "label": 1}', '{"finding": "different"}'])
+        b = run(cli.Settings(second_look_a6_prompt="A-v6-second-look-b"),
+                ['{"paragraphs": [2], "label": 1}', '{"finding": "different"}'])
+        self.assertEqual(a6[2][0], b[2][0])  # the first request
+        self.assertEqual(a6[2][1][0][1], b[2][1][0][1])  # the excerpt and claim
+        self.assertEqual(b[2][1][0][0]["content"], nli.PROMPTS_A["A-v6-second-look-b"])
+        self.assertIn('never "different"', nli.PROMPTS_A["A-v6-second-look-b"])
+        self.assertEqual((b[2][1][2], b[0]["label"], b[1]["second_look_a6"]["prompt_version"]),
+                         (nli.ANSWER_SCHEMA_A6, 2, "A-v6-second-look-b"))
+        self.assertNotIn("prompt_version", a6[1]["second_look_a6"])
+
+    def test_on_by_default_and_switched_off_no_second_call(self):
+        resp, raw, seen = run(cli.Settings(), ['{"paragraphs": [2], "label": 1}', '{"finding": "nothing"}'])
+        self.assertEqual((len(seen), resp["label"]), (2, 1))  # session 15: A6 on by default
+        self.assertIn("second_look_a6", raw)
+        resp, raw, seen = run(cli.Settings(second_look_a6=False), ['{"paragraphs": [2], "label": 1}'])
         self.assertEqual((len(seen), resp["label"]), (1, 1))
         self.assertNotIn("second_look_a6", raw)
 

@@ -305,9 +305,28 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 16:00 UTC)
+## Current stage: session 15 (2026-10-14 13:13 UTC to 2026-10-15 03:00 UTC)
 
-Branch `rashad/session-14` from `main` at `3c60943` (PR #21 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-15` from `main` at `4f19500` (PR #22 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_15_status.md`, decisions `docs/decisions/2026-10-14-1313_rashad_session-15.md`, report
+`track_2a/docs/session_15_report.md`. Experiments stop on 15 October at 02:00 UTC, everything pushed by 03:00 UTC.
+Rules as in session 14; PAIRED RULE for steps 2–4 (val +0.005, dev not below −0.004, sign test p ≤ 0.10 on dev+val,
+tokens within the step's limit, no more unreadable answers, local time ≤ +0.002 s at 1.0 and 0.3 s, task A on-topic
+flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA`.
+
+- **Step 0:** PR #22 merged into `main` as `4f19500`; publish-image on `main` green (`latest`, `sha-4f1950002ca0`;
+  `latest` pulls without a login, digest `sha256:e3e61af166c0…`).
+- **Step 1 (team decision): A6 is a default** (`second_look_a6 = True`; `--no-second-look-a6` switches it off). G1:
+  first requests identical, A6's second looks added in 15 dev/val cases; G2 unchanged with stub answers. Its known
+  weakness (on-topic passages answered "different") is in the technical report's Limitations.
+- **Step 2:** A6b (`--second-look-a6-prompt A-v6-second-look-b`): A6's second look with "related but not settled".
+  Running.
+- **Steps 3–5:** B1 retry with the format fixed, B6 (a task B second look on the ballot), stability of the final
+  defaults (three dev runs). Not started.
+
+## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
+
+Branch `rashad/session-14` from `main` at `3c60943` (PR #22, merged into `main` on 2026-10-14 as `4f19500`, no tag); status
 `track_2a/docs/session_14_status.md`, decisions `docs/decisions/2026-10-14-0832_rashad_session-14.md`, report
 `track_2a/docs/session_14_report.md`. Experiments stop at 15:00 UTC, everything pushed by 16:00 UTC; steps in the order
 given, what is not reached is written down as not done. Rules as in session 13; "today" = session 13's final defaults
@@ -336,7 +355,7 @@ given, what is not reached is written down as not done. Rules as in session 13; 
 - **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
+## Earlier stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
 
 Branch `rashad/session-13` from `main` at `c85a119` (PR #21, merged into `main` on 2026-10-14 as `3c60943`, no tag); status
 `track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report

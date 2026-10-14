@@ -55,12 +55,12 @@ class CoupledSchema(unittest.TestCase):
 class SecondLookCited(unittest.TestCase):
     def test_off_by_default(self):
         self.assertFalse(cli.Settings().second_look_cited_a)
-        resp, raw, seen = run(cli.Settings(), ['{"paragraphs": [2], "label": 1}'])
+        resp, raw, seen = run(cli.Settings(second_look_a6=False), ['{"paragraphs": [2], "label": 1}'])
         self.assertEqual((len(seen), resp["label"], resp["evidence"]), (1, 1, []))
         self.assertNotIn("second_look_cited", raw)
 
     def test_neutral_with_a_citation_is_asked_again_with_only_the_cited_paragraphs(self):
-        settings = cli.Settings(second_look_cited_a=True)
+        settings = cli.Settings(second_look_cited_a=True, second_look_a6=False)  # SL alone (A6 is on by default)
         resp, raw, seen = run(settings, ['{"paragraphs": [3, 1, 3, 99], "label": 1}', '{"paragraphs": [2], "label": 2}'])
         first, second = sent_paragraphs(seen[0][0]), sent_paragraphs(seen[1][0])
         self.assertEqual(second, [first[0], first[2]])  # paragraphs 1 and 3, in their order; 99 is not a paragraph
@@ -73,7 +73,7 @@ class SecondLookCited(unittest.TestCase):
             booklet_pages(), case(COUNCIL_CLAIM)["vote"], COUNCIL_CLAIM)[1]) for item in resp["evidence"]))
 
     def test_a_neutral_second_answer_keeps_the_first(self):
-        resp, raw, seen = run(cli.Settings(second_look_cited_a=True),
+        resp, raw, seen = run(cli.Settings(second_look_cited_a=True, second_look_a6=False),
                               ['{"paragraphs": [2], "label": 1}', '{"paragraphs": [], "label": 1}'])
         self.assertEqual((len(seen), resp["label"], resp["evidence"]), (2, 1, []))
         self.assertEqual(resp["metrics"]["input_tokens"], 300)  # both calls count

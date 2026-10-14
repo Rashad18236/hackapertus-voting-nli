@@ -126,6 +126,7 @@ temperature 0, answers constrained by `json_schema`, only through `BASE_URL`; no
 | AP-part: the part a claim's opening names | the rules know no part for the opening | 0 / – | ≈ 236 + 49 |
 | AP-structure: read the booklet's contents | the parser finds no valid part | 0 / – | ≈ 1,825 + 192 per booklet |
 | AP-translate: the claim into the booklet's language | fallback across languages | 0.33 / – | 141 + 55 |
+| A6: a second look at the cited paragraphs and their neighbours (finding same / different / nothing → 0 / 2 / 1) | the label is neutral but cites paragraphs | 1.6 / – | 479 + 8 |
 
 | Ablation, task A dev (minimum Macro-F1 0.60; task B 0.75) | Macro-F1 | Evidence | Input tokens per case |
 |------------------------------------------------|--------|--------|-------------------------|
@@ -154,7 +155,6 @@ number or date 6, scope 4, other 2.
 | Apertus does all parsing (AP-all) | 0.960 / 0.891 vs 0.977 / 0.980 | lower, +34 % tokens |
 | Python rule "neutral with a citation → contradiction" | val +0.014 offline; on-topic neutral 3 of 3 wrong | Python may not set a label |
 | session 13 prompts A1–A5 against contradictions answered neutral | dev 0.902–0.983 vs 0.983; on-topic neutral 13–28 of 46 vs 32 | fail on dev |
-| A6: second look at a neutral answer that cites paragraphs, with their neighbours (confirmed on the final defaults) | val 0.981 vs 0.969, probe 0.990 vs 0.981 (9 fixes, 1 break), +0.6 % tokens, 1.7 second looks per 100 cases | 3 of 46 on-topic neutrals flipped (rule: at most 2) |
 | B1 (ballots first) / B3 (T with the reference's title) / B4 (claim first) | B1 void (unreadable); 0.980 / 0.980 vs 0.987 (B4: 5 unreadable) | lower or unreadable |
 
 :::
@@ -233,6 +233,12 @@ about a committee in votes that have none, answered by the BM25 fallback.
   neither the rules nor Apertus place, or a vote the parser cannot read, falls back (answered, less accurate).
 - **Endpoint and speed.** Our scores hold for the backend that answered; with a fast model, PDF reading no longer
   hides behind the requests (model S removed e5's share in session 13).
+- **A6's known weakness.** "A6 failed its on-topic condition twice by one case (2 of 46 in session 13, 3 of 46 in
+  session 14) and passed every other condition in both runs (val +0.014 and +0.012, probe +0.010, 19 fixes against 2
+  breaks on 1,254 real cases). The team adopts it on the strength of val and probe and records the on-topic result as
+  its known weakness: a passage on the claim's subject that does not settle the claim can be answered 'different'."
+  (Counted from the runs: 19 against 2 includes session 13's dev run, 1,554 cases; on the 1,254 val and probe cases
+  18 against 2.)
 - **Evidence pages.** If the official run checks the *first* page of the gold passage, about 40 % of our hits would
   not count (the passage often starts a page before the paragraph Apertus cites); H recovers part of it (§ 4 of the
   session 13 report; `docs/organiser_questions.md`).

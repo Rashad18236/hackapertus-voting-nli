@@ -56,7 +56,8 @@ class HedgeInCli(unittest.TestCase):
         self.assertLessEqual(len(hedged["evidence"]), 5)
 
     def test_neutral_answers_get_no_evidence(self):
-        hedged, _, _ = run(cli.Settings(evidence_hedge_a=True), ['{"paragraphs": [2], "label": 1}'])
+        hedged, _, _ = run(cli.Settings(evidence_hedge_a=True),  # A6 (on by default) looks again and keeps neutral
+                           ['{"paragraphs": [2], "label": 1}', '{"finding": "nothing"}'])
         self.assertEqual(hedged["evidence"], [])
 
 

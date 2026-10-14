@@ -352,13 +352,23 @@ ROUTED_VERSIONS = {
                    "field": "label", "words": {"supported": 0, "not_covered": 1, "contradicted": 2}, "max_tokens": 128},
 }
 
-# A6 (session 13, step 1; off by default): a second look after a neutral answer that cites paragraphs. The excerpt is
+# A6 (session 13, step 1; on by default since session 15): a second look after a neutral answer that cites paragraphs. The excerpt is
 # the cited paragraphs with their neighbours (src/cli.py second_look_a6); Apertus's finding is mapped to the label.
 PROMPTS_A["A-v6-second-look"] = """You compare a CLAIM with a short EXCERPT from an official Swiss federal voting booklet (numbered paragraphs; the excerpt and the claim may be in different languages). Use only the excerpt.
 "finding": "same" if the excerpt states what the claim says; "different" if the excerpt gives a different number, share, date, actor, direction or outcome for the same thing, or the opposite; "nothing" if the excerpt does not deal with the point the claim makes.
 
 Answer with one JSON object and nothing else:
 {"finding": "same"}"""
+# A6b (session 15, step 2; off by default, `--second-look-a6-prompt A-v6-second-look-b`): A6's second look with
+# "related but not settled" spelled out, so that a passage on the claim's subject that does not state the claim's value
+# is "nothing", not "different". Only this prompt differs from A6; excerpt, schema and mapping are A6's.
+PROMPTS_A["A-v6-second-look-b"] = """You compare a CLAIM with a short EXCERPT from an official Swiss federal voting booklet (numbered paragraphs; the excerpt and the claim may be in different languages). Use only the excerpt.
+"finding": "same" if the excerpt states what the claim says; "different" if the excerpt gives a different number, share, date, actor, direction or outcome FOR THE SAME THING, or states the opposite; "nothing" if the excerpt does not settle the point the claim makes, including when it deals with the same subject but does not state the claim's value or its opposite.
+A text that does not state the claim's value is "nothing", never "different".
+
+Answer with one JSON object and nothing else:
+{"finding": "same"}"""
+SECOND_LOOK_A6_VERSIONS = ("A-v6-second-look", "A-v6-second-look-b")
 ANSWER_SCHEMA_A6 = _schema(finding={"type": "string", "enum": ["same", "different", "nothing"]})
 FINDING_LABELS = {"same": 0, "different": 2, "nothing": 1}
 
