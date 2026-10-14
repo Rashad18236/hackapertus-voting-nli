@@ -1,0 +1,30 @@
+{
+ "A": {
+  "cases": 300,
+  "roles": {
+   "label": {
+    "calls": 300,
+    "per_100_cases": 100.0,
+    "input_per_call": 1250.7,
+    "output_per_call": 14.5
+   },
+   "AP-translate": {
+    "calls": 1,
+    "per_100_cases": 0.33,
+    "input_per_call": 141.0,
+    "output_per_call": 55.0
+   }
+  }
+ },
+ "B": {
+  "cases": 300,
+  "roles": {
+   "label": {
+    "calls": 300,
+    "per_100_cases": 100.0,
+    "input_per_call": 815.3,
+    "output_per_call": 8.9
+   }
+  }
+ }
+}

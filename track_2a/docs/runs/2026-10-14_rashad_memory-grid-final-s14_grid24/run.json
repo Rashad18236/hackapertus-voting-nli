@@ -1,0 +1,212 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "11:02",
+ "kind": "offline check",
+ "code": "228822b (the published image sha-228822b2e6fa)",
+ "task": "A+B",
+ "variant": "section-route / task B cut4-t (session 14 final defaults)",
+ "cases": "dev, all 300 task A and all 300 task B cases, at 6 memory limits x 2 CPU counts",
+ "setup": "scripts/local_time.py through the final image: --memory 4g 2g 1.5g 1g 768m 512m, --cpus 2 and 1, fake model 0.1 s per request",
+ "format": "responses written, exit code, lanes, peak memory; no model calls",
+ "paired_with": null,
+ "highlight": true,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Every response written at every limit (4g to 512m, 2 and 1 CPUs, both tasks); task A with 2 CPUs in two lanes at every limit (peak 207 MiB); task B unchanged.",
+ "results": {
+  "A_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0535,
+   "guard": false
+  },
+  "A_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 206,
+   "local_per_case_s": 0.0528,
+   "guard": false
+  },
+  "A_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0528,
+   "guard": false
+  },
+  "A_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0507,
+   "guard": true
+  },
+  "A_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 206,
+   "local_per_case_s": 0.0491,
+   "guard": true
+  },
+  "A_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0572,
+   "guard": true
+  },
+  "A_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 128,
+   "local_per_case_s": 0.2019,
+   "guard": false
+  },
+  "A_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.2107,
+   "guard": false
+  },
+  "A_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 128,
+   "local_per_case_s": 0.1994,
+   "guard": false
+  },
+  "A_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.1949,
+   "guard": true
+  },
+  "A_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.2025,
+   "guard": true
+  },
+  "A_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.2091,
+   "guard": true
+  },
+  "B_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.187,
+   "guard": false
+  },
+  "B_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.1753,
+   "guard": false
+  },
+  "B_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.1829,
+   "guard": false
+  },
+  "B_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0084,
+   "guard": true
+  },
+  "B_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0095,
+   "guard": true
+  },
+  "B_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0082,
+   "guard": true
+  },
+  "B_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.3493,
+   "guard": false
+  },
+  "B_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.3487,
+   "guard": false
+  },
+  "B_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.3522,
+   "guard": false
+  },
+  "B_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0081,
+   "guard": true
+  },
+  "B_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.009,
+   "guard": true
+  },
+  "B_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.008,
+   "guard": true
+  }
+ }
+}

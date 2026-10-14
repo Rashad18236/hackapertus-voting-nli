@@ -39,8 +39,30 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (10:55) Step 2 memory grid done (`docs/runs/2026-10-14_rashad_memory-grid-lanes-s14_grid24`): every response at every
   limit, both tasks, 2 and 1 CPUs; task A with 2 CPUs in two lanes down to 512 MiB (peak 207 MiB). **LANE RULE holds:
   the lane change is adopted** (`MEMORY_FOR_TWO_LANES_S` = 512 MiB).
-- (11:05) G1/G2 of the final `src/` (log line moved): identical; pytest 348 passed, 1 skipped.
+- (10:58) G1/G2 of the final `src/` (log line moved): identical; pytest 348 passed, 1 skipped.
+- (11:01) Lane change committed (`228822b`); publish-image built `sha-228822b2e6fa` (also `session-14`); final dev600
+  run through it started (CPUs 0–1); memory grid of the final image started (CPUs 2–3).
+- (11:14) Final dev600 done (`docs/runs/2026-10-14_rashad_final-s14_dev600`, one backend, 0 failed calls, 0 cache
+  hits): task A 0.970 / evidence 0.980, task B 0.987; tokens A 1,251 + 14.7, B 815 + 8.9; 0 Python labels; format check
+  clean. One task A label differs from session 13's final dev run (row 1161, same request). New replay reference
+  started.
+
+- (11:25) Replay reference `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA` built: reproduces the
+  final dev600 and session 13's final val task A answers exactly (0 of 1,180 differ).
+- (11:30) Memory grid of the final image (`docs/runs/2026-10-14_rashad_memory-grid-final-s14_grid24`): every response at
+  every limit, both tasks, 2 and 1 CPUs.
+- (11:52) Final image local time: task B slower than in session 13 with unchanged code; a repeat and a control (session
+  13's image) added (decision written first).
+- (12:15) Local time done: A 0.021 / 0.022 s, B 0.012 / 0.013 s at 1.0 / 0.3 s (means of 2); control: session 13's image
+  gave task B 0.016 / 0.043 s in the same window. REF SCORE dev 0.900 / 0.898. Task A at 1 GB: 0.019 / 0.024 / 0.063 s.
+- (12:17) Technical report (A6 row, lanes, summary table, local time, memory; PDF 6 pages), README, CLAUDE.md, session
+  report, decisions complete.
 
 ## Running
 
+- Nothing. Session 14 is finished; the pull request stays a draft (never merged, no tag).
+
 ## Next
+
+- For the team: A6 (strong on real cases, twice just over its on-topic bar), and the 512 MiB two-lane limit's margin
+  (363–366 MiB peaks seen at 4 GB; every limit down to 512 MiB passed both grids). See the session report.
