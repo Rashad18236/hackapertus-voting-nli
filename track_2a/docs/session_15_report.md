@@ -193,7 +193,7 @@ session 14.
 final runs), also `scripts/local_time.py`'s default table.
 
 **Checks:** pytest 356 passed, 1 skipped (pypdf 6.17.0); `scripts/build_docs.py --check`; `scripts/self_checks.py` 17 of 17;
-`scripts/check_format.py` on all six final prediction files: no problem, no warning; the branch's workflows (tests, image, publish, pull-and-run) are checked after the final push (status log). Technical report: role table (A6 1.7 per 100 dev cases, 454 + 8 tokens), negative results (A6b, B1 retry,
+`scripts/check_format.py` on all six final prediction files: no problem, no warning; the branch's workflows (tests, image, publish, pull-and-run) green on `734f188`. Technical report: role table (A6 1.7 per 100 dev cases, 454 + 8 tokens), negative results (A6b, B1 retry,
 B6), summary table, the endpoint-drift paragraph, Limitations (A6's weakness, task B's other-ballot errors); PDF 6
 pages.
 
