@@ -1,0 +1,120 @@
+{
+ "runs": {
+  "2026-10-14_rashad_stability-s15-run1_dev600": {
+   "A": {
+    "macro_f1": 0.9767,
+    "bootstrap_95": {
+     "macro_f1": 0.9767,
+     "low": 0.9583,
+     "high": 0.9907,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 15:23:16",
+    "ended_utc": "2026-10-14 15:34:10",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 306
+    },
+    "gateway_cache_hits": 0
+   },
+   "B": {
+    "macro_f1": 0.9867,
+    "bootstrap_95": {
+     "macro_f1": 0.9867,
+     "low": 0.9725,
+     "high": 0.9968,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 15:34:10",
+    "ended_utc": "2026-10-14 15:40:10",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 300
+    },
+    "gateway_cache_hits": 0
+   }
+  },
+  "2026-10-14_rashad_stability-s15-run2_dev600": {
+   "A": {
+    "macro_f1": 0.9767,
+    "bootstrap_95": {
+     "macro_f1": 0.9767,
+     "low": 0.9583,
+     "high": 0.9907,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 16:10:17",
+    "ended_utc": "2026-10-14 16:20:14",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 306
+    },
+    "gateway_cache_hits": 0
+   },
+   "B": {
+    "macro_f1": 0.9867,
+    "bootstrap_95": {
+     "macro_f1": 0.9867,
+     "low": 0.9725,
+     "high": 0.9968,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 16:20:14",
+    "ended_utc": "2026-10-14 16:27:55",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 300
+    },
+    "gateway_cache_hits": 0
+   }
+  },
+  "2026-10-14_rashad_stability-s15-run3_dev600": {
+   "A": {
+    "macro_f1": 0.9767,
+    "bootstrap_95": {
+     "macro_f1": 0.9767,
+     "low": 0.9583,
+     "high": 0.9907,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 16:57:59",
+    "ended_utc": "2026-10-14 17:05:22",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 306
+    },
+    "gateway_cache_hits": 0
+   },
+   "B": {
+    "macro_f1": 0.9867,
+    "bootstrap_95": {
+     "macro_f1": 0.9867,
+     "low": 0.9725,
+     "high": 0.9968,
+     "cases": 300
+    },
+    "missing": 0,
+    "started_utc": "2026-10-14 17:05:22",
+    "ended_utc": "2026-10-14 17:11:01",
+    "backends": {
+     "vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840 | https://api.blablador.fz-juelich.de/v1": 300
+    },
+    "gateway_cache_hits": 0
+   }
+  }
+ },
+ "tasks": {
+  "A": {
+   "cases": 300,
+   "labels_ever_changed": 0,
+   "changed": {},
+   "macro_f1_range": 0.0
+  },
+  "B": {
+   "cases": 300,
+   "labels_ever_changed": 0,
+   "changed": {},
+   "macro_f1_range": 0.0
+  }
+ }
+}

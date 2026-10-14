@@ -65,8 +65,12 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (16:28) Stability run 2 done: every one of the 600 labels equals run 1's (A 0.977, B 0.987).
 - (16:32) Final probe188 done: task A 0.990 (evidence 1.000), task B 0.977.
 
+- (17:11) Stability run 3 done. **Step 5: 0 of 600 labels changed over the three runs** (A 0.9767 [0.958, 0.991], B
+  0.9867 [0.973, 0.997] each time; one backend, 0 cache hits); 10 task A answers cite other paragraphs and 20 task B
+  answers differ in trailing text, labels equal (`stability.json` in run 3's folder).
+
 ## Running
 
-- The queue: stability run 3 at 16:58, then the final dev600 run at least 30 minutes after it.
+- The queue: the final dev600 run at 17:41 (30 minutes after run 3).
 
 ## Next
