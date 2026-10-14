@@ -8,6 +8,7 @@
 #   - a push to rashad/session-11:   "session-11" and the commit hash (session 11);
 #   - a push to rashad/session-12:   "session-12" and the commit hash (session 12);
 #   - a push to rashad/session-13:   "session-13" and the commit hash (session 13);
+#   - a push to rashad/session-14:   "session-14" and the commit hash (session 14);
 #   - started by hand (Actions -> publish-image -> Run workflow): the commit hash, plus "latest" on main
 #     and the session tag on a session branch. "latest" is only ever built from main.
 #
@@ -25,7 +26,7 @@ name: publish-image
 
 on:
   push:
-    branches: [main, rashad/session-10, rashad/session-11, rashad/session-12, rashad/session-13]
+    branches: [main, rashad/session-10, rashad/session-11, rashad/session-12, rashad/session-13, rashad/session-14]
     paths: ["track_2a/**", ".github/workflows/publish-image.yml"]
   workflow_dispatch:
 
@@ -55,6 +56,7 @@ jobs:
           if [ "$GITHUB_REF_NAME" = "rashad/session-11" ]; then tags="$tags,$REGISTRY_IMAGE:session-11"; fi
           if [ "$GITHUB_REF_NAME" = "rashad/session-12" ]; then tags="$tags,$REGISTRY_IMAGE:session-12"; fi
           if [ "$GITHUB_REF_NAME" = "rashad/session-13" ]; then tags="$tags,$REGISTRY_IMAGE:session-13"; fi
+          if [ "$GITHUB_REF_NAME" = "rashad/session-14" ]; then tags="$tags,$REGISTRY_IMAGE:session-14"; fi
           echo "sha_tag=$sha_tag" >> "$GITHUB_OUTPUT"
           echo "tags=$tags" >> "$GITHUB_OUTPUT"
           echo "Tags: $tags"
