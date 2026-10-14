@@ -47,9 +47,14 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (15:00) No default changed beyond step 1: no combination run; final defaults = S, H, two lanes, A6 on.
   `scripts/stability.py` (step 5) and the B6 block of `scripts/arm_table.py` added; step 5's plan in the decisions file.
 
+- (14:58) Branch image of `7ae78ad` published (`sha-7ae78ad87cfd` = `session-15`, digest `sha256:a89c507afff1…`) and
+  pulled.
+- (15:03) One queue for step 5 and the final runs (decisions file): stability run 1 at 15:23 → final val1160 →
+  stability run 2 (≥ 30 min after run 1) → final probe188 → stability run 3 (≥ 30 min after run 2) → final dev600
+  (≥ 30 min after run 3), all through `sha-7ae78ad87cfd`.
+
 ## Running
 
-- Nothing. Next: the branch image of the step 4 records commit, then step 5's first stability run (not before 15:23,
-  30 minutes after the B6 run's dev requests).
+- The queue (`queue.sh`, scratchpad), waiting for 15:23.
 
 ## Next
