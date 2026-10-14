@@ -13,20 +13,27 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (08:33) Step 0: PR #21 checked: open, draft, `mergeable_state` clean, head `b0b88f6`, all four checks green (tests,
   image, publish, pull-and-run). Marked ready for review, then merged with a merge commit: `main` = `3c60943` (branch
   kept). `origin/main` contains `b0b88f6`.
-- (08:35) Branch `rashad/session-14` from `origin/main`; the publish workflow also builds `session-14`.
-- (08:44) dockerd was not running (container restarted); started again. Session 13's local images still present.
-- (08:47) Step 1 decisions written (A6 CONFIRMATION RULE readings); cases file (580 val + 94 probe + 46 on-topic task A)
+- (08:34) Branch `rashad/session-14` from `origin/main`; the publish workflow also builds `session-14`.
+- (08:34) dockerd was not running (container restarted); started again. Session 13's local images still present.
+- (08:35) Step 1 decisions written (A6 CONFIRMATION RULE readings); cases file (580 val + 94 probe + 46 on-topic task A)
   and booklet folder (51 booklets, no sealed date) prepared.
 
-- (08:49) Step 1 run started (`docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`: today, today+A6;
+- (08:36) Step 1 run started (`docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`: today, today+A6;
   720 cases, CPUs 0–1, 1 request per second).
-- (08:52) Step 0: publish-image on `main` (run 87, `3c60943`) succeeded: tags `latest` and `sha-3c609435dce7`. `latest`
+- (08:38) Step 0: publish-image on `main` (run 87, `3c60943`) succeeded: tags `latest` and `sha-3c609435dce7`. `latest`
   pulls without a login (empty Docker config): digest `sha256:3572bfdebce7…`, the same image as `sha-3c609435dce7`,
   revision label `3c60943` = `main`.
-- (08:54) CLAUDE.md: session 14 is the current stage; session 13 "merged as PR #21".
+- (08:38) CLAUDE.md: session 14 is the current stage; session 13 "merged as PR #21".
+- (08:41) Step 2 decisions written (lane limit for S, LANE RULE readings, local-time protocol, grid).
+- (08:42–08:54) Step 2: two lanes forced in `main`'s image at 4g: peaks dev 230 / 204, val 217 / 211, probe 92 / 120
+  MiB (0.1 / 0.3 s); forced two-lane dev runs at 2g … 512m write all responses with the 4g labels. Limit for S: 512 MiB
+  (2 × 230 MiB → the next grid limit). Code: `pipeline.MEMORY_FOR_TWO_LANES_S`, `cli.loads_no_e5`, unit tests.
+- (08:53) G1/G2 of the lane change: identical (0 requests, labels or evidence differ).
+- (09:05) Step 1 run done (`docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`, one backend, 0 failed
+  calls): val 0.969 → 0.981, probe 0.981 → 0.990, 9 fixes / 1 break, tokens +0.6 %, 0 unreadable; on-topic flips 3
+  (rows 85, 232, 1026; bar 2). **A6 fails (f) by one case: not adopted.**
 
 ## Running
-
-- Step 1 run (started 08:49).
+- Step 2 local time before / after (started 08:54; 4g and 1g, 0.1 / 0.3 / 1.0 s, three alternating rounds).
 
 ## Next
