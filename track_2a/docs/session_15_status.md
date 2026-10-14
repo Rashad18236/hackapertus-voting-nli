@@ -53,8 +53,14 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   stability run 2 (≥ 30 min after run 1) → final probe188 → stability run 3 (≥ 30 min after run 2) → final dev600
   (≥ 30 min after run 3), all through `sha-7ae78ad87cfd`.
 
+- (15:23) Stability run 1 started (task A 15:23–15:37: 0.977, evidence 0.990).
+- (15:33) Memory grid of the final image (`docs/runs/2026-10-14_rashad_memory-grid-final-s15_grid24`, CPUs 2–3, no
+  model calls): every response at every limit (4g … 512m, 2 and 1 CPUs, both tasks); task A two lanes with 2 CPUs at
+  every limit, peak 206–242 MiB. Its task A local time is higher than session 14's grid; the same image with A6 on and
+  off gives 0.084 / 0.077 against 0.077 / 0.092 s per case at 0.1 s per request: not A6.
+
 ## Running
 
-- The queue (`queue.sh`, scratchpad), waiting for 15:23.
+- The queue (`queue.sh`, scratchpad): stability run 1, task B.
 
 ## Next

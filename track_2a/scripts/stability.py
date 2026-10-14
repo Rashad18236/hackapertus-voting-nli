@@ -9,7 +9,8 @@ Per run and task: Macro-F1 (the starter's official_score.json) and its 95 % boot
 method: 2,000 resamples of the cases, seed 42), the run's start and end, and the backend identity of its calls (the
 endpoint's system_fingerprint and the gateway's x-litellm-model-api-base, from the raw answers, first calls and second looks alike; how many were gateway
 cache hits). Over the runs: per task the cases whose label ever changed (ids, with each run's label), and the largest
-difference in Macro-F1 between two runs.
+difference in Macro-F1 between two runs. (scripts/stability_report.py does the same for session 9's points, which ran
+both tasks in one container; since session 10 the tasks run in separate containers, task-A/ and task-B/.)
 """
 
 import argparse

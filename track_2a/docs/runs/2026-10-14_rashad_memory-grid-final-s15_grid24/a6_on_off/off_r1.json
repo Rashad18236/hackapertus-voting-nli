@@ -1,0 +1,36 @@
+{
+ "cases": 300,
+ "requests": 301,
+ "wall_s": 53.403,
+ "in_flight_s": 30.362,
+ "local_s": 23.041,
+ "local_per_case_s": 0.0768,
+ "to_first_request_s": 3.733,
+ "tail_s": 0.205,
+ "gaps_s": 19.104,
+ "gap_count": 300,
+ "gap_median_s": 0.0073,
+ "gap_p95_s": 0.4044,
+ "gap_max_s": 1.867,
+ "max_in_flight": 1,
+ "exit_code": 0,
+ "image": "ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd",
+ "image_id": "sha256:a89c507afff113dbedfd129776ef98fe02c92f6fc62aa39092991ad33faef4cb",
+ "cases_file": "output/devA/cases.jsonl",
+ "delay_s": 0.1,
+ "cpus": "2",
+ "memory": "4g",
+ "cli_args": [
+  "--no-second-look-a6"
+ ],
+ "src_mounted": false,
+ "responses": 300,
+ "unique_ids": 300,
+ "answer_kinds": {
+  "replay": 301
+ },
+ "replay_misses": 0,
+ "input_tokens_per_case": 100.3,
+ "output_tokens_per_case": 10.0,
+ "measured_at": "2026-10-14T15:35:13Z"
+}
