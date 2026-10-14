@@ -1212,3 +1212,19 @@ reading taken.
 - **The format check (10 dev cases) passed: all 10 B1f answers readable; the arm is not void, the dev run follows.** `docs/runs/2026-10-14_rashad_format-check-B1f_devB10`.
 - **B1f fails on dev, so there is no val run and B1f is not adopted: (b) 0.892 against 0.987 (−0.094), (d) +13.1 % input tokens (922.3 against 815.3), (e) 19 unreadable answers against 0; fixes / breaks 2 / 30.** `docs/runs/2026-10-14_rashad_B1f_devB300`: the cap did not stop the endpoint from ending answers inside a string with whitespace or NUL runs (19 of 300), and `same_ballot` is mostly a copy of the passage's title (true with `claim_ballot` = `passage_ballot` in 17 of the 20 new "gold neutral answered contradiction" errors). B1f stays in the code as `--prompt-b v7-same-ballot-f`.
 - **(f) is not measured for B1f.** It is measured only for an arm that passes (a)–(e) (step 3's plan).
+
+## Step 5: stability, set before its runs
+
+- **Three runs of all 600 dev cases (`data/dev/cases.jsonl`; task A and task B in separate containers, as the organisers run them) through the image published from the branch commit that holds the defaults decided in steps 2–4 (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-<commit>`), with the organisers' command (`make run`), the real endpoint, 1 request per second, CPUs 0–1; no other model run at the same time.** "Through the current defaults": the image is what the organisers run.
+- **"At least 30 minutes apart" = each run starts at least 30 minutes after the previous one ended, and the first starts at least 30 minutes after any earlier run that sent dev requests.** The gateway answers a request identical to one of the last ~10 minutes from its cache; with 30 minutes no answer of a run can be a copy of the previous run's (cache hits are counted per run).
+- **Reported per run and task: Macro-F1 (the starter's `evaluate.py`), its 95 % bootstrap interval (`scripts/analysis_offline.py`'s method: 2,000 resamples of the cases, seed 42), the backend identity of every call (system fingerprint and the gateway's API base); over the runs: the cases whose label ever changed and the largest Macro-F1 difference.** `scripts/stability.py`; the instruction's list.
+- **The third run is skipped if it could not end before 02:00 UTC with time left for the final runs; then it is written down as not done.** The instruction.
+
+## Step 4 verdict (after the run)
+
+- **B6 fails on dev, so there is no val run and B6 is not adopted: (b) 0.970 against 0.987 (−0.017), (d) +7.0 % input tokens (872.7 against 815.3; at most +5 %); (e) holds (0 unreadable); fixes / breaks 1 / 6.** `docs/runs/2026-10-14_rashad_B6_devB300`: 99 second looks (33 per 100 cases), 7 changed answers (2 same-language, 5 cross-language); the one fix is dev's only targeted error (row 688), the 6 breaks are gold contradictions whose claim misstates the reference's own ballot, which Apertus calls "not about the ballot". B6 stays in the code as `--second-look-b6` (off); (f) not measured.
+
+## Adoption after steps 2–4
+
+- **No default changed beyond step 1 (A6b, B1f and B6 all fail), so there is no combination run; the final defaults are step 1's: model S, hedge H, two lanes, A6 on, task B as in session 14.** The instruction: the combination runs only "if any default changed beyond step 1".
+- **The code of the final defaults is `src/` as of `766f359` (steps 3–4's code, both off); later commits change only scripts and documents. The stability runs and the final runs use the image the workflow publishes for the branch commit that holds step 4's records.** The image the organisers would pull.

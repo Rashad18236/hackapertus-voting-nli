@@ -40,8 +40,16 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   sampled `claim_ballot` values in the reference's language.
 - (14:38) Step 4 dev run started (`docs/runs/2026-10-14_rashad_B6_devB300`: today, today+B6; 300 task B cases).
 
+- (14:53) Step 4 dev run done (`docs/runs/2026-10-14_rashad_B6_devB300`, one backend, 0 failed calls, first answers
+  shared): B6 0.970 against 0.987, +7.0 % input tokens, 0 unreadable; 99 second looks (33 per 100 cases), 7 changed
+  (2 same / 5 cross language), 1 fix / 6 breaks. **B6 fails (b), (d) on dev: no val run, not adopted.** The 6 breaks
+  are claims that misstate the reference's own ballot, answered "not about the ballot".
+- (15:00) No default changed beyond step 1: no combination run; final defaults = S, H, two lanes, A6 on.
+  `scripts/stability.py` (step 5) and the B6 block of `scripts/arm_table.py` added; step 5's plan in the decisions file.
+
 ## Running
 
-- Step 4 dev run (started 14:38).
+- Nothing. Next: the branch image of the step 4 records commit, then step 5's first stability run (not before 15:23,
+  30 minutes after the B6 run's dev requests).
 
 ## Next

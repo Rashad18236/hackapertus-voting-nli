@@ -325,8 +325,12 @@ flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-fin
 - **Step 3 (not adopted):** B1 retried with the format fixed (`--prompt-b v7-same-ballot-f`: at most 6 words,
   `maxLength` 40, 64 tokens). Format check readable; dev 0.892 against 0.987, 19 unreadable, +13.1 % input tokens:
   fails (b), (d), (e) on dev, no val run (`docs/runs/2026-10-14_rashad_B1f_devB300`).
-- **Step 4:** B6 (`--second-look-b6`): after a task B answer 2, one request on the ballot (title, vote, claim). Running.
-- **Step 5:** stability of the final defaults (three dev runs). Not started.
+- **Step 4 (not adopted):** B6 (`--second-look-b6`): after a task B answer 2, one request on the ballot (title, vote,
+  claim). Dev 0.970 against 0.987, +7.0 % input tokens, 1 fix / 6 breaks (claims that misstate their own ballot are
+  answered "not about the ballot"): fails (b), (d) on dev, no val run (`docs/runs/2026-10-14_rashad_B6_devB300`).
+- **No default changed beyond step 1:** no combination run; final defaults = S, H, two lanes, A6 on.
+- **Step 5:** stability of the final defaults (three dev runs through the branch image, at least 30 minutes apart;
+  `scripts/stability.py`). Not started.
 
 ## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
 

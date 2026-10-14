@@ -12,7 +12,8 @@ case (response metrics: all calls of the case), unreadable answers (raw answers 
 fixes and breaks against "today" with a one-sided sign test (exact binomial; the two-sided p too), the error row the session follows
 (task A: gold contradiction answered neutral; task B: gold neutral answered contradiction, split by whether claim and
 reference share a language, from --cases), the on-topic neutral share (--ontopic), A6's second looks
-(raw "second_look_a6") and, with --focus, which of session 12's errors of that kind (answered neutral in task A,
+(raw "second_look_a6"), B6's second looks (raw "second_look_b6": calls, changes, fixes, breaks, changes by language)
+and, with --focus, which of session 12's errors of that kind (answered neutral in task A,
 answered contradiction in task B) the arm fixes and which new ones it makes.
 """
 
@@ -79,6 +80,18 @@ def arm_numbers(folder, task, gold, today_pred, ontopic, focus, languages, score
                                  "changed": sum(1 for i in scope if preds[i]["label"] != 1),
                                  "fixes": sum(1 for i in scope if preds[i]["label"] != 1 and preds[i]["label"] == gold[i]),
                                  "breaks": sum(1 for i in scope if preds[i]["label"] != 1 and gold[i] == 1)}
+    looks_b6 = [i for i in ids if "second_look_b6" in raws.get(i, {})]
+    if looks_b6:  # session 15: B6, a second look on the ballot after a task B answer 2 (a change makes it 1)
+        changed = [i for i in looks_b6 if preds[i]["label"] != 2]
+        out["second_look_b6"] = {"calls": len(looks_b6), "per_100_cases": round(100 * len(looks_b6) / len(ids), 2),
+                                 "unreadable": sum(1 for i in looks_b6 if raws[i]["second_look_b6"].get("parse_reason")),
+                                 "failed": sum(1 for i in looks_b6 if raws[i]["second_look_b6"].get("error")),
+                                 "changed": len(changed),
+                                 "fix_ids": [i for i in changed if preds[i]["label"] == gold[i]],
+                                 "break_ids": [i for i in changed if gold[i] == 2]}
+        if languages:
+            out["second_look_b6"]["changed_same_language"] = sum(1 for i in changed if languages.get(i))
+            out["second_look_b6"]["changed_cross_language"] = sum(1 for i in changed if not languages.get(i))
     if focus is not None:
         before = {i for i in ids if i in focus and focus[i]["label"] != gold[i] and focus[i]["label"] == wrong_to}
         now = {i for i in ids if preds[i]["label"] != gold[i] and preds[i]["label"] == wrong_to}
@@ -118,6 +131,7 @@ def main():
               f"row {a['error_row']['count']}  fix/break {a.get('fixes', '-')}/{a.get('breaks', '-')} "
               f"p {a.get('sign_test_p', '-')}  ontopic {a.get('ontopic', {}).get('neutral', '-')}"
               + (f"  A6 {a['second_look_a6']}" if "second_look_a6" in a else "")
+              + (f"  B6 {a['second_look_b6']}" if "second_look_b6" in a else "")
               + (f"  focus fixed {len(a['focus']['fixed'])}/{a['focus']['session_12']} new {len(a['focus']['new'])}"
                  if "focus" in a else ""))
     Path(args.out).write_text(json.dumps(table, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
