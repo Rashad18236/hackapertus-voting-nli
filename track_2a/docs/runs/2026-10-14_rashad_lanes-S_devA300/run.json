@@ -1,0 +1,176 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "08:42",
+ "kind": "offline check",
+ "code": "working tree after cfab870: src/pipeline.py MEMORY_FOR_TWO_LANES_S, src/cli.py loads_no_e5 (committed with this folder); before = main 3c60943's src",
+ "task": "A",
+ "variant": "section-route (today's defaults: ranker S, hedge H)",
+ "cases": "dev, all 300 task A cases; peak runs also val (580) and probe (94) task A",
+ "setup": "scripts/local_time.py through main's image sha-3c609435dce7 with --src (main's src = before, the working tree's = after), 2 CPUs on CPUs 2-3, --memory 4g and 1g, fake model replaying session 13's reference answers at 1.0, 0.3 and 0.1 s per request, before and after alternating, 3 rounds, medians; peak runs: --workers 2 forced in the image, 4g, then 2g ... 512m",
+ "format": "local time per case (the organisers' way), peak memory, responses; no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "LANE RULE parts (1) and (2) hold: at 4g after - before = -0.003 / -0.000 / +0.001 s at 1.0 / 0.3 / 0.1 s per request; at 1g and 0.1 s 0.211 -> 0.070 s per case (two lanes instead of one). Limit for S 512 MiB (2 x the highest two-lane peak, 230 MiB, of the peak runs).",
+ "results": {
+  "before_4g_1.0": {
+   "median_local_per_case_s": 0.0217,
+   "rounds": [
+    0.0193,
+    0.0217,
+    0.0228
+   ],
+   "peak_mib": [
+    206,
+    363,
+    366
+   ]
+  },
+  "before_4g_0.3": {
+   "median_local_per_case_s": 0.0192,
+   "rounds": [
+    0.0207,
+    0.0192,
+    0.0178
+   ],
+   "peak_mib": [
+    206,
+    206,
+    206
+   ]
+  },
+  "before_4g_0.1": {
+   "median_local_per_case_s": 0.0564,
+   "rounds": [
+    0.0521,
+    0.0564,
+    0.0578
+   ],
+   "peak_mib": [
+    207,
+    207,
+    206
+   ]
+  },
+  "before_1g_1.0": {
+   "median_local_per_case_s": 0.0203,
+   "rounds": [
+    0.0184,
+    0.0203,
+    0.0222
+   ],
+   "peak_mib": [
+    129,
+    293,
+    291
+   ]
+  },
+  "before_1g_0.3": {
+   "median_local_per_case_s": 0.0188,
+   "rounds": [
+    0.0188,
+    0.018,
+    0.019
+   ],
+   "peak_mib": [
+    128,
+    130,
+    129
+   ]
+  },
+  "before_1g_0.1": {
+   "median_local_per_case_s": 0.2108,
+   "rounds": [
+    0.2108,
+    0.213,
+    0.2061
+   ],
+   "peak_mib": [
+    293,
+    130,
+    131
+   ]
+  },
+  "after_4g_1.0": {
+   "median_local_per_case_s": 0.0186,
+   "rounds": [
+    0.0171,
+    0.0186,
+    0.0193
+   ],
+   "peak_mib": [
+    208,
+    207,
+    208
+   ]
+  },
+  "after_4g_0.3": {
+   "median_local_per_case_s": 0.019,
+   "rounds": [
+    0.0189,
+    0.019,
+    0.0193
+   ],
+   "peak_mib": [
+    206,
+    207,
+    206
+   ]
+  },
+  "after_4g_0.1": {
+   "median_local_per_case_s": 0.0571,
+   "rounds": [
+    0.0504,
+    0.0633,
+    0.0571
+   ],
+   "peak_mib": [
+    207,
+    207,
+    207
+   ]
+  },
+  "after_1g_1.0": {
+   "median_local_per_case_s": 0.0182,
+   "rounds": [
+    0.0182,
+    0.0187,
+    0.0178
+   ],
+   "peak_mib": [
+    206,
+    207,
+    207
+   ]
+  },
+  "after_1g_0.3": {
+   "median_local_per_case_s": 0.02,
+   "rounds": [
+    0.02,
+    0.0192,
+    0.02
+   ],
+   "peak_mib": [
+    207,
+    207,
+    206
+   ]
+  },
+  "after_1g_0.1": {
+   "median_local_per_case_s": 0.0704,
+   "rounds": [
+    0.0709,
+    0.0623,
+    0.0704
+   ],
+   "peak_mib": [
+    208,
+    207,
+    208
+   ]
+  }
+ }
+}

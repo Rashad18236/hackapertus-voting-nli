@@ -88,18 +88,28 @@ def cgroup_memory():
 # Session 11, step 5: the lanes' number from the container's memory limit (each lane that embeds holds its own copy
 # of e5). None leaves the number to the CPUs alone, as in session 10.
 MEMORY_FOR_TWO_LANES = 2684354560  # bytes (2.5 GiB; session 11, step 5, adopted); below it one lane
+# Session 14, step 2: the same limit for a run in which no case can load e5 (src/cli.py's loads_no_e5: task A only, with
+# model S as the ranker). Its lanes hold model S's table, not e5, so two of them fit in less memory: two lanes forced
+# in today's image peaked at 230 MiB at most (dev, val and probe task A, 4g, 0.1 and 0.3 s per request); the limit is
+# the smallest memory-grid limit of at least twice that, 512 MiB, where two lanes wrote every dev response with the
+# labels of the 4g run. None: the run uses MEMORY_FOR_TWO_LANES like every other.
+MEMORY_FOR_TWO_LANES_S = 536870912  # bytes (512 MiB; session 14, step 2)
 MEMORY_FOR_ONE_LANE = None   # bytes; below it no lane (every case in turn in the main process)
 
 
-def default_workers():
+def default_workers(without_e5=False):
     """Worker processes: two on a machine with at least two CPUs, else one. Each worker owns whole booklets
     (src/cli.py's lane_key), so no booklet is read twice; the main process needs little CPU. Session 11, step 5:
-    fewer under a low memory limit (MEMORY_FOR_TWO_LANES, MEMORY_FOR_ONE_LANE)."""
+    fewer under a low memory limit (MEMORY_FOR_TWO_LANES, MEMORY_FOR_ONE_LANE). Session 14, step 2: a run in which no
+    case can load e5 (without_e5) has one lane only below MEMORY_FOR_TWO_LANES_S."""
     workers = 2 if available_cpus() >= 2 else 1
     memory = cgroup_memory()
     if memory is not None and MEMORY_FOR_ONE_LANE is not None and memory < MEMORY_FOR_ONE_LANE:
         return 0
-    if memory is not None and MEMORY_FOR_TWO_LANES is not None and memory < MEMORY_FOR_TWO_LANES:
+    two_lanes = MEMORY_FOR_TWO_LANES
+    if without_e5 and MEMORY_FOR_TWO_LANES_S is not None:
+        two_lanes = MEMORY_FOR_TWO_LANES_S
+    if memory is not None and two_lanes is not None and memory < two_lanes:
         return min(workers, 1)
     return workers
 

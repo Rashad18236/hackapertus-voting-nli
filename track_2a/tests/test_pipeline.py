@@ -7,6 +7,7 @@ model and the booklet and for a killed run, and in this process where a step mus
 (a preparation that raises in a worker, a model call that times out).
 """
 
+import dataclasses
 import json
 import os
 import subprocess
@@ -109,6 +110,45 @@ class RunWithFakeSteps(unittest.TestCase):
             for memory, lanes in ((2 * 2**30, 1), (int(1.5 * 2**30), 1), (3 * 2**30, 2), (None, 2)):
                 with self.subTest(memory=memory), mock.patch.object(pipeline, "cgroup_memory", return_value=memory):
                     self.assertEqual(pipeline.default_workers(), lanes)
+
+    def test_two_lanes_in_less_memory_when_no_case_loads_e5(self):
+        """Session 14, step 2: a run in which no case can load e5 (task A with model S) keeps two lanes down to
+        MEMORY_FOR_TWO_LANES_S; every other run has one lane under MEMORY_FOR_TWO_LANES (2.5 GiB), as before."""
+        mib, gib = 2**20, 2**30
+        with mock.patch.object(pipeline, "available_cpus", return_value=2), \
+                mock.patch.object(pipeline, "MEMORY_FOR_TWO_LANES_S", 768 * mib):
+            for memory, without_e5, lanes in ((gib, True, 2), (768 * mib, True, 2), (512 * mib, True, 1),
+                                              (2 * gib, False, 1), (gib, False, 1), (3 * gib, False, 2),
+                                              (3 * gib, True, 2), (None, True, 2)):
+                with self.subTest(memory=memory, without_e5=without_e5), \
+                        mock.patch.object(pipeline, "cgroup_memory", return_value=memory):
+                    self.assertEqual(pipeline.default_workers(without_e5=without_e5), lanes)
+        with mock.patch.object(pipeline, "available_cpus", return_value=1), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=4 * gib):
+            self.assertEqual(pipeline.default_workers(without_e5=True), 1)  # one CPU: one lane, as before
+        with mock.patch.object(pipeline, "available_cpus", return_value=2), \
+                mock.patch.object(pipeline, "cgroup_memory", return_value=gib), \
+                mock.patch.object(pipeline, "MEMORY_FOR_TWO_LANES_S", None):
+            self.assertEqual(pipeline.default_workers(without_e5=True), 1)  # switched off: e5's limit for every run
+
+    def test_which_runs_cannot_load_e5(self):
+        """Session 14, step 2: only a run of task A cases routed with a ranker without e5, the fallback bm25-ap or
+        embed, and L2 off counts as loading no e5; any task B case (selector T) or an e5 setting keeps e5's limit."""
+        a, b = (1, a_case("v1-A")), (2, b_case("v1-B"))
+        today = cli.Settings()
+        self.assertEqual(today.ranker, "S")
+        self.assertTrue(cli.loads_no_e5([a], today))
+        self.assertFalse(cli.loads_no_e5([a, b], today))
+        self.assertFalse(cli.loads_no_e5([b], today))
+        self.assertFalse(cli.loads_no_e5([], today))
+        for ranker in ("S+BM25", "BM25", "none"):
+            with self.subTest(ranker=ranker):
+                self.assertTrue(cli.loads_no_e5([a], dataclasses.replace(today, ranker=ranker)))
+        for change in ({"ranker": "e5"}, {"ranker": "e5+BM25"}, {"second_look_a": True},
+                       {"context_a": "embed-e5-small"}, {"fallback_a": "vw"}):
+            with self.subTest(change=change):
+                self.assertFalse(cli.loads_no_e5([a], dataclasses.replace(today, **change)))
+        self.assertTrue(cli.loads_no_e5([a], dataclasses.replace(today, fallback_a="embed")))
 
     def test_each_lane_is_its_own_process_and_gets_its_cases(self):
         items = [(i, {"id": i, "booklet": i % 3}) for i in range(9)]

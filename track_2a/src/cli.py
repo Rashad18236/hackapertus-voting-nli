@@ -869,6 +869,16 @@ COMPLETE = {"B": complete_b, "A-pages": complete_a_pages, "A-paragraphs": comple
             "A-ask-structure": complete_a_ask_structure}
 
 
+def loads_no_e5(todo, settings):
+    """Session 14, step 2: True when no case of the run can load e5, so that pipeline.MEMORY_FOR_TWO_LANES_S applies:
+    every case is task A, routed by section-route with a ranker that needs no e5 (S, S+BM25, BM25, none) and the
+    fallback bm25-ap or embed (both rank with that ranker), and L2 is off. Task B's selector T, the rankers e5 and
+    e5+BM25, the other task A variants and fallback levels, and L2 can load e5. todo: [(line number, case)]."""
+    return (bool(todo) and all(task_of(case) == "A" for _, case in todo)
+            and settings.context_a == "section-route" and settings.fallback_a in ("bm25-ap", "embed")
+            and rankers.uses_model(settings.ranker) != "e5-small" and not settings.second_look_a)
+
+
 def prepare(case, data_dir=".", settings=None):
     """Everything a case needs before its model call. Returns a Prepared (see there)."""
     from src import timing
@@ -1040,10 +1050,10 @@ def main():
                         help="development only: what a case section-route cannot route gets (session 11, step 2)")
     parser.add_argument("--ranker", default=defaults.ranker, choices=rankers.NAMES,
                         help="development only: the local ranker of long parts, the fallback and cut4-r (session 12)")
-    parser.add_argument("--workers", type=int, default=pipeline.default_workers(),
+    parser.add_argument("--workers", type=int, default=None,
                         help="background processes that prepare cases while a request is in flight (session 10; "
-                             "default 2, or 1 on a single CPU; each owns whole booklets); 0 runs every case in "
-                             "turn, as before session 10")
+                             "default 2, or 1 on a single CPU or under a low memory limit; each owns whole "
+                             "booklets); 0 runs every case in turn, as before session 10")
     parser.add_argument("--in-flight", type=int, default=1, choices=(1, 2),
                         help="development only: model requests sent at the same time (with --workers > 0)")
     args = parser.parse_args()
@@ -1132,13 +1142,18 @@ def _run(args, settings):
         sequential = guarded(lambda case: predict(case, data_dir, settings))
         # Session 11, step 3: Apertus's parsing calls are made while a case is prepared, so with them on every case
         # is prepared and completed in turn (requests stay one at a time).
-        if args.workers == 0 or ap_in_prepare(settings):  # the sequential path: each case prepared and completed in turn
+        workers = args.workers
+        if workers is None:  # session 14, step 2: the default depends on whether a case of this run can load e5
+            workers = pipeline.default_workers(without_e5=loads_no_e5(todo, settings))
+        if workers == 0 or ap_in_prepare(settings):  # the sequential path: each case prepared and completed in turn
+            log.info("Worker processes: 0 (each case prepared and completed in turn)")
             for number, case in todo:
                 emit(number, case, sequential(case))
         else:
+            log.info("Worker processes: %d", workers)
             pipeline.run(todo, functools.partial(prepare, data_dir=data_dir, settings=settings),
                          guarded(lambda p: complete(p, settings)),
-                         sequential, emit, workers=args.workers, in_flight=args.in_flight,
+                         sequential, emit, workers=workers, in_flight=args.in_flight,
                          order_key=preparation_key(todo, settings), lane_key=lane_key(todo))
     written, routing_failed = counts["written"], counts["routing_failed"]
 

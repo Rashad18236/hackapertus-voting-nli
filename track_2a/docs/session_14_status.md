@@ -32,8 +32,15 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (09:05) Step 1 run done (`docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`, one backend, 0 failed
   calls): val 0.969 → 0.981, probe 0.981 → 0.990, 9 fixes / 1 break, tokens +0.6 %, 0 unreadable; on-topic flips 3
   (rows 85, 232, 1026; bar 2). **A6 fails (f) by one case: not adopted.**
+- (10:27) Step 2 local time done (`docs/runs/2026-10-14_rashad_lanes-S_devA300`): at 4g after − before −0.003 /
+  −0.000 / +0.001 s at 1.0 / 0.3 / 0.1 s; at 1g and 0.1 s 0.211 → 0.070 s per case (two lanes). LANE RULE (1) and (2)
+  hold. 4g rounds of both versions sometimes peak at 363–366 MiB (reported; the limit stays 512 MiB as fixed).
+- (10:27) Step 2 memory grid started (after code, tasks A and B, 4g … 512m, 2 and 1 CPUs).
+- (10:55) Step 2 memory grid done (`docs/runs/2026-10-14_rashad_memory-grid-lanes-s14_grid24`): every response at every
+  limit, both tasks, 2 and 1 CPUs; task A with 2 CPUs in two lanes down to 512 MiB (peak 207 MiB). **LANE RULE holds:
+  the lane change is adopted** (`MEMORY_FOR_TWO_LANES_S` = 512 MiB).
+- (11:05) G1/G2 of the final `src/` (log line moved): identical; pytest 348 passed, 1 skipped.
 
 ## Running
-- Step 2 local time before / after (started 08:54; 4g and 1g, 0.1 / 0.3 / 1.0 s, three alternating rounds).
 
 ## Next
