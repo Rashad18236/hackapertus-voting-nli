@@ -156,6 +156,9 @@ number or date 6, scope 4, other 2.
 | Python rule "neutral with a citation → contradiction" | val +0.014 offline; on-topic neutral 3 of 3 wrong | Python may not set a label |
 | session 13 prompts A1–A5 against contradictions answered neutral | dev 0.902–0.983 vs 0.983; on-topic neutral 13–28 of 46 vs 32 | fail on dev |
 | B1 (ballots first) / B3 (T with the reference's title) / B4 (claim first) | B1 void (unreadable); 0.980 / 0.980 vs 0.987 (B4: 5 unreadable) | lower or unreadable |
+| A6b: A6's second look told "related but not settled" is "nothing" | the same finding in all 19 second looks; on-topic flips 3 vs 3 | no fewer on-topic flips |
+| B1 retried with the format fixed (6 words, 40 characters, 64 tokens) | 0.892 vs 0.987; 19 unreadable; +13 % tokens | lower, unreadable |
+| B6: after an answer 2, one question "is the claim about the ballot in the title?" | 0.970 vs 0.987; 1 fix, 6 breaks; +7 % tokens | lower: a claim that misstates its ballot is called "not about it" |
 
 :::
 

@@ -49,7 +49,7 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (14:58) Branch image of `7ae78ad` published (`sha-7ae78ad87cfd` = `session-15`, digest `sha256:a89c507afff1…`) and
   pulled.
-- (15:03) One queue for step 5 and the final runs (decisions file): stability run 1 at 15:23 → final val1160 →
+- (15:00) One queue for step 5 and the final runs (decisions file): stability run 1 at 15:23 → final val1160 →
   stability run 2 (≥ 30 min after run 1) → final probe188 → stability run 3 (≥ 30 min after run 2) → final dev600
   (≥ 30 min after run 3), all through `sha-7ae78ad87cfd`.
 
