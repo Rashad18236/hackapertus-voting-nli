@@ -2530,7 +2530,17 @@ meaning (S RULE, step 6); evidence adds the page hedge H (step 3). Session 12's 
 Task A paths: council 102, summary 67, committee 48, detail 43, law 39, fallback (bm25-ap) 1; translation calls (bm25-ap across languages): 1. No case needed AP-part or
 AP-structure.
 
-LOCAL_TIME_dev600
+Local time and REF SCORE: measured through the same image (`scripts/local_time.py`, 2 CPUs pinned to CPUs 2-3, 4 GB, the
+fake model replaying the final answers after the given delay, 01:17 to 02:05 UTC; `local_time_*.json`; REF SCORE with its
+parts in `ref_score.json`):
+
+| Model latency per request | Task A local time per case (s) | Task B | S_A | S_B | REF SCORE |
+|---|---|---|---|---|---|
+| 1.0 s | 0.0161 | 0.0080 | 0.9047 | 0.9301 | **0.9149** |
+| 0.3 s | 0.0171 | 0.0090 | 0.9047 | 0.9196 | **0.9107** |
+| 0.1 s | 0.0249 | 0.1315 | 0.9047 | 0.8420 | **0.8796** |
+
+A repeat of task A at 0.3 s gave 0.0146 s per case. Session 12's final image (e5): task A 0.0170 / 0.1599 / 0.3639 s at 1.0 / 0.3 / 0.1 s; model S keeps task A's local work small at every speed.
 
 ### Final defaults through the published image, val (session 13 FINISH)
 
@@ -2552,7 +2562,16 @@ meaning (S RULE, step 6); evidence adds the page hedge H (step 3). Session 12's 
 Task A paths: council 175, summary 139, committee 102, law 87, detail 74, fallback (bm25-ap) 3; translation calls (bm25-ap across languages): 2. No case needed AP-part or
 AP-structure.
 
-LOCAL_TIME_val1160
+Local time and REF SCORE: measured through the same image (`scripts/local_time.py`, 2 CPUs pinned to CPUs 2-3, 4 GB, the
+fake model replaying the final answers after the given delay, 01:17 to 02:05 UTC; `local_time_*.json`; REF SCORE with its
+parts in `ref_score.json`):
+
+| Model latency per request | Task A local time per case (s) | Task B | S_A | S_B | REF SCORE |
+|---|---|---|---|---|---|
+| 1.0 s | 0.0077 | 0.0062 | 0.9002 | 0.9430 | **0.9173** |
+| 0.3 s | 0.0073 | 0.0070 | 0.9002 | 0.9292 | **0.9118** |
+
+Val task B is not in the replay reference (dev A/B and val A only): its requests get the fake model's fixed answer; local work does not depend on the answer.
 
 ### Final defaults through the published image, probe (session 13 FINISH)
 
@@ -2574,7 +2593,16 @@ meaning (S RULE, step 6); evidence adds the page hedge H (step 3). Session 12's 
 Task A paths: council 34, summary 20, law 16, detail 10, committee 10, fallback (bm25-ap) 4; translation calls (bm25-ap across languages): 3. No case needed AP-part or
 AP-structure.
 
-LOCAL_TIME_probe188
+Local time and REF SCORE: measured through the same image (`scripts/local_time.py`, 2 CPUs pinned to CPUs 2-3, 4 GB, the
+fake model replaying the final answers after the given delay, 01:17 to 02:05 UTC; `local_time_*.json`; REF SCORE with its
+parts in `ref_score.json`):
+
+| Model latency per request | Task A local time per case (s) | Task B | S_A | S_B | REF SCORE |
+|---|---|---|---|---|---|
+| 1.0 s | 0.0352 | 0.0139 | 0.9130 | 0.8878 | **0.9029** |
+| 0.3 s | 0.0273 | 0.0152 | 0.9130 | 0.8832 | **0.9011** |
+
+The probe has no replay table of its own, so the fake model gives its fixed answer to every probe request (replay misses); local work does not depend on the answer.
 
 ### 2026-10-09, task B cheap fixes, run 1 (v3 + strict JSON): stopped before the first case, the canary failed
 

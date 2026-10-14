@@ -18,4 +18,13 @@ meaning (S RULE, step 6); evidence adds the page hedge H (step 3). Session 12's 
 Task A paths: council 175, summary 139, committee 102, law 87, detail 74, fallback (bm25-ap) 3; translation calls (bm25-ap across languages): 2. No case needed AP-part or
 AP-structure.
 
-LOCAL_TIME_val1160
+Local time and REF SCORE: measured through the same image (`scripts/local_time.py`, 2 CPUs pinned to CPUs 2-3, 4 GB, the
+fake model replaying the final answers after the given delay, 01:17 to 02:05 UTC; `local_time_*.json`; REF SCORE with its
+parts in `ref_score.json`):
+
+| Model latency per request | Task A local time per case (s) | Task B | S_A | S_B | REF SCORE |
+|---|---|---|---|---|---|
+| 1.0 s | 0.0077 | 0.0062 | 0.9002 | 0.9430 | **0.9173** |
+| 0.3 s | 0.0073 | 0.0070 | 0.9002 | 0.9292 | **0.9118** |
+
+Val task B is not in the replay reference (dev A/B and val A only): its requests get the fake model's fixed answer; local work does not depend on the answer.

@@ -7,7 +7,39 @@ log: `docs/session_13_status.md`. The instruction was complete (it ends with "EN
 
 ## In short
 
-SUMMARY
+**Finished:** step 0 and steps 1 to 6, the combination and FINISH; nothing was dropped for time (the last model call
+at 01:01 UTC, the last measurement at 02:05; the stop was 08:00). At 01:16 the session's worker restarted (dockerd and a
+local-time measurement were lost and restarted) and the instruction was delivered again, word for word the same; no
+step was repeated. The sealed test dates were never run, parsed, downloaded or opened;
+`data/test/`, the splits and the scorer are unchanged; no key was printed, logged or committed; no booklet PDF or text
+is committed; no new local model; no translation model. Every label comes from an answer of Apertus; Python wrote 1
+label in the final runs (2,128 cases): the neutral fallback for one val task B answer it could not read (a bare `1`).
+
+**Defaults changed, each by its rule:** the evidence page hedge **H** (step 3: under the strictest page rule, the
+first page of the gold passage, +18 hits over dev, val and probe; nothing worse; labels and requests unchanged) and
+**model S as the ranker** for task A (step 6: val 0.961 → 0.969, REF SCORE higher at 0.3 and 1.0 s per request; task
+A's peak memory 2,287 → 206 MiB). **Not adopted:** the five task A prompts (all fail on dev), the second look A6 (best
+val arm, 0.973 against 0.959, but it turned 2 of 46 on-topic neutrals into contradictions; its rule allows 1), task B's
+B2 (val 0.974 against 0.968 and no unrelated passage answered contradiction, but 9 fixes against 6 breaks and one more
+unreadable answer than today), B1 (void: unreadable), B3 and B4. Everything stays in the code, switched off.
+
+**Each step:**
+
+| Step | What | Result | Rule, outcome |
+|---|---|---|---|
+| 0 | merge session 12 | PR #20 merged (`c85a119`; it was a draft, marked ready first); PR #19 closed; `latest` published | — |
+| 1 | task A prompts A1–A5, second look A6 (dev 300 + 46 on-topic, val 580) | dev: no prompt better than today; val (report only): A5 0.971, A3 0.970, A6 0.973 vs 0.959 | PAIRED / SECOND-LOOK RULE: **none passes** (A6 fails the on-topic condition by one case) |
+| 2 | task B prompts B1, B2, B4, selector B3 (dev 300, val 580) | B1 void; B2 val 0.974 vs 0.968, the targeted error 8 → 0 | PAIRED RULE: **none passes** (B2 fails (c) and (e)) |
+| 3 | evidence page hedge H (offline) | rule 3 hits +18 (dev 116 → 119, val 223 → 236, probe 44 → 46) | H RULE: **default** |
+| 4 | report section "How Apertus is used" | roles, ablation, errors (10 routing + 13 reading on val A), negative results | — |
+| 5 | questions for the organisers | `docs/organiser_questions.md` (8 questions) | — |
+| 6 | model S on val | val A 0.961 → 0.969; REF SCORE 0.9243 / 0.9166 → 0.9269 / 0.9192 | S RULE: **default** |
+| — | combination H+S (val A) | 0.969 vs 0.959, equal to S alone | kept |
+
+**Session 12's targeted val errors in the final runs** (another run, so indicative): of the 15 task A errors
+answered neutral, 3 are fixed (rows 341, 1025, 1159: routing errors S now finds) and 1 new (row 1175); of the 9 task B
+errors answered contradiction, none is fixed and 1 new (row 396). Val errors: task A 23 → 18, task B 18 → 19.
+
 
 ## Step 0: session 12 merged
 
@@ -131,4 +163,39 @@ S is the default ranker.** e5 stays in the image (task B's selector T). On dev, 
 0.016 s against e5's 0.127 s (three rounds each). Memory grid and image size: in FINISH.
 
 
-FINISH
+## FINISH
+
+**Final defaults through the published image** `ghcr.io/rashad18236/hackapertus-voting-nli:sha-54032b4a7970` (built
+from `54032b4`; tag `session-13` at the time; task A and B in separate containers; every answer from one backend; 0
+failed calls), session 12's final image → session 13's (different runs):
+
+| | dev | val | probe |
+|---|---|---|---|
+| Task A Macro-F1 / evidence | 0.977 / 0.980 → **0.973 / 0.985** | 0.961 / 0.960 → **0.969 / 0.965** | 0.971 / 0.969 → **0.981 / 0.985** |
+| Task B Macro-F1 | 0.987 → **0.987** | 0.969 → **0.968** | 0.977 → **0.977** |
+| Task A tokens per case (input + output) | 1,240 + 14.7 → 1,251 + 14.8 | 1,211 + 14.7 → 1,225 + 14.7 | 1,169 + 16.5 → 1,172 + 16.6 |
+| Task B tokens per case | 815 + 8.7 → 815 + 8.8 | 820 + 9.4 → 820 + 9.4 | 789 + 8.6 → 789 + 8.9 |
+| Task A local time per case, 1.0 / 0.3 s per request | 0.017 / 0.160 s → **0.016 / 0.017 s** (repeat 0.015; at 0.1 s 0.364 → 0.025 s) | 0.009 / 0.010 → 0.008 / 0.007 s | 0.040 / 0.028 → 0.035 / 0.027 s |
+| Task B local time per case, 1.0 / 0.3 s | 0.012 / 0.010 → 0.008 / 0.009 s | 0.007 / 0.007 → 0.006 / 0.007 s | 0.015 / 0.016 → 0.014 / 0.015 s |
+| **REF SCORE**, 1.0 / 0.3 s | 0.903 / 0.845 → **0.915 / 0.911** | 0.913 / 0.907 → **0.917 / 0.912** | 0.897 / 0.896 → **0.903 / 0.901** |
+
+Task A paths (dev / val / probe): routed 299 / 577 / 90, fallback bm25-ap 1 / 3 / 4 (with 1 / 2 / 3 translation calls);
+no case needed AP-part or AP-structure. Python wrote 1 of 2,128 labels (val task B, a bare `1`). Local time measured
+01:17 to 02:05 UTC through the same image (`scripts/local_time.py`, 2 CPUs pinned to CPUs 2–3, 4 GB).
+
+**Memory** (`docs/runs/2026-10-14_rashad_memory-grid-final-s13_grid24`): both tasks write every response at 4g, 2g,
+1.5g, 1g, 768m and 512m, with 2 CPUs and with 1. Task A peak 2,287 → 206 MiB (two worker processes; 130 MiB with one);
+task B 1,164 MiB (e5 for selector T; 51 MiB below 1.5 GiB). Image size 2,216 MB before and after (e5 stays for task B).
+For the team: below 2.5 GiB task A still runs one worker process (a limit set for e5); with S the second one would fit
+and keep local time low at fast models (0.016 against 0.126 s per case at 0.1 s per request).
+
+**Replay reference:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA` reproduces the final dev and
+val runs exactly (0 of 1,180 labels or evidence differ); it is G1/G2's anchor and `scripts/local_time.py`'s default.
+
+**Checks:** 347 tests (pytest: 346 passed, 1 skipped; unittest the same after one test pinned its ranker); self-checks;
+`scripts/build_docs.py --check`; pypdf 6.17.0; `.env.example` unchanged (no new variable). `latest` pulls without a
+login: digest `sha256:a6213d70ea55…`, the same image as `sha-c85a119b409a`, i.e. `main` at `c85a119`.
+
+**Not done:** nothing from the instruction. Left for the team: A6 (val +0.014, misses its rule by one on-topic case),
+B2 (val +0.007, removes the targeted error, fails on breaks and one unreadable answer), and the one-lane memory limit
+with model S.

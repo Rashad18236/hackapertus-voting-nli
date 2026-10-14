@@ -341,7 +341,9 @@ on-topic neutral share ≥ today's − 0.05); G1/G2 against `docs/runs/2026-10-1
 - **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-54032b4a7970`, tag
   `session-13`; `docs/runs/2026-10-14_rashad_final-s13_*`): dev task A 0.973 (evidence 0.985), task B 0.987; val 0.969
   (0.965), 0.968; probe 0.981 (0.985), 0.977. Tokens per case (dev, input + output): A 1,251 + 14.8, B 815 + 8.8.
-  REF_SCORE_LINE Python wrote 1 of 2,128 labels.
+  Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.016 / 0.017 / 0.025 s (session 12 with e5: 0.017 /
+  0.160 / 0.364), B 0.008 / 0.009 / 0.132 s. REF SCORE dev 0.915 / 0.911, val 0.917 / 0.912, probe 0.903 / 0.901 (1.0 / 0.3 s).
+  Python wrote 1 of 2,128 labels.
 - **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 

@@ -84,10 +84,19 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (01:03) `latest` pulls without a login: digest `sha256:a6213d70ea55…`, the same image as `sha-c85a119b409a`
   (`main` = `c85a119`).
 
+- (01:16) The worker process restarted: dockerd and the local-time measurement were lost; the instruction arrived
+  again, identical (nothing repeated). (01:17) dockerd restarted; local time of the final image restarted from scratch.
+
+- (02:05) Local time of the final image and REF SCORE: dev 0.915 / 0.911, val 0.917 / 0.912, probe 0.903 / 0.901 at
+  1.0 / 0.3 s per request; task A dev local time 0.016 / 0.017 / 0.025 s at 1.0 / 0.3 / 0.1 s.
+- (02:15) Reports, technical report (section 4, PDF 6 pages), CLAUDE.md, README; self-checks; pushed; PR description.
+
 ## Running
 
-- New replay reference (make_ref), then local time of the final image and REF SCORE.
+- Nothing. Session 13 is finished; the pull request stays a draft (never merged, no tag).
 
 ## Next
 
-- Reports, technical report and PDF, CLAUDE.md, self-checks, PR description.
+- For the team: A6 (val 0.973 vs 0.959, misses its rule by one on-topic case), B2 (val 0.974 vs 0.968, removes the
+  targeted task B error, fails on breaks and one unreadable answer), and task A's one-lane limit below 2.5 GiB (set for
+  e5; with model S a second lane would fit). See the session report.

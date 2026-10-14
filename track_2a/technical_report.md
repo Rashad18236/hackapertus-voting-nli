@@ -27,15 +27,15 @@ with 1,248; without booklet text Apertus scores 0.435 [E2-cb].
 
 | Final defaults, published image [FIN] | dev | val | probe (2 unseen dates) |
 |---|---|---|---|
-| Task A Macro-F1 (weight 0.30 of the score) | **0.977** | **0.961** | **0.971** |
-| Task A evidence (0.12) | **0.980** | **0.960** | **0.969** |
-| Task A tokens per case, input + output (K, 0.09) | 1,240 + 14.7 | 1,211 + 14.7 | 1,169 + 16.5 |
-| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.017 / 0.160 s (repeat: 0.113) | 0.009 / 0.010 s | 0.040 / 0.028 s |
-| Task B Macro-F1 (0.28) | **0.987** | **0.969** | **0.977** |
-| Task B tokens per case, input + output (K, 0.06) | 815 + 8.7 | 820 + 9.4 | 789 + 8.6 |
-| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.012 / 0.010 s | 0.007 / 0.007 s | 0.015 / 0.016 s |
+| Task A Macro-F1 (weight 0.30 of the score) | **0.973** | **0.969** | **0.981** |
+| Task A evidence (0.12) | **0.985** | **0.965** | **0.985** |
+| Task A tokens per case, input + output (K, 0.09) | 1,251 + 14.8 | 1,225 + 14.7 | 1,172 + 16.6 |
+| Task A local time per case, model at 1.0 / 0.3 s per request (T, 0.09) | 0.016 / 0.017 s (repeat: 0.015) | 0.008 / 0.007 s | 0.035 / 0.027 s |
+| Task B Macro-F1 (0.28) | **0.987** | **0.968** | **0.977** |
+| Task B tokens per case, input + output (K, 0.06) | 815 + 8.8 | 820 + 9.4 | 789 + 8.9 |
+| Task B local time per case, 1.0 / 0.3 s per request (T, 0.06) | 0.008 / 0.009 s | 0.006 / 0.007 s | 0.014 / 0.015 s |
 | Labels written by Python (neutral fallback) | 0 of 600 | 1 of 1,160 | 0 of 188 |
-| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.903 / 0.845** | **0.913 / 0.907** | **0.897 / 0.896** |
+| **REF SCORE** at 1.0 / 0.3 s per request (section 2) | **0.915 / 0.911** | **0.917 / 0.912** | **0.903 / 0.901** |
 
 **Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15): TODO, results after the organisers' evaluation.
 
@@ -195,16 +195,16 @@ Not adopted: vote-wide (0.927 / 0.873) and booklet-wide paragraphs (0.857 / 0.85
 paragraphs whose first 300 characters are most similar to the claim (T): Macro-F1 dev 0.987, val 0.968 with 815
 input tokens per case, against 0.967, 0.954 with 1,994 for the whole reference.
 
-**Local time** (the organisers' measure; image, 2 CPUs, fake model replaying the final answers) [FIN, STEP4, S-COST].
-What is local in task A is PDF reading (about 1.3 s per booklet, pure-Python pypdf) and e5's embedding of long parts
-(about 3 s each); session 11 hid them better behind the requests (0.202 → 0.101 s per case at 0.3 s per request,
-same requests), and session 12's BM25 fallback removed e5's whole-booklet embedding (probe: 0.237 → 0.028 s).
+**Local time** (the organisers' measure; image, 2 CPUs, fake model replaying the final answers) [FIN]. What is local in
+task A is PDF reading (about 1.3 s per booklet, pure-Python pypdf) and the ranking of long parts. With e5 (until
+session 12) the ranking took about 3 s per long part and stopped hiding behind fast requests; model S (session 13)
+ranks in milliseconds:
 
 | Final image, local time per case | 1.0 s per request | 0.3 s | 0.1 s |
 |---|---|---|---|
-| Task A, dev | 0.017 s | 0.160 s (repeat 0.113 s) | 0.364 s |
-| Task B, dev | 0.012 s | 0.010 s | 0.161 s |
-| Task A with model S instead of e5 (not adopted, step 4) | 0.016 s | 0.018 s | 0.043 s |
+| Task A, dev, model S (session 13) | 0.016 s | 0.017 s (repeat 0.015 s) | 0.025 s |
+| Task A, dev, e5 (session 12's final image) | 0.017 s | 0.160 s (repeat 0.113 s) | 0.364 s |
+| Task B, dev (e5 for selector T) | 0.008 s | 0.009 s | 0.132 s |
 
 Single measurements at 0.3 s vary by up to about ±0.03 s.
 
@@ -214,7 +214,7 @@ final image, both tasks write every response at 4g, 2g, 1.5g, 1g, 768m and 512m,
 
 **Probe: two unseen voting dates** (test rows of 2021-03-07 and 2025-09-28, opened in session 10).
 Through the final image [FIN]: task A **0.981**, evidence **0.985** (64 of 65), task B **0.977**; REF SCORE
-**PROBE_REF**. Session 12's image: 0.971, 0.969, 0.977. 90 of 94 task A cases are routed; the 4 others are claims
+**0.903 / 0.901**. Session 12's image: 0.971, 0.969, 0.977. 90 of 94 task A cases are routed; the 4 others are claims
 about a committee in votes that have none, answered by the BM25 fallback.
 
 ## 7. Limitations
