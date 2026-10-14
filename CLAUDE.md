@@ -304,9 +304,23 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 09:00 UTC)
+## Current stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 16:00 UTC)
 
-Branch `rashad/session-13` from `main` at `c85a119` (PR #20 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-14` from `main` at `3c60943` (PR #21 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_14_status.md`, decisions `docs/decisions/2026-10-14-0832_rashad_session-14.md`, report
+`track_2a/docs/session_14_report.md`. Experiments stop at 15:00 UTC, everything pushed by 16:00 UTC; steps in the order
+given, what is not reached is written down as not done. Rules as in session 13; "today" = session 13's final defaults
+(S, H, A6 off); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA`.
+
+- **Step 0:** PR #21 merged into `main` as `3c60943` (merge commit; marked ready first); publish-image on `main`
+  green (run 87: `latest`, `sha-3c609435dce7`); `latest` pulls without a login (digest `sha256:3572bfdebce7…`).
+- **Step 1:** A6 confirmed once more on the final defaults (val 580, probe 94, on-topic 46 task A cases, arms today and
+  today+A6), A6 CONFIRMATION RULE (on-topic bar raised to 2 flips by the team). Running.
+- **Step 2:** the one-lane memory limit depends on the ranker (two lanes with model S), LANE RULE. Not started.
+
+## Previous stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
+
+Branch `rashad/session-13` from `main` at `c85a119` (PR #21, merged into `main` on 2026-10-14 as `3c60943`, no tag); status
 `track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report
 `track_2a/docs/session_13_report.md`. Experiments stop on 14 October at 08:00 UTC, everything pushed by 09:00 UTC; steps
 in the order given, what is not reached is written down as not done. Rules as in session 12, plus: Python may decide
@@ -347,7 +361,7 @@ on-topic neutral share ≥ today's − 0.05); G1/G2 against `docs/runs/2026-10-1
 - **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
+## Earlier stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
 
 Branch `rashad/session-12` from `main` at `37904b3` (PR #20, merged into `main` on 2026-10-13 as `c85a119`, no tag); status
 `track_2a/docs/session_12_status.md`, decisions `docs/decisions/2026-10-13-1035_rashad_session-12.md`, report

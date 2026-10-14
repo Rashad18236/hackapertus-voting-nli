@@ -18,6 +18,15 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (08:47) Step 1 decisions written (A6 CONFIRMATION RULE readings); cases file (580 val + 94 probe + 46 on-topic task A)
   and booklet folder (51 booklets, no sealed date) prepared.
 
+- (08:49) Step 1 run started (`docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`: today, today+A6;
+  720 cases, CPUs 0–1, 1 request per second).
+- (08:52) Step 0: publish-image on `main` (run 87, `3c60943`) succeeded: tags `latest` and `sha-3c609435dce7`. `latest`
+  pulls without a login (empty Docker config): digest `sha256:3572bfdebce7…`, the same image as `sha-3c609435dce7`,
+  revision label `3c60943` = `main`.
+- (08:54) CLAUDE.md: session 14 is the current stage; session 13 "merged as PR #21".
+
 ## Running
+
+- Step 1 run (started 08:49).
 
 ## Next
