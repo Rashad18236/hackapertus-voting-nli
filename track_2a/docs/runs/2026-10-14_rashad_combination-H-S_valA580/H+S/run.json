@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "00:01",
+ "kind": "model run",
+ "code": "b634ac9 (scripts/paired_run.py, in-process; both arms name their settings)",
+ "cases": "val, all 580 task A cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 13 combination)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-14_rashad_combination-H-S_valA580/today",
+ "setup": "the combination: evidence hedge H on and model S as the ranker (the new defaults)",
+ "results": {
+  "macro_f1": 0.969,
+  "f1": {
+   "entailment": 0.984,
+   "neutral": 0.965,
+   "contradiction": 0.958
+  },
+  "evidence": {
+   "score": 0.965,
+   "found": 387,
+   "cases": 401
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1225,
+  "mean_time_ms": 689,
+  "p95_time_ms": 1328,
+  "mean_output_tokens": 14.7
+ }
+}

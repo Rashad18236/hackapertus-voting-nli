@@ -133,7 +133,7 @@ class NeverDropACase(unittest.TestCase):
              mock.patch.object(cli.Path, "is_file", return_value=True), \
              mock.patch.object(embed_e5_small, "select_chunks", return_value=[(2, "details on the tax")]):
             code, out = run_cli([json.dumps(a_case("a"))], ['{"pages": [2], "label": 0}'],
-                                ["--context-a", "embed-e5-small"], seen)
+                                ["--context-a", "embed-e5-small", "--ranker", "e5"], seen)
         self.assertEqual(code, 0)
         system, user = seen[0][0]["content"], seen[0][1]["content"]
         self.assertIn("only excerpts of the booklet", system)

@@ -67,10 +67,18 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   the 9; fails (c) p = 0.30 and (e) 2 unreadable vs 1), B3 0.966. **Step 2 adopts nothing.**
 - (23:37) Step 6 started (`docs/runs/2026-10-13_rashad_S-val_valA580`: val task A, today and `--ranker S`).
 
+- (00:00) Step 6 done (`docs/runs/2026-10-13_rashad_S-val_valA580`): val task A 0.961 → 0.969 (6 fixes, 1 break),
+  evidence 0.963 → 0.968; REF SCORE 0.9243 / 0.9166 → 0.9269 / 0.9192 at 1.0 / 0.3 s: **S passes the S RULE.**
+- (00:00) H is the default (commit `b634ac9`; G1 identical, G2 only evidence).
+- (00:01) Combination run started (`docs/runs/2026-10-14_rashad_combination-H-S_valA580`: today against H+S, val task A).
+- (00:08) S as the default in the working tree: G1 changes only the 74 task A requests of long parts, G2 labels only
+  there; 346 tests pass.
+
 ## Running
 
-- Step 6 run (until about 00:05); val task B local time on CPUs 2–3.
+- Combination run (until about 00:22).
 
 ## Next
 
-- S RULE; combination (H, and S if it passes); FINISH.
+- Commit S as the default (if the combination keeps it); FINISH: image, final runs, memory grid, local time, REF SCORE,
+  replay reference, reports.

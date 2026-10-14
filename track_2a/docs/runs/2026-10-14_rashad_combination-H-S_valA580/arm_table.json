@@ -1,0 +1,117 @@
+{
+ "run": "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-14_rashad_combination-H-S_valA580",
+ "task": "A",
+ "expected": "data/val/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 580,
+   "macro_f1": 0.9589,
+   "f1": {
+    "entailment": 0.9738,
+    "neutral": 0.9572,
+    "contradiction": 0.9455
+   },
+   "evidence": {
+    "score": 0.9576,
+    "found": 384,
+    "cases": 401
+   },
+   "input_tokens": 1210.7,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 14
+   },
+   "focus": {
+    "session_12": 15,
+    "fixed": [],
+    "still_wrong": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1053-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1309-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A",
+     "v1.1-row-235-A",
+     "v1.1-row-341-A"
+    ],
+    "new": [
+     "v1.1-row-1162-A"
+    ]
+   }
+  },
+  "H+S": {
+   "cases": 580,
+   "macro_f1": 0.9691,
+   "f1": {
+    "entailment": 0.9844,
+    "neutral": 0.965,
+    "contradiction": 0.958
+   },
+   "evidence": {
+    "score": 0.9651,
+    "found": 387,
+    "cases": 401
+   },
+   "input_tokens": 1224.9,
+   "output_tokens": 14.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold contradiction answered neutral",
+    "count": 12
+   },
+   "fixes": 7,
+   "breaks": 1,
+   "sign_test_p": 0.0352,
+   "sign_test_p_two_sided": 0.0703,
+   "fix_ids": [
+    "v1.1-row-17-A",
+    "v1.1-row-186-A",
+    "v1.1-row-341-A",
+    "v1.1-row-1025-A",
+    "v1.1-row-1159-A",
+    "v1.1-row-1162-A",
+    "v1.1-row-1174-A"
+   ],
+   "break_ids": [
+    "v1.1-row-1175-A"
+   ],
+   "focus": {
+    "session_12": 15,
+    "fixed": [
+     "v1.1-row-1025-A",
+     "v1.1-row-1159-A",
+     "v1.1-row-341-A"
+    ],
+    "still_wrong": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1200-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1309-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1347-A",
+     "v1.1-row-1351-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A",
+     "v1.1-row-235-A"
+    ],
+    "new": [
+     "v1.1-row-1175-A"
+    ]
+   }
+  }
+ }
+}

@@ -106,8 +106,10 @@ class Settings:
                                  # claim (translated by Apertus when it is in another language than the booklet), an
                                  # error going on to embed-e5-small; "embed" (embed-e5-small, before session 12); session
                                  # 11's levels "vw" (vote-wide), "bw" (booklet-wide), "vw+bw" (off)
-    ranker: str = "e5"           # session 12, step 1: which local ranker keeps a long part's, the fallback's and (cut4-r) a
-                                 # long task B reference's most similar pieces: see src/rankers.py ("e5" is today's code)
+    ranker: str = "S"            # which local ranker keeps a long part's, the fallback's and (cut4-r) a long task B
+                                 # reference's most similar pieces: see src/rankers.py. Session 13, step 6 (adopted, S RULE:
+                                 # val task A 0.961 -> 0.969, REF SCORE at 0.3 s 0.917 -> 0.919, at 1.0 s 0.924 -> 0.927):
+                                 # "S" (model S); "e5" until session 12. Task B's selector T still uses e5
     second_look_threshold: float = 0.845  # L2 only: the claim's highest e5 similarity to a sent paragraph must reach
                                           # this (phase B, B6: on E5's 110 neutral answers it flags 10 of the 11 wrong
                                           # ones and 11 of the 99 right ones; the best difference of the two shares)

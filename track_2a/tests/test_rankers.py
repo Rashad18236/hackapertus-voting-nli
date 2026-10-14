@@ -160,7 +160,7 @@ class TaskAFallbackBM25(unittest.TestCase):
         with mock.patch.object(cli.parse, "load_pages", return_value=pages), \
                 mock.patch.object(cli.Path, "is_file", return_value=True), \
                 mock.patch.object(llm, "chat", fake_chat(answers, seen)):
-            resp, status, raw = cli.predict(case, ".", cli.Settings(fallback_a="bm25-ap", ap_part_a="off"))
+            resp, status, raw = cli.predict(case, ".", cli.Settings(fallback_a="bm25-ap", ap_part_a="off", ranker="e5"))
         return resp, status, raw, seen
 
     def test_cross_language_claim_is_translated_first(self):
@@ -232,7 +232,7 @@ class FallbackRobustness(unittest.TestCase):
                 mock.patch.object(cli.Path, "is_file", return_value=True), \
                 mock.patch.object(embed_e5_small, "select_chunks", return_value=[(1, "Einleitung.")]), \
                 mock.patch.object(llm, "chat", fake_chat(['{"pages": [1], "label": 1}'], seen)):
-            resp, status, raw = cli.predict(case, ".", cli.Settings(fallback_a="bm25-ap", ap_part_a="off"))
+            resp, status, raw = cli.predict(case, ".", cli.Settings(fallback_a="bm25-ap", ap_part_a="off", ranker="e5"))
         self.assertEqual((status, raw["fallback"], len(seen)), ("ok", "embed-e5-small", 1))
         self.assertIn("bm25_error", raw)
 
