@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "13:30",
+ "kind": "model run",
+ "code": "f1e5981 (A6 on by default, A6b as --second-look-a6-prompt; scripts/paired_run.py in-process)",
+ "cases": "all 300 dev, 580 val and 94 probe task A cases and the 46 on-topic neutral cases (1,020; Macro-F1 and evidence here are val's; dev and probe in official_score_dev.json and official_score_probe.json; mean tokens and times include all 1,020)",
+ "format": "official scorer on val (and dev, probe); interleaved, 2 arms, 1 request per second (session 15 step 2)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer and second look from one backend: vllm-0.23.1rc1, blablador; both arms share every first answer through the gateway cache)",
+ "variant": "section-route",
+ "task": "A",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46/A6b",
+ "setup": "today's defaults (session 15 step 1): ranker S, hedge H, two lanes, A6 on (A-v6-second-look)",
+ "results": {
+  "macro_f1": 0.981,
+  "f1": {
+   "entailment": 0.984,
+   "neutral": 0.983,
+   "contradiction": 0.976
+  },
+  "evidence": {
+   "score": 0.985,
+   "found": 395,
+   "cases": 401
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1212,
+  "mean_time_ms": 813,
+  "p95_time_ms": 1722,
+  "mean_output_tokens": 15.0
+ }
+}

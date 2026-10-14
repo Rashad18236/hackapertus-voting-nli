@@ -26,9 +26,16 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   1,020 cases, CPUs 0–1, 1 request per second).
 - (13:36) Steps 3–4 code: `v7-same-ballot-f` (B1 with the format fixed) and B6 (`--second-look-b6`), both off; tests;
   pytest 356 passed, 1 skipped; G1/G2 identical to step 1's snapshot. Decisions for steps 3 and 4 written.
+- (14:10) Step 2 run done (`docs/runs/2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46`, one backend, 0 failed
+  calls, first answers shared): A6 and A6b gave the same finding in all 19 second looks; dev 0.977, val 0.981, probe
+  0.990 for both; on-topic flips 3 and 3 (rows 85, 232, 1026). **A6b fails (2): not adopted.** Session 14's four
+  still-wrong val cases get no second look (their first answer cites no paragraph).
+- (14:11) Step 3 format check (`docs/runs/2026-10-14_rashad_format-check-B1f_devB10`): all 10 B1f answers readable,
+  fields in order (6 ballot names cut at 40 characters, still closed): not void.
+- (14:12) Step 3 dev run started (`docs/runs/2026-10-14_rashad_B1f_devB300`: today, B1f; 300 task B cases).
 
 ## Running
 
-- Step 2 run (started 13:30).
+- Step 3 dev run (started 14:12).
 
 ## Next

@@ -1,0 +1,13 @@
+10 cases, 0 booklets parsed; arms: ['today', 'B1f']
+[1/10] v1.1-row-2-B | today: entailment | B1f: entailment
+[2/10] v1.1-row-4-B | B1f: entailment | today: entailment
+[3/10] v1.1-row-5-B | today: entailment | B1f: entailment
+[4/10] v1.1-row-9-B | B1f: entailment | today: entailment
+[5/10] v1.1-row-18-B | today: entailment | B1f: entailment
+[6/10] v1.1-row-21-B | B1f: entailment | today: entailment
+[7/10] v1.1-row-22-B | today: entailment | B1f: entailment
+[8/10] v1.1-row-26-B | B1f: entailment | today: entailment
+[9/10] v1.1-row-27-B | today: entailment | B1f: entailment
+[10/10] v1.1-row-31-B | B1f: entailment | today: entailment
+today: ok: 10; HTTP 429 answers: 0, retries: 0
+B1f: ok: 10; HTTP 429 answers: 0, retries: 0
