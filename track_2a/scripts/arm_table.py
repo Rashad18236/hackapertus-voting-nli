@@ -34,12 +34,12 @@ def sign_test(fixes, breaks):
     return sum(math.comb(n, k) for k in range(fixes, n + 1)) / 2 ** n
 
 
-def arm_numbers(folder, task, gold, today_pred, ontopic, focus, languages):
+def arm_numbers(folder, task, gold, today_pred, ontopic, focus, languages, score_file="official_score.json"):
     preds = {p["id"]: p for p in load(folder / "predictions.jsonl")}
     raws = {}
     for r in load(folder / "raw_answers.jsonl"):
         raws[r["id"]] = r
-    official = json.loads((folder / "official_score.json").read_text())["tasks"][task]
+    official = json.loads((folder / score_file).read_text())["tasks"][task]
     ids = [i for i in gold if i in preds]
     out = {"cases": len(ids), "macro_f1": round(official["macro_f1"], 4),
            "f1": {k: round(v["f1"], 4) for k, v in official["per_class"].items()}}

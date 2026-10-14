@@ -1,0 +1,264 @@
+{
+ "run": "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46",
+ "sets": {
+  "val": {
+   "today": {
+    "cases": 580,
+    "macro_f1": 0.9691,
+    "f1": {
+     "entailment": 0.9844,
+     "neutral": 0.965,
+     "contradiction": 0.958
+    },
+    "evidence": {
+     "score": 0.9651,
+     "found": 387,
+     "cases": 401
+    },
+    "input_tokens": 1224.9,
+    "output_tokens": 14.7,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "error_row": {
+     "name": "gold contradiction answered neutral",
+     "count": 12
+    },
+    "focus": {
+     "session_12": 15,
+     "fixed": [
+      "v1.1-row-1025-A",
+      "v1.1-row-1159-A",
+      "v1.1-row-341-A"
+     ],
+     "still_wrong": [
+      "v1.1-row-1053-A",
+      "v1.1-row-1151-A",
+      "v1.1-row-1200-A",
+      "v1.1-row-1210-A",
+      "v1.1-row-1226-A",
+      "v1.1-row-1309-A",
+      "v1.1-row-1318-A",
+      "v1.1-row-1347-A",
+      "v1.1-row-1351-A",
+      "v1.1-row-1404-A",
+      "v1.1-row-1467-A",
+      "v1.1-row-235-A"
+     ],
+     "new": [
+      "v1.1-row-1175-A"
+     ]
+    },
+    "gold_ids": 580
+   },
+   "today+A6": {
+    "cases": 580,
+    "macro_f1": 0.9812,
+    "f1": {
+     "entailment": 0.9844,
+     "neutral": 0.9834,
+     "contradiction": 0.9758
+    },
+    "evidence": {
+     "score": 0.985,
+     "found": 395,
+     "cases": 401
+    },
+    "input_tokens": 1233.1,
+    "output_tokens": 14.9,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "error_row": {
+     "name": "gold contradiction answered neutral",
+     "count": 4
+    },
+    "fixes": 8,
+    "breaks": 1,
+    "sign_test_p": 0.0195,
+    "sign_test_p_two_sided": 0.0391,
+    "fix_ids": [
+     "v1.1-row-1053-A",
+     "v1.1-row-1151-A",
+     "v1.1-row-1210-A",
+     "v1.1-row-1226-A",
+     "v1.1-row-1309-A",
+     "v1.1-row-1318-A",
+     "v1.1-row-1404-A",
+     "v1.1-row-1467-A"
+    ],
+    "break_ids": [
+     "v1.1-row-950-A"
+    ],
+    "second_look_a6": {
+     "calls": 14,
+     "calls_on_scored_cases": 10,
+     "per_100_cases": 1.72,
+     "unreadable": 0,
+     "failed": 0,
+     "changed": 9,
+     "fixes": 8,
+     "breaks": 1
+    },
+    "focus": {
+     "session_12": 15,
+     "fixed": [
+      "v1.1-row-1025-A",
+      "v1.1-row-1053-A",
+      "v1.1-row-1151-A",
+      "v1.1-row-1159-A",
+      "v1.1-row-1210-A",
+      "v1.1-row-1226-A",
+      "v1.1-row-1309-A",
+      "v1.1-row-1318-A",
+      "v1.1-row-1404-A",
+      "v1.1-row-1467-A",
+      "v1.1-row-341-A"
+     ],
+     "still_wrong": [
+      "v1.1-row-1200-A",
+      "v1.1-row-1347-A",
+      "v1.1-row-1351-A",
+      "v1.1-row-235-A"
+     ],
+     "new": [
+      "v1.1-row-1175-A"
+     ]
+    },
+    "gold_ids": 580
+   }
+  },
+  "probe": {
+   "today": {
+    "cases": 94,
+    "macro_f1": 0.9808,
+    "f1": {
+     "entailment": 1.0,
+     "neutral": 0.9655,
+     "contradiction": 0.9767
+    },
+    "evidence": {
+     "score": 0.9846,
+     "found": 64,
+     "cases": 65
+    },
+    "input_tokens": 1171.8,
+    "output_tokens": 16.5,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "error_row": {
+     "name": "gold contradiction answered neutral",
+     "count": 1
+    },
+    "gold_ids": 94
+   },
+   "today+A6": {
+    "cases": 94,
+    "macro_f1": 0.9903,
+    "f1": {
+     "entailment": 1.0,
+     "neutral": 0.9825,
+     "contradiction": 0.9885
+    },
+    "evidence": {
+     "score": 1.0,
+     "found": 65,
+     "cases": 65
+    },
+    "input_tokens": 1177.4,
+    "output_tokens": 16.6,
+    "unreadable": 0,
+    "failed_calls": 0,
+    "error_row": {
+     "name": "gold contradiction answered neutral",
+     "count": 0
+    },
+    "fixes": 1,
+    "breaks": 0,
+    "sign_test_p": 0.5,
+    "sign_test_p_two_sided": 1.0,
+    "fix_ids": [
+     "v1.1-row-1453-A"
+    ],
+    "break_ids": [],
+    "second_look_a6": {
+     "calls": 14,
+     "calls_on_scored_cases": 1,
+     "per_100_cases": 1.06,
+     "unreadable": 0,
+     "failed": 0,
+     "changed": 1,
+     "fixes": 1,
+     "breaks": 0
+    },
+    "gold_ids": 94
+   }
+  }
+ },
+ "rule": {
+  "a": {
+   "today": 0.9691,
+   "today+A6": 0.9812,
+   "diff": 0.0121,
+   "holds": true
+  },
+  "b": {
+   "today": 0.9808,
+   "today+A6": 0.9903,
+   "holds": true
+  },
+  "c": {
+   "fixes": 9,
+   "breaks": 1,
+   "sign_test_p_one_sided": 0.0107,
+   "sign_test_p_two_sided": 0.0215,
+   "holds": true
+  },
+  "d": {
+   "cases": 674,
+   "today": 1217.5,
+   "today+A6": 1225.3,
+   "change_percent": 0.64,
+   "holds": true
+  },
+  "e": {
+   "today": {
+    "first_answers": 0,
+    "second_looks": 0,
+    "total": 0
+   },
+   "today+A6": {
+    "first_answers": 0,
+    "second_looks": 0,
+    "total": 0
+   },
+   "holds": true
+  },
+  "f": {
+   "cases": 46,
+   "today_neutral": 31,
+   "a6_neutral": 28,
+   "flips": [
+    "v1.1-row-85-ot-A",
+    "v1.1-row-232-ot-A",
+    "v1.1-row-1026-ot-A"
+   ],
+   "flips_by_second_look": [
+    "v1.1-row-85-ot-A",
+    "v1.1-row-232-ot-A",
+    "v1.1-row-1026-ot-A"
+   ],
+   "other_changes": [],
+   "holds": false
+  },
+  "g": {
+   "records_per_case_max": {
+    "today": 1,
+    "today+A6": 1
+   },
+   "today_second_looks": 0,
+   "a6_second_looks": 14,
+   "metrics_not_matching_recorded_calls": [],
+   "holds": true
+  },
+  "adopt": false
+ }
+}

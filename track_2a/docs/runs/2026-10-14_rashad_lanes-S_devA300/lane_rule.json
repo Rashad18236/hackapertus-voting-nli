@@ -1,0 +1,215 @@
+{
+ "rounds": {
+  "before 4g 1.0": {
+   "local_per_case_s": [
+    0.0193,
+    0.0217,
+    0.0228
+   ],
+   "peak_mib": [
+    206,
+    363,
+    366
+   ]
+  },
+  "before 4g 0.3": {
+   "local_per_case_s": [
+    0.0207,
+    0.0192,
+    0.0178
+   ],
+   "peak_mib": [
+    206,
+    206,
+    206
+   ]
+  },
+  "before 4g 0.1": {
+   "local_per_case_s": [
+    0.0521,
+    0.0564,
+    0.0578
+   ],
+   "peak_mib": [
+    207,
+    207,
+    206
+   ]
+  },
+  "before 1g 1.0": {
+   "local_per_case_s": [
+    0.0184,
+    0.0203,
+    0.0222
+   ],
+   "peak_mib": [
+    129,
+    293,
+    291
+   ]
+  },
+  "before 1g 0.3": {
+   "local_per_case_s": [
+    0.0188,
+    0.018,
+    0.019
+   ],
+   "peak_mib": [
+    128,
+    130,
+    129
+   ]
+  },
+  "before 1g 0.1": {
+   "local_per_case_s": [
+    0.2108,
+    0.213,
+    0.2061
+   ],
+   "peak_mib": [
+    293,
+    130,
+    131
+   ]
+  },
+  "after 4g 1.0": {
+   "local_per_case_s": [
+    0.0171,
+    0.0186,
+    0.0193
+   ],
+   "peak_mib": [
+    208,
+    207,
+    208
+   ]
+  },
+  "after 4g 0.3": {
+   "local_per_case_s": [
+    0.0189,
+    0.019,
+    0.0193
+   ],
+   "peak_mib": [
+    206,
+    207,
+    206
+   ]
+  },
+  "after 4g 0.1": {
+   "local_per_case_s": [
+    0.0504,
+    0.0633,
+    0.0571
+   ],
+   "peak_mib": [
+    207,
+    207,
+    207
+   ]
+  },
+  "after 1g 1.0": {
+   "local_per_case_s": [
+    0.0182,
+    0.0187,
+    0.0178
+   ],
+   "peak_mib": [
+    206,
+    207,
+    207
+   ]
+  },
+  "after 1g 0.3": {
+   "local_per_case_s": [
+    0.02,
+    0.0192,
+    0.02
+   ],
+   "peak_mib": [
+    207,
+    207,
+    206
+   ]
+  },
+  "after 1g 0.1": {
+   "local_per_case_s": [
+    0.0709,
+    0.0623,
+    0.0704
+   ],
+   "peak_mib": [
+    208,
+    207,
+    208
+   ]
+  }
+ },
+ "median": {
+  "before 4g 1.0": 0.0217,
+  "before 4g 0.3": 0.0192,
+  "before 4g 0.1": 0.0564,
+  "before 1g 1.0": 0.0203,
+  "before 1g 0.3": 0.0188,
+  "before 1g 0.1": 0.2108,
+  "after 4g 1.0": 0.0186,
+  "after 4g 0.3": 0.019,
+  "after 4g 0.1": 0.0571,
+  "after 1g 1.0": 0.0182,
+  "after 1g 0.3": 0.02,
+  "after 1g 0.1": 0.0704
+ },
+ "workers": {
+  "before 4g 1.0": [
+   "not logged (before: no log line)"
+  ],
+  "before 4g 0.3": [
+   "not logged (before: no log line)"
+  ],
+  "before 4g 0.1": [
+   "not logged (before: no log line)"
+  ],
+  "before 1g 1.0": [
+   "not logged (before: no log line)"
+  ],
+  "before 1g 0.3": [
+   "not logged (before: no log line)"
+  ],
+  "before 1g 0.1": [
+   "not logged (before: no log line)"
+  ],
+  "after 4g 1.0": [
+   "2"
+  ],
+  "after 4g 0.3": [
+   "2"
+  ],
+  "after 4g 0.1": [
+   "2"
+  ],
+  "after 1g 1.0": [
+   "2"
+  ],
+  "after 1g 0.3": [
+   "2"
+  ],
+  "after 1g 0.1": [
+   "2"
+  ]
+ },
+ "after_minus_before": {
+  "4g 1.0": -0.0031,
+  "4g 0.3": -0.0002,
+  "4g 0.1": 0.0007,
+  "1g 1.0": -0.0021,
+  "1g 0.3": 0.0012,
+  "1g 0.1": -0.1404
+ },
+ "rule_1_not_higher_at_4g": {
+  "1.0": true,
+  "0.3": true,
+  "0.1": true
+ },
+ "rule_2_lower_at_0.1_at_1g": true,
+ "rules_1_and_2_hold": true
+}

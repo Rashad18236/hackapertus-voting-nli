@@ -39,11 +39,11 @@ Requirements: `runtime, hardware, API keys, model weights`
 - **Runtime:** Docker (the image is `linux/amd64`, Python 3.12). `make run` builds the image and answers
   `examples/cases.jsonl`; predictions go to `output/predictions.jsonl`.
 - **Hardware:** CPU only, no GPU. Worker processes prepare the next cases while a request is in flight, so most
-  local work overlaps with the model's latency. Memory: task A uses two worker processes from a 2.5 GiB memory limit
-  on and one below it, and peaks at about 0.2 GB (model S); task B peaks at about 1.2 GB (e5) and needs 1.5 GiB for it.
-  Below that a memory guard runs without e5 (a long task B reference is then sent whole), so both tasks answer every
-  case down to at least 512 MiB, with 2 CPUs or 1 (`docs/runs/2026-10-14_rashad_memory-grid-final-s13_grid24`). Local
-  time per case in `technical_report.md`.
+  local work overlaps with the model's latency. Memory: task A (model S) uses two worker processes down to a 512 MiB
+  memory limit and one below it, and peaks at about 0.2–0.4 GB; task B uses two from 2.5 GiB on and one below it,
+  peaks at about 1.2–1.6 GB (e5) and needs 1.5 GiB for e5. Below that a memory guard runs without e5 (a long task B
+  reference is then sent whole), so both tasks answer every case down to at least 512 MiB, with 2 CPUs or 1
+  (`docs/runs/2026-10-14_rashad_memory-grid-final-s14_grid24`). Local time per case in `technical_report.md`.
 - **API keys:** the model is called through `BASE_URL` with `API_KEY` (an OpenAI-compatible endpoint serving
   Apertus v1.5; the model name comes from `MODEL`, default `swiss-ai/Apertus-v1.5-8B`). Export them, or put
   them in a local `.env` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`; see `.env.example`). No key is in the

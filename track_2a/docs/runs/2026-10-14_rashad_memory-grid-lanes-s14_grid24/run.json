@@ -1,0 +1,212 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "10:27",
+ "kind": "offline check",
+ "code": "working tree after cfab870 (the lane change, committed with this folder), mounted over main's image sha-3c609435dce7",
+ "task": "A+B",
+ "variant": "section-route / task B cut4-t (today's defaults)",
+ "cases": "dev, all 300 task A and all 300 task B cases, at 6 memory limits x 2 CPU counts",
+ "setup": "scripts/local_time.py --src through main's image: --memory 4g 2g 1.5g 1g 768m 512m, --cpus 2 and 1, fake model 0.1 s per request",
+ "format": "responses written, exit code, lanes, peak memory; no model calls",
+ "paired_with": null,
+ "highlight": false,
+ "model": "none (fake model)",
+ "endpoint": "none",
+ "notes": "NOTES.md",
+ "summary": "Every response written at every limit (4g to 512m, 2 and 1 CPUs, both tasks); task A with 2 CPUs now keeps two lanes down to 512 MiB (peak 207 MiB); task B unchanged.",
+ "results": {
+  "A_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 366,
+   "local_per_case_s": 0.0691,
+   "guard": false
+  },
+  "A_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 205,
+   "local_per_case_s": 0.0551,
+   "guard": false
+  },
+  "A_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0544,
+   "guard": false
+  },
+  "A_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.051,
+   "guard": true
+  },
+  "A_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0534,
+   "guard": true
+  },
+  "A_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 207,
+   "local_per_case_s": 0.0602,
+   "guard": true
+  },
+  "A_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 130,
+   "local_per_case_s": 0.1967,
+   "guard": false
+  },
+  "A_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.1916,
+   "guard": false
+  },
+  "A_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 130,
+   "local_per_case_s": 0.1969,
+   "guard": false
+  },
+  "A_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.1868,
+   "guard": true
+  },
+  "A_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 130,
+   "local_per_case_s": 0.195,
+   "guard": true
+  },
+  "A_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 129,
+   "local_per_case_s": 0.2077,
+   "guard": true
+  },
+  "B_c2_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 2,
+   "peak_mib": 1650,
+   "local_per_case_s": 0.1835,
+   "guard": false
+  },
+  "B_c2_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.1455,
+   "guard": false
+  },
+  "B_c2_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.1465,
+   "guard": false
+  },
+  "B_c2_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0086,
+   "guard": true
+  },
+  "B_c2_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0082,
+   "guard": true
+  },
+  "B_c2_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0082,
+   "guard": true
+  },
+  "B_c1_m4g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.3219,
+   "guard": false
+  },
+  "B_c1_m2g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.3117,
+   "guard": false
+  },
+  "B_c1_m1.5g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 1164,
+   "local_per_case_s": 0.324,
+   "guard": false
+  },
+  "B_c1_m1g": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 52,
+   "local_per_case_s": 0.0081,
+   "guard": true
+  },
+  "B_c1_m768m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0086,
+   "guard": true
+  },
+  "B_c1_m512m": {
+   "exit": 0,
+   "responses": 300,
+   "lanes": 1,
+   "peak_mib": 51,
+   "local_per_case_s": 0.0084,
+   "guard": true
+  }
+ }
+}

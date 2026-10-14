@@ -199,7 +199,8 @@ src/
   cli.py        official entrypoint: --input/--output, tasks A and B, never drops a case; since session 10
                 each case is prepare() (local work) + complete() (model call); --workers 0 = sequential
   pipeline.py   session 10: two forked worker processes ("lanes", each owning whole booklets) prepare cases
-                while the main process sends them, one request at a time
+                while the main process sends them, one request at a time; one lane under 2.5 GiB, or (session 14)
+                under 512 MiB when no case can load e5 (task A with model S)
   memo.py       session 10: compute-once caches safe with threads
   ap_parse.py   session 11: Apertus in the parsing roles (AP-part: the claim's part; AP-structure: the contents);
                 session 12: AP-translate (a claim into the booklet's language, for the BM25 fallback)
@@ -304,9 +305,40 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 09:00 UTC)
+## Current stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 16:00 UTC)
 
-Branch `rashad/session-13` from `main` at `c85a119` (PR #20 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-14` from `main` at `3c60943` (PR #21 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_14_status.md`, decisions `docs/decisions/2026-10-14-0832_rashad_session-14.md`, report
+`track_2a/docs/session_14_report.md`. Experiments stop at 15:00 UTC, everything pushed by 16:00 UTC; steps in the order
+given, what is not reached is written down as not done. Rules as in session 13; "today" = session 13's final defaults
+(S, H, A6 off); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA`.
+
+- **Step 0:** PR #21 merged into `main` as `3c60943` (merge commit; marked ready first); publish-image on `main`
+  green (run 87: `latest`, `sha-3c609435dce7`); `latest` pulls without a login (digest `sha256:3572bfdebce7…`).
+- **Step 1 (not adopted):** A6 (`--second-look-a6`) confirmed once more on the final defaults (one interleaved run,
+  `docs/runs/2026-10-14_rashad_A6-confirm_valA580-probeA94-ontopic46`; both arms share every first answer through the
+  gateway cache): val 0.969 → 0.981, probe 0.981 → 0.990, 9 fixes / 1 break (p = 0.011), input tokens +0.6 %, 0
+  unreadable, at most one second look per case; but 3 of 46 on-topic neutrals flipped (rows 85, 232, 1026; the team's
+  bar is 2): fails (f), `second_look_a6` stays off.
+- **Step 2 (adopted): two lanes with model S.** `pipeline.MEMORY_FOR_TWO_LANES_S` = 512 MiB applies when no case can
+  load e5 (`cli.loads_no_e5`: task A only, section-route, ranker without e5, L2 off); every other run keeps 2.5 GiB.
+  Limit = 2 × the highest forced two-lane peak (230 MiB) → next grid limit; 4g rounds sometimes peak at 363–366 MiB.
+  LANE RULE: at 4g after − before −0.003 / −0.000 / +0.001 s at 1.0 / 0.3 / 0.1 s per request; at 1g and 0.1 s
+  0.211 → 0.070 s per case; the grid writes every response (`docs/runs/2026-10-14_rashad_lanes-S_devA300`,
+  `..._memory-grid-lanes-s14_grid24`). G1/G2 identical. The CLI logs "Worker processes: N".
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-228822b2e6fa`, tag
+  `session-14`; `docs/runs/2026-10-14_rashad_final-s14_dev600`, dev only: the lane change alters no request; val and
+  probe keep session 13's final runs): dev task A 0.970 (evidence 0.980), task B 0.987; tokens per case (input + output)
+  A 1,251 + 14.7, B 815 + 8.9; local time (mean of 2) A 0.021 / 0.022 s, B 0.012 / 0.013 s at 1.0 / 0.3 s per request;
+  REF SCORE 0.900 / 0.898 (task B's local time was slower in this window: session 13's own image measured 0.016 / 0.043 s
+  there). Task A at 1 GB: 0.019 / 0.024 / 0.063 s at 1.0 / 0.3 / 0.1 s (two lanes). Memory grid of the final image:
+  every response at every limit (`..._memory-grid-final-s14_grid24`). Python wrote 0 of 600 labels.
+- **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA` (also
+  `scripts/local_time.py`'s default table).
+
+## Previous stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
+
+Branch `rashad/session-13` from `main` at `c85a119` (PR #21, merged into `main` on 2026-10-14 as `3c60943`, no tag); status
 `track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report
 `track_2a/docs/session_13_report.md`. Experiments stop on 14 October at 08:00 UTC, everything pushed by 09:00 UTC; steps
 in the order given, what is not reached is written down as not done. Rules as in session 12, plus: Python may decide
@@ -347,7 +379,7 @@ on-topic neutral share ≥ today's − 0.05); G1/G2 against `docs/runs/2026-10-1
 - **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s13_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
+## Earlier stage: session 12 (2026-10-13 10:35 UTC to 2026-10-13 17:05 UTC, merged as PR #20)
 
 Branch `rashad/session-12` from `main` at `37904b3` (PR #20, merged into `main` on 2026-10-13 as `c85a119`, no tag); status
 `track_2a/docs/session_12_status.md`, decisions `docs/decisions/2026-10-13-1035_rashad_session-12.md`, report
