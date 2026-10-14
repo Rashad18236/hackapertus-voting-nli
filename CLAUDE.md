@@ -319,10 +319,14 @@ flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-fin
 - **Step 1 (team decision): A6 is a default** (`second_look_a6 = True`; `--no-second-look-a6` switches it off). G1:
   first requests identical, A6's second looks added in 15 dev/val cases; G2 unchanged with stub answers. Its known
   weakness (on-topic passages answered "different") is in the technical report's Limitations.
-- **Step 2:** A6b (`--second-look-a6-prompt A-v6-second-look-b`): A6's second look with "related but not settled".
-  Running.
-- **Steps 3–5:** B1 retry with the format fixed, B6 (a task B second look on the ballot), stability of the final
-  defaults (three dev runs). Not started.
+- **Step 2 (not adopted):** A6b (`--second-look-a6-prompt A-v6-second-look-b`): A6's second look with "related but
+  not settled". Same finding as A6 in all 19 second looks (dev 0.977, val 0.981, probe 0.990 for both); on-topic flips
+  3 and 3 (rows 85, 232, 1026): fails its rule (`docs/runs/2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46`).
+- **Step 3 (not adopted):** B1 retried with the format fixed (`--prompt-b v7-same-ballot-f`: at most 6 words,
+  `maxLength` 40, 64 tokens). Format check readable; dev 0.892 against 0.987, 19 unreadable, +13.1 % input tokens:
+  fails (b), (d), (e) on dev, no val run (`docs/runs/2026-10-14_rashad_B1f_devB300`).
+- **Step 4:** B6 (`--second-look-b6`): after a task B answer 2, one request on the ballot (title, vote, claim). Running.
+- **Step 5:** stability of the final defaults (three dev runs). Not started.
 
 ## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
 

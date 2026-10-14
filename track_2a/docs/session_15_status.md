@@ -34,8 +34,14 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   fields in order (6 ballot names cut at 40 characters, still closed): not void.
 - (14:12) Step 3 dev run started (`docs/runs/2026-10-14_rashad_B1f_devB300`: today, B1f; 300 task B cases).
 
+- (14:36) Step 3 dev run done (`docs/runs/2026-10-14_rashad_B1f_devB300`, one backend, 0 failed calls): B1f 0.892
+  against 0.987, 19 unreadable, +13.1 % input tokens, 2 fixes / 30 breaks. **B1f fails (b), (d), (e) on dev: no val
+  run, not adopted.** Gold neutral answered contradiction 20 (6 same / 14 cross language) against 1; 21 of 27 readable
+  sampled `claim_ballot` values in the reference's language.
+- (14:38) Step 4 dev run started (`docs/runs/2026-10-14_rashad_B6_devB300`: today, today+B6; 300 task B cases).
+
 ## Running
 
-- Step 3 dev run (started 14:12).
+- Step 4 dev run (started 14:38).
 
 ## Next

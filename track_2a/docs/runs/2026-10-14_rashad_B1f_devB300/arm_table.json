@@ -1,0 +1,86 @@
+{
+ "run": "docs/runs/2026-10-14_rashad_B1f_devB300",
+ "task": "B",
+ "expected": "output/devB/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 300,
+   "macro_f1": 0.9867,
+   "f1": {
+    "entailment": 0.9854,
+    "neutral": 0.9949,
+    "contradiction": 0.9798
+   },
+   "input_tokens": 815.3,
+   "output_tokens": 8.7,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 1,
+    "same_language": 1,
+    "cross_language": 0
+   }
+  },
+  "B1f": {
+   "cases": 300,
+   "macro_f1": 0.8925,
+   "f1": {
+    "entailment": 0.9802,
+    "neutral": 0.836,
+    "contradiction": 0.8612
+   },
+   "input_tokens": 922.3,
+   "output_tokens": 53.5,
+   "unreadable": 19,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 20,
+    "same_language": 6,
+    "cross_language": 14
+   },
+   "fixes": 2,
+   "breaks": 30,
+   "sign_test_p": 1.0,
+   "sign_test_p_two_sided": 0.0,
+   "fix_ids": [
+    "v1.1-row-232-B",
+    "v1.1-row-688-B"
+   ],
+   "break_ids": [
+    "v1.1-row-94-B",
+    "v1.1-row-310-B",
+    "v1.1-row-331-B",
+    "v1.1-row-515-B",
+    "v1.1-row-517-B",
+    "v1.1-row-580-B",
+    "v1.1-row-633-B",
+    "v1.1-row-640-B",
+    "v1.1-row-666-B",
+    "v1.1-row-670-B",
+    "v1.1-row-700-B",
+    "v1.1-row-711-B",
+    "v1.1-row-757-B",
+    "v1.1-row-770-B",
+    "v1.1-row-800-B",
+    "v1.1-row-844-B",
+    "v1.1-row-869-B",
+    "v1.1-row-875-B",
+    "v1.1-row-946-B",
+    "v1.1-row-948-B",
+    "v1.1-row-951-B",
+    "v1.1-row-980-B",
+    "v1.1-row-988-B",
+    "v1.1-row-1003-B",
+    "v1.1-row-1011-B",
+    "v1.1-row-1023-B",
+    "v1.1-row-1056-B",
+    "v1.1-row-1102-B",
+    "v1.1-row-1335-B",
+    "v1.1-row-1444-B"
+   ]
+  }
+ }
+}

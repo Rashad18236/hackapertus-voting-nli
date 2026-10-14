@@ -1,0 +1,38 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "start_utc": "14:11",
+ "kind": "model run",
+ "code": "766f359 (v7-same-ballot-f as --prompt-b; scripts/paired_run.py, in-process)",
+ "cases": "dev, all 300 task B cases",
+ "format": "official scorer; interleaved, 2 arms, 1 request per second (session 15 step 3)",
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (every answer from one backend: vllm-0.23.1rc1, blablador)",
+ "variant": "task B",
+ "task": "B",
+ "notes": "../NOTES.md",
+ "paired_with": "2026-10-14_rashad_B1f_devB300/today",
+ "setup": "B1 retried with the format fixed: v7-same-ballot-f (both ballot fields at most 6 words and maxLength 40, 64 tokens), json_schema (--prompt-b v7-same-ballot-f)",
+ "task_b": {
+  "prompt_version": "v7-same-ballot-f",
+  "change": "prompt v7-same-ballot-f with json_schema (B1 with the format fixed)",
+  "n_cases": 300,
+  "strict_json": true,
+  "max_tokens": 64
+ },
+ "results": {
+  "macro_f1": 0.892,
+  "f1": {
+   "entailment": 0.98,
+   "neutral": 0.836,
+   "contradiction": 0.861
+  },
+  "parse_failures": 19,
+  "failed_calls": 0,
+  "mean_input_tokens": 922,
+  "mean_time_ms": 3544,
+  "p95_time_ms": 5693,
+  "mean_output_tokens": 53.5
+ }
+}
