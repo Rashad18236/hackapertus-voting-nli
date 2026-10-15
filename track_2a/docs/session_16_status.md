@@ -54,5 +54,5 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 ## Closed
 
-All steps done; the PR description holds the after-merge steps for Rashad (tag, publish check, package visibility, form,
-keys). Waiting only for the workflows on the final commit.
+All steps done (13:24). Workflows green on `7edeaa4` (tests, image); PR #25 draft, mergeable, not merged, no tag. The PR
+description holds the after-merge steps for Rashad (tag, publish check, package visibility, form, keys).
