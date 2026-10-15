@@ -180,7 +180,8 @@ experiments [K].
 - **Dataset:** `OSTswiss/MNLIoverSwissVotingBooklets` v1.1 (commit `9ff08597`, MIT): 1,488 rows, 335 exact
   duplicates; each row gives one task A and one task B case.
 - **Splits** (by voting date, duplicates removed): test 5 dates (267 rows); dev 300 rows; val 580 rows of the dev
-  dates (never used to change a rule); **probe:** the 94 test rows of 2021-03-07 and 2025-09-28; three dates sealed.
+  dates (never used to change a rule); **probe:** the 94 test rows of 2021-03-07 and 2025-09-28; **sealed:** the 173
+  test rows of the three other dates, opened once after the freeze (section 1).
 - **Booklets:** the Federal Chancellery's PDFs, downloaded by script and not committed. For parser coverage, every
   federal booklet from 2016 to 2026 in de, fr and it (93 PDFs; the sealed dates never downloaded). Swiss copyright
   law exempts official reports of authorities (Art. 5 URG). No personal data.
@@ -268,7 +269,8 @@ about a committee in votes that have none, answered by the BM25 fallback.
 - **Evidence pages.** If the official run checks the gold passage's *first* page, about 40 % of our hits would not
   count (the passage often starts a page earlier); H recovers part of it (`docs/organiser_questions.md`).
 - **Not political advice.** The system checks a claim against the booklet's text only. Its answers are not
-  voting recommendations. Every task A label 0 or 2 comes with the booklet page and the verbatim text it rests on.
+  voting recommendations. Every task A label 0 or 2 is traceable to the booklet: it comes with the page and the
+  verbatim text it rests on.
 
 ## 8. Reproducibility
 
