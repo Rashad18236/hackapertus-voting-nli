@@ -1446,3 +1446,34 @@ changes. One line per decision with its reason, written before the step it conce
   or a table.
 - **The numbers check's 2 MISSING (the arXiv id 2402.05672 and the year 2009 of the references) are traced to the
   citations themselves and left as they are.** They are identifiers, not results.
+
+# Session 17: the model-name fallback on HTTP 403, then freeze
+
+Started 2026-10-15 19:42 UTC by Claude Code for Rashad, unattended. The instruction ends with "END OF SESSION 17
+INSTRUCTION": complete. Push by 22:30 UTC. One change to `src/llm.py` (the model-name fallback also fires on HTTP 403
+and on an HTTP 400 or 422 that names the model), its tests, one verification run, documents. One line per decision
+with its reason, written before the step it concerns.
+
+## Step 0: merge session 16
+
+- **`main` moved after session 16: Kaan's commit `5095048` (15:51 UTC, pushed straight to `main`) rewrote the
+  technical report in plain language (diagram and four charts, `scripts/report_figures.py`, `report.css`, the PDF),
+  starting from the report before session 16. PR #25 therefore has a merge conflict (`technical_report.md`,
+  `report.css`, `technical_report.pdf`).** Found at 19:44.
+- **The conflict is resolved on `rashad/session-16` by merging `origin/main` into it (a merge commit; no rebase, no
+  force-push), then PR #25 is merged as the instruction says.** The instruction's step 0; the team's rule for a moved
+  `main`.
+- **`technical_report.md`: Kaan's rewrite is the base (the newer text, written for readers new to the project), and
+  session 16's content is carried into it: the title line, the header fields (project, team, repository, image with
+  IMAGE_DIGEST and MAIN_COMMIT), the first paragraph's sealed sentence, §1's sealed table and sentence, "Who did
+  what", §6's "Sealed test" paragraph, "traceable to the booklet" in §7, §8's digest and `submission` tag line, the
+  sealed run in the references. Nothing of either side is dropped; numbers are copied, not changed.** Both sides
+  hold content the submission needs; picking one loses the other.
+- **Kaan's placeholder "Qualitative examples. TODO" (§6) stays as he wrote it and is reported to Rashad.** Writing
+  the examples is Kaan's open item, outside both session 16's and session 17's scope; a removed placeholder would
+  hide it.
+- **`report.css`: both changes kept (Kaan's figure rule; session 16's compact §1 tables, smaller code blocks and line
+  height 1.26) as far as the merged report needs them to stay within 6 pages; the PDF is rebuilt with
+  `scripts/build_report_pdf.sh`, never taken from either side.** The PDF is generated.
+- **The merge is checked like any change: pytest, `build_docs.py --check`, the numbers check, PDF pages; then PR #25's
+  checks must be green before it is merged.** The instruction: "checks green".

@@ -1,0 +1,78 @@
+// Architecture diagram for technical_report.md, section 2.
+// Render from track_2a/:  dot -Tsvg docs/report/architecture.dot -o docs/report/architecture.svg
+//                         dot -Tpng -Gdpi=200 docs/report/architecture.dot -o docs/report/architecture.png
+// Colours: grey = input/output, blue = local work (no model), orange = a call to Apertus through BASE_URL.
+digraph architecture {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=11, nodesep=0.3, ranksep=0.35, newrank=true, pad=0.2];
+  node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10, fillcolor="#e8f0fb", color="#4a6fa5", margin="0.12,0.06"];
+  edge  [fontname="Helvetica", fontsize=9, color="#555555", arrowsize=0.7];
+
+  // Input and output
+  cases [label="cases\n(claim + booklet or passage)", fillcolor="#eeeeee", color="#777777"];
+  cli   [label="read the cases,\nsplit by task"];
+  out   [label="answers\nlabel, evidence, tokens and time", fillcolor="#eeeeee", color="#777777"];
+
+  // Worker processes: local preparation only
+  subgraph cluster_lanes {
+    label="Preparation: two worker processes, each handling whole booklets (local, no language model)";
+    labeljust=l; style="rounded,dashed"; color="#4a6fa5"; fontcolor="#4a6fa5";
+
+    subgraph cluster_b {
+      label="Task B"; style="rounded"; color="#999999"; fontcolor="#333333";
+      ref   [label="reference text"];
+      cutb  [label="long passage: first line +\n4 paragraphs most similar\nto the claim"];
+      ref -> cutb;
+    }
+
+    subgraph cluster_a {
+      label="Task A"; style="rounded"; color="#999999"; fontcolor="#333333";
+      pdf     [label="booklet PDF"];
+      parse   [label="read the PDF\ntext per page, with page numbers"];
+      router  [label="which part does the claim name?\n(summary, Federal Council, committee,\nlegal text, detailed explanation)"];
+      booklet [label="find the vote and its parts\nfrom the table of contents,\nchecked against page headings"];
+      paras   [label="numbered paragraphs of that part\n(long parts: the 8 most similar)"];
+      bm25    [label="fallback: 8 chunks by word search\n(no part, no vote, or any error)"];
+      pdf -> parse;
+      parse -> booklet;
+      router -> paras  [label="part"];
+      booklet -> paras [label="vote, part"];
+      booklet -> bm25  [style=dashed, label="fails"];
+    }
+  }
+
+  // Apertus helper calls used only while selecting context
+  appart   [label="Apertus names the part", fillcolor="#fde9d4", color="#c46a1b"];
+  apstruct [label="Apertus reads the\ntable of contents", fillcolor="#fde9d4", color="#c46a1b"];
+  aptrans  [label="Apertus translates the claim\ninto the booklet language", fillcolor="#fde9d4", color="#c46a1b"];
+
+  router  -> appart   [style=dashed, label="no match"];
+  appart  -> paras    [style=dashed];
+  booklet -> apstruct [style=dashed, label="no valid part"];
+  apstruct -> paras   [style=dashed];
+  bm25    -> aptrans  [style=dashed, dir=back, label="other language"];
+
+  // Main process: the model calls
+  subgraph cluster_main {
+    label="Model stage: one request to Apertus at a time";
+    labeljust=l; style="rounded,dashed"; color="#c46a1b"; fontcolor="#c46a1b";
+    nli [label="Apertus decides\nprompt: decision rule, part, paragraphs, vote, claim\nanswer: label + cited paragraphs", fillcolor="#fde9d4", color="#c46a1b"];
+    a6  [label="second look (task A)\nneutral but cites paragraphs:\nsame / different / nothing?", fillcolor="#fde9d4", color="#c46a1b"];
+    nli -> a6 [style=dashed];
+  }
+
+  evid [label="evidence: cited paragraphs,\nword for word, with page\n(at most five items)"];
+
+  cases -> cli;
+  cli   -> ref;
+  cli   -> pdf;
+  cli   -> router;
+  cutb  -> nli;
+  paras -> nli;
+  bm25  -> nli;
+  nli   -> evid [label="task A: supports\nor contradicts"];
+  a6    -> evid;
+  evid  -> out;
+  nli   -> out  [label="task B"];
+
+  { rank=same; ref; pdf; router; }
+}
