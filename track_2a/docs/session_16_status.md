@@ -48,6 +48,8 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (13:03) `examples/predictions.jsonl`: the submission image (by digest) on `examples/cases.jsonl` through `make run`, real endpoint, fresh answers (no cache hit): 2 lines, both entailment, check_format clean.
 - (13:05) README command tested as written: `docker pull` and `docker run` of `latest` (= IMAGE_DIGEST) exit 0 with one line per id. In this sandbox the container needs the proxy flags; with them, every call is refused with HTTP 403 because the default model name `swiss-ai/Apertus-v1.5-8B` is not one Public AI's key may use (`src/llm.py`'s model-name fallback handles 404 and 400, not 403). With `-e MODEL` (`swiss-ai/apertus-v1.5-8b`) both cases are answered. Command unchanged; one note added under it. No code changed (the session's rule); reported for Rashad.
 
+- (13:20) Step 2: technical report: §1 sealed table (pooled and per date) with the sentence "Run once through the submission image after every default was frozen; nothing was changed afterwards."; the sealed column did not fit the final-defaults table within 6 pages, so the sealed table stands alone; §6 "Sealed test" paragraph; §3 prose shortened; report style: tables of §1 compact, code blocks 8.5 pt, line height 1.26 (no number or table removed). PDF 6 pages. `scripts/report_numbers_check.py`: 577 numbers, 575 found in run files or documents, 2 MISSING = the citations' arXiv id 2402.05672 and year 2009 (traced to the citations; unchanged). `docs/submission_message.md`: MODEL sentence and the sealed numbers.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
