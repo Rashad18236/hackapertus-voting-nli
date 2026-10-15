@@ -140,6 +140,9 @@ temperature 0, answers constrained by `json_schema`, only through `BASE_URL`; no
 | **the part the claim names (routed), with A6 [FIN]** | **0.977** | **0.990** | 1,259 |
 :::
 
+A larger Apertus could not be measured as a reference: Public AI lists `swiss-ai/apertus-v1.5-70b`, but on 15
+October it refused all 9 calls we sent it over 41 minutes (21 HTTP requests, every one HTTP 429) [S15b].
+
 **Errors** (session 12's val answers, `scripts/error_types.py`): of 23 task A errors, **10 are routing errors** (gold
 passage not read; 8 in long parts cut to 8 paragraphs) and **13 reading errors** (direction or negation 6, scope 5,
 number or date 2, as Apertus names them offline); all 18 task B errors are reading errors (another ballot or topic 6,
@@ -241,6 +244,8 @@ about a committee in votes that have none, answered by the BM25 fallback.
   probe (two unseen dates) lands at val's level.
 - **`section-route` depends on the booklet layout** (2016–2026 checked: 244 of 249 votes pass). A claim whose opening
   neither the rules nor Apertus place, or a vote the parser cannot read, falls back (answered, less accurate).
+- **The 8B.** The submission calls Apertus v1.5 8B: the organisers' endpoint and model are unknown to us, every rule,
+  prompt and threshold was built and measured on the 8B, and the one larger v1.5 model listed (70B) did not answer.
 - **Endpoint and speed.** Our scores hold for the backend that answered; with a fast model, PDF reading no longer
   hides behind the requests (model S removed e5's share in session 13).
 - **A6's known weakness.** "A6 failed its on-topic condition twice by one case (2 of 46 in session 13, 3 of 46 in
@@ -261,7 +266,7 @@ about a committee in votes that have none, answered by the BM25 fallback.
   tested on a fresh runner), run with the organisers' command (README); final numbers from `sha-7ae78ad87cfd`.
 - **From source:** `make run` builds the image and answers `examples/cases.jsonl`.
 - **Hardware:** CPU only; measured with 2 CPUs and 4 GB; every case answered down to 512 MiB, 2 CPUs or 1 [GRID].
-- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 357 tests.
+- **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 358 tests.
 - **License:** code Apache-2.0 (the repository's `LICENSE`); report text CC-BY-4.0.
 
 ## References
@@ -274,4 +279,5 @@ about a committee in votes that have none, answered by the BM25 fallback.
   `memory-grid-final-s15_grid24`; GUARD `memory-guard_grid48`; TB `taskb-selectors_*`; COV `parser-coverage_booklets93`;
   FB `fallbacks_*`; S12 `S-and-fallbacks_devA300`, `bm25ap-fallback_valA300`, `ap-structure-ask_*`; E1-curve
   `context-curve_devA100`; E2-cb `closed-book_devA300`; E5 `section-route-vs-embed_devA300`; AP-all `ap-all_devA300`;
-  not adopted (section 4): `prompts-A_*`, `prompts-B_*`, `A6b_*`, `B1f_devB300`, `B6_devB300`.
+  not adopted (section 4): `prompts-A_*`, `prompts-B_*`, `A6b_*`, `B1f_devB300`, `B6_devB300`; S15b
+  `70B-smoke_devA3-devB3`.

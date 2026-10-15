@@ -1243,3 +1243,98 @@ reading taken.
 - **Local time: dev at 1.0 and 0.3 s measured twice and averaged (single measurements vary by up to ±0.03 s), at 0.1 s once; val and probe once at 1.0 and 0.3 s; all with the new reference's table, CPUs 2–3, after the last model call.** Sessions 13 and 14's protocol.
 - **A6's role-table row in the technical report uses the final dev run (1.7 second looks per 100 task A cases, 454 + 8 tokens per call), like the label row.** The table's header names the final dev run.
 - **The technical report PDF stays at 6 pages: section 6's tables use the compact style of section 4, the older local-time rows (session 13's window) and the replaced fallback rows went into one sentence, duplicated negative-results rows (AP-all, vote-/booklet-wide) were dropped (they remain in the ablation table and section 6), and the licence moved into section 8.** The instruction: PDF at most 6 pages.
+
+# Session 15b: the 70B as a reference point (report only)
+
+Started 2026-10-15 10:30 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-15b` from `main` at
+`61ce0eb` (PR #23 merged in step 0). One measurement for the technical report: no code path, default or prompt of
+`src/` changes; the submission stays the 8B. One line per decision with its reason, written before the run it
+concerns; where the instruction was unclear, the reading taken.
+
+## Step 0 and set-up
+
+- **The instruction is complete (it ends with "END OF SESSION 15B INSTRUCTION").** Its first check.
+- **The session started at 10:30 UTC, after the instruction's push deadline ("Push by Thursday 15 October 10:00 UTC").
+  Reading: the instruction was sent now and the submission deadline is 16 October 10:00 UTC, so the work goes on and
+  everything is pushed as soon as the measurement is done; the delay is recorded here and in the status log.** The
+  alternative (stop with nothing done) would lose the measurement the instruction asks for.
+- **PR #23 checked: open, draft, `mergeable_state` clean, head `18fcd06`, all four checks green; marked ready for
+  review and merged with a merge commit (`61ce0eb`), branch kept. `origin/main` contains `18fcd06`.** Step 0.
+- **dockerd did not start (a stale containerd pid file from the previous container); the pid files were removed and
+  dockerd started again.** Environment.
+
+## Step 1: is a larger Apertus v1.5 reachable?
+
+- **`BASE_URL/models` (Public AI, the key from `.env`, never printed) lists 9 ids; those naming Apertus:
+  `swiss-ai/apertus-v1.5-8b`, `swiss-ai/apertus-v1.5-8b-thinking`, `swiss-ai/apertus-v1.5-70b`,
+  `swiss-ai/apertus-v1.5-70b-thinking`, `swiss-ai/apertus-8b-instruct`, `swiss-ai/apertus-70b-instruct`. MODEL_70B =
+  `swiss-ai/apertus-v1.5-70b`** (the only id that names v1.5 and 70B and is not a thinking variant).
+- **Smoke test: the last 3 dev task A and the last 3 dev task B cases of `data/dev/cases.jsonl`, through
+  `scripts/paired_run.py` (the CLI's code in-process) with the arms of step 2 (`70B`: `MODEL=swiss-ai/apertus-v1.5-70b`,
+  nothing else changed; `8B` as a check that the arm switch sends the right model), `--call-log`, 1 request per second.
+  The last cases, so that step 2 reaches them long after the gateway's ~10-minute cache.** The instruction.
+- **"Readable JSON with the json_schema format": task A's answers (sent with `response_format` json_schema) must parse
+  under that schema; task B's default sends no schema (`v3-topic-first`), so its answers must be read by the default
+  parser without a fallback. Any `parse_reason`, an HTTP error or a `fallbacks` entry (no response_format, replaced
+  model name) means step 2 is skipped.** The 8B's settings, unchanged, are the measurement.
+- **"Latency per call above 20 s" = the median of the smoke test's 70B call latencies (`elapsed_ms` of every call in
+  `calls.jsonl`, `scripts/paired_run.py --call-log`, new: `src/llm.py`'s chat wrapped in the script's process); above
+  20 s, step 2 runs on the first 100 dev task A and the first 100 dev task B cases instead of 600.** The instruction.
+
+## Step 2: one interleaved run, set before it
+
+- **NOTHING IS ADOPTED from this run.** The instruction, word for word in substance: the 70B is a reference point for
+  the technical report; no default changes whatever it scores.
+- **Arms: `8B` (`{"name": "8B"}`: the final defaults exactly as `main`, the model from `.env`,
+  `swiss-ai/apertus-v1.5-8b`) and `70B` (`{"name": "70B", "model": "swiss-ai/apertus-v1.5-70b"}`: identical settings,
+  `MODEL` set for every call of the arm's cases, the answer, A6's second looks and AP-translate).** The instruction.
+- **The arm field `model` is new in `scripts/paired_run.py` (development script, not `src/`): it sets the environment
+  variable `MODEL` around the arm's cases, exactly as `MODEL=<id>` does for the CLI, and keeps `src/llm.py`'s run-wide
+  fallbacks (no response_format, a replaced model name) per arm, so that one arm's fallback cannot change the other
+  arm's requests. Every 70B response's body names the model that answered; the analysis checks it.** No code path of
+  the pipeline changes.
+- **Cases: all 300 dev task A and 300 dev task B cases (`data/dev/cases.jsonl`) and the 46 on-topic neutral cases
+  (`data/ontopic_neutral/cases.jsonl`, ids `…-ot-A`, with `--exclude-paragraphs data/ontopic_neutral/exclusions.json`),
+  646 cases in one file, booklets `output/data_s14/`, arms alternating which goes first, 1 request per second
+  (`--min-interval 1.0`, `LLM_MIN_INTERVAL=1`), CPUs 0–1, one run at a time. Folder
+  `docs/runs/2026-10-15_rashad_70B-vs-8B_dev600` (the on-topic cases scored separately inside it).** The instruction;
+  the on-topic ids do not collide with dev's.
+- **The two arms' requests differ in `model`, so the gateway's cache cannot hand one arm the other's answers (unlike
+  session 15's arms, which shared first answers); the 8B arm's requests were last sent yesterday, beyond the cache.**
+  Recorded; cache hits are counted per arm.
+- **Report per task and arm: Macro-F1 and per-label F1 (the starter's `evaluate.py`), evidence (task A), input and
+  output tokens per case, unreadable answers, Python-written labels, latency per call (median and p95 of every call's
+  `elapsed_ms` in the arm's `calls.jsonl`: first answers, A6, AP-translate; cache hits left out), backend identity (response `model`, `system_fingerprint`, gateway API
+  base), cases the 70B fixes and breaks against the 8B with ids (`scripts/arm_table.py`, arm "8B" as "today"), the
+  error rows "gold contradiction answered neutral" (A) and "gold neutral answered contradiction" (B, same / cross
+  language); on-topic: neutral count per arm.** The instruction's list.
+- **If the 70B arm hits HTTP errors or rate limits, the run continues (each case is answered; a failed call is a
+  neutral fallback, counted as Python-written); if more than 10 % of the 70B's calls fail, the report says the
+  measurement is incomplete.** A reading for a case the instruction does not cover.
+
+## Step 1: smoke test result and the reading for a refusing 70B (after the smoke test, before any retry)
+
+- **Smoke test (10:36 to 10:46 UTC, `docs/runs/2026-10-15_rashad_70B-smoke_devA3-devB3`): every one of the 6 70B calls
+  failed with HTTP 429 after 3 attempts (18 HTTP 429 answers, about 26 s each: "429 Too Many Requests … Received Model
+  Group=swiss-ai/apertus-v1.5-70b, Available Model Group Fallbacks=None"); the 8B arm answered all 6 (1.3–1.7 s per
+  call, the response bodies name `swiss-ai/apertus-v1.5-8b`).** Public AI's status page (read 10:46) lists
+  `swiss-ai/apertus-v1.5-70b` with about 54–56 % uptime over 30 days, one entry "Down".
+- **Reading: a 70B that answers every call with HTTP 429 is listed but not reachable; this falls under "the endpoint
+  refuses … record it and skip to STEP 3". Before skipping, at most three probes of one minimal request each (model
+  `swiss-ai/apertus-v1.5-70b`, a one-line prompt, 8 tokens, one attempt, no retries), 15 minutes apart (10:47, 11:02,
+  11:17). If a probe answers, the smoke test runs again; if it passes, step 2 runs. If no probe answers, step 2 is not
+  run and the report says why.** A bounded wait: the 70B's outages last hours on the status page, and the session is
+  already past its push time.
+
+## Step 1 verdict (after the probes)
+
+- **No probe answered: 10:47, 11:02 and 11:17 UTC, each HTTP 429 after 26–27 s
+  (`docs/runs/2026-10-15_rashad_70B-smoke_devA3-devB3/probes.jsonl`). Together with the smoke test, 9 of 9 calls to
+  `swiss-ai/apertus-v1.5-70b` were refused over 41 minutes (21 HTTP requests: the smoke test's 6 calls with 3 attempts
+  each, and the 3 single-attempt probes; every one HTTP 429). Step 2 is not run; the session goes to step 3.** The
+  reading written before the probes.
+- **NOTHING IS ADOPTED: there is no 70B run to adopt from, and no default, prompt or code path of `src/` changed.**
+  The instruction.
+- **The technical report says in one sentence that no larger model was reachable (with the evidence: listed, but 9 of
+  9 calls refused with HTTP 429 on 15 October), and in one sentence why the submission is the 8B.** Step 3.
+- **The README stays unchanged: it names only the default model (`swiss-ai/Apertus-v1.5-8B`), not a model list.** Step 3.

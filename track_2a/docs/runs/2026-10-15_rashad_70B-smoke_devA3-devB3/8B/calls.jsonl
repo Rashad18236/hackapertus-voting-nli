@@ -1,0 +1,6 @@
+{"id": "v1.1-row-1477-A", "sent_utc": "2026-10-15 10:37:57", "elapsed_ms": 1740, "input_tokens": 1225, "output_tokens": 17, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
+{"id": "v1.1-row-1478-A", "sent_utc": "2026-10-15 10:37:59", "elapsed_ms": 1309, "input_tokens": 1197, "output_tokens": 14, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
+{"id": "v1.1-row-1481-A", "sent_utc": "2026-10-15 10:40:50", "elapsed_ms": 1491, "input_tokens": 760, "output_tokens": 14, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
+{"id": "v1.1-row-1477-B", "sent_utc": "2026-10-15 10:41:44", "elapsed_ms": 1081, "input_tokens": 888, "output_tokens": 7, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
+{"id": "v1.1-row-1478-B", "sent_utc": "2026-10-15 10:44:36", "elapsed_ms": 1017, "input_tokens": 647, "output_tokens": 7, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
+{"id": "v1.1-row-1481-B", "sent_utc": "2026-10-15 10:44:37", "elapsed_ms": 820, "input_tokens": 672, "output_tokens": 7, "attempts": 1, "model": "swiss-ai/apertus-v1.5-8b", "cache_hit": false, "fallbacks": []}
