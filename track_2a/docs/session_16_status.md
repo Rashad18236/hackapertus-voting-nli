@@ -31,6 +31,8 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (11:40) Step 1e, coverage of the sealed booklets (`scripts/parser_coverage.py --include-sealed`, a new flag; no model): 9 of 9 booklets complete, 27 of 27 votes found and valid (2020: 2 votes, 2022: 7, in each of de, fr, it), every vote with a usable part, 0 cross-language disagreements (`docs/runs/2026-10-15_rashad_sealed-once/coverage.json`, page numbers only).
 - (11:45) Step 2 drafts (no sealed number in them yet): report title, header fields, "Who did what", §8 tag line; README title, team, sealed-results and example lines; `docs/organiser_questions.md` answers; `docs/submission_message.md`; `scripts/report_numbers_check.py` and `scripts/sealed_report.py` written.
 
+- (11:53) Health check 1 (10 dev cases through the image): FAIL. 5 of 10 calls refused with the same HTTP 400 ("no available clients: alias-apertus"), the other 5 answered by blablador; task A's first 400 switched off response_format. The gateway still sends about half of the 8B's requests to a deployment without a client. Next check 12:03; the sealed rerun waits.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
