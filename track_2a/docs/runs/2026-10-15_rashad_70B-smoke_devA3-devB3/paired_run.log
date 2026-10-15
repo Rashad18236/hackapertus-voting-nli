@@ -1,0 +1,21 @@
+6 cases, 3 booklets parsed; arms: ['70B', '8B']
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[1/6] v1.1-row-1477-A | 70B: neutral (model call failed) | 8B: contradiction
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[2/6] v1.1-row-1478-A | 8B: contradiction | 70B: neutral (model call failed)
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[3/6] v1.1-row-1481-A | 70B: neutral (model call failed) | 8B: contradiction
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[4/6] v1.1-row-1477-B | 8B: contradiction | 70B: neutral (model call failed)
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[5/6] v1.1-row-1478-B | 70B: neutral (model call failed) | 8B: contradiction
+WARNING LLM call rate-limited (HTTP 429); retry 1 of 2 in 2.0 s
+WARNING LLM call rate-limited (HTTP 429); retry 2 of 2 in 4.0 s
+[6/6] v1.1-row-1481-B | 8B: contradiction | 70B: neutral (model call failed)
+70B: model call failed: 6; HTTP 429 answers: 18, retries: 12
+8B: ok: 6; HTTP 429 answers: 0, retries: 0

@@ -40,12 +40,23 @@ vote match fail (src/booklet.py find_vote and section-route's vote_by_meaning), 
 the Python parser off for the case's vote: the vote is still found in the contents, but none of its parts passes (as
 if every check had failed). The wrappers live in this process only; src/ is unchanged, and an arm without "force"
 runs exactly as the CLI.
+
+An arm's "model" field (session 15b: the 70B as a reference point) sets the environment variable MODEL for that arm's
+cases only (every call of the case: the answer, A6's second look, AP-translate), exactly as `MODEL=<id>` does for the
+CLI. src/llm.py's run-wide fallbacks (no response_format, a replaced model name) are kept per arm, so that one arm's
+fallback never changes what the other arm sends. An arm without "model" uses the environment's or .env's model.
+
+--call-log (session 15b) writes OUT/<name>/calls.jsonl: one line per model call (src/llm.py chat, wrapped in this
+process only): the case id, the call's elapsed_ms, input and output tokens, attempts, the model the response body
+names and whether the gateway's cache answered; a failed call is logged with its error. Latency per call comes from there (a case's inference_time_ms adds its
+calls and the local work between them).
 """
 
 import argparse
 import datetime
 import json
 import logging
+import os
 import sys
 import time
 from collections import Counter
@@ -54,9 +65,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src import booklet, cli, env, parse  # noqa: E402
+from src import booklet, cli, env, llm, parse  # noqa: E402
 
-_current = {"id": None, "vote": None}  # the case being answered (for --exclude-paragraphs and "no parser")
+_current = {"id": None, "vote": None, "arm": None}  # the case being answered (for --exclude-paragraphs and "no parser")
 
 
 def exclude_paragraphs(exclusions):
@@ -125,6 +136,7 @@ def main():
                    help="seconds between the starts of two requests (default 0: no pause)")
     p.add_argument("--resume", action="store_true", help="continue a stopped run in the same --out-dir")
     p.add_argument("--exclude-paragraphs", type=Path, help="test only: JSON {case id: [paragraph texts]} (step 6)")
+    p.add_argument("--call-log", action="store_true", help="write OUT/<arm>/calls.jsonl, one line per model call")
     args = p.parse_args()
     if args.exclude_paragraphs:
         exclude_paragraphs(json.loads(args.exclude_paragraphs.read_text(encoding="utf-8")))
@@ -133,6 +145,7 @@ def main():
     arms = [json.loads(a) for a in args.arm]
     names = [a.pop("name") for a in arms]
     forces = [a.pop("force", None) for a in arms]
+    models = [a.pop("model", None) for a in arms]
     if any(f not in FORCES for f in forces):
         p.error(f"force must be one of {FORCES[1:]}")
     if any(forces):
@@ -165,11 +178,17 @@ def main():
                 counts["ok" if not (raw.get("error") or raw.get("parse_reason")) else "resumed: earlier failure"] += 1
                 count_calls(calls[name], raw)
         else:
-            (d / "settings.json").write_text(json.dumps({"name": name, "force": forces[names.index(name)], **vars(s)},
-                                                        indent=1) + "\n", encoding="utf-8")
+            extra = {"model": models[names.index(name)]} if models[names.index(name)] else {}
+            (d / "settings.json").write_text(json.dumps({"name": name, "force": forces[names.index(name)], **extra,
+                                                        **vars(s)}, indent=1) + "\n", encoding="utf-8")
         out[name] = (open(d / "predictions.jsonl", mode, encoding="utf-8"),
                      open(d / "raw_answers.jsonl", mode, encoding="utf-8"), counts)
 
+    if args.call_log:
+        install_call_log({name: args.out_dir / name / "calls.jsonl" for name in names}, args.resume)
+    env_model = os.environ.get("MODEL")
+    fallback_keys = ("no_response_format", "model", "models_read", "extra_requests")  # not the pacing clock
+    llm_state = {name: {k: llm._run[k] for k in fallback_keys} for name in names}  # src/llm.py's fallbacks, per arm
     last_start = 0.0
     for i, case in enumerate(cases):
         order = arm_order(i, len(names))
@@ -183,10 +202,15 @@ def main():
             last_start = time.monotonic()
             sent = f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M:%S}"
             _current["id"], _current["vote"] = case["id"], case.get("vote", "")
+            _current["arm"] = name
+            set_model(models[k] or env_model)
+            llm._run.update(llm_state[name])
             try:
                 resp, status, raw = cli.predict(case, args.data_dir, s)
             except Exception as e:  # same guarantee as the CLI: never drop a case
                 resp, status, raw = cli.response(case["id"], cli.FALLBACK_LABEL), f"unexpected error ({type(e).__name__})", {"id": case["id"]}
+            llm_state[name] = {k: llm._run[k] for k in fallback_keys}
+            set_model(env_model)
             raw["order"], raw["sent_utc"] = order.index(k) + 1, sent
             count_calls(calls[name], raw)
             preds, raws, counts = out[name]
@@ -207,6 +231,39 @@ def main():
         summary += f"; HTTP 429 answers: {calls[name]['http_429']}, retries: {calls[name]['retries']}"
         (args.out_dir / name / "run.log").write_text(summary + "\n", encoding="utf-8")
         print(f"{name}: {summary}", flush=True)
+
+
+def install_call_log(paths, resume):
+    """Wrap src/llm.py's chat (this process only) so that every call is logged to its arm's calls.jsonl."""
+    files = {name: open(path, "a" if resume else "w", encoding="utf-8") for name, path in paths.items()}
+    original = llm.chat
+
+    def logged_chat(*a, **kw):
+        entry = {"id": _current["id"], "sent_utc": f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M:%S}"}
+        try:
+            result = original(*a, **kw)
+        except llm.LLMError as e:
+            entry.update(error=str(e)[:200], attempts=e.attempts)
+            raise
+        else:
+            entry.update(elapsed_ms=result.elapsed_ms, input_tokens=result.input_tokens,
+                         output_tokens=result.output_tokens, attempts=result.attempts,
+                         model=(result.endpoint or {}).get("model"),
+                         cache_hit=bool((result.endpoint or {}).get("gateway_cache_hit")), fallbacks=result.fallbacks or [])
+            return result
+        finally:
+            f = files[_current["arm"]]
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+            f.flush()
+    llm.chat = logged_chat
+
+
+def set_model(model):
+    """MODEL for the next calls (an arm's "model"), or the environment's own value (None: unset)."""
+    if model:
+        os.environ["MODEL"] = model
+    else:
+        os.environ.pop("MODEL", None)
 
 
 def count_calls(counter, raw):

@@ -250,7 +250,8 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 taskb_long_errors.py (task B errors on long references); session 13: arm_table.py (PAIRED RULE
                 numbers per arm), taskb_b3_picks.py, evidence_pages.py (three page rules, hedge H), error_types.py (routing or
                 reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role); session 15:
-                a6b_rule.py (A6b RULE), stability.py (repeat runs: labels that changed, bootstrap intervals, backends)
+                a6b_rule.py (A6b RULE), stability.py (repeat runs: labels that changed, bootstrap intervals, backends);
+                session 15b: paired_run.py's arm field "model" and --call-log
 models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -306,9 +307,25 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 15 (2026-10-14 13:13 UTC to 2026-10-15 03:00 UTC)
+## Current stage: session 15b (2026-10-15 10:30 UTC, report only)
 
-Branch `rashad/session-15` from `main` at `4f19500` (PR #22 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-15b` from `main` at `61ce0eb` (PR #23 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_15b_status.md`, decisions `docs/decisions/2026-10-15-1030_rashad_session-15b.md`, report
+`track_2a/docs/session_15b_report.md`. One measurement for the technical report: the same pipeline with Apertus v1.5
+70B as a reference point. No code path, default or prompt of `src/` changes; the submission stays the 8B; nothing is
+adopted. Sealed dates stay sealed. The session started at 10:30 UTC, after the instruction's push time (10:00 UTC).
+
+- **Step 0:** PR #23 merged into `main` as `61ce0eb`; publish-image on `main` green (run 106: `latest`,
+  `sha-61ce0ebb9f2c`); `latest` pulls without a login (digest `sha256:5cb605460fe5…`, revision `61ce0eb`).
+- **Step 1:** Public AI lists `swiss-ai/apertus-v1.5-70b` (MODEL_70B). Smoke test: every 70B call answered HTTP 429
+  (`docs/runs/2026-10-15_rashad_70B-smoke_devA3-devB3`); probes 15 minutes apart. Running.
+- **Steps 2–3:** the interleaved 70B-vs-8B run (if the 70B answers) and the report. Not started.
+- `scripts/paired_run.py` has an arm field `model` (sets `MODEL` for that arm's cases; `src/llm.py`'s fallbacks kept per
+  arm) and `--call-log` (one line per model call: latency, tokens, answering model, cache hit).
+
+## Previous stage: session 15 (2026-10-14 13:13 UTC to 2026-10-14 19:20 UTC, merged as PR #23)
+
+Branch `rashad/session-15` from `main` at `4f19500` (PR #23, merged into `main` on 2026-10-15 as `61ce0eb`, no tag); status
 `track_2a/docs/session_15_status.md`, decisions `docs/decisions/2026-10-14-1313_rashad_session-15.md`, report
 `track_2a/docs/session_15_report.md`. Experiments stop on 15 October at 02:00 UTC, everything pushed by 03:00 UTC.
 Rules as in session 14; PAIRED RULE for steps 2–4 (val +0.005, dev not below −0.004, sign test p ≤ 0.10 on dev+val,
@@ -343,7 +360,7 @@ flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-fin
 - **New replay reference for G1/G2:** `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
+## Earlier stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
 
 Branch `rashad/session-14` from `main` at `3c60943` (PR #22, merged into `main` on 2026-10-14 as `4f19500`, no tag); status
 `track_2a/docs/session_14_status.md`, decisions `docs/decisions/2026-10-14-0832_rashad_session-14.md`, report

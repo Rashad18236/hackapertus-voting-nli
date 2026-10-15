@@ -30,3 +30,19 @@ class ArmOrder(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ArmModel(unittest.TestCase):
+    """Session 15b: an arm's "model" sets MODEL for its own cases only; without one, the environment's value."""
+
+    def test_set_model_sets_and_restores(self):
+        import os
+        old = os.environ.get("MODEL")
+        try:
+            paired_run.set_model("swiss-ai/apertus-v1.5-70b")
+            self.assertEqual(os.environ["MODEL"], "swiss-ai/apertus-v1.5-70b")
+            paired_run.set_model(None)
+            self.assertNotIn("MODEL", os.environ)
+        finally:
+            if old is not None:
+                os.environ["MODEL"] = old

@@ -1,0 +1,6 @@
+{"id": "v1.1-row-1477-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 84397}}
+{"id": "v1.1-row-1478-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 84945}}
+{"id": "v1.1-row-1481-A", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 85124}}
+{"id": "v1.1-row-1477-B", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 85660}}
+{"id": "v1.1-row-1478-B", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 85361}}
+{"id": "v1.1-row-1481-B", "label": 1, "label_name": "neutral", "evidence": [], "metrics": {"input_tokens": 0, "output_tokens": 0, "inference_time_ms": 86951}}

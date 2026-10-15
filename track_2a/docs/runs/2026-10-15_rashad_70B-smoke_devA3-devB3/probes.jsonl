@@ -1,0 +1,1 @@
+{"utc": "2026-10-15 10:47:13", "status": 429, "elapsed_s": 27.0, "body": "{\"error\":{\"message\":\"litellm.RateLimitError: RateLimitError: OpenAIException - <html><body><h1>429 Too Many Requests</h1>\\nYou have sent too many requests in a given amount of time.\\n</body></html>. Received Model Group=swiss-ai/apertus-v1."}
