@@ -1,0 +1,73 @@
+{
+ "what": "Session 16 step 1c: health checks of the endpoint before the one sealed rerun (the submission image by digest, the first 5 task A and first 5 task B cases of data/dev/cases.jsonl, LLM_MIN_INTERVAL=1, CPUs 0-1). Pass = every call answered and response_format never dropped. Dev cases only; predictions not kept.",
+ "checks": [
+  {
+   "check": 1,
+   "started_utc": "2026-10-15 11:53:00",
+   "cases": 10,
+   "failed_calls": 5,
+   "errors": {
+    "HTTP 400 no available clients: alias-apertus": 5
+   },
+   "answered_by": {
+    "api.blablador.fz-juelich.de": 5
+   },
+   "response_format_dropped": true,
+   "pass": false
+  },
+  {
+   "check": 2,
+   "started_utc": "2026-10-15 12:03:05",
+   "cases": 10,
+   "failed_calls": 7,
+   "errors": {
+    "HTTP 400 no available clients: alias-apertus": 7
+   },
+   "answered_by": {
+    "api.blablador.fz-juelich.de": 3
+   },
+   "response_format_dropped": true,
+   "pass": false
+  },
+  {
+   "check": 3,
+   "started_utc": "2026-10-15 12:13:06",
+   "cases": 10,
+   "failed_calls": 5,
+   "errors": {
+    "HTTP 400 no available clients: alias-apertus": 5
+   },
+   "answered_by": {
+    "api.blablador.fz-juelich.de": 5
+   },
+   "response_format_dropped": true,
+   "pass": false
+  },
+  {
+   "check": 4,
+   "started_utc": "2026-10-15 12:23:14",
+   "cases": 10,
+   "failed_calls": 5,
+   "errors": {
+    "HTTP 400 no available clients: alias-apertus": 5
+   },
+   "answered_by": {
+    "api.blablador.fz-juelich.de": 5
+   },
+   "response_format_dropped": true,
+   "pass": false
+  },
+  {
+   "check": 5,
+   "started_utc": "2026-10-15 12:33:23",
+   "cases": 10,
+   "failed_calls": 0,
+   "errors": {},
+   "answered_by": {
+    "api.blablador.fz-juelich.de": 10
+   },
+   "response_format_dropped": false,
+   "pass": true
+  }
+ ]
+}
