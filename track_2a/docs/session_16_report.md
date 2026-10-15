@@ -1,8 +1,8 @@
 # Session 16 (final): the sealed test dates once, the report's fields, the submission prepared
 
 Branch `rashad/session-16` from `main` at `71a6d6a` (session 15b merged in step 0), 2026-10-15 from 11:31 UTC,
-unattended. Status log: `docs/session_16_status.md`; decisions, each written before the step it concerns (the
-after-the-run ones say when they were written): `docs/decisions/2026-10-15-1131_rashad_session-16.md`. No code in
+unattended. Status log: `docs/session_16_status.md`; decisions (steps 0–1c written before each step; steps 1d–2
+written at 13:12, after them, as a record of the choices made): `docs/decisions/2026-10-15-1131_rashad_session-16.md`. No code in
 `src/`, no default, prompt or threshold changed. Draft PR, not merged, no tag: Rashad merges, tags `submission`,
 submits and rotates the keys.
 

@@ -1413,7 +1413,7 @@ changes. One line per decision with its reason, written before the step it conce
   failed calls are Python's neutral fallbacks, counted.** The instruction ("ONCE"; "never run again because of the
   score").
 
-## Step 1d–f: after the run (written 12:42, after the numbers were read)
+## Step 1d–f: after the run (written 13:12, after these steps; the first line repeats the status log's entry of 12:42)
 
 - **Nothing is changed after the sealed numbers were read (12:42): no code, default, prompt, threshold, rule or run.**
   The instruction (step 1f).
@@ -1427,7 +1427,7 @@ changes. One line per decision with its reason, written before the step it conce
   their gold and given labels (gold neutral answered contradiction = an unrelated passage, "another ballot").** The
   instruction asks for counts by class; no further model call is needed for them.
 
-## Step 2: report and submission files (written 13:10, before the report's sealed section)
+## Step 2: report and submission files (written 13:12, after the step: a record of the choices made during it, not written before it)
 
 - **`examples/predictions.jsonl` is the second run of the submission image on `examples/cases.jsonl` (13:03): the
   first (12:42) was answered from the gateway's cache (health check 5 had sent the same two requests at 12:33) while
