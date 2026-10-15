@@ -1,4 +1,13 @@
-# Academia Challenges
+# Abstimmungsbüchlein Check
+
+Multilingual claim verification against Swiss voting booklets (Hack Apertus, Track 2A — OST).
+
+- **Team:** Bissegger & Bayraktar — Rashad Bissegger, Kaan Bayraktar
+- **Technical report:** `technical_report.md` (and `technical_report.pdf`). Sealed test results: see technical_report.md §1.
+- **Example output:** `examples/predictions.jsonl` is the submission image's real output for `examples/cases.jsonl`
+  (one task A and one task B case).
+
+## Academia Challenges (organisers' template)
 
 Submissions must use the Apertus model family.
 For Track 2 this means that submitted solutions must be built with Apertus. Other open-weights models can be used to support development, e.g. as automatic judges during evaluation. Their role must be clearly described in the submission report.

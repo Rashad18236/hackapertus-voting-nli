@@ -1,13 +1,16 @@
-# Technical report — NLI over Swiss federal voting booklets with Apertus
+# Technical report — Abstimmungsbüchlein Check: NLI over Swiss federal voting booklets with Apertus
 
 What we built, how it works, and what the numbers say. Every number comes from a recorded run in
 `docs/runs/` (short names in brackets, listed under References) on the dev split, the validation set (val),
-the probe set or all three; **the sealed test dates have not been run**.
+the probe set or all three; **the sealed test dates were run once, after the freeze (section 1)**.
 
-- **Track:** `Track 2A — OST: Multilingual Natural Language Inference over Swiss Official Voting Booklets`
+- **Track:** Track 2A — OST: Multilingual Natural Language Inference over Swiss Official Voting Booklets
 - **Event:** Online
-- **Project:** TODO project name
-- **Team:** TODO team name — Rashad, Kaan (TODO full names)
+- **Project:** Abstimmungsbüchlein Check — multilingual claim verification against Swiss voting booklets
+- **Team:** Bissegger & Bayraktar — Rashad Bissegger, Kaan Bayraktar
+- **Repository:** https://github.com/Rashad18236/hackapertus-voting-nli
+- **Image:** ghcr.io/rashad18236/hackapertus-voting-nli:latest (digest
+  `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be`, commit `71a6d6a`)
 - **Demo:** none
 
 ## 1. Summary
@@ -165,6 +168,13 @@ number or date 6, scope 4, other 2).
 
 :::
 
+**Who did what.** Rashad Bissegger: routing (claim router, booklet parser, `section-route`), evidence (cited pieces,
+halves, hedge H), timing and memory (lanes, memory guard), model S, A6, and the session method (a rule fixed before
+every interleaved run) [FIN, COV, GRID, GUARD, STAB]. Kaan Bayraktar: the BM25 and translated-claim retrievers that
+became the fallback [K, S12], the finding that a claim's and its negation's answers disagree on almost every error
+(all 10 task B and 4 of 5 task A dev errors, in about 7 % of cases), and the tournament and decomposition
+experiments [K].
+
 ## 5. Data
 
 - **Dataset:** `OSTswiss/MNLIoverSwissVotingBooklets` v1.1 (commit `9ff08597`, MIT): 1,488 rows, 335 exact
@@ -263,7 +273,10 @@ about a committee in votes that have none, answered by the BM25 fallback.
 ## 8. Reproducibility
 
 - **Published image:** `ghcr.io/rashad18236/hackapertus-voting-nli:latest` (built from `main` by the publish workflow,
-  tested on a fresh runner), run with the organisers' command (README); final numbers from `sha-7ae78ad87cfd`.
+  tested on a fresh runner), run with the organisers' command (README). The sealed run used digest
+  `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be` (commit `71a6d6a`); the final dev, val and
+  probe numbers come from `sha-7ae78ad87cfd` (the same `src/`).
+- **Submission tag:** `submission` (set on main after this PR).
 - **From source:** `make run` builds the image and answers `examples/cases.jsonl`.
 - **Hardware:** CPU only; measured with 2 CPUs and 4 GB; every case answered down to 512 MiB, 2 CPUs or 1 [GRID].
 - **Determinism:** temperature 0; a fake model replays saved answers by request hash (G1, G2); 358 tests.
@@ -280,4 +293,4 @@ about a committee in votes that have none, answered by the BM25 fallback.
   FB `fallbacks_*`; S12 `S-and-fallbacks_devA300`, `bm25ap-fallback_valA300`, `ap-structure-ask_*`; E1-curve
   `context-curve_devA100`; E2-cb `closed-book_devA300`; E5 `section-route-vs-embed_devA300`; AP-all `ap-all_devA300`;
   not adopted (section 4): `prompts-A_*`, `prompts-B_*`, `A6b_*`, `B1f_devB300`, `B6_devB300`; S15b
-  `70B-smoke_devA3-devB3`.
+  `70B-smoke_devA3-devB3`; K `kaan_strategies_dev600`, `kaan_retrievers_*`; SEALED `sealed-once`.

@@ -28,6 +28,9 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   also switched off response_format. Stopped at 11:37:56 (no score read); files in `aborted-attempt-1/`. Rule for
   the one rerun in the decisions file: not before 11:53, and only after a 10-case dev health check passes.
 
+- (11:40) Step 1e, coverage of the sealed booklets (`scripts/parser_coverage.py --include-sealed`, a new flag; no model): 9 of 9 booklets complete, 27 of 27 votes found and valid (2020: 2 votes, 2022: 7, in each of de, fr, it), every vote with a usable part, 0 cross-language disagreements (`docs/runs/2026-10-15_rashad_sealed-once/coverage.json`, page numbers only).
+- (11:45) Step 2 drafts (no sealed number in them yet): report title, header fields, "Who did what", §8 tag line; README title, team, sealed-results and example lines; `docs/organiser_questions.md` answers; `docs/submission_message.md`; `scripts/report_numbers_check.py` and `scripts/sealed_report.py` written.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.

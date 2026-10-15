@@ -125,8 +125,11 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--cache", default="/tmp/booklet-cache-coverage")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--include-sealed", action="store_true",
+                    help="session 16 only: the sealed dates, opened once for the final run, are checked too")
     args = ap.parse_args()
-    pdfs = sorted(p for p in args.booklets.glob("*.pdf") if p.name[:10].replace("_", "-") not in SEALED)
+    pdfs = sorted(p for p in args.booklets.glob("*.pdf")
+                  if args.include_sealed or p.name[:10].replace("_", "-") not in SEALED)
     with ProcessPoolExecutor(args.workers) as pool:
         results = list(pool.map(check_booklet, [(str(p), args.cache) for p in pdfs]))
     checks = cross_language(results)
