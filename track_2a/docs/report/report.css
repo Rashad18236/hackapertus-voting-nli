@@ -1,6 +1,6 @@
 /* Print style for technical_report.pdf (scripts/build_report_pdf.sh): A4, 10 pt body text. */
 @page { size: A4; margin: 15mm 15mm 15mm 15mm; }
-body { font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif; font-size: 10pt; line-height: 1.3; color: #000; }
+body { font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif; font-size: 9.5pt; line-height: 1.26; color: #000; }  /* session 16: 1.3 -> 1.26; session 17: 10 -> 9.5 pt, six pages with the sealed results and the figures */
 h1 { font-size: 15pt; margin: 0 0 4pt 0; }
 h2 { font-size: 12pt; margin: 9pt 0 3pt 0; }
 h3 { font-size: 10.5pt; margin: 7pt 0 2pt 0; }
@@ -10,7 +10,7 @@ table { border-collapse: collapse; margin: 4pt 0; font-size: 10pt; }
 th, td { border: 0.5pt solid #888; padding: 1pt 4pt; vertical-align: top; }
 th { background: #eee; }
 code { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
-pre { font-size: 10pt; line-height: 1.15; margin: 3pt 0; white-space: pre-wrap; }
+pre { font-size: 8.5pt; line-height: 1.15; margin: 3pt 0; white-space: pre-wrap; }  /* session 16: the architecture diagram fits the page width */
 blockquote { margin: 2pt 10pt; font-style: italic; }
 /* Session 13: compact tables inside ::: {.compact} blocks (section 4 must stay within one page). */
 .compact table { font-size: 8.5pt; margin: 2pt 0; }

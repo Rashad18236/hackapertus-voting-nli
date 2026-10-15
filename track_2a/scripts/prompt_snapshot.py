@@ -84,7 +84,8 @@ def run(args):
     cache = Path(args.cache).resolve()
     work = Path(tempfile.mkdtemp(prefix="prompt-snapshot-"))
     jobs = {}
-    for name, cases_file in SETS.items():
+    sets = {k: Path(v) for k, v in (item.split("=", 1) for item in args.set)} if args.set else SETS
+    for name, cases_file in sets.items():
         server, url = stub_llm.start(replay=replay, keep_payloads=True)
         folder = work / name
         folder.mkdir()
@@ -108,7 +109,7 @@ def run(args):
         log.close()
         server.shutdown()
         calls = server.config.calls
-        cases = {c["id"]: c for c in load_jsonl(SETS[name])}
+        cases = {c["id"]: c for c in load_jsonl(sets[name])}
         raws = load_jsonl(out / name / "raw_answers.jsonl")
         called = [r for r in raws if "answer" in r or r.get("ap_calls")]
         if code != 0:
@@ -241,6 +242,8 @@ def main():
     r.add_argument("--replay")
     r.add_argument("--cli-arg", action="append", default=[], help="extra argument for the CLI (session 9), repeatable")
     r.add_argument("--booklets", default=str(ROOT / "output" / "booklets_dev"))
+    r.add_argument("--set", action="append", default=[],
+                   help="NAME=CASES.jsonl instead of the dev and val sets (session 16: the sealed cases), repeatable")
     r.add_argument("--cache", default=str(Path(tempfile.gettempdir()) / "booklet-cache-snapshot"),
                    help="parsed-PDF cache (src/parse.py); its content depends only on the PDF")
     t = sub.add_parser("table")

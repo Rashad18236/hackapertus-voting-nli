@@ -1,4 +1,13 @@
-# Academia Challenges
+# Abstimmungsbüchlein Check
+
+Multilingual claim verification against Swiss voting booklets (Hack Apertus, Track 2A — OST).
+
+- **Team:** Bissegger & Bayraktar — Rashad Bissegger, Kaan Bayraktar
+- **Technical report:** `technical_report.md` (and `technical_report.pdf`). Sealed test results: see technical_report.md §1.
+- **Example output:** `examples/predictions.jsonl` is the submission image's real output for `examples/cases.jsonl`
+  (one task A and one task B case).
+
+## Academia Challenges (organisers' template)
 
 Submissions must use the Apertus model family.
 For Track 2 this means that submitted solutions must be built with Apertus. Other open-weights models can be used to support development, e.g. as automatic judges during evaluation. Their role must be clearly described in the submission report.
@@ -85,7 +94,9 @@ docker run --rm --read-only --tmpfs /tmp -e BASE_URL -e API_KEY \
   ghcr.io/rashad18236/hackapertus-voting-nli:latest --input /data/cases.jsonl --output /output/predictions.jsonl
 ```
 
-`BASE_URL` and `API_KEY` are taken from the shell (export them first); `MODEL` may be passed the same way.
+`BASE_URL` and `API_KEY` are taken from the shell (export them first); `MODEL` may be passed the same way. Without `MODEL` the model name is `swiss-ai/Apertus-v1.5-8B`; Public AI refuses that name (HTTP 403, every case
+then gets the neutral fallback), so with Public AI as `BASE_URL` add `-e MODEL` with `MODEL=swiss-ai/apertus-v1.5-8b`
+(tested on 15 October 2026).
 `/output` must be writable for the container's user.
 
 **Not political advice.** The system only checks whether a claim agrees with the text of an official voting

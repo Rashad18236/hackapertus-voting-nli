@@ -229,7 +229,8 @@ examples/       cases.jsonl for make run (one task A, one task B request, from d
 data/           raw dataset, dev/ and test/ splits, splits.json; val/ (session 7: 580 task A cases from
                 rows in neither dev nor test, and a balanced 300-case sample); session 10: probe/ (the test
                 rows of 2021-03-07 and 2025-09-28, copies) and ontopic_neutral/ (46 dev cases, gold passage
-                removed, expected neutral)
+                removed, expected neutral); session 16: sealed/ (the test rows of the three sealed dates, copies,
+                run once)
 docs/           official contract, reports, reviews
   runs/         one folder per run: run.json, NOTES.md and the run's files (see runs/README.md)
   decisions/    one file per stage or session: <YYYY-MM-DD-HHMM>_<person>_<topic>.md
@@ -251,7 +252,8 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 numbers per arm), taskb_b3_picks.py, evidence_pages.py (three page rules, hedge H), error_types.py (routing or
                 reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role); session 15:
                 a6b_rule.py (A6b RULE), stability.py (repeat runs: labels that changed, bootstrap intervals, backends);
-                session 15b: paired_run.py's arm field "model" and --call-log
+                session 15b: paired_run.py's arm field "model" and --call-log; session 16: make_sealed.py (the sealed
+                set, copied like data/probe/), prompt_snapshot.py run --set
 models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -307,9 +309,34 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 15b (2026-10-15 10:30 UTC, report only)
+## Current stage: session 16 (final; 2026-10-15 11:31 UTC to 20:00 UTC)
 
-Branch `rashad/session-15b` from `main` at `61ce0eb` (PR #23 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-16` from `main` at `71a6d6a` (PR #24 merged first; draft PR, never merged by Claude, no tag:
+Rashad tags `submission` after merging); status `track_2a/docs/session_16_status.md`, decisions
+`docs/decisions/2026-10-15-1131_rashad_session-16.md`, report `track_2a/docs/session_16_report.md`. The last session:
+no code in `src/`, no default, prompt or threshold changes. The sealed test dates are run once through the submission
+image; nothing is changed after their numbers are read. Names: project "Abstimmungsbüchlein Check", team "Bissegger &
+Bayraktar" (Rashad Bissegger, Kaan Bayraktar).
+
+- **Step 0:** PR #24 merged into `main` as `71a6d6a` (MAIN_COMMIT); publish-image on `main` green (run 107: `latest`,
+  `sha-71a6d6ad61f5`); `latest` pulls without a login: IMAGE_DIGEST `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be`,
+  revision `71a6d6a`. Merging session 16's documents into `main` rebuilds `latest` (same `src/`, new digest).
+- **Step 1, the sealed run, once** (`docs/runs/2026-10-15_rashad_sealed-once`): attempt 1 (11:37) stopped after 23 cases,
+  the gateway refusing most calls with HTTP 400 (no score read); the one rerun waited for a 10-case dev health check
+  (failed 11:53–12:23, passed 12:33) and ran 12:33–12:41 UTC: **task A 0.989 (evidence 0.975), task B 0.960; REF SCORE
+  0.898 / 0.893** (1.0 / 0.3 s); tokens A 1,276 + 19.2, B 845 + 9.8; local time A 0.025 / 0.035 s, B 0.011 / 0.013 s;
+  0 failed calls, 0 Python labels, one backend, 0 cache hits. Coverage 27 of 27 votes; 23 cases of one ballot placed by
+  AP-structure (the parser misread its title), 2 by AP-part; errors A 2 (reading), B 7 (2 another ballot). Nothing
+  changed after reading the numbers (status log, 12:42).
+- **Step 2:** technical report (header, §1 sealed table, §6 sealed paragraph, who did what; PDF 6 pages after §3 and
+  style were tightened), README (title, team, sealed line, MODEL note: Public AI refuses the default model name with
+  HTTP 403, `src/llm.py` unchanged), `examples/predictions.jsonl`, `docs/submission_message.md`,
+  `scripts/report_numbers_check.py` (2 MISSING = citation ids). **Step 3:** 357 tests pass (1 skipped), build_docs,
+  self_checks, check_format clean. Report `track_2a/docs/session_16_report.md`.
+
+## Previous stage: session 15b (2026-10-15 10:30 UTC to 11:20 UTC, report only, merged as PR #24)
+
+Branch `rashad/session-15b` from `main` at `61ce0eb` (PR #24, merged into `main` on 2026-10-15 as `71a6d6a`, no tag); status
 `track_2a/docs/session_15b_status.md`, decisions `docs/decisions/2026-10-15-1030_rashad_session-15b.md`, report
 `track_2a/docs/session_15b_report.md`. One measurement for the technical report: the same pipeline with Apertus v1.5
 70B as a reference point. No code path, default or prompt of `src/` changes; the submission stays the 8B; nothing is
@@ -326,7 +353,7 @@ adopted. Sealed dates stay sealed. The session started at 10:30 UTC, after the i
 - `scripts/paired_run.py` has an arm field `model` (sets `MODEL` for that arm's cases; `src/llm.py`'s fallbacks kept per
   arm) and `--call-log` (one line per model call: latency, tokens, answering model, cache hit).
 
-## Previous stage: session 15 (2026-10-14 13:13 UTC to 2026-10-14 19:20 UTC, merged as PR #23)
+## Earlier stage: session 15 (2026-10-14 13:13 UTC to 2026-10-14 19:20 UTC, merged as PR #23)
 
 Branch `rashad/session-15` from `main` at `4f19500` (PR #23, merged into `main` on 2026-10-15 as `61ce0eb`, no tag); status
 `track_2a/docs/session_15_status.md`, decisions `docs/decisions/2026-10-14-1313_rashad_session-15.md`, report

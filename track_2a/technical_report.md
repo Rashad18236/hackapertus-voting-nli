@@ -1,12 +1,16 @@
-# Technical report — NLI over Swiss federal voting booklets with Apertus
+# Technical report — Abstimmungsbüchlein Check: NLI over Swiss federal voting booklets with Apertus
 
 Every number in this report comes from a recorded run (listed at the end), on our development split (dev), a
-validation set (val) or a probe set of two unseen voting dates. **The sealed test dates have not been run.**
+validation set (val) or a probe set of two unseen voting dates; **the sealed test dates were run once, after the
+freeze (section 1)**.
 
-- **Track:** `Track 2A — OST: Multilingual Natural Language Inference over Swiss Official Voting Booklets`
+- **Track:** Track 2A — OST: Multilingual Natural Language Inference over Swiss Official Voting Booklets
 - **Event:** Online
-- **Project:** TODO project name
-- **Team:** TODO team name — Rashad, Kaan (TODO full names)
+- **Project:** Abstimmungsbüchlein Check — multilingual claim verification against Swiss voting booklets
+- **Team:** Bissegger & Bayraktar — Rashad Bissegger, Kaan Bayraktar
+- **Repository:** https://github.com/Rashad18236/hackapertus-voting-nli
+- **Image:** ghcr.io/rashad18236/hackapertus-voting-nli:latest (digest
+  `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be`, commit `71a6d6a`)
 - **Demo:** none
 
 ## 1. Summary
@@ -25,6 +29,7 @@ cases, the whole booklet scored a Macro-F1 of 0.858 at 37,586 input tokens per c
 to scored 0.989 at 1,248 tokens; no booklet text at all scored 0.435. Our design follows from this: find the part a
 claim is about and send only that.
 
+::: {.compact}
 | Final system | dev | val | probe |
 |----------------------------|----------|----------|----------|
 | Task A Macro-F1 | **0.977** | **0.981** | **0.990** |
@@ -36,14 +41,32 @@ claim is about and send only that.
 | Task B local time per case, 1.0 / 0.3 s per request | 0.012 / 0.021 s | 0.009 / 0.010 s | 0.020 / 0.019 s |
 | Labels not set by Apertus (unreadable answer → neutral) | 0 of 600 | 1 of 1,160 | 0 of 188 |
 | **Our estimate of the official score** at 1.0 / 0.3 s per request (section 6) | **0.904 / 0.893** | **0.908 / 0.907** | **0.901 / 0.902** |
+:::
 
 All numbers come from the published Docker image (`sha-7ae78ad87cfd`).
 
-**Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15): TODO, results after the organisers' evaluation.
+**Sealed test dates** (2020-02-09, 2022-02-13, 2022-05-15; 173 rows, one task A and one task B case each). Run once
+through the submission image after every default was frozen; nothing was changed afterwards. No call failed, no
+label was set by our code, no answer came from the endpoint's cache.
+
+::: {.compact}
+| Sealed, run once | all | 2020-02-09 | 2022-02-13 | 2022-05-15 |
+|---|---|---|---|---|
+| Rows | 173 | 42 | 90 | 41 |
+| Task A Macro-F1 / evidence | **0.989 / 0.975** | 0.973 / 1.000 | 1.000 / 0.984 | 0.975 / 0.935 |
+| Task A tokens, in + out | 1,276 + 19.2 | 1,239 + 14.6 | 1,283 + 23.2 | 1,299 + 15.2 |
+| Task A local time, 1.0 / 0.3 s | 0.025 / 0.035 s | 0.057 / 0.051 s | 0.050 / 0.048 s | 0.160 / 0.152 s |
+| Task B Macro-F1 | **0.960** | 0.926 | 0.965 | 0.978 |
+| Task B tokens, in + out | 845 + 9.8 | 786 + 8.2 | 836 + 10.6 | 928 + 9.7 |
+| Task B local time, 1.0 / 0.3 s | 0.011 / 0.013 s | 0.035 / 0.081 s | 0.017 / 0.019 s | 0.034 / 0.121 s |
+| Official score (our estimate), 1.0 / 0.3 s | **0.898 / 0.893** | 0.863 / 0.866 | 0.894 / 0.892 | 0.808 / 0.803 |
+:::
+
+Per date, start-up falls on fewer cases (task A: 1.8–6.3 s to the first request).
 
 ## 2. Architecture
 
-![Architecture: cases are prepared locally and sent to Apertus one at a time](docs/report/architecture.png){width=70%}
+![Architecture: cases are prepared locally and sent to Apertus one at a time](docs/report/architecture.png){width=65%}
 
 *Figure 1. Blue: local work, no language model. Orange: a call to Apertus. Dashed arrows: taken only when the step
 before fails.*
@@ -125,7 +148,7 @@ every case, not only as a backup.
 | **the part the claim names (final)** | **0.977** | **0.990** | **1,259** |
 :::
 
-![Task A ablation: Macro-F1 and input tokens per case for each context](docs/report/ablation_task_a.png){width=90%}
+![Task A ablation: Macro-F1 and input tokens per case for each context](docs/report/ablation_task_a.png){width=70%}
 
 *Figure 2. What Apertus reads in task A (dev): Macro-F1 (left) and input tokens per case (right, log scale). Blue:
 the final system. Dashed: the minimum Macro-F1 for a valid submission (0.60).*
@@ -158,12 +181,19 @@ thing, with the rule for keeping it fixed before the run:
 | code rule "neutral with a citation → contradiction" | val +0.014 offline; 3 of 3 on-topic neutrals wrong | the code may not set a label |
 :::
 
+**Who did what.** Rashad Bissegger: finding the part (patterns, parser), evidence, speed and memory, the static
+embedding model, the second look, and the method (a rule fixed before every comparison). Kaan Bayraktar: the word
+search and translated claim of the fallback; the finding that a claim's and its negation's answers disagree on almost
+every error (all 10 task B and 4 of 5 task A dev errors, about 7 % of cases); the claim-splitting and several-languages
+experiments; this report's rewrite, diagram and charts.
+
 ## 5. Data
 
 - **Dataset:** `OSTswiss/MNLIoverSwissVotingBooklets` v1.1 (MIT): 1,488 rows, of which 335 are exact duplicates.
   Each row gives one task A case and one task B case.
 - **Splits** by voting date, duplicates removed: test 5 dates (267 rows), dev 300 rows, val 580 further rows of
-  the dev dates (only for confirming). Two test dates (94 rows) were opened as an unseen **probe**; three stay sealed.
+  the dev dates (only for confirming). Two test dates (94 rows) were opened as an unseen **probe**; the other three
+(173 rows) stayed **sealed** until one run after the freeze (section 1).
 - **Booklets:** the Federal Chancellery's PDFs, not stored in the repository; for parser tests, all 93 federal
   booklets 2016–2026. Official reports are exempt from Swiss copyright (Art. 5 URG); no personal data.
 
@@ -175,7 +205,7 @@ relative to the best team. Our estimate uses fixed reference values instead (600
 task A / B). Because the endpoint's answers drifted between days, we only compared versions within one run, sending
 each case to every version back to back.
 
-![Final system: Macro-F1 on dev, val and probe for both tasks](docs/report/final_scores.png){width=55%}
+![Final system: Macro-F1 on dev, val and probe for both tasks](docs/report/final_scores.png){width=40%}
 
 *Figure 3. Macro-F1 of the final system on dev, val and the probe (two unseen voting dates). Bars on dev: 95 %
 bootstrap intervals. The axis starts at 0.95.*
@@ -197,7 +227,7 @@ fixes).
 | table of contents unreadable → Apertus reads it | 0.946 / 0.925 | 0.939 / 0.917 | 1,564 + 42.8 |
 :::
 
-![Forced fallbacks: dev Macro-F1 before and after the adopted fallbacks](docs/report/fallbacks.png){width=60%}
+![Forced fallbacks: dev Macro-F1 before and after the adopted fallbacks](docs/report/fallbacks.png){width=40%}
 
 *Figure 4. Every dev case forced into a fallback: the earlier embedding search (grey) against the fallback we kept
 (blue).*
@@ -217,7 +247,7 @@ takes milliseconds:
 | Task B, final | 0.012 s | 0.021 s | 0.172 s |
 :::
 
-![Local time per case against the model's latency per request](docs/report/local_time.png){width=50%}
+![Local time per case against the model's latency per request](docs/report/local_time.png){width=38%}
 
 *Figure 5. Local time per case (dev) as the model gets faster. With e5, the ranking no longer hides behind the model;
 with the static model it does.*
@@ -226,6 +256,12 @@ with the static model it does.*
 
 **Unseen booklets.** On the probe, task A scores 0.990 (evidence 1.000) and task B 0.977. 90 of 94 task A cases are
 routed; the other 4 concern a committee that the vote does not have and go to the fallback.
+
+**Sealed test dates.** Their 9 booklets parse completely (27 of 27 votes, 9 per language). Our patterns named the
+part of 171 of 173 task A claims, Apertus the other 2; the parser found the vote for 150 cases, Apertus reading the
+contents for 23 (one ballot whose title the parser misread in all three languages). No fallback; all 25 cases Apertus
+helped were right; the second look fixed 3 of 3. Errors: task A 2, both reading errors; task B 7, of which 2 are
+passages about another ballot called a contradiction.
 
 **Qualitative examples.** TODO: a few typical cases (one correct entailment, one contradiction, one neutral, one
 error) and one full worked example from claim to prompt to answer and evidence.
@@ -244,12 +280,16 @@ error) and one full worked example from claim to prompt to answer and evidence.
 - **Evidence pages.** Gold passages often start on the page before the one we cite; if the official check uses the
   first page, about 40 % of our hits would not count.
 - **Not political advice.** The system only checks claims against the booklet's text. Its answers are not voting
-  recommendations; every task A "supports" or "contradicts" comes with the page and exact text it rests on.
+  recommendations; every task A "supports" or "contradicts" is traceable to the booklet: it comes with the page and
+  exact text it rests on.
 
 ## 8. Reproducibility
 
 - **Image:** `ghcr.io/rashad18236/hackapertus-voting-nli:latest`, built from `main`, run with the organisers'
-  command (README); final numbers from `sha-7ae78ad87cfd`. **From source:** `make run`.
+  command (README); final numbers from `sha-7ae78ad87cfd`; the sealed run used digest
+  `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be` (commit `71a6d6a`, the same code).
+  **From source:** `make run`.
+- **Submission tag:** `submission` (set on main after this PR).
 - **Hardware:** CPU only; measured with 2 CPUs and 4 GB. **Determinism:** temperature 0; replaying saved answers
   reproduces every label and evidence item.
 - **License:** code Apache-2.0; report text CC-BY-4.0.
@@ -267,4 +307,5 @@ error) and one full worked example from claim to prompt to answer and evidence.
   `S-and-fallbacks_devA300`, `bm25ap-fallback_valA300`, `ap-structure-ask_*`; whole booklet `context-curve_devA100`;
   no booklet text `closed-book_devA300`; embedding chunks `section-route-vs-embed_devA300`; Apertus does all parsing
   `ap-all_devA300`; variants not kept `prompts-A_*`, `prompts-B_*`, `A6b_*`, `B1f_devB300`, `B6_devB300`; 70B
-  `70B-smoke_devA3-devB3`.
+  `70B-smoke_devA3-devB3`; Kaan's retrievers and experiments `kaan_strategies_dev600`, `kaan_retrievers_*`; sealed
+  test dates `sealed-once`.

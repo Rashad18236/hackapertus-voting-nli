@@ -1,0 +1,29 @@
+mkdir -p docs/runs/2026-10-15_rashad_sealed-once/task-A
+docker run --rm --platform linux/amd64 --env-file .env -e BASE_URL -e API_KEY -e MODEL -e LLM_BASE_URL -e LLM_API_KEY -e LLM_NAME --cpuset-cpus 0,1 --network host -e HTTPS_PROXY -e HTTP_PROXY -e NO_PROXY -v /root/.ccr/ca-bundle.crt:/etc/sandbox-ca.crt:ro -e REQUESTS_CA_BUNDLE=/etc/sandbox-ca.crt -e LLM_MIN_INTERVAL=1 --read-only --tmpfs /tmp --user $(id -u):$(id -g) -v "/tmp/claude-0/-home-user-hackapertus-voting-nli/b37c5c3d-3d22-5372-8403-2cf8846d98e2/scratchpad/s16/sealedA.jsonl:/data/cases.jsonl:ro" -v "/home/user/sealed_booklets:/data/booklets:ro" -v "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-15_rashad_sealed-once/task-A:/output" \
+	ghcr.io/rashad18236/hackapertus-voting-nli@sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be --input /data/cases.jsonl --output /output/predictions.jsonl --raw /output/raw_answers.jsonl 
+INFO Worker processes: 2
+WARNING The endpoint refused response_format (HTTP 400); sending the request again without it, and no response_format for the rest of the run
+INFO [1/173] v1.1-row-14-A -> neutral (fallback: model call failed)
+INFO [2/173] v1.1-row-20-A -> neutral (fallback: model call failed)
+INFO [11/173] v1.1-row-96-A -> neutral (fallback: model call failed)
+INFO [13/173] v1.1-row-115-A -> neutral (fallback: model call failed)
+INFO [37/173] v1.1-row-306-A -> neutral (fallback: model call failed)
+INFO [41/173] v1.1-row-351-A -> neutral (fallback: model call failed)
+INFO [51/173] v1.1-row-465-A -> neutral (fallback: model call failed)
+INFO [53/173] v1.1-row-488-A -> neutral (fallback: model call failed)
+INFO [56/173] v1.1-row-502-A -> neutral
+INFO [62/173] v1.1-row-527-A -> neutral (fallback: model call failed)
+INFO [71/173] v1.1-row-582-A -> neutral (fallback: model call failed)
+INFO [74/173] v1.1-row-625-A -> neutral
+INFO [82/173] v1.1-row-754-A -> neutral
+INFO [86/173] v1.1-row-781-A -> neutral (fallback: model call failed)
+INFO [96/173] v1.1-row-883-A -> neutral (fallback: model call failed)
+INFO [106/173] v1.1-row-970-A -> neutral (fallback: model call failed)
+INFO [108/173] v1.1-row-985-A -> neutral
+INFO [109/173] v1.1-row-990-A -> neutral
+INFO [118/173] v1.1-row-1077-A -> neutral
+INFO [119/173] v1.1-row-1079-A -> neutral (fallback: model call failed)
+INFO [121/173] v1.1-row-1093-A -> neutral (fallback: model call failed)
+INFO [125/173] v1.1-row-1114-A -> neutral (fallback: model call failed)
+INFO [126/173] v1.1-row-1119-A -> contradiction
+make: *** [Makefile:41: run] Error 137

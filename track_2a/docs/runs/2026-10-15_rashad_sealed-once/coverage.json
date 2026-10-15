@@ -1,0 +1,1027 @@
+{
+ "summary": {
+  "booklets": 9,
+  "dates": 3,
+  "booklets complete": 9,
+  "votes": 27,
+  "votes ok": 27,
+  "votes with a usable part": 27,
+  "dates with a cross-language disagreement": 0
+ },
+ "by_year_language": {
+  "2020 de": {
+   "booklets": 1,
+   "booklets complete": 1,
+   "votes": 2,
+   "votes ok": 2,
+   "votes with a usable part": 2
+  },
+  "2020 fr": {
+   "booklets": 1,
+   "booklets complete": 1,
+   "votes": 2,
+   "votes ok": 2,
+   "votes with a usable part": 2
+  },
+  "2020 it": {
+   "booklets": 1,
+   "booklets complete": 1,
+   "votes": 2,
+   "votes ok": 2,
+   "votes with a usable part": 2
+  },
+  "2022 de": {
+   "booklets": 2,
+   "booklets complete": 2,
+   "votes": 7,
+   "votes ok": 7,
+   "votes with a usable part": 7
+  },
+  "2022 fr": {
+   "booklets": 2,
+   "booklets complete": 2,
+   "votes": 7,
+   "votes ok": 7,
+   "votes with a usable part": 7
+  },
+  "2022 it": {
+   "booklets": 2,
+   "booklets complete": 2,
+   "votes": 7,
+   "votes ok": 7,
+   "votes with a usable part": 7
+  }
+ },
+ "causes": {},
+ "cross_language_causes": {},
+ "cross_language": {
+  "2020-02-09": [],
+  "2022-02-13": [],
+  "2022-05-15": []
+ },
+ "booklets": [
+  {
+   "booklet": "2020_02_09_de.pdf",
+   "pages": 32,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       8,
+       11
+      ],
+      "committee": [
+       12,
+       13
+      ],
+      "council": [
+       14,
+       15
+      ],
+      "law": [
+       16,
+       17
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       18,
+       21
+      ],
+      "committee": [
+       22,
+       23
+      ],
+      "council": [
+       24,
+       25
+      ],
+      "law": [
+       26,
+       31
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 2
+  },
+  {
+   "booklet": "2020_02_09_fr.pdf",
+   "pages": 32,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       8,
+       11
+      ],
+      "committee": [
+       12,
+       13
+      ],
+      "council": [
+       14,
+       15
+      ],
+      "law": [
+       16,
+       17
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       18,
+       21
+      ],
+      "committee": [
+       22,
+       23
+      ],
+      "council": [
+       24,
+       25
+      ],
+      "law": [
+       26,
+       31
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 2
+  },
+  {
+   "booklet": "2020_02_09_it.pdf",
+   "pages": 32,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       8,
+       11
+      ],
+      "committee": [
+       12,
+       13
+      ],
+      "council": [
+       14,
+       15
+      ],
+      "law": [
+       16,
+       17
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       18,
+       21
+      ],
+      "committee": [
+       22,
+       23
+      ],
+      "council": [
+       24,
+       25
+      ],
+      "law": [
+       26,
+       31
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 2
+  },
+  {
+   "booklet": "2022_02_13_de.pdf",
+   "pages": 64,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       12,
+       17
+      ],
+      "committee": [
+       18,
+       19
+      ],
+      "council": [
+       20,
+       21
+      ],
+      "law": [
+       22,
+       23
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       24,
+       29
+      ],
+      "committee": [
+       30,
+       31
+      ],
+      "council": [
+       32,
+       33
+      ],
+      "law": [
+       34,
+       35
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       36,
+       39
+      ],
+      "committee": [
+       40,
+       41
+      ],
+      "council": [
+       42,
+       43
+      ],
+      "law": [
+       44,
+       45
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       10,
+       11
+      ],
+      "detail": [
+       46,
+       51
+      ],
+      "committee": [
+       52,
+       53
+      ],
+      "council": [
+       54,
+       55
+      ],
+      "law": [
+       56,
+       63
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 4
+  },
+  {
+   "booklet": "2022_02_13_fr.pdf",
+   "pages": 64,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       12,
+       17
+      ],
+      "committee": [
+       18,
+       19
+      ],
+      "council": [
+       20,
+       21
+      ],
+      "law": [
+       22,
+       23
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       24,
+       29
+      ],
+      "committee": [
+       30,
+       31
+      ],
+      "council": [
+       32,
+       33
+      ],
+      "law": [
+       34,
+       35
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       36,
+       39
+      ],
+      "committee": [
+       40,
+       41
+      ],
+      "council": [
+       42,
+       43
+      ],
+      "law": [
+       44,
+       45
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       10,
+       11
+      ],
+      "detail": [
+       46,
+       51
+      ],
+      "committee": [
+       52,
+       53
+      ],
+      "council": [
+       54,
+       55
+      ],
+      "law": [
+       56,
+       63
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 4
+  },
+  {
+   "booklet": "2022_02_13_it.pdf",
+   "pages": 64,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       12,
+       17
+      ],
+      "committee": [
+       18,
+       19
+      ],
+      "council": [
+       20,
+       21
+      ],
+      "law": [
+       22,
+       23
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       24,
+       29
+      ],
+      "committee": [
+       30,
+       31
+      ],
+      "council": [
+       32,
+       33
+      ],
+      "law": [
+       34,
+       35
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       36,
+       39
+      ],
+      "committee": [
+       40,
+       41
+      ],
+      "council": [
+       42,
+       43
+      ],
+      "law": [
+       44,
+       45
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       10,
+       11
+      ],
+      "detail": [
+       46,
+       51
+      ],
+      "committee": [
+       52,
+       53
+      ],
+      "council": [
+       54,
+       55
+      ],
+      "law": [
+       56,
+       63
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 4
+  },
+  {
+   "booklet": "2022_05_15_de.pdf",
+   "pages": 56,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       10,
+       15
+      ],
+      "committee": [
+       16,
+       17
+      ],
+      "council": [
+       18,
+       19
+      ],
+      "law": [
+       20,
+       25
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       26,
+       31
+      ],
+      "committee": [
+       32,
+       33
+      ],
+      "council": [
+       34,
+       35
+      ],
+      "law": [
+       36,
+       41
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       42,
+       47
+      ],
+      "committee": [
+       48,
+       49
+      ],
+      "council": [
+       50,
+       51
+      ],
+      "law": [
+       52,
+       55
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 3
+  },
+  {
+   "booklet": "2022_05_15_fr.pdf",
+   "pages": 56,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       10,
+       15
+      ],
+      "committee": [
+       16,
+       17
+      ],
+      "council": [
+       18,
+       19
+      ],
+      "law": [
+       20,
+       25
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       26,
+       31
+      ],
+      "committee": [
+       32,
+       33
+      ],
+      "council": [
+       34,
+       35
+      ],
+      "law": [
+       36,
+       41
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       42,
+       47
+      ],
+      "committee": [
+       48,
+       49
+      ],
+      "council": [
+       50,
+       51
+      ],
+      "law": [
+       52,
+       55
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 3
+  },
+  {
+   "booklet": "2022_05_15_it.pdf",
+   "pages": 56,
+   "contents": true,
+   "votes": [
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       4,
+       5
+      ],
+      "detail": [
+       10,
+       15
+      ],
+      "committee": [
+       16,
+       17
+      ],
+      "council": [
+       18,
+       19
+      ],
+      "law": [
+       20,
+       25
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       6,
+       7
+      ],
+      "detail": [
+       26,
+       31
+      ],
+      "committee": [
+       32,
+       33
+      ],
+      "council": [
+       34,
+       35
+      ],
+      "law": [
+       36,
+       41
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    },
+    {
+     "ok": true,
+     "parts": {
+      "summary": [
+       8,
+       9
+      ],
+      "detail": [
+       42,
+       47
+      ],
+      "committee": [
+       48,
+       49
+      ],
+      "council": [
+       50,
+       51
+      ],
+      "law": [
+       52,
+       55
+      ]
+     },
+     "problems": [],
+     "usable_parts": [
+      "committee",
+      "council",
+      "detail",
+      "law",
+      "summary"
+     ]
+    }
+   ],
+   "votes_ok": 3
+  }
+ ]
+}

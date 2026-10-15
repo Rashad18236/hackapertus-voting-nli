@@ -1338,3 +1338,142 @@ concerns; where the instruction was unclear, the reading taken.
 - **The technical report says in one sentence that no larger model was reachable (with the evidence: listed, but 9 of
   9 calls refused with HTTP 429 on 15 October), and in one sentence why the submission is the 8B.** Step 3.
 - **The README stays unchanged: it names only the default model (`swiss-ai/Apertus-v1.5-8B`), not a model list.** Step 3.
+
+# Session 16 (final): the sealed test dates once, the report's fields, the submission tag prepared
+
+Started 2026-10-15 11:31 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-16` from `main` at
+`71a6d6a` (PR #24 merged in step 0). The last session: no code in `src/`, no default, no prompt, no threshold
+changes. One line per decision with its reason, written before the step it concerns.
+
+## Step 1: the sealed dates
+
+- **The sealed dates are opened once, in this session, for one run through the submission image. No change follows
+  from the result.** The instruction, word for word, written before anything else about the sealed dates.
+- **The sealed cases are made as `data/probe/` was (`scripts/make_probe.py`'s method): only the lines of
+  `data/test/cases.jsonl` that name a sealed booklet are parsed; the task B lines and expected labels of exactly these
+  rows are picked by id text; they are copied to `data/sealed/` (cases.jsonl, expected-labels.jsonl; `data/test/`
+  unchanged). The new script `scripts/make_sealed.py` reuses `make_probe.py`'s functions with the three sealed
+  dates.** The instruction; `data/probe/` is the model.
+- **The sealed booklets (de, fr, it of 2020-02-09, 2022-02-13, 2022-05-15) are downloaded from the dataset's
+  `booklet_url` column into `/home/user/sealed_booklets`, outside the repository; no PDF or page text is committed.**
+  The instruction.
+- **The run: the submission image pinned by its digest (`ghcr.io/rashad18236/hackapertus-voting-nli@<IMAGE_DIGEST>`,
+  = `latest` after step 0), `make run` with the organisers' command, task A and task B in separate containers, the
+  real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `.env`), `LLM_MIN_INTERVAL=1`, containers pinned to CPUs
+  0–1, `--raw` kept, into `docs/runs/2026-10-15_rashad_sealed-once/{task-A,task-B}`. Task A first, then task B.**
+  The instruction.
+- **A task is run again (once, after 15 minutes) only if its run fails for a reason outside the code: the endpoint
+  down, HTTP 5xx on every call, or the container killed. "Fails" = a non-zero exit code, or more than half of the
+  task's calls failed (raw answers with `error`). Never because of a score; the score is not read before both tasks
+  have their final run.** The instruction; the threshold makes "every call" checkable.
+- **Scoring: the starter's `evaluate.py` against `data/sealed/expected-labels.jsonl`, which never enters a
+  container. Local time: `scripts/local_time.py` through the same image at 1.0 and 0.3 s per request, with a replay
+  table of the sealed run's own answers (`scripts/prompt_snapshot.py run --set sealed=data/sealed/cases.jsonl`, a new
+  option, then `table`), 2 CPUs pinned to CPUs 2–3, 4 GB; one measurement per delay and task. REF SCORE with
+  `scripts/official_score.py`.** The instruction; the same tools as the final runs.
+- **Reported pooled and per date (a task B case's date is its row's task A booklet date): Macro-F1 and per-label F1
+  per task, evidence (task A), tokens in and out per case, local time, REF SCORE, Python-written labels, failed
+  calls, backend identity, gateway cache hits (must be 0: these requests were never sent before), A6 second looks,
+  task A paths (routed per part / AP-part / AP-structure / bm25-ap with its translation calls), parser and router
+  coverage of the sealed booklets (`scripts/parser_coverage.py`: votes found, votes and parts valid, per language),
+  and the error list (id, gold, answer, path; ids and labels only).** The instruction's list. Per-date Macro-F1 on
+  few cases is reported as it is, with the case counts.
+- **After the numbers are read, nothing is changed; the status log records the sentence with its time.** The
+  instruction.
+
+## Step 0 and set-up
+
+- **The instruction is complete (it ends with "END OF SESSION 16 INSTRUCTION").** Its first check.
+- **PR #24 checked: open, draft, `mergeable_state` clean, head `d3a5fdd`, both checks green (tests, image; the publish
+  workflow does not build `session-15b`); marked ready for review and merged with a merge commit: MAIN_COMMIT =
+  `71a6d6a`, branch kept. `origin/main` contains `d3a5fdd`.** Step 0.
+- **dockerd was not running (the container had been restarted); stale pid files removed, started again.** Environment.
+- **`scripts/prompt_snapshot.py run` gets an option `--set NAME=CASES.jsonl` (repeatable) that replaces the dev and val
+  sets; nothing else changes in it.** Needed for the sealed replay table (step 1d); a development script, not `src/`.
+
+## Step 1c: the first attempt failed outside the code (written before the rerun)
+
+- **Attempt 1 (task A, started 11:37:06, stopped 11:37:56 UTC after 23 of 173 cases) failed for a reason outside the
+  code: 16 of its 23 calls were refused with HTTP 400 "Unsupported model or no available clients: alias-apertus.
+  Received Model Group=swiss-ai/apertus-v1.5-8b" (one of the gateway's deployments of the 8B had no client); 7 were
+  answered by blablador (`vllm-0.23.1rc1`). The first 400 also made `src/llm.py` drop `response_format` for the rest
+  of the run (session 9's fallback reads a 400 as a refused schema). More than half the calls failed, so by this
+  file's rule the attempt is a failed run; it was stopped (container stopped) instead of producing 150 more neutral
+  fallbacks. No score was read; its files are kept in `docs/runs/2026-10-15_rashad_sealed-once/aborted-attempt-1/`
+  (ids, errors and the 7 answers; no booklet text). Task B was not started.** The instruction: "If a run fails for a
+  reason outside the code (endpoint down, HTTP 5xx on every call, container killed), wait 15 minutes and run that task
+  again ONCE, and write why".
+- **The one rerun of task A (and then task B, its first run) starts no earlier than 11:53 UTC (15 minutes after the
+  stop) and only after a health check passes: the same image on 10 dev cases (the first 5 task A and the first 5 task
+  B cases of `data/dev/cases.jsonl`; dev, never sealed), the same flags, every call answered (no `error` in the raw
+  answers) and no "refused response_format" in the log. The check repeats every 10 minutes; if it has not passed by
+  18:30 UTC, the sealed run is not made, and the report says why.** The rerun is allowed once; a rerun into the same
+  outage would waste it. The health check sends dev requests last sent yesterday (no cache) and is not a sealed run.
+- **The rerun's result is reported whatever it is: if the endpoint fails again during it, no further run is made;
+  failed calls are Python's neutral fallbacks, counted.** The instruction ("ONCE"; "never run again because of the
+  score").
+
+## Step 1d–f: after the run (written 13:12, after these steps; the first line repeats the status log's entry of 12:42)
+
+- **Nothing is changed after the sealed numbers were read (12:42): no code, default, prompt, threshold, rule or run.**
+  The instruction (step 1f).
+- **The replay table of the sealed answers is built with two passes, as the session 15 reference; its one unpaired
+  request (row 1077-A's second look, a chain of three calls) is reported, not fixed by a third pass: local time counts
+  it as one replay miss, the same number of requests.** A third pass changes no local-time number; the table is a
+  measuring aid, not a result.
+- **Local time per date is measured with one container per date and task; the pooled column (one container per task)
+  is the organisers' setting and the one in REF SCORE's headline.** Per date, start-up falls on fewer cases.
+- **Task A errors are classified with `scripts/error_types.py` without `--label` (no model call); task B errors by
+  their gold and given labels (gold neutral answered contradiction = an unrelated passage, "another ballot").** The
+  instruction asks for counts by class; no further model call is needed for them.
+
+## Step 2: report and submission files (written 13:12, after the step: a record of the choices made during it, not written before it)
+
+- **`examples/predictions.jsonl` is the second run of the submission image on `examples/cases.jsonl` (13:03): the
+  first (12:42) was answered from the gateway's cache (health check 5 had sent the same two requests at 12:33) while
+  the replay passes used the CPUs. Both runs gave the same labels; the second has fresh answers.** A real answer, not a
+  cached one, for the file that shows the output format.
+- **The README command is tested exactly as written, then with only this sandbox's proxy flags; the failure found
+  (the default model name refused by Public AI with HTTP 403, which `src/llm.py`'s model-name fallback does not
+  handle) is not fixed in `src/` (this session changes no code), but written under the command, in the submission
+  message and for Rashad in the session report.** The command stays unchanged as the instruction asks; the note tells
+  a reader with a Public AI key what to add.
+- **If the sealed column does not fit the final-defaults table within 6 pages, the sealed table stands alone.** The
+  instruction. It did not fit (the column made every row wrap).
+- **To reach 6 pages: §3's prose shortened and the negative table's "why not" column shortened (the instruction's
+  two places), then the report style: §1's tables compact (8.5 pt, as §4's), code blocks 8.5 pt (the diagram no
+  longer wraps), line height 1.3 → 1.26. No number, table or row removed.** The instruction: never remove a number
+  or a table.
+- **The numbers check's 2 MISSING (the arXiv id 2402.05672 and the year 2009 of the references) are traced to the
+  citations themselves and left as they are.** They are identifiers, not results.
+
+# Session 17: the model-name fallback on HTTP 403, then freeze
+
+Started 2026-10-15 19:42 UTC by Claude Code for Rashad, unattended. The instruction ends with "END OF SESSION 17
+INSTRUCTION": complete. Push by 22:30 UTC. One change to `src/llm.py` (the model-name fallback also fires on HTTP 403
+and on an HTTP 400 or 422 that names the model), its tests, one verification run, documents. One line per decision
+with its reason, written before the step it concerns.
+
+## Step 0: merge session 16
+
+- **`main` moved after session 16: Kaan's commit `5095048` (15:51 UTC, pushed straight to `main`) rewrote the
+  technical report in plain language (diagram and four charts, `scripts/report_figures.py`, `report.css`, the PDF),
+  starting from the report before session 16. PR #25 therefore has a merge conflict (`technical_report.md`,
+  `report.css`, `technical_report.pdf`).** Found at 19:44.
+- **The conflict is resolved on `rashad/session-16` by merging `origin/main` into it (a merge commit; no rebase, no
+  force-push), then PR #25 is merged as the instruction says.** The instruction's step 0; the team's rule for a moved
+  `main`.
+- **`technical_report.md`: Kaan's rewrite is the base (the newer text, written for readers new to the project), and
+  session 16's content is carried into it: the title line, the header fields (project, team, repository, image with
+  IMAGE_DIGEST and MAIN_COMMIT), the first paragraph's sealed sentence, §1's sealed table and sentence, "Who did
+  what", §6's "Sealed test" paragraph, "traceable to the booklet" in §7, §8's digest and `submission` tag line, the
+  sealed run in the references. Nothing of either side is dropped; numbers are copied, not changed.** Both sides
+  hold content the submission needs; picking one loses the other.
+- **Kaan's placeholder "Qualitative examples. TODO" (§6) stays as he wrote it and is reported to Rashad.** Writing
+  the examples is Kaan's open item, outside both session 16's and session 17's scope; a removed placeholder would
+  hide it.
+- **`report.css`: both changes kept (Kaan's figure rule; session 16's compact §1 tables, smaller code blocks and line
+  height 1.26) as far as the merged report needs them to stay within 6 pages; the PDF is rebuilt with
+  `scripts/build_report_pdf.sh`, never taken from either side.** The PDF is generated.
+- **The merge is checked like any change: pytest, `build_docs.py --check`, the numbers check, PDF pages; then PR #25's
+  checks must be green before it is merged.** The instruction: "checks green".

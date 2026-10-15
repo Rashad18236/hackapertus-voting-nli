@@ -1,0 +1,574 @@
+{
+ "run": "docs/runs/2026-10-15_rashad_sealed-once",
+ "scopes": {
+  "pooled": {
+   "A": {
+    "cases": 173,
+    "macro_f1": 0.9886,
+    "f1": {
+     "entailment": 0.9908,
+     "neutral": 0.991,
+     "contradiction": 0.9841
+    },
+    "input_tokens": 1276.3,
+    "output_tokens": 19.2,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 181,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 181
+    },
+    "cache_hits": 0,
+    "evidence": 0.9746,
+    "evidence_found": "115 of 118",
+    "a6_second_looks": 3,
+    "a6_changed": 3,
+    "paths": {
+     "route:council": 48,
+     "route:summary": 37,
+     "route:committee": 34,
+     "route:law": 28,
+     "route:detail": 26
+    },
+    "ap_calls": {
+     "AP-structure-v1": 3,
+     "AP-claim-v1": 2
+    },
+    "errors": [
+     {
+      "id": "v1.1-row-1222-A",
+      "gold": "contradiction",
+      "answer": "entailment",
+      "path": "route:summary"
+     },
+     {
+      "id": "v1.1-row-1303-A",
+      "gold": "contradiction",
+      "answer": "neutral",
+      "path": "route:summary"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0253,
+     "0.3": 0.0349
+    }
+   },
+   "B": {
+    "cases": 173,
+    "macro_f1": 0.9598,
+    "f1": {
+     "entailment": 0.9524,
+     "neutral": 0.9725,
+     "contradiction": 0.9545
+    },
+    "input_tokens": 845.4,
+    "output_tokens": 9.8,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 173,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 173
+    },
+    "cache_hits": 0,
+    "errors": [
+     {
+      "id": "v1.1-row-1160-B",
+      "gold": "contradiction",
+      "answer": "entailment",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-201-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-221-B",
+      "gold": "entailment",
+      "answer": "neutral",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-349-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-488-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-771-B",
+      "gold": "neutral",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-866-B",
+      "gold": "neutral",
+      "answer": "contradiction",
+      "path": "task B"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0108,
+     "0.3": 0.013
+    }
+   },
+   "ref_score": {
+    "1.0": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9886,
+      "evidence": 0.9746,
+      "tokens_per_case": 1295.5,
+      "local_time_s": 0.0253,
+      "K": 0.4631,
+      "T": 1.0,
+      "S": 0.9087,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9598,
+      "evidence": null,
+      "tokens_per_case": 855.1999999999999,
+      "local_time_s": 0.0108,
+      "K": 0.9355,
+      "T": 0.463,
+      "S": 0.8816,
+      "valid": true
+     },
+     "score": 0.8979
+    },
+    "0.3": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9886,
+      "evidence": 0.9746,
+      "tokens_per_case": 1295.5,
+      "local_time_s": 0.0349,
+      "K": 0.4631,
+      "T": 1.0,
+      "S": 0.9087,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9598,
+      "evidence": null,
+      "tokens_per_case": 855.1999999999999,
+      "local_time_s": 0.013,
+      "K": 0.9355,
+      "T": 0.3846,
+      "S": 0.8699,
+      "valid": true
+     },
+     "score": 0.8932
+    }
+   }
+  },
+  "2020-02-09": {
+   "A": {
+    "cases": 42,
+    "macro_f1": 0.9734,
+    "f1": {
+     "entailment": 0.9677,
+     "neutral": 1.0,
+     "contradiction": 0.9524
+    },
+    "input_tokens": 1239.0,
+    "output_tokens": 14.6,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 42,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 42
+    },
+    "cache_hits": 0,
+    "evidence": 1.0,
+    "evidence_found": "26 of 26",
+    "a6_second_looks": 0,
+    "a6_changed": 0,
+    "paths": {
+     "route:summary": 12,
+     "route:council": 10,
+     "route:committee": 7,
+     "route:detail": 7,
+     "route:law": 6
+    },
+    "ap_calls": {},
+    "errors": [
+     {
+      "id": "v1.1-row-1222-A",
+      "gold": "contradiction",
+      "answer": "entailment",
+      "path": "route:summary"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0565,
+     "0.3": 0.0511
+    }
+   },
+   "B": {
+    "cases": 42,
+    "macro_f1": 0.9263,
+    "f1": {
+     "entailment": 0.9655,
+     "neutral": 0.9333,
+     "contradiction": 0.88
+    },
+    "input_tokens": 786.0,
+    "output_tokens": 8.2,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 42,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 42
+    },
+    "cache_hits": 0,
+    "errors": [
+     {
+      "id": "v1.1-row-201-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-771-B",
+      "gold": "neutral",
+      "answer": "contradiction",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-866-B",
+      "gold": "neutral",
+      "answer": "contradiction",
+      "path": "task B"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0349,
+     "0.3": 0.0814
+    }
+   },
+   "ref_score": {
+    "1.0": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9734,
+      "evidence": 1.0,
+      "tokens_per_case": 1253.6,
+      "local_time_s": 0.0565,
+      "K": 0.4786,
+      "T": 0.885,
+      "S": 0.8912,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9263,
+      "evidence": null,
+      "tokens_per_case": 794.2,
+      "local_time_s": 0.0349,
+      "K": 1.0,
+      "T": 0.1433,
+      "S": 0.8199,
+      "valid": true
+     },
+     "score": 0.8627
+    },
+    "0.3": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9734,
+      "evidence": 1.0,
+      "tokens_per_case": 1253.6,
+      "local_time_s": 0.0511,
+      "K": 0.4786,
+      "T": 0.9785,
+      "S": 0.9053,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9263,
+      "evidence": null,
+      "tokens_per_case": 794.2,
+      "local_time_s": 0.0814,
+      "K": 1.0,
+      "T": 0.0614,
+      "S": 0.8076,
+      "valid": true
+     },
+     "score": 0.8662
+    }
+   }
+  },
+  "2022-02-13": {
+   "A": {
+    "cases": 90,
+    "macro_f1": 1.0,
+    "f1": {
+     "entailment": 1.0,
+     "neutral": 1.0,
+     "contradiction": 1.0
+    },
+    "input_tokens": 1283.4,
+    "output_tokens": 23.2,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 97,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 97
+    },
+    "cache_hits": 0,
+    "evidence": 0.9836,
+    "evidence_found": "60 of 61",
+    "a6_second_looks": 2,
+    "a6_changed": 2,
+    "paths": {
+     "route:council": 22,
+     "route:committee": 20,
+     "route:summary": 19,
+     "route:law": 17,
+     "route:detail": 12
+    },
+    "ap_calls": {
+     "AP-structure-v1": 3,
+     "AP-claim-v1": 2
+    },
+    "errors": [],
+    "local_time_s": {
+     "1.0": 0.0497,
+     "0.3": 0.0479
+    }
+   },
+   "B": {
+    "cases": 90,
+    "macro_f1": 0.9652,
+    "f1": {
+     "entailment": 0.9412,
+     "neutral": 0.9831,
+     "contradiction": 0.9714
+    },
+    "input_tokens": 835.5,
+    "output_tokens": 10.6,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 90,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 90
+    },
+    "cache_hits": 0,
+    "errors": [
+     {
+      "id": "v1.1-row-1160-B",
+      "gold": "contradiction",
+      "answer": "entailment",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-221-B",
+      "gold": "entailment",
+      "answer": "neutral",
+      "path": "task B"
+     },
+     {
+      "id": "v1.1-row-488-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0171,
+     "0.3": 0.0188
+    }
+   },
+   "ref_score": {
+    "1.0": {
+     "A": {
+      "task": "A",
+      "macro_f1": 1.0,
+      "evidence": 0.9836,
+      "tokens_per_case": 1306.6000000000001,
+      "local_time_s": 0.0497,
+      "K": 0.4592,
+      "T": 1.0,
+      "S": 0.9156,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9652,
+      "evidence": null,
+      "tokens_per_case": 846.1,
+      "local_time_s": 0.0171,
+      "K": 0.9455,
+      "T": 0.2924,
+      "S": 0.8613,
+      "valid": true
+     },
+     "score": 0.8939
+    },
+    "0.3": {
+     "A": {
+      "task": "A",
+      "macro_f1": 1.0,
+      "evidence": 0.9836,
+      "tokens_per_case": 1306.6000000000001,
+      "local_time_s": 0.0479,
+      "K": 0.4592,
+      "T": 1.0,
+      "S": 0.9156,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9652,
+      "evidence": null,
+      "tokens_per_case": 846.1,
+      "local_time_s": 0.0188,
+      "K": 0.9455,
+      "T": 0.266,
+      "S": 0.8574,
+      "valid": true
+     },
+     "score": 0.8923
+    }
+   }
+  },
+  "2022-05-15": {
+   "A": {
+    "cases": 41,
+    "macro_f1": 0.9746,
+    "f1": {
+     "entailment": 1.0,
+     "neutral": 0.9524,
+     "contradiction": 0.9714
+    },
+    "input_tokens": 1299.2,
+    "output_tokens": 15.2,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 42,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 42
+    },
+    "cache_hits": 0,
+    "evidence": 0.9355,
+    "evidence_found": "29 of 31",
+    "a6_second_looks": 1,
+    "a6_changed": 1,
+    "paths": {
+     "route:council": 16,
+     "route:detail": 7,
+     "route:committee": 7,
+     "route:summary": 6,
+     "route:law": 5
+    },
+    "ap_calls": {},
+    "errors": [
+     {
+      "id": "v1.1-row-1303-A",
+      "gold": "contradiction",
+      "answer": "neutral",
+      "path": "route:summary"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.1603,
+     "0.3": 0.1521
+    }
+   },
+   "B": {
+    "cases": 41,
+    "macro_f1": 0.9777,
+    "f1": {
+     "entailment": 0.96,
+     "neutral": 1.0,
+     "contradiction": 0.973
+    },
+    "input_tokens": 927.9,
+    "output_tokens": 9.7,
+    "python_labels": 0,
+    "failed_calls": 0,
+    "calls": 41,
+    "backends": {
+     "https://api.blablador.fz-juelich.de/v1 | vllm-0.23.1rc1.dev1029+ga601a9d99-tp8-pp2-dd237840": 41
+    },
+    "cache_hits": 0,
+    "errors": [
+     {
+      "id": "v1.1-row-349-B",
+      "gold": "entailment",
+      "answer": "contradiction",
+      "path": "task B"
+     }
+    ],
+    "local_time_s": {
+     "1.0": 0.0338,
+     "0.3": 0.1211
+    }
+   },
+   "ref_score": {
+    "1.0": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9746,
+      "evidence": 0.9355,
+      "tokens_per_case": 1314.4,
+      "local_time_s": 0.1603,
+      "K": 0.4565,
+      "T": 0.3119,
+      "S": 0.7897,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9777,
+      "evidence": null,
+      "tokens_per_case": 937.6,
+      "local_time_s": 0.0338,
+      "K": 0.8532,
+      "T": 0.1479,
+      "S": 0.8346,
+      "valid": true
+     },
+     "score": 0.8077
+    },
+    "0.3": {
+     "A": {
+      "task": "A",
+      "macro_f1": 0.9746,
+      "evidence": 0.9355,
+      "tokens_per_case": 1314.4,
+      "local_time_s": 0.1521,
+      "K": 0.4565,
+      "T": 0.3287,
+      "S": 0.7922,
+      "valid": true
+     },
+     "B": {
+      "task": "B",
+      "macro_f1": 0.9777,
+      "evidence": null,
+      "tokens_per_case": 937.6,
+      "local_time_s": 0.1211,
+      "K": 0.8532,
+      "T": 0.0413,
+      "S": 0.8186,
+      "valid": true
+     },
+     "score": 0.8028
+    }
+   }
+  }
+ }
+}

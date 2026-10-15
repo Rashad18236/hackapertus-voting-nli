@@ -1,0 +1,46 @@
+INFO Worker processes: 2
+[0;93m2026-10-15 12:52:47.373706875 [W:onnxruntime:Default, telemetry.cc:800 operator()] Failed to persist telemetry device ID; using an in-memory identifier[m
+INFO [3/42] v1.1-row-111-B -> entailment
+INFO [10/42] v1.1-row-276-B -> entailment
+INFO [11/42] v1.1-row-374-B -> entailment
+INFO [12/42] v1.1-row-376-B -> entailment
+INFO [14/42] v1.1-row-428-B -> entailment
+INFO [32/42] v1.1-row-1095-B -> contradiction
+INFO [33/42] v1.1-row-1105-B -> contradiction
+INFO [34/42] v1.1-row-1121-B -> contradiction
+INFO [37/42] v1.1-row-1185-B -> contradiction
+INFO [39/42] v1.1-row-1222-B -> contradiction
+INFO [40/42] v1.1-row-1311-B -> contradiction
+INFO [42/42] v1.1-row-1487-B -> contradiction
+INFO [2/42] v1.1-row-74-B -> entailment
+INFO [9/42] v1.1-row-251-B -> entailment
+INFO [13/42] v1.1-row-417-B -> entailment
+INFO [15/42] v1.1-row-494-B -> entailment
+INFO [1/42] v1.1-row-53-B -> entailment
+INFO [4/42] v1.1-row-124-B -> entailment
+INFO [5/42] v1.1-row-178-B -> entailment
+INFO [6/42] v1.1-row-184-B -> entailment
+INFO [7/42] v1.1-row-195-B -> entailment
+INFO [8/42] v1.1-row-201-B -> contradiction
+INFO [16/42] v1.1-row-512-B -> neutral
+INFO [17/42] v1.1-row-520-B -> neutral
+INFO [18/42] v1.1-row-523-B -> neutral
+INFO [19/42] v1.1-row-524-B -> neutral
+INFO [20/42] v1.1-row-551-B -> neutral
+INFO [21/42] v1.1-row-704-B -> neutral
+INFO [22/42] v1.1-row-715-B -> neutral
+INFO [23/42] v1.1-row-735-B -> neutral
+INFO [24/42] v1.1-row-771-B -> contradiction
+INFO [25/42] v1.1-row-790-B -> neutral
+INFO [26/42] v1.1-row-858-B -> neutral
+INFO [27/42] v1.1-row-860-B -> neutral
+INFO [28/42] v1.1-row-866-B -> contradiction
+INFO [29/42] v1.1-row-905-B -> neutral
+INFO [30/42] v1.1-row-916-B -> neutral
+INFO [31/42] v1.1-row-972-B -> neutral
+INFO [35/42] v1.1-row-1180-B -> contradiction
+INFO [36/42] v1.1-row-1182-B -> contradiction
+INFO [38/42] v1.1-row-1202-B -> contradiction
+INFO [41/42] v1.1-row-1398-B -> contradiction
+INFO Wrote 42 responses to /output/predictions.jsonl
+INFO No failures.
