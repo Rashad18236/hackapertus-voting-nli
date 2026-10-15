@@ -1,0 +1,25 @@
+INFO Worker processes: 2
+WARNING The endpoint refused the model name (HTTP 403); model name replaced by swiss-ai/apertus-v1.5-8b, listed by the endpoint, for the rest of the run
+INFO [1/20] v1.1-row-2-A -> entailment
+INFO [12/20] v1.1-row-36-A -> entailment
+INFO [2/20] v1.1-row-4-A -> entailment
+INFO [4/20] v1.1-row-9-A -> entailment
+INFO [15/20] v1.1-row-49-A -> entailment
+INFO [3/20] v1.1-row-5-A -> entailment
+INFO [7/20] v1.1-row-22-A -> entailment
+INFO [9/20] v1.1-row-27-A -> entailment
+INFO [20/20] v1.1-row-84-A -> entailment
+INFO [5/20] v1.1-row-18-A -> entailment
+INFO [6/20] v1.1-row-21-A -> entailment
+INFO [17/20] v1.1-row-75-A -> entailment
+INFO [11/20] v1.1-row-35-A -> entailment
+INFO [8/20] v1.1-row-26-A -> entailment
+INFO [14/20] v1.1-row-48-A -> entailment
+INFO [18/20] v1.1-row-76-A -> entailment
+INFO [10/20] v1.1-row-31-A -> contradiction
+INFO [13/20] v1.1-row-40-A -> entailment
+INFO [16/20] v1.1-row-68-A -> entailment
+INFO [19/20] v1.1-row-80-A -> entailment
+INFO Wrote 20 responses to /output/predictions.jsonl
+INFO No failures.
+exit 0

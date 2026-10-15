@@ -185,6 +185,10 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
     (b) HTTP 404, or HTTP 400 once (a) has happened (the model name is the likely cause): read BASE_URL/models
         once, pick the id that names Apertus v1.5 8B (ignoring case; the shortest if several), and send the
         request again with it; that id is used for the rest of the run.
+    Session 17: (b) runs first, before (a), when the answer refuses the model name (_model_name_refused: HTTP 403,
+    or HTTP 400 or 422 whose body names the model). Public AI answers the contract's spelling of the default
+    name with HTTP 403 ("key not allowed to access model"). If (b) does not replace the name, (a) and the 404
+    case follow as before.
     Tokens and time of every request of the call are counted in its result.
     """
     configured_model, base, key = _settings()
@@ -206,6 +210,9 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
     counts = {"input_tokens": 0, "output_tokens": 0, "attempts": 0, "http_429": 0}  # over all requests
     fallbacks = []
     response = _post(base, payload, headers, counts)
+    if (_model_name_refused(response) and not _run["models_read"]
+            and _run["extra_requests"] + 2 <= MAX_EXTRA_REQUESTS):
+        response, payload = _replace_model(base, payload, headers, counts, fallbacks, response)
     if (response.status_code in (400, 422) and "response_format" in payload
             and _run["extra_requests"] + 1 <= MAX_EXTRA_REQUESTS):
         logging.warning("The endpoint refused response_format (HTTP %d); sending the request again without it, "
@@ -217,17 +224,7 @@ def chat(messages, max_tokens=256, json_mode=False, json_schema=None):
         response = _post(base, payload, headers, counts)
     if ((response.status_code == 404 or (response.status_code == 400 and _run["no_response_format"]))
             and not _run["models_read"] and _run["extra_requests"] + 2 <= MAX_EXTRA_REQUESTS):
-        _run["models_read"] = True
-        _run["extra_requests"] += 1
-        picked = pick_model(list_models(base, headers))
-        if picked and picked != payload["model"]:
-            logging.warning("The endpoint refused the model name (HTTP %d); using %s, listed by the endpoint, for "
-                            "the rest of the run", response.status_code, picked)
-            _run["model"] = picked
-            _run["extra_requests"] += 1
-            fallbacks.append(f"model {picked}")
-            payload = {**payload, "model": picked}
-            response = _post(base, payload, headers, counts)
+        response, payload = _replace_model(base, payload, headers, counts, fallbacks, response)
     elapsed_ms = round((time.perf_counter() - start) * 1000)
 
     if response.status_code != 200:
@@ -301,6 +298,36 @@ def _post(base, payload, headers, counts):
             time.sleep(wait)
             continue
         return response
+
+
+# Session 17: words in an HTTP 400 or 422 body that show the model name was refused (Public AI's gateway:
+# "Unsupported model or no available clients", "key not allowed to access model").
+MODEL_ERROR_WORDS = re.compile(r"model|not allowed|unsupported|no available", re.IGNORECASE)
+
+
+def _model_name_refused(response):
+    """Session 17: HTTP 403, or HTTP 400 or 422 whose body names the model: fallback (b) is tried first."""
+    if response.status_code == 403:
+        return True
+    return response.status_code in (400, 422) and bool(MODEL_ERROR_WORDS.search(response.text or ""))
+
+
+def _replace_model(base, payload, headers, counts, fallbacks, response):
+    """Fallback (b): read BASE_URL/models (once per run) and, if it lists an Apertus v1.5 8B id other than the
+    name sent, send the request again with that id, which is used for the rest of the run. Returns the last
+    response and the payload sent with it."""
+    _run["models_read"] = True
+    _run["extra_requests"] += 1
+    picked = pick_model(list_models(base, headers))
+    if picked and picked != payload["model"]:
+        logging.warning("The endpoint refused the model name (HTTP %d); model name replaced by %s, listed by the "
+                        "endpoint, for the rest of the run", response.status_code, picked)
+        _run["model"] = picked
+        _run["extra_requests"] += 1
+        fallbacks.append(f"model {picked}")
+        payload = {**payload, "model": picked}
+        response = _post(base, payload, headers, counts)
+    return response, payload
 
 
 def list_models(base, headers):

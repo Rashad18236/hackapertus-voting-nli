@@ -1,0 +1,35 @@
+{
+ "person": "rashad",
+ "date": "2026-10-15",
+ "start_utc": "20:02",
+ "kind": "model check",
+ "code": "898776f (the session-17 image ghcr.io/rashad18236/hackapertus-voting-nli@sha256:fe4324697372af91247c25a7f21c5b1c2ae6298c43b08ba424e2d22729ec43ae, built by the publish workflow)",
+ "task": "B",
+ "variant": null,
+ "cases": "dev, the first 20 task B cases of data/dev/cases.jsonl",
+ "setup": "session 15 final defaults plus session 17's model-name fallback; MODEL and LLM_NAME unset (the image asks for swiss-ai/Apertus-v1.5-8B); LLM_MIN_INTERVAL=1",
+ "format": "the organisers' docker run command (plus the sandbox's proxy flags and --raw), CPUs 0-1; labels compared with the session 15 final dev run, not scored",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/Apertus-v1.5-8B requested; swiss-ai/apertus-v1.5-8b after the replacement",
+ "endpoint": "Public AI (blablador; 1 gateway cache hit: the example case sent just before)",
+ "notes": "../NOTES.md",
+ "summary": "HTTP 403 on the default name, 'model name replaced' once, 20 of 20 real answers, 20 of 20 labels equal to the session 15 final dev run",
+ "results": {
+  "cases": 20,
+  "labels_by_python": 0,
+  "failed_calls": 0,
+  "model_name_replaced_lines": 1,
+  "same_label_as_final_s15": 20,
+  "requests": 21,
+  "mean_input_tokens": 852,
+  "mean_output_tokens": 8.2
+ },
+ "task_b": {
+  "prompt_version": "v3-topic-first",
+  "change": "none (model-name fallback only)",
+  "n_cases": 20,
+  "strict_json": false,
+  "max_tokens": 32
+ }
+}

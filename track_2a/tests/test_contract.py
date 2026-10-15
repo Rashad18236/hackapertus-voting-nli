@@ -575,6 +575,36 @@ class FailedAndGarbageModelAnswers(ContractBase):
         # call 6 HTTP 400 (not retried); call 7 answers case 6.
         self.assertEqual([run.by_id[f"b{i}"]["label"] for i in range(1, 7)], [1, 1, 0, 1, 1, 0])
 
+    def test_model_name_refused_with_403_is_replaced_from_models(self):  # session 17
+        # No MODEL in the environment: the CLI asks for the default name, which this endpoint refuses with
+        # HTTP 403 (as Public AI does); BASE_URL/models lists the Apertus v1.5 8B id, used from then on.
+        server, url = stub_llm.start(models=["other/model", "swiss-ai/apertus-v1.5-8b"], model_error_status=403,
+                                     model_error_message="key not allowed to access model")
+        try:
+            cases = [b_case("b1"), b_case("b2"), a_case("a1")]
+            run = self.run_cli(cases, server=server, url=url)
+        finally:
+            server.shutdown()
+        self.assertContract(run, cases)
+        self.assertEqual([run.by_id[i]["label"] for i in ("b1", "b2", "a1")], [0, 0, 0])  # real answers
+        self.assertEqual(run.stderr.count("model name replaced"), 1)
+        self.assertEqual(server.config.models_requests, 1)
+        self.assertNotIn("model call failed", run.stderr)
+
+    def test_model_name_refused_without_an_apertus_id_gives_the_counted_fallback(self):  # session 17
+        server, url = stub_llm.start(models=["other/model"], model_error_status=403,
+                                     model_error_message="key not allowed to access model")
+        try:
+            cases = [b_case("b1"), b_case("b2")]
+            run = self.run_cli(cases, server=server, url=url)
+        finally:
+            server.shutdown()
+        self.assertContract(run, cases)
+        self.assertEqual([run.by_id[i]["label"] for i in ("b1", "b2")], [1, 1])
+        self.assertIn("model call failed: 2", run.stderr)
+        self.assertEqual(server.config.models_requests, 1)
+        self.assertNotIn("model name replaced", run.stderr)
+
     def test_no_endpoint_configured(self):
         cases = [b_case("b"), a_case("a")]
         run = self.run_cli(cases, env={"BASE_URL": None, "API_KEY": None})

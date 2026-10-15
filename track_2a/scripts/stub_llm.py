@@ -54,7 +54,8 @@ POST /_stub/reset clears it. The API key's value is never stored or printed.
 Endpoint quirks (session 9, for src/llm.py's fallbacks; module use): Config(reject_response_format=400 or
 422) answers every request that carries response_format with that status (and 7 prompt tokens in usage);
 Config(models=[ids], model_error_status=404) answers a request for any other model with that status, and
-GET /v1/models lists those ids (Config.models_requests counts the reads).
+GET /v1/models lists those ids (Config.models_requests counts the reads); session 17: model_error_message sets the
+refusal's text.
 
 Replay (session 8): --replay TABLE.json, a JSON object {request_sha256: answer
 text}. A request whose hash is in the table gets that text as its answer
@@ -94,7 +95,7 @@ class Config:
     slow_seconds = 3.0  # how long a STUB_SLOW call waits before its answer
     def __init__(self, label=0, prompt_tokens=100, completion_tokens=10, fail_calls=(), garbage_calls=(),
                  html_calls=(), error_calls=(), replay=None, keep_payloads=False, delay=0.0,
-                 reject_response_format=None, models=None, model_error_status=404):
+                 reject_response_format=None, models=None, model_error_status=404, model_error_message=None):
         self.label = label
         # Endpoint quirks for src/llm.py's fallbacks (session 9, A1): an HTTP status (400 or 422) for every
         # request that carries response_format; and, with a list of model ids, model_error_status for any other
@@ -102,6 +103,9 @@ class Config:
         self.reject_response_format = reject_response_format
         self.models = models
         self.model_error_status = model_error_status
+        # Session 17: the refusal's text (default: "stub: model '<name>' not found"), e.g. Public AI's
+        # "key not allowed to access model" with HTTP 403.
+        self.model_error_message = model_error_message
         self.models_requests = 0
         self.delay = delay              # seconds to wait before each chat answer (tests of a stopped run)
         self.replay = replay            # {request_sha256: answer text}, or None
@@ -243,7 +247,8 @@ def make_handler(config):
             if config.models is not None and payload.get("model") not in config.models:
                 entry["kind"] = "unknown_model"
                 return self._send(config.model_error_status,
-                                  {"error": {"message": f"stub: model {payload.get('model')!r} not found"}})
+                                  {"error": {"message": config.model_error_message
+                                             or f"stub: model {payload.get('model')!r} not found"}})
             if config.reject_response_format and "response_format" in payload:
                 entry["kind"] = "rejected_response_format"
                 return self._send(config.reject_response_format,
