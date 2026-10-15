@@ -1,0 +1,12 @@
+mkdir -p docs/runs/2026-10-15_rashad_sealed-once/task-A
+docker run --rm --platform linux/amd64 --env-file .env -e BASE_URL -e API_KEY -e MODEL -e LLM_BASE_URL -e LLM_API_KEY -e LLM_NAME --cpuset-cpus 0,1 --network host -e HTTPS_PROXY -e HTTP_PROXY -e NO_PROXY -v /root/.ccr/ca-bundle.crt:/etc/sandbox-ca.crt:ro -e REQUESTS_CA_BUNDLE=/etc/sandbox-ca.crt -e LLM_MIN_INTERVAL=1 --read-only --tmpfs /tmp --user $(id -u):$(id -g) -v "/tmp/claude-0/-home-user-hackapertus-voting-nli/b37c5c3d-3d22-5372-8403-2cf8846d98e2/scratchpad/s16/sealedA.jsonl:/data/cases.jsonl:ro" -v "/home/user/sealed_booklets:/data/booklets:ro" -v "/home/user/hackapertus-voting-nli/track_2a/docs/runs/2026-10-15_rashad_sealed-once/task-A:/output" \
+	ghcr.io/rashad18236/hackapertus-voting-nli@sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be --input /data/cases.jsonl --output /output/predictions.jsonl --raw /output/raw_answers.jsonl 
+INFO Worker processes: 2
+INFO [1/173] v1.1-row-14-A -> entailment
+INFO [2/173] v1.1-row-20-A -> entailment
+INFO [11/173] v1.1-row-96-A -> entailment
+INFO [13/173] v1.1-row-115-A -> entailment
+INFO [37/173] v1.1-row-306-A -> entailment
+INFO [41/173] v1.1-row-351-A -> entailment
+INFO [51/173] v1.1-row-465-A -> entailment
+INFO [53/173] v1.1-row-488-A -> entailment
