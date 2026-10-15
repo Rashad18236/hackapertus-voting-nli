@@ -1,0 +1,26 @@
+INFO Worker processes: 2
+[0;93m2026-10-15 20:02:36.831571469 [W:onnxruntime:Default, telemetry.cc:800 operator()] Failed to persist telemetry device ID; using an in-memory identifier[m
+WARNING The endpoint refused the model name (HTTP 403); model name replaced by swiss-ai/apertus-v1.5-8b, listed by the endpoint, for the rest of the run
+INFO [2/20] v1.1-row-4-B -> entailment
+INFO [15/20] v1.1-row-49-B -> entailment
+INFO [17/20] v1.1-row-75-B -> entailment
+INFO [20/20] v1.1-row-84-B -> entailment
+INFO [11/20] v1.1-row-35-B -> entailment
+INFO [1/20] v1.1-row-2-B -> entailment
+INFO [3/20] v1.1-row-5-B -> entailment
+INFO [4/20] v1.1-row-9-B -> entailment
+INFO [5/20] v1.1-row-18-B -> entailment
+INFO [6/20] v1.1-row-21-B -> entailment
+INFO [7/20] v1.1-row-22-B -> entailment
+INFO [8/20] v1.1-row-26-B -> entailment
+INFO [9/20] v1.1-row-27-B -> entailment
+INFO [10/20] v1.1-row-31-B -> entailment
+INFO [12/20] v1.1-row-36-B -> entailment
+INFO [13/20] v1.1-row-40-B -> entailment
+INFO [14/20] v1.1-row-48-B -> entailment
+INFO [16/20] v1.1-row-68-B -> entailment
+INFO [18/20] v1.1-row-76-B -> entailment
+INFO [19/20] v1.1-row-80-B -> entailment
+INFO Wrote 20 responses to /output/predictions.jsonl
+INFO No failures.
+exit 0

@@ -9,7 +9,7 @@ freeze (section 1)**.
 - **Project:** Abstimmungsbüchlein Check — multilingual claim verification against Swiss voting booklets
 - **Team:** Bissegger & Bayraktar — Rashad Bissegger, Kaan Bayraktar
 - **Repository:** https://github.com/Rashad18236/hackapertus-voting-nli
-- **Image:** ghcr.io/rashad18236/hackapertus-voting-nli:latest (digest
+- **Image:** ghcr.io/rashad18236/hackapertus-voting-nli:latest (the sealed run: digest
   `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be`, commit `71a6d6a`)
 - **Demo:** none
 
@@ -261,7 +261,8 @@ routed; the other 4 concern a committee that the vote does not have and go to th
 part of 171 of 173 task A claims, Apertus the other 2; the parser found the vote for 150 cases, Apertus reading the
 contents for 23 (one ballot whose title the parser misread in all three languages). No fallback; all 25 cases Apertus
 helped were right; the second look fixed 3 of 3. Errors: task A 2, both reading errors; task B 7, of which 2 are
-passages about another ballot called a contradiction.
+passages about another ballot called a contradiction. The sealed run was made with MODEL set to Public AI's id; the
+fallback added afterwards (session 17) does not change any request the endpoint accepts.
 
 **Qualitative examples.** TODO: a few typical cases (one correct entailment, one contradiction, one neutral, one
 error) and one full worked example from claim to prompt to answer and evidence.
@@ -289,6 +290,8 @@ error) and one full worked example from claim to prompt to answer and evidence.
   command (README); final numbers from `sha-7ae78ad87cfd`; the sealed run used digest
   `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be` (commit `71a6d6a`, the same code).
   **From source:** `make run`.
+- **Model name:** the image asks for `swiss-ai/Apertus-v1.5-8B` and, if the endpoint refuses that name, resolves the
+  Apertus v1.5 8B id from `BASE_URL/models`; `MODEL` can override it.
 - **Submission tag:** `submission` (set on main after this PR).
 - **Hardware:** CPU only; measured with 2 CPUs and 4 GB. **Determinism:** temperature 0; replaying saved answers
   reproduces every label and evidence item.

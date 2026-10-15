@@ -20,7 +20,8 @@ Posted on Discord. Short answers are enough; each one changes a setting or a lin
    *Answer received: none as of 15 October 2026.*
 5. Which server and model variant answer at evaluation: CSCS or Public AI, and which `swiss-ai/Apertus-v1.5-...`
    model (8B instruct or another)?
-   *Answer received: none as of 15 October 2026.*
+   *Answer received: none as of 15 October 2026.* **Mitigated (session 17): the image resolves the id from /models**
+   when the endpoint refuses the default name `swiss-ai/Apertus-v1.5-8B`.
 6. Do output tokens (and reasoning tokens, if any) count in K, or input tokens only?
    *Answer received: none as of 15 October 2026.*
 7. Is there a rate limit on the team key at evaluation (requests per second or per minute)? Are retries after an

@@ -42,6 +42,24 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   G2_label_differs 0, G2_evidence_differs 0 ("G1 pass | G2 pass"); val 580 cases, 592 model calls, all replayed. The
   fake model accepts every model name, so the new fallback never fires there.
 
-## Running
+- (19:59) Step 1 committed and pushed (`898776f`); draft PR #26 opened. Decisions for steps 2–3 written.
+- (20:01) Step 2: publish-image on `rashad/session-17` (run 110) pushed `session-17`; pulled with an empty Docker
+  configuration: digest `sha256:fe4324697372af91247c25a7f21c5b1c2ae6298c43b08ba424e2d22729ec43ae`, revision `898776f`;
+  `src.llm._model_name_refused` present in the image.
+- (20:01–20:03) Step 3, the only model run (`docs/runs/2026-10-15_rashad_model-fallback_examples-dev40`), without
+  `MODEL`/`LLM_NAME`: examples 2, dev task A 20, dev task B 20, each container exit 0, 0 labels written by Python, 0
+  failed calls; each refused the default name once with HTTP 403 and logged "model name replaced" once; the 40 dev
+  labels equal the session 15 final dev run (0 differences). With `MODEL` set: both examples answered, no
+  replacement line. check_format clean for all four files.
+- (20:00) Step 4 (done while the image was built): README note (one sentence: the image resolves the id from BASE_URL/models; MODEL can override it);
+  report §8 "Model name" line, §6's sentence on the sealed run, the header's image line now says its digest is the
+  sealed run's; `docs/submission_message.md` (the MODEL sentence replaced); `docs/organiser_questions.md` question 5
+  "Mitigated". PDF 6 pages; numbers check 396 numbers, 0 MISSING.
 
-- Step 2: commit, push, publish-image on the branch (tag `session-17`).
+- (20:08) Step 5: `docs/session_17_report.md`; CLAUDE.md steps 1–4; build_docs --check passes; pytest 364 passed, 1
+  skipped (pypdf 6.17.0); self_checks 17 PASS; no key value in any staged file.
+
+## Closed
+
+All steps done. Waiting only for the workflows on the final commit; the PR description holds the after-merge steps
+for Rashad (latest digest, `submission` tag, package visibility, form, keys).

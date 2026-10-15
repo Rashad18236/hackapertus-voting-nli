@@ -1505,3 +1505,23 @@ with its reason, written before the step it concerns.
   gets `model_error_message` (the refusal's text) for them.** The instruction's list; the fake model is a test tool.
 - **G1/G2 against `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` after the change: must be
   identical, because the fake model accepts every model name (the fallback never fires).** The instruction.
+
+## Steps 2 and 3: the image and the verification (written before them)
+
+- **The verification uses the `session-17` image pulled with an empty Docker configuration and pinned by its digest,
+  run with the organisers' command (`docker run ... --input /data/cases.jsonl --output /output/predictions.jsonl`,
+  read-only root, /tmp in memory), plus only this sandbox's proxy flags, `LLM_MIN_INTERVAL=1`, CPUs 0–1 and
+  `--raw` (to count calls).** The instruction's step 3; the proxy flags are needed here only.
+- **Environment: `BASE_URL` and `API_KEY` (from `.env`'s `LLM_BASE_URL` / `LLM_API_KEY`, never printed); `MODEL` and
+  `LLM_NAME` unset, and `.env` not mounted (so its `LLM_NAME` cannot reach the container).** The instruction: "WITHOUT
+  any MODEL/LLM_NAME variable".
+- **Runs, each in its own container: `examples/cases.jsonl` (2 cases), the first 20 task A and the first 20 task B
+  cases of `data/dev/cases.jsonl` (separate containers, as the organisers run the tasks), then the 2 example cases
+  with `MODEL` set to Public AI's id. Folder `docs/runs/2026-10-15_rashad_model-fallback_examples-dev40/` (one
+  subfolder each).** The instruction.
+- **Pass: every response a real answer (0 labels written by Python), "model name replaced" exactly once in each
+  container's log without `MODEL` and never with it, and the 40 dev labels compared with the session 15 final dev run
+  (`docs/runs/2026-10-15_rashad_final-s15_dev600`) for the same ids; any difference is listed and reported as
+  endpoint drift, not as a result of this change (which only changes which name is sent).** The instruction.
+- **No other model run in this session; no rerun because of a label difference.** The instruction ("No model run
+  except the verification in step 3").

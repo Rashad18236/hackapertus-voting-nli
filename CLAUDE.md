@@ -321,6 +321,17 @@ Rashad tags `submission` after merging); status `track_2a/docs/session_17_status
   `rashad/session-16` (`790a465`: Kaan's text plus session 16's sealed content; PDF 6 pages, body 9.5 pt), PR #25
   merged as `d1513a0`; publish-image on `main` green (run 109); `latest` pulls without a login: digest
   `sha256:f368637b98e9…`, revision `d1513a0`. Kaan's "Qualitative examples. TODO" (§6) is left for him.
+- **Step 1:** `src/llm.py` `_model_name_refused` (HTTP 403, or 400/422 whose body says model / not allowed /
+  unsupported / no available) runs fallback (b) (`_replace_model`: one /models read, `pick_model`, "model name
+  replaced" logged once) before (a); limits unchanged. Tests: 5 in `tests/test_llm_fallbacks.py` (`ModelRefused`), 2
+  CLI tests in `tests/test_contract.py`, `stub_llm.py` `model_error_message`; 364 tests pass. G1/G2 against the
+  session 15 reference identical.
+- **Steps 2–3:** image `session-17` (`sha256:fe4324697372…`, revision `898776f`); verification without `MODEL`
+  (`docs/runs/2026-10-15_rashad_model-fallback_examples-dev40`): examples 2 + dev A 20 + dev B 20, HTTP 403 then
+  "model name replaced" once per container, 0 Python labels, the 40 dev labels equal the session 15 final run; with
+  `MODEL` set no replacement.
+- **Step 4:** README note, report §6/§8 (PDF 6 pages), submission message, organiser question 5 "mitigated". Report
+  `track_2a/docs/session_17_report.md`.
 
 ## Previous stage: session 16 (final; 2026-10-15 11:31 UTC to 13:24 UTC, merged as PR #25)
 
