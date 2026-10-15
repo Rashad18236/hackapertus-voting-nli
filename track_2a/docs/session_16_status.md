@@ -39,6 +39,8 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (12:23) Health check 4: FAIL (5 of 10 calls HTTP 400, the same error). Next check 12:33.
 
+- (12:33) Health check 5: PASS (10 of 10 calls answered, no refused response_format). The one rerun of the sealed run started at once: task A, then task B, into `docs/runs/2026-10-15_rashad_sealed-once/`.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
