@@ -56,10 +56,12 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
   sealed run's; `docs/submission_message.md` (the MODEL sentence replaced); `docs/organiser_questions.md` question 5
   "Mitigated". PDF 6 pages; numbers check 396 numbers, 0 MISSING.
 
-- (20:08) Step 5: `docs/session_17_report.md`; CLAUDE.md steps 1–4; build_docs --check passes; pytest 364 passed, 1
+- (20:07) Step 5: `docs/session_17_report.md`; CLAUDE.md steps 1–4; build_docs --check passes; pytest 364 passed, 1
   skipped (pypdf 6.17.0); self_checks 17 PASS; no key value in any staged file.
 
 ## Closed
 
-All steps done. Waiting only for the workflows on the final commit; the PR description holds the after-merge steps
-for Rashad (latest digest, `submission` tag, package visibility, form, keys).
+All steps done (20:10). Workflows green on `7e7d1bf` (publish, pull-and-run, tests, image; the `session-17` tag now
+points at that build, whose `src/` equals the verified `898776f`). PR #26 draft, mergeable, not merged, no tag. The PR
+description holds the after-merge steps for Rashad (latest digest, `submission` tag, package visibility, form, keys).
+Open item for the team: Kaan's "Qualitative examples. TODO" in the report's §6.
