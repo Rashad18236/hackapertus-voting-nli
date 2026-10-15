@@ -16,3 +16,7 @@ blockquote { margin: 2pt 10pt; font-style: italic; }
 .compact table { font-size: 8.5pt; margin: 2pt 0; }
 .compact th, .compact td { padding: 0.5pt 3pt; }
 .compact p { font-size: 9.5pt; }
+/* Figures (architecture diagram): fit the text width. */
+figure { margin: 4pt 0; }
+img { max-width: 100%; height: auto; }
+figcaption { display: none; }
