@@ -1,0 +1,33 @@
+{
+ "task": "A",
+ "run": "docs/runs/2026-10-15_rashad_sealed-once/task-A",
+ "prompt": "ERR-type-v1",
+ "summary": {
+  "errors": 2,
+  "by_error": {
+   "reading": 2
+  },
+  "by_gold_given": {
+   "2->1": 1,
+   "2->0": 1
+  }
+ },
+ "rows": [
+  {
+   "id": "v1.1-row-1303-A",
+   "gold": 2,
+   "given": 1,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": true
+  },
+  {
+   "id": "v1.1-row-1222-A",
+   "gold": 2,
+   "given": 0,
+   "error": "reading",
+   "prepared": "route:summary",
+   "same_language": false
+  }
+ ]
+}
