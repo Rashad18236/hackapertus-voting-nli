@@ -309,11 +309,23 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 16 (final; 2026-10-15 11:31 UTC to 20:00 UTC)
+## Current stage: session 17 (2026-10-15 19:42 UTC to 22:30 UTC): the model-name fallback on HTTP 403, then freeze
 
-Branch `rashad/session-16` from `main` at `71a6d6a` (PR #24 merged first; draft PR, never merged by Claude, no tag:
-Rashad tags `submission` after merging); status `track_2a/docs/session_16_status.md`, decisions
-`docs/decisions/2026-10-15-1131_rashad_session-16.md`, report `track_2a/docs/session_16_report.md`. The last session:
+Branch `rashad/session-17` from `main` at `d1513a0` (PR #25 merged first; draft PR, never merged by Claude, no tag:
+Rashad tags `submission` after merging); status `track_2a/docs/session_17_status.md`, decisions
+`docs/decisions/2026-10-15-1942_rashad_session-17.md`, report `track_2a/docs/session_17_report.md`. One change:
+`src/llm.py`'s model-name fallback (b) also fires on HTTP 403 and on HTTP 400/422 whose body names the model, before
+(a); everything else unchanged. Only verification model run: examples and 20 + 20 dev cases without `MODEL`.
+
+- **Step 0:** `main` had moved (Kaan's `5095048`, plain-language report rewrite with diagram and charts); merged into
+  `rashad/session-16` (`790a465`: Kaan's text plus session 16's sealed content; PDF 6 pages, body 9.5 pt), PR #25
+  merged as `d1513a0`; publish-image on `main` green (run 109); `latest` pulls without a login: digest
+  `sha256:f368637b98e9…`, revision `d1513a0`. Kaan's "Qualitative examples. TODO" (§6) is left for him.
+
+## Previous stage: session 16 (final; 2026-10-15 11:31 UTC to 13:24 UTC, merged as PR #25)
+
+Branch `rashad/session-16` from `main` at `71a6d6a` (PR #25, merged into `main` on 2026-10-15 as `d1513a0`, no tag);
+status `track_2a/docs/session_16_status.md`, decisions `docs/decisions/2026-10-15-1131_rashad_session-16.md`, report `track_2a/docs/session_16_report.md`. The last session:
 no code in `src/`, no default, prompt or threshold changes. The sealed test dates are run once through the submission
 image; nothing is changed after their numbers are read. Names: project "Abstimmungsbüchlein Check", team "Bissegger &
 Bayraktar" (Rashad Bissegger, Kaan Bayraktar).
@@ -334,7 +346,7 @@ Bayraktar" (Rashad Bissegger, Kaan Bayraktar).
   `scripts/report_numbers_check.py` (2 MISSING = citation ids). **Step 3:** 357 tests pass (1 skipped), build_docs,
   self_checks, check_format clean. Report `track_2a/docs/session_16_report.md`.
 
-## Previous stage: session 15b (2026-10-15 10:30 UTC to 11:20 UTC, report only, merged as PR #24)
+## Earlier stage: session 15b (2026-10-15 10:30 UTC to 11:20 UTC, report only, merged as PR #24)
 
 Branch `rashad/session-15b` from `main` at `61ce0eb` (PR #24, merged into `main` on 2026-10-15 as `71a6d6a`, no tag); status
 `track_2a/docs/session_15b_status.md`, decisions `docs/decisions/2026-10-15-1030_rashad_session-15b.md`, report

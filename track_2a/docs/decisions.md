@@ -1477,3 +1477,31 @@ with its reason, written before the step it concerns.
   `scripts/build_report_pdf.sh`, never taken from either side.** The PDF is generated.
 - **The merge is checked like any change: pytest, `build_docs.py --check`, the numbers check, PDF pages; then PR #25's
   checks must be green before it is merged.** The instruction: "checks green".
+- **PR #25 checks green on the merge commit `790a465` (tests, image); marked ready; merged with a merge commit as
+  `d1513a0` (19:53), branch kept; `origin/main` contains `7bf5e25`. Branch `rashad/session-17` from `origin/main`;
+  the publish workflow gets `rashad/session-17` (tag `session-17`).** The instruction's step 0.
+
+## Step 1: the change (written before the code)
+
+- **`src/llm.py` only: a new check `_model_name_refused(response)` = HTTP 403, or HTTP 400 or 422 whose body contains
+  "model", "not allowed", "unsupported" or "no available" (case-insensitive). When it holds, fallback (b) runs first,
+  before (a): read BASE_URL/models once, pick the Apertus v1.5 8B id with `pick_model` (unchanged), and resend with it
+  if it differs from the name sent.** The instruction's rule, word for word.
+- **(a) and today's (b) stay where they are, after the new check: if (b) did not replace the name (no listed id, the
+  same id, or /models unreadable), a 400 or 422 to a request with `response_format` still drops it as today, and a
+  404 still reads /models as today (unless it was read already).** "If BASE_URL/models cannot be read or lists no
+  Apertus v1.5 8B id, behaviour is as today"; a refusal that names the model but is about `response_format` keeps
+  its fallback.
+- **The limits are today's: /models read at most once per run, the replacement kept for the rest of the run, at most
+  3 extra requests per run (the read and the resend count 2), and the replacement logged once, the message now
+  containing "model name replaced" and the id, never the key.** The instruction.
+- **The (b) code becomes one helper used by both places; the log text changes from "using <id>" to "model name
+  replaced by <id>"; nothing else in `src/` changes.** One code path is easier to test and explain.
+- **Tests: `tests/test_llm_fallbacks.py` (the fake model over HTTP) gets the instruction's four cases: 403 to the
+  default name and 200 to the listed id (no MODEL set); 400 "Unsupported model" first (the replacement keeps
+  `response_format`); 403 with no Apertus id listed (the call fails, /models read once); 200 at once (no /models
+  read, no log line). `tests/test_contract.py` gets the CLI's side: the 403 endpoint answered through the
+  replacement, and the 403 endpoint without an Apertus id giving the counted neutral fallback. `scripts/stub_llm.py`
+  gets `model_error_message` (the refusal's text) for them.** The instruction's list; the fake model is a test tool.
+- **G1/G2 against `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` after the change: must be
+  identical, because the fake model accepts every model name (the fallback never fires).** The instruction.

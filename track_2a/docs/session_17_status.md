@@ -26,6 +26,22 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (19:48) Checks of the merge: `build_docs.py --check` passes; pytest 357 passed, 1 skipped; numbers check of the
   merged report 395 numbers, 395 found, 0 MISSING; PDF 6 pages.
 
+- (19:53) PR #25 checks green on `790a465` (tests, image); marked ready, merged with a merge commit: `d1513a0`, branch
+  kept; `origin/main` contains `7bf5e25`. Branch `rashad/session-17` from `origin/main`; `publish-image.yml` gets
+  `rashad/session-17` (tag `session-17`).
+- (19:55) Step 1 decisions written; `src/llm.py` changed (`_model_name_refused`, `_replace_model`; (b) first on HTTP
+  403 or a 400/422 naming the model); `scripts/stub_llm.py` gets `model_error_message`; tests: 5 in
+  `tests/test_llm_fallbacks.py` (class `ModelRefused`; one existing test's expected order updated: a 400 that names the
+  model now gets (b) before (a)), 2 in `tests/test_contract.py`. pytest: 364 passed, 1 skipped.
+- (19:57) publish-image on `main` (run 109) green: `latest` and `sha-d1513a02e99b`; `latest` pulled with an empty
+  Docker configuration: digest `sha256:f368637b98e9369c377a185921bbba86bef2125db6bbd3335ac2da71222a3ea7`, revision
+  `d1513a0` (a new build of the same `src/` as the sealed run's `sha256:0c1a10cd…`). CLAUDE.md: session 17 current.
+
+- (19:59) G1/G2 (`scripts/prompt_snapshot.py run --replay` with the session 15 reference's replay table, then
+  `compare` against `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA`): G1_request_or_path_differs 0,
+  G2_label_differs 0, G2_evidence_differs 0 ("G1 pass | G2 pass"); val 580 cases, 592 model calls, all replayed. The
+  fake model accepts every model name, so the new fallback never fires there.
+
 ## Running
 
-- Step 0: checks of the merge, push, PR #25 checks, merge.
+- Step 2: commit, push, publish-image on the branch (tag `session-17`).
