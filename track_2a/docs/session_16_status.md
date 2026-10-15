@@ -37,6 +37,8 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (12:13) Health check 3: FAIL (5 of 10 calls HTTP 400, the same error). Next check 12:23.
 
+- (12:23) Health check 4: FAIL (5 of 10 calls HTTP 400, the same error). Next check 12:33.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
