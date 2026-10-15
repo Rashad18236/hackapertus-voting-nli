@@ -33,6 +33,8 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (11:53) Health check 1 (10 dev cases through the image): FAIL. 5 of 10 calls refused with the same HTTP 400 ("no available clients: alias-apertus"), the other 5 answered by blablador; task A's first 400 switched off response_format. The gateway still sends about half of the 8B's requests to a deployment without a client. Next check 12:03; the sealed rerun waits.
 
+- (12:03) Health check 2: FAIL (7 of 10 calls HTTP 400, the same error; 3 answered by blablador). Public AI's status page (read 11:55) lists `swiss-ai/apertus-v1.5-8b` as "Degraded". Next check 12:13.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
