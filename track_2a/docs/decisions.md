@@ -1338,3 +1338,55 @@ concerns; where the instruction was unclear, the reading taken.
 - **The technical report says in one sentence that no larger model was reachable (with the evidence: listed, but 9 of
   9 calls refused with HTTP 429 on 15 October), and in one sentence why the submission is the 8B.** Step 3.
 - **The README stays unchanged: it names only the default model (`swiss-ai/Apertus-v1.5-8B`), not a model list.** Step 3.
+
+# Session 16 (final): the sealed test dates once, the report's fields, the submission tag prepared
+
+Started 2026-10-15 11:31 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-16` from `main` at
+`71a6d6a` (PR #24 merged in step 0). The last session: no code in `src/`, no default, no prompt, no threshold
+changes. One line per decision with its reason, written before the step it concerns.
+
+## Step 1: the sealed dates
+
+- **The sealed dates are opened once, in this session, for one run through the submission image. No change follows
+  from the result.** The instruction, word for word, written before anything else about the sealed dates.
+- **The sealed cases are made as `data/probe/` was (`scripts/make_probe.py`'s method): only the lines of
+  `data/test/cases.jsonl` that name a sealed booklet are parsed; the task B lines and expected labels of exactly these
+  rows are picked by id text; they are copied to `data/sealed/` (cases.jsonl, expected-labels.jsonl; `data/test/`
+  unchanged). The new script `scripts/make_sealed.py` reuses `make_probe.py`'s functions with the three sealed
+  dates.** The instruction; `data/probe/` is the model.
+- **The sealed booklets (de, fr, it of 2020-02-09, 2022-02-13, 2022-05-15) are downloaded from the dataset's
+  `booklet_url` column into `/home/user/sealed_booklets`, outside the repository; no PDF or page text is committed.**
+  The instruction.
+- **The run: the submission image pinned by its digest (`ghcr.io/rashad18236/hackapertus-voting-nli@<IMAGE_DIGEST>`,
+  = `latest` after step 0), `make run` with the organisers' command, task A and task B in separate containers, the
+  real endpoint (Public AI, `swiss-ai/apertus-v1.5-8b` from `.env`), `LLM_MIN_INTERVAL=1`, containers pinned to CPUs
+  0–1, `--raw` kept, into `docs/runs/2026-10-15_rashad_sealed-once/{task-A,task-B}`. Task A first, then task B.**
+  The instruction.
+- **A task is run again (once, after 15 minutes) only if its run fails for a reason outside the code: the endpoint
+  down, HTTP 5xx on every call, or the container killed. "Fails" = a non-zero exit code, or more than half of the
+  task's calls failed (raw answers with `error`). Never because of a score; the score is not read before both tasks
+  have their final run.** The instruction; the threshold makes "every call" checkable.
+- **Scoring: the starter's `evaluate.py` against `data/sealed/expected-labels.jsonl`, which never enters a
+  container. Local time: `scripts/local_time.py` through the same image at 1.0 and 0.3 s per request, with a replay
+  table of the sealed run's own answers (`scripts/prompt_snapshot.py run --set sealed=data/sealed/cases.jsonl`, a new
+  option, then `table`), 2 CPUs pinned to CPUs 2–3, 4 GB; one measurement per delay and task. REF SCORE with
+  `scripts/official_score.py`.** The instruction; the same tools as the final runs.
+- **Reported pooled and per date (a task B case's date is its row's task A booklet date): Macro-F1 and per-label F1
+  per task, evidence (task A), tokens in and out per case, local time, REF SCORE, Python-written labels, failed
+  calls, backend identity, gateway cache hits (must be 0: these requests were never sent before), A6 second looks,
+  task A paths (routed per part / AP-part / AP-structure / bm25-ap with its translation calls), parser and router
+  coverage of the sealed booklets (`scripts/parser_coverage.py`: votes found, votes and parts valid, per language),
+  and the error list (id, gold, answer, path; ids and labels only).** The instruction's list. Per-date Macro-F1 on
+  few cases is reported as it is, with the case counts.
+- **After the numbers are read, nothing is changed; the status log records the sentence with its time.** The
+  instruction.
+
+## Step 0 and set-up
+
+- **The instruction is complete (it ends with "END OF SESSION 16 INSTRUCTION").** Its first check.
+- **PR #24 checked: open, draft, `mergeable_state` clean, head `d3a5fdd`, both checks green (tests, image; the publish
+  workflow does not build `session-15b`); marked ready for review and merged with a merge commit: MAIN_COMMIT =
+  `71a6d6a`, branch kept. `origin/main` contains `d3a5fdd`.** Step 0.
+- **dockerd was not running (the container had been restarted); stale pid files removed, started again.** Environment.
+- **`scripts/prompt_snapshot.py run` gets an option `--set NAME=CASES.jsonl` (repeatable) that replaces the dev and val
+  sets; nothing else changes in it.** Needed for the sealed replay table (step 1d); a development script, not `src/`.
