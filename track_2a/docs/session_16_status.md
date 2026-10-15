@@ -41,6 +41,9 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (12:33) Health check 5: PASS (10 of 10 calls answered, no refused response_format). The one rerun of the sealed run started at once: task A, then task B, into `docs/runs/2026-10-15_rashad_sealed-once/`.
 
+- (12:41) Sealed run done (task A 12:33:52–12:37:53, task B 12:37:53–12:41:12 UTC): both exit 0, 173 of 173 responses each, 0 failed calls, 0 unreadable answers; final by the rule (no rerun). Scored with the starter at 12:41:42: task A Macro-F1 0.9886, evidence 0.9746 (115 of 118); task B 0.9598.
+- **(12:42) The sealed numbers have been read. NOTHING is changed after reading them: no code, default, prompt, threshold, rule or run.**
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
