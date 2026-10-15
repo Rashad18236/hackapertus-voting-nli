@@ -321,7 +321,18 @@ Bayraktar" (Rashad Bissegger, Kaan Bayraktar).
 - **Step 0:** PR #24 merged into `main` as `71a6d6a` (MAIN_COMMIT); publish-image on `main` green (run 107: `latest`,
   `sha-71a6d6ad61f5`); `latest` pulls without a login: IMAGE_DIGEST `sha256:0c1a10cd92261cdfede7eb8c191a16eab3f94770f0a7386b45a06ebc06f088be`,
   revision `71a6d6a`. Merging session 16's documents into `main` rebuilds `latest` (same `src/`, new digest).
-- **Steps 1–3:** the sealed run once, the report's fields, the submission files. Running.
+- **Step 1, the sealed run, once** (`docs/runs/2026-10-15_rashad_sealed-once`): attempt 1 (11:37) stopped after 23 cases,
+  the gateway refusing most calls with HTTP 400 (no score read); the one rerun waited for a 10-case dev health check
+  (failed 11:53–12:23, passed 12:33) and ran 12:33–12:41 UTC: **task A 0.989 (evidence 0.975), task B 0.960; REF SCORE
+  0.898 / 0.893** (1.0 / 0.3 s); tokens A 1,276 + 19.2, B 845 + 9.8; local time A 0.025 / 0.035 s, B 0.011 / 0.013 s;
+  0 failed calls, 0 Python labels, one backend, 0 cache hits. Coverage 27 of 27 votes; 23 cases of one ballot placed by
+  AP-structure (the parser misread its title), 2 by AP-part; errors A 2 (reading), B 7 (2 another ballot). Nothing
+  changed after reading the numbers (status log, 12:42).
+- **Step 2:** technical report (header, §1 sealed table, §6 sealed paragraph, who did what; PDF 6 pages after §3 and
+  style were tightened), README (title, team, sealed line, MODEL note: Public AI refuses the default model name with
+  HTTP 403, `src/llm.py` unchanged), `examples/predictions.jsonl`, `docs/submission_message.md`,
+  `scripts/report_numbers_check.py` (2 MISSING = citation ids). **Step 3:** 357 tests pass (1 skipped), build_docs,
+  self_checks, check_format clean. Report `track_2a/docs/session_16_report.md`.
 
 ## Previous stage: session 15b (2026-10-15 10:30 UTC to 11:20 UTC, report only, merged as PR #24)
 

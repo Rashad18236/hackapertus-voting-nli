@@ -50,6 +50,9 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 
 - (13:20) Step 2: technical report: §1 sealed table (pooled and per date) with the sentence "Run once through the submission image after every default was frozen; nothing was changed afterwards."; the sealed column did not fit the final-defaults table within 6 pages, so the sealed table stands alone; §6 "Sealed test" paragraph; §3 prose shortened; report style: tables of §1 compact, code blocks 8.5 pt, line height 1.26 (no number or table removed). PDF 6 pages. `scripts/report_numbers_check.py`: 577 numbers, 575 found in run files or documents, 2 MISSING = the citations' arXiv id 2402.05672 and year 2009 (traced to the citations; unchanged). `docs/submission_message.md`: MODEL sentence and the sealed numbers.
 
-## Running
+- (13:35) Step 3: pytest 357 passed, 1 skipped (pypdf 6.17.0); build_docs --check passes; self_checks 17 PASS; check_format clean on the sealed predictions (173 + 173) and examples/predictions.jsonl; no key value in any committed file. Decisions for steps 1d–2 appended; `docs/session_16_report.md` written; CLAUDE.md updated.
 
-- Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.
+## Closed
+
+All steps done; the PR description holds the after-merge steps for Rashad (tag, publish check, package visibility, form,
+keys). Waiting only for the workflows on the final commit.
