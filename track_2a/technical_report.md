@@ -66,7 +66,7 @@ Per date, start-up falls on fewer cases (task A: 1.8–6.3 s to the first reques
 
 ## 2. Architecture
 
-![Architecture: cases are prepared locally and sent to Apertus one at a time](docs/report/architecture.png){width=65%}
+![Architecture: cases are prepared locally and sent to Apertus one at a time](docs/report/architecture.png){width=55%}
 
 *Figure 1. Blue: local work, no language model. Orange: a call to Apertus. Dashed arrows: taken only when the step
 before fails.*
@@ -148,7 +148,7 @@ every case, not only as a backup.
 | **the part the claim names (final)** | **0.977** | **0.990** | **1,259** |
 :::
 
-![Task A ablation: Macro-F1 and input tokens per case for each context](docs/report/ablation_task_a.png){width=70%}
+![Task A ablation: Macro-F1 and input tokens per case for each context](docs/report/ablation_task_a.png){width=62%}
 
 *Figure 2. What Apertus reads in task A (dev): Macro-F1 (left) and input tokens per case (right, log scale). Blue:
 the final system. Dashed: the minimum Macro-F1 for a valid submission (0.60).*
@@ -264,8 +264,16 @@ helped were right; the second look fixed 3 of 3. Errors: task A 2, both reading 
 passages about another ballot called a contradiction. The sealed run was made with MODEL set to Public AI's id; the
 fallback added afterwards (session 17) does not change any request the endpoint accepts.
 
-**Qualitative examples.** TODO: a few typical cases (one correct entailment, one contradiction, one neutral, one
-error) and one full worked example from claim to prompt to answer and evidence.
+**A worked example** (the task A request in `examples/cases.jsonl`, answered by the submission image). Claim, in
+German: *"Wird die Abstimmung angenommen, haben alle erwerbstätigen Väter Anspruch auf zwei Wochen Vaterschaftsurlaub
+…"*; booklet: the French booklet of 27 September 2020; vote: the paternity-leave counter-proposal. The claim's opening
+("Wird die Abstimmung angenommen …") maps to the detailed explanation; the parser finds that part of the vote on pages 58–60 and sends
+its 5 paragraphs (1,265 input tokens). Apertus answers `{"paragraphs": [3], "label": 0}` in 14 output tokens.
+Paragraph 3 (page 59) begins *"Si le projet est accepté, tous les pères actifs auront droit à un congé de paternité de
+deux semaines …"*; the evidence returns it, its two halves and the page, all with page 59. The gold label is
+entailment. Of the sealed run's two task A errors, one (row 1303) is a contradiction answered neutral without a
+citation, so the second look never fired; the other (row 1222) is a contradiction answered entailment from the right
+paragraph: both are reading errors of the kind described in section 4.
 
 ## 7. Limitations
 
