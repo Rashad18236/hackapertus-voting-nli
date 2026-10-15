@@ -1,0 +1,81 @@
+{
+ "run": "docs/runs/2026-10-14_rashad_B6_devB300",
+ "task": "B",
+ "expected": "output/devB/expected-labels.jsonl",
+ "today": "today",
+ "arms": {
+  "today": {
+   "cases": 300,
+   "macro_f1": 0.9867,
+   "f1": {
+    "entailment": 0.9854,
+    "neutral": 0.9949,
+    "contradiction": 0.9798
+   },
+   "input_tokens": 815.3,
+   "output_tokens": 8.6,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 1,
+    "same_language": 1,
+    "cross_language": 0
+   }
+  },
+  "today+B6": {
+   "cases": 300,
+   "macro_f1": 0.9696,
+   "f1": {
+    "entailment": 0.9854,
+    "neutral": 0.9706,
+    "contradiction": 0.9529
+   },
+   "input_tokens": 872.7,
+   "output_tokens": 12.0,
+   "unreadable": 0,
+   "failed_calls": 0,
+   "error_row": {
+    "name": "gold neutral answered contradiction",
+    "count": 0,
+    "same_language": 0,
+    "cross_language": 0
+   },
+   "fixes": 1,
+   "breaks": 6,
+   "sign_test_p": 0.9922,
+   "sign_test_p_two_sided": 0.125,
+   "fix_ids": [
+    "v1.1-row-688-B"
+   ],
+   "break_ids": [
+    "v1.1-row-1063-B",
+    "v1.1-row-1074-B",
+    "v1.1-row-1144-B",
+    "v1.1-row-1223-B",
+    "v1.1-row-1263-B",
+    "v1.1-row-1472-B"
+   ],
+   "second_look_b6": {
+    "calls": 99,
+    "per_100_cases": 33.0,
+    "unreadable": 0,
+    "failed": 0,
+    "changed": 7,
+    "fix_ids": [
+     "v1.1-row-688-B"
+    ],
+    "break_ids": [
+     "v1.1-row-1063-B",
+     "v1.1-row-1074-B",
+     "v1.1-row-1144-B",
+     "v1.1-row-1223-B",
+     "v1.1-row-1263-B",
+     "v1.1-row-1472-B"
+    ],
+    "changed_same_language": 2,
+    "changed_cross_language": 5
+   }
+  }
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "A": {
+  "cases": 580,
+  "roles": {
+   "label": {
+    "calls": 580,
+    "per_100_cases": 100.0,
+    "input_per_call": 1224.4,
+    "output_per_call": 14.6
+   },
+   "A6 second look": {
+    "calls": 10,
+    "per_100_cases": 1.72,
+    "input_per_call": 473.8,
+    "output_per_call": 8.0
+   },
+   "AP-translate": {
+    "calls": 2,
+    "per_100_cases": 0.34,
+    "input_per_call": 142.5,
+    "output_per_call": 52.5
+   }
+  }
+ },
+ "B": {
+  "cases": 580,
+  "roles": {
+   "label": {
+    "calls": 580,
+    "per_100_cases": 100.0,
+    "input_per_call": 819.5,
+    "output_per_call": 9.3
+   }
+  }
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "person": "rashad",
+ "date": "2026-10-14",
+ "kind": "model run",
+ "code": "7ae78ad (the published image ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd, built from it by the publish workflow; also tagged session-15 at the time)",
+ "paired_with": null,
+ "highlight": false,
+ "model": "swiss-ai/apertus-v1.5-8b",
+ "endpoint": "Public AI (calls by backend: blablador vllm-0.23.1rc1 306; 0 gateway cache hits)",
+ "notes": "../NOTES.md",
+ "format": "official, the published image pulled from ghcr.io, via make run (container pinned to CPUs 0-1), task A and task B in separate containers (session 15 step 5, stability run 2 of 3)",
+ "start_utc": "16:10",
+ "cases": "dev, all 300 task A cases",
+ "variant": "section-route",
+ "setup": "session 15 final defaults: session 14's (section-route, A-v4-section-route-L1 + json_schema, AP-part after the rules, AP-structure asked after the parser, fallback bm25-ap, model S ranks long parts, evidence with halves and the page hedge H, memory guard, two lanes) plus A6 on (one second look after a neutral answer that cites paragraphs, A-v6-second-look); LLM_MIN_INTERVAL=1",
+ "task": "A",
+ "results": {
+  "macro_f1": 0.977,
+  "f1": {
+   "entailment": 0.971,
+   "neutral": 0.995,
+   "contradiction": 0.964
+  },
+  "evidence": {
+   "score": 0.99,
+   "found": 199,
+   "cases": 201
+  },
+  "parse_failures": 0,
+  "failed_calls": 0,
+  "mean_input_tokens": 1259,
+  "mean_output_tokens": 14.9,
+  "mean_time_ms": 2358,
+  "p95_time_ms": 5485
+ }
+}

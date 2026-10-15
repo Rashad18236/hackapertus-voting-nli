@@ -43,7 +43,7 @@ Requirements: `runtime, hardware, API keys, model weights`
   memory limit and one below it, and peaks at about 0.2–0.4 GB; task B uses two from 2.5 GiB on and one below it,
   peaks at about 1.2–1.6 GB (e5) and needs 1.5 GiB for e5. Below that a memory guard runs without e5 (a long task B
   reference is then sent whole), so both tasks answer every case down to at least 512 MiB, with 2 CPUs or 1
-  (`docs/runs/2026-10-14_rashad_memory-grid-final-s14_grid24`). Local time per case in `technical_report.md`.
+  (`docs/runs/2026-10-14_rashad_memory-grid-final-s15_grid24`). Local time per case in `technical_report.md`.
 - **API keys:** the model is called through `BASE_URL` with `API_KEY` (an OpenAI-compatible endpoint serving
   Apertus v1.5; the model name comes from `MODEL`, default `swiss-ai/Apertus-v1.5-8B`). Export them, or put
   them in a local `.env` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_NAME`; see `.env.example`). No key is in the
@@ -54,7 +54,8 @@ Requirements: `runtime, hardware, API keys, model weights`
   the 8 paragraphs of a long booklet part that are most similar to the claim (task A; the default since session 13,
   `--ranker e5` for the earlier model). `intfloat/multilingual-e5-small` (MIT) picks, for a task B reference over
   3,000 characters, the 4 paragraphs sent with its first line.
-  Apertus makes every entailment decision, names the part of the booklet a claim refers to when our rules do not know
+  Apertus makes every entailment decision (in task A it takes one second look at the cited paragraphs and their
+  neighbours when its first answer is neutral but cites paragraphs), names the part of the booklet a claim refers to when our rules do not know
   the claim's opening, and translates a claim into the booklet's language when the case falls back to keyword search
   (BM25) across languages. No translation model is in the image.
 

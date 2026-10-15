@@ -249,7 +249,8 @@ scripts/        dataset profile, splits, self-checks, format check, offline re-p
                 endpoint), static_equivalence.py (model S against sentence-transformers, development machine only),
                 taskb_long_errors.py (task B errors on long references); session 13: arm_table.py (PAIRED RULE
                 numbers per arm), taskb_b3_picks.py, evidence_pages.py (three page rules, hedge H), error_types.py (routing or
-                reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role)
+                reading errors; Apertus's offline labels), apertus_roles.py (calls and tokens per Apertus role); session 15:
+                a6b_rule.py (A6b RULE), stability.py (repeat runs: labels that changed, bootstrap intervals, backends)
 models/         local copies of the embedding models (git-ignored; the image downloads e5 and model S at build time)
 tests/          unit tests (evaluate, parser, CLI, context variants, generated docs)
 ```
@@ -305,9 +306,46 @@ those; new files go inside `src/` and `docs/`.
   make build` rebuilds that version. The final submission gets the tag
   `submission`.
 
-## Current stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 16:00 UTC)
+## Current stage: session 15 (2026-10-14 13:13 UTC to 2026-10-15 03:00 UTC)
 
-Branch `rashad/session-14` from `main` at `3c60943` (PR #21 merged first; draft PR, never merged, no tag); status
+Branch `rashad/session-15` from `main` at `4f19500` (PR #22 merged first; draft PR, never merged, no tag); status
+`track_2a/docs/session_15_status.md`, decisions `docs/decisions/2026-10-14-1313_rashad_session-15.md`, report
+`track_2a/docs/session_15_report.md`. Experiments stop on 15 October at 02:00 UTC, everything pushed by 03:00 UTC.
+Rules as in session 14; PAIRED RULE for steps 2–4 (val +0.005, dev not below −0.004, sign test p ≤ 0.10 on dev+val,
+tokens within the step's limit, no more unreadable answers, local time ≤ +0.002 s at 1.0 and 0.3 s, task A on-topic
+flips at most 3); G1/G2 against `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA`.
+
+- **Step 0:** PR #22 merged into `main` as `4f19500`; publish-image on `main` green (`latest`, `sha-4f1950002ca0`;
+  `latest` pulls without a login, digest `sha256:e3e61af166c0…`).
+- **Step 1 (team decision): A6 is a default** (`second_look_a6 = True`; `--no-second-look-a6` switches it off). G1:
+  first requests identical, A6's second looks added in 15 dev/val cases; G2 unchanged with stub answers. Its known
+  weakness (on-topic passages answered "different") is in the technical report's Limitations.
+- **Step 2 (not adopted):** A6b (`--second-look-a6-prompt A-v6-second-look-b`): A6's second look with "related but
+  not settled". Same finding as A6 in all 19 second looks (dev 0.977, val 0.981, probe 0.990 for both); on-topic flips
+  3 and 3 (rows 85, 232, 1026): fails its rule (`docs/runs/2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46`).
+- **Step 3 (not adopted):** B1 retried with the format fixed (`--prompt-b v7-same-ballot-f`: at most 6 words,
+  `maxLength` 40, 64 tokens). Format check readable; dev 0.892 against 0.987, 19 unreadable, +13.1 % input tokens:
+  fails (b), (d), (e) on dev, no val run (`docs/runs/2026-10-14_rashad_B1f_devB300`).
+- **Step 4 (not adopted):** B6 (`--second-look-b6`): after a task B answer 2, one request on the ballot (title, vote,
+  claim). Dev 0.970 against 0.987, +7.0 % input tokens, 1 fix / 6 breaks (claims that misstate their own ballot are
+  answered "not about the ballot"): fails (b), (d) on dev, no val run (`docs/runs/2026-10-14_rashad_B6_devB300`).
+- **No default changed beyond step 1:** no combination run; final defaults = S, H, two lanes, A6 on.
+- **Step 5: stability.** Three runs of all 600 dev cases through the final image, each 30 minutes after the previous
+  one ended (`docs/runs/2026-10-14_rashad_stability-s15-run{1,2,3}_dev600`, `scripts/stability.py`): **0 of 600 labels
+  ever changed** (A 0.9767 [0.958, 0.991], B 0.9867 [0.973, 0.997], 95 % bootstrap; one backend, 0 cache hits); 10 task
+  A answers cited other paragraphs and 20 task B answers differed in trailing text, labels equal.
+- **Final defaults through the published image** (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd`, tag
+  `session-15`; `docs/runs/2026-10-15_rashad_final-s15_*`, run on 14 October): dev task A 0.977 (evidence 0.990), task B
+  0.987; val 0.981 (0.988), 0.968; probe 0.990 (1.000), 0.977. Tokens per case (dev, input + output): A 1,259 + 14.9, B
+  815 + 9.0. Local time per case (dev, 1.0 / 0.3 / 0.1 s per request): A 0.020 / 0.027 / 0.062 s, B 0.012 / 0.021 /
+  0.172 s. REF SCORE dev 0.904 / 0.893, val 0.908 / 0.907, probe 0.901 / 0.902 (1.0 / 0.3 s). Python wrote 1 of 1,948
+  labels. Memory grid of the final image: every response at every limit (`..._memory-grid-final-s15_grid24`).
+- **New replay reference for G1/G2:** `docs/runs/2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA` (also
+  `scripts/local_time.py`'s default table).
+
+## Previous stage: session 14 (2026-10-14 08:32 UTC to 2026-10-14 12:26 UTC, merged as PR #22)
+
+Branch `rashad/session-14` from `main` at `3c60943` (PR #22, merged into `main` on 2026-10-14 as `4f19500`, no tag); status
 `track_2a/docs/session_14_status.md`, decisions `docs/decisions/2026-10-14-0832_rashad_session-14.md`, report
 `track_2a/docs/session_14_report.md`. Experiments stop at 15:00 UTC, everything pushed by 16:00 UTC; steps in the order
 given, what is not reached is written down as not done. Rules as in session 13; "today" = session 13's final defaults
@@ -336,7 +374,7 @@ given, what is not reached is written down as not done. Rules as in session 13; 
 - **New replay reference for G1/G2:** `docs/runs/2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA` (also
   `scripts/local_time.py`'s default table).
 
-## Previous stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
+## Earlier stage: session 13 (2026-10-13 19:56 UTC to 2026-10-14 02:23 UTC, merged as PR #21)
 
 Branch `rashad/session-13` from `main` at `c85a119` (PR #21, merged into `main` on 2026-10-14 as `3c60943`, no tag); status
 `track_2a/docs/session_13_status.md`, decisions `docs/decisions/2026-10-13-1956_rashad_session-13.md`, report

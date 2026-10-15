@@ -1,0 +1,170 @@
+{
+ "dev_d1.0": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9766767049140398,
+   "evidence": 0.9900497512437811,
+   "tokens_per_case": 1273.6266666666668,
+   "local_time_s": 0.0198,
+   "K": 0.4711,
+   "T": 1.0,
+   "S": 0.907,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.9866958971081788,
+   "evidence": null,
+   "tokens_per_case": 824.3066666666666,
+   "local_time_s": 0.0119,
+   "K": 0.9705,
+   "T": 0.4202,
+   "S": 0.8993,
+   "valid": true
+  },
+  "score": 0.9039,
+  "local_time": {
+   "A": {
+    "local_per_case_s": 0.0198,
+    "measurements": [
+     0.0199,
+     0.0196
+    ],
+    "peak_memory_mib": [
+     206,
+     205
+    ],
+    "replay_misses": [
+     0,
+     0
+    ]
+   },
+   "B": {
+    "local_per_case_s": 0.0119,
+    "measurements": [
+     0.0105,
+     0.0133
+    ],
+    "peak_memory_mib": [
+     1649,
+     1674
+    ],
+    "replay_misses": [
+     0,
+     0
+    ]
+   }
+  }
+ },
+ "dev_d0.3": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9766767049140398,
+   "evidence": 0.9900497512437811,
+   "tokens_per_case": 1273.6266666666668,
+   "local_time_s": 0.0267,
+   "K": 0.4711,
+   "T": 1.0,
+   "S": 0.907,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.9866958971081788,
+   "evidence": null,
+   "tokens_per_case": 824.3066666666666,
+   "local_time_s": 0.0212,
+   "K": 0.9705,
+   "T": 0.2358,
+   "S": 0.8716,
+   "valid": true
+  },
+  "score": 0.8928,
+  "local_time": {
+   "A": {
+    "local_per_case_s": 0.0267,
+    "measurements": [
+     0.0228,
+     0.0305
+    ],
+    "peak_memory_mib": [
+     363,
+     363
+    ],
+    "replay_misses": [
+     0,
+     0
+    ]
+   },
+   "B": {
+    "local_per_case_s": 0.0212,
+    "measurements": [
+     0.0195,
+     0.0228
+    ],
+    "peak_memory_mib": [
+     1650,
+     1649
+    ],
+    "replay_misses": [
+     0,
+     0
+    ]
+   }
+  }
+ },
+ "dev_d0.1": {
+  "A": {
+   "task": "A",
+   "macro_f1": 0.9766767049140398,
+   "evidence": 0.9900497512437811,
+   "tokens_per_case": 1273.6266666666668,
+   "local_time_s": 0.0616,
+   "K": 0.4711,
+   "T": 0.8117,
+   "S": 0.8788,
+   "valid": true
+  },
+  "B": {
+   "task": "B",
+   "macro_f1": 0.9866958971081788,
+   "evidence": null,
+   "tokens_per_case": 824.3066666666666,
+   "local_time_s": 0.172,
+   "K": 0.9705,
+   "T": 0.0291,
+   "S": 0.8406,
+   "valid": true
+  },
+  "score": 0.8635,
+  "local_time": {
+   "A": {
+    "local_per_case_s": 0.0616,
+    "measurements": [
+     0.0616
+    ],
+    "peak_memory_mib": [
+     206
+    ],
+    "replay_misses": [
+     0
+    ]
+   },
+   "B": {
+    "local_per_case_s": 0.172,
+    "measurements": [
+     0.172
+    ],
+    "peak_memory_mib": [
+     1164
+    ],
+    "replay_misses": [
+     0
+    ]
+   }
+  }
+ },
+ "mean_over_delays_1.0_0.3": {
+  "score": 0.8983
+ }
+}

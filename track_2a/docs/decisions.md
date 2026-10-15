@@ -1151,3 +1151,95 @@ taken.
 - **REF SCORE dev 0.900 / 0.898 at 1.0 / 0.3 s per request, from the mean of two local-time measurements each; reported with the control (session 13's image, task B, same window: 0.0157 / 0.0425 s) that shows the lower value comes from the machine's state, not the change.** The decision of 11:52.
 - **New replay reference `2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA` (dev from the final dev600 run, val task A from session 13's final val run): reproduces both exactly (0 of 1,180 differ); `scripts/local_time.py`'s default table points to it.** The instruction's FINISH.
 - **The technical report's role table is unchanged apart from the final dev run's tokens (A6 not adopted: no new role); A6's negative-results row carries this run's numbers.** The instruction: the tables are updated for A6's outcome either way.
+
+# Session 15: A6 as a default, A6b, task B's ballot errors (B1 retry, B6), stability of the final defaults
+
+Started 2026-10-14 13:13 UTC by Claude Code for Rashad, unattended, on branch `rashad/session-15` from `main` at
+`4f19500` (PR #22 merged in step 0). Experiments stop on Thursday 15 October at 02:00 UTC; everything pushed by 03:00
+UTC. One line per decision with its reason, written before the run it concerns; where the instruction was unclear, the
+reading taken.
+
+## Step 0 and set-up
+
+- **The instruction is complete (it ends with "END OF SESSION 15 INSTRUCTION").** Its first check.
+- **PR #22 checked: open, draft, `mergeable_state` clean, head `ec7a6c1`, all four checks green; marked ready for review (the first attempt failed on a connection reset, so GitHub refused the merge of a draft; the second succeeded), then merged with a merge commit (`4f19500`), expected head `ec7a6c1`, branch kept.** Step 0.
+- **publish-image on `main` (run 92, `4f19500`) succeeded: tags `latest` and `sha-4f1950002ca0`; `latest` pulls without a login (an empty Docker configuration): digest `sha256:e3e61af166c0…`, the same image as `sha-4f1950002ca0`, revision label `4f19500` = `main`. `origin/main` contains `ec7a6c1`.** Step 0.
+- **dockerd was not running (the container had been restarted); started again at 13:13 before any Docker use.** Environment.
+- **The publish workflow also builds from `rashad/session-15` and tags `session-15`.** The instruction.
+- **The replay reference for G1/G2 is `2026-10-14_rashad_prompt-snapshot-final-s14_devAB-valA`.** The newest reference.
+- **This sandbox has no `gh` CLI; the GitHub steps use the session's GitHub tools.** Environment.
+
+## Step 1: A6 becomes a default (team decision, no new run)
+
+- **The team's decision, in its words: "A6 failed its on-topic condition twice by one case (2 of 46 in session 13, 3 of 46 in session 14) and passed every other condition in both runs (val +0.014 and +0.012, probe +0.010, 19 fixes against 2 breaks on 1,254 real cases). The team adopts it on the strength of val and probe and records the on-topic result as its known weakness: a passage on the claim's subject that does not settle the claim can be answered 'different'."** The instruction.
+- **The counts behind that sentence, from the run files: session 13 dev 1 fix / 0 breaks (300 cases) and val 9 / 1 (580); session 14 val 8 / 1 (580) and probe 1 / 0 (94). 19 fixes against 2 breaks are over 1,554 real cases (with session 13's dev run); over the 1,254 val and probe cases they are 18 against 2.** Recorded next to the team's words so that the report's numbers match the runs.
+- **`second_look_a6 = True` is the default (`src/cli.py` `Settings`); `--no-second-look-a6` switches it off. Five tests that assumed A6 off now say so explicitly (they test SL, H or the defaults).** The instruction.
+- **G1/G2 against the session 14 reference (stub answers): every first request and path identical in all 1,180 cases; the only differences are A6's added second-look requests in 15 cases, the ones whose replayed first answer is neutral with a citation: dev rows 629, 844, 1016, 1052, 1161; val rows 950, 991, 1053, 1151, 1210, 1226, 1309, 1318, 1404, 1467. G2: 0 labels and 0 evidence differ, because the fake model answers a second look with no finding (unreadable), so A6 keeps the first answer; A6's real effect on labels is measured in the model runs below.** The instruction: G1 identical, G2 different only where A6 fires.
+- **From here "today" = S, H, two lanes, A6 on.** The instruction.
+- **Technical report: A6 gets a row in the role table (calls per 100 cases and tokens per call, from session 14's run until the final runs replace them), its negative-results row is removed, and the on-topic weakness goes into Limitations with the team's sentence.** The instruction.
+
+## Step 2: A6b, set before its run
+
+- **A6b is `--second-look-a6-prompt A-v6-second-look-b` (setting `second_look_a6_prompt`): only the second look's system prompt changes, word for word as the instruction gives it ("FOR THE SAME THING" in capitals as written; the extra sentence "A text that does not state the claim's value is "nothing", never "different"." on its own line before the answer block); excerpt, schema (enum same / different / nothing), mapping, budget and the first request are A6's.** "One prompt variant of the second-look request only, everything else as A6."
+- **One interleaved run, arms `today` (`{"name": "today"}`: A6) and `A6b` (`{"name": "A6b", "second_look_a6_prompt": "A-v6-second-look-b"}`), on all 300 dev, 580 val and 94 probe task A cases and the 46 on-topic cases (1,020 cases, one file `output/s15_step2/cases.jsonl`, not committed; booklets `output/data_s14/`; `--exclude-paragraphs data/ontopic_neutral/exclusions.json` for the on-topic ones), arms alternating which goes first, 1 request per second, CPUs 0–1.** The instruction; session 14's set-up.
+- **Fixes and breaks of an arm are counted against its first answers (the label before the second look, shared by both arms): a fix = the first answer wrong and the final label right, a break = the first answer right and the final label wrong.** "Its fixes … A6's": A6's fixes and breaks in this run are the changes its second looks make; with the first answers shared, the same count for A6b compares the two prompts on the same cases.
+- **A6b RULE as written, with these readings:** (1) on val + probe (674 cases) A6b's fixes ≥ A6's fixes − 1 and A6b's breaks ≤ A6's breaks; (2) on-topic flips (an on-topic case whose first answer is neutral and whose final label is not) of A6b < A6's, in this run; (3) mean input tokens per case over dev + val + probe (974 cases, every call) of A6b ≤ A6's × 1.005. Dev is reported, not judged.
+- **If A6b passes, `second_look_a6_prompt = "A-v6-second-look-b"` becomes the default (its own commit, pytest, G1/G2).** Adoption order: A6 → A6b.
+
+## Step 3: B1 retried with the format fixed, set before its runs
+
+- **The retry is a new version, `v7-same-ballot-f` (a name never changes meaning): B1's prompt with "at most 6 words" for both ballot fields (instead of 8), both fields `maxLength` 40 (instead of 80), budget 64 tokens (instead of 160); everything else is B1's text and schema.** The instruction: "Fix only the format".
+- **Format check: the first 10 dev task B cases, arms `today` and `B1f`, real calls; B1f is void if any of its answers is unreadable (a `parse_reason` in the raw answer); then step 3 stops and step 4 follows.** The instruction.
+- **Dev run: all 300 dev task B cases, arms `today` (`{"name": "today"}`) and `B1f` (`{"name": "B1f", "prompt_b": "v7-same-ballot-f"}`), interleaved, 1 request per second, CPUs 0–1.** The instruction.
+- **"Val if B1 is not worse than today on dev" = the conditions that can be judged on dev hold there: (b) dev Macro-F1 not below today's by more than 0.004, (d) mean input tokens per case at most +6 %, (e) no more unreadable answers. Then all 580 val task B cases (`output/valB/cases.jsonl`), the same two arms.** Val confirms; an arm that already fails on dev cannot be adopted.
+- **PAIRED RULE as written, with (d) +6 % (judged on dev and on val), (c) fixes against breaks over dev + val (one-sided exact sign test; the two-sided p reported too), (e) unreadable answers over both runs, (g) not applicable (task B), (f) only for an arm that passes (a)–(e): `scripts/local_time.py` through the image built from this branch (every version is a flag there), all 300 dev task B cases, 2 CPUs, 4 GB, CPUs 2–3, today and the arm alternating, three rounds at 1.0 and 0.3 s per request, medians; the arm fails (f) if its median is above today's by more than 0.002 s at either delay.** Session 13's protocol for (f).
+- **Report: the row "gold neutral answered contradiction" split by same / cross language (`scripts/arm_table.py --cases`), and the share of `claim_ballot` values written in the reference's language, judged by hand on 30 B1f answers drawn at random (seed 15) from the dev run.** The instruction.
+
+## Step 4: B6, set before its runs
+
+- **B6 (`--second-look-b6`, setting `second_look_b6`, version `B6-same-ballot-v1`): when task B's first answer is readable and 2, one more request: a single user message "TITLE: <the reference's first line>\nVOTE: <the case's vote field>\nCLAIM: <the claim>\n\n" followed by the instruction's question word for word ("Is the claim about the ballot named in the title? Answer in JSON: {"same_ballot": true|false}."), no system message, schema `{"same_ballot": boolean}` (strict), budget 16 tokens. false → label 1; true → the first answer stands; unreadable or failed → the first answer stands. Never a third call, never in task A; both calls count in the case's metrics.** The instruction; the mapping is of a boolean Apertus chose, Python only decides when to ask (the first label was 2), like A6.
+- **Dev run: all 300 dev task B cases, arms `today` and `today+B6` (`{"name": "today+B6", "second_look_b6": true}`), interleaved; val (580) if B6 is not worse on dev, read as in step 3 with (d) +5 %. PAIRED RULE as in step 3 with (d) +5 %.** The instruction.
+- **Report: fires per 100 cases, changed answers, fixes, breaks, and the row "gold neutral answered contradiction" split same / cross language.** The instruction.
+- **If B1f and B6 both pass, the one with the higher val Macro-F1 is adopted, never both.** The instruction's adoption order.
+
+## Step 2 verdict (after the run)
+
+- **A6b is not adopted: (2) fails (3 on-topic flips against A6's 3, the same rows 85, 232, 1026); (1) and (3) hold (9 fixes / 1 break each on val + probe; +0.05 % input tokens).** `docs/runs/2026-10-14_rashad_A6b_devA300-valA580-probeA94-ontopic46` (`a6b_rule.json`): both prompts gave the same finding in all 19 second looks, so every label of the two arms is equal (dev 0.9767, val 0.9812, probe 0.9903). A6's prompt stays.
+- **Both arms share every first answer (1,020 of 1,020, the gateway's cache); no second look was a cache hit (A6b's requests carry its longer prompt, 40 more input tokens).** Recorded: the two arms differ exactly by the second look's prompt.
+
+## Step 3 verdict (after the runs)
+
+- **The format check (10 dev cases) passed: all 10 B1f answers readable; the arm is not void, the dev run follows.** `docs/runs/2026-10-14_rashad_format-check-B1f_devB10`.
+- **B1f fails on dev, so there is no val run and B1f is not adopted: (b) 0.892 against 0.987 (−0.094), (d) +13.1 % input tokens (922.3 against 815.3), (e) 19 unreadable answers against 0; fixes / breaks 2 / 30.** `docs/runs/2026-10-14_rashad_B1f_devB300`: the cap did not stop the endpoint from ending answers inside a string with whitespace or NUL runs (19 of 300), and `same_ballot` is mostly a copy of the passage's title (true with `claim_ballot` = `passage_ballot` in 17 of the 20 new "gold neutral answered contradiction" errors). B1f stays in the code as `--prompt-b v7-same-ballot-f`.
+- **(f) is not measured for B1f.** It is measured only for an arm that passes (a)–(e) (step 3's plan).
+
+## Step 5: stability, set before its runs
+
+- **Three runs of all 600 dev cases (`data/dev/cases.jsonl`; task A and task B in separate containers, as the organisers run them) through the image published from the branch commit that holds the defaults decided in steps 2–4 (`ghcr.io/rashad18236/hackapertus-voting-nli:sha-<commit>`), with the organisers' command (`make run`), the real endpoint, 1 request per second, CPUs 0–1; no other model run at the same time.** "Through the current defaults": the image is what the organisers run.
+- **"At least 30 minutes apart" = each run starts at least 30 minutes after the previous one ended, and the first starts at least 30 minutes after any earlier run that sent dev requests.** The gateway answers a request identical to one of the last ~10 minutes from its cache; with 30 minutes no answer of a run can be a copy of the previous run's (cache hits are counted per run).
+- **Reported per run and task: Macro-F1 (the starter's `evaluate.py`), its 95 % bootstrap interval (`scripts/analysis_offline.py`'s method: 2,000 resamples of the cases, seed 42), the backend identity of every call (system fingerprint and the gateway's API base); over the runs: the cases whose label ever changed and the largest Macro-F1 difference.** `scripts/stability.py`; the instruction's list.
+- **The third run is skipped if it could not end before 02:00 UTC with time left for the final runs; then it is written down as not done.** The instruction.
+
+## Step 4 verdict (after the run)
+
+- **B6 fails on dev, so there is no val run and B6 is not adopted: (b) 0.970 against 0.987 (−0.017), (d) +7.0 % input tokens (872.7 against 815.3; at most +5 %); (e) holds (0 unreadable); fixes / breaks 1 / 6.** `docs/runs/2026-10-14_rashad_B6_devB300`: 99 second looks (33 per 100 cases), 7 changed answers (2 same-language, 5 cross-language); the one fix is dev's only targeted error (row 688), the 6 breaks are gold contradictions whose claim misstates the reference's own ballot, which Apertus calls "not about the ballot". B6 stays in the code as `--second-look-b6` (off); (f) not measured.
+
+## Adoption after steps 2–4
+
+- **No default changed beyond step 1 (A6b, B1f and B6 all fail), so there is no combination run; the final defaults are step 1's: model S, hedge H, two lanes, A6 on, task B as in session 14.** The instruction: the combination runs only "if any default changed beyond step 1".
+- **The code of the final defaults is `src/` as of `766f359` (steps 3–4's code, both off); later commits change only scripts and documents. The stability runs and the final runs use the image the workflow publishes for the branch commit that holds step 4's records.** The image the organisers would pull.
+
+## Step 5 and the final runs: the order of the model runs, set before them
+
+- **Image for both: `ghcr.io/rashad18236/hackapertus-voting-nli:sha-7ae78ad87cfd` (published by run of `7ae78ad`, at the time also the `session-15` tag, digest `sha256:a89c507afff1…`).** The final defaults' code; later commits change no file of the image's `src/`.
+- **One queue, one model run at a time: stability run 1 (not before 15:23:15, 30 minutes after the B6 run's dev requests) → final val1160 → stability run 2 (at least 30 minutes after run 1 ended) → final probe188 → stability run 3 (at least 30 minutes after run 2 ended) → final dev600 (at least 30 minutes after run 3 ended).** The gaps between stability runs hold the final val and probe runs (other requests, so no cache overlap with dev); the final dev600 run keeps the same 30-minute distance from the last stability run.
+- **Folder names: the stability runs `2026-10-14_rashad_stability-s15-run{1,2,3}_dev600`; the final runs `2026-10-15_rashad_final-s15_{dev600,val1160,probe188}` and the replay reference `2026-10-15_rashad_prompt-snapshot-final-s15_devAB-valA`, as the instruction names them, though they run on 14 October (each `run.json` has the real date).** The instruction's names.
+- **The final dev600 run is reported with the stability runs as a fourth repeat (same image, same cases), not as one of the three.** Step 5 asks for three runs; the fourth costs nothing extra.
+
+## Step 5 verdict and FINISH (after the runs)
+
+- **Step 5: 0 of 600 labels changed over the three stability runs (and the final dev600 run); task A 0.9767 [0.958, 0.991], task B 0.9867 [0.973, 0.997] each time; one backend, 0 cache hits.** `docs/runs/2026-10-14_rashad_stability-s15-run3_dev600/stability.json`. The third run was not skipped (the clock allowed it).
+- **The final runs are those of the queue (dev600, val1160, probe188 through `sha-7ae78ad87cfd`); no second final image was needed because no default changed after step 1.** The image the stability runs used is the final one.
+- **Local time: dev at 1.0 and 0.3 s measured twice and averaged (single measurements vary by up to ±0.03 s), at 0.1 s once; val and probe once at 1.0 and 0.3 s; all with the new reference's table, CPUs 2–3, after the last model call.** Sessions 13 and 14's protocol.
+- **A6's role-table row in the technical report uses the final dev run (1.7 second looks per 100 task A cases, 454 + 8 tokens per call), like the label row.** The table's header names the final dev run.
+- **The technical report PDF stays at 6 pages: section 6's tables use the compact style of section 4, the older local-time rows (session 13's window) and the replaced fallback rows went into one sentence, duplicated negative-results rows (AP-all, vote-/booklet-wide) were dropped (they remain in the ablation table and section 6), and the licence moved into section 8.** The instruction: PDF at most 6 pages.
