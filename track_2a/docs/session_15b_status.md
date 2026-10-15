@@ -30,6 +30,12 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (10:50) Step 0: publish-image on `main` (run 106) succeeded: `latest` and `sha-61ce0ebb9f2c`; `latest` pulls
   without a login: digest `sha256:5cb605460fe5…`, the same image as `sha-61ce0ebb9f2c`, revision label `61ce0eb`.
 
-## Running
+- (11:02) Probe 2: HTTP 429 after 27.2 s.
+- (11:17) Probe 3: HTTP 429 after 26.0 s. **The 70B is not reachable (9 of 9 calls refused over 41 minutes); step 2
+  not run; nothing adopted.**
+- (11:18) Step 3: technical report (one sentence under the ablation table, a Limitations bullet on the 8B; PDF 6
+  pages); README unchanged; `docs/session_15b_report.md`.
 
-- Probes 2 and 3 of the 70B (11:02, 11:17).
+## Closed
+
+The 70B could not be measured; the submission stays the 8B. The final session was not started.

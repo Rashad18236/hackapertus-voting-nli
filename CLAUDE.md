@@ -317,9 +317,12 @@ adopted. Sealed dates stay sealed. The session started at 10:30 UTC, after the i
 
 - **Step 0:** PR #23 merged into `main` as `61ce0eb`; publish-image on `main` green (run 106: `latest`,
   `sha-61ce0ebb9f2c`); `latest` pulls without a login (digest `sha256:5cb605460fe5…`, revision `61ce0eb`).
-- **Step 1:** Public AI lists `swiss-ai/apertus-v1.5-70b` (MODEL_70B). Smoke test: every 70B call answered HTTP 429
-  (`docs/runs/2026-10-15_rashad_70B-smoke_devA3-devB3`); probes 15 minutes apart. Running.
-- **Steps 2–3:** the interleaved 70B-vs-8B run (if the 70B answers) and the report. Not started.
+- **Step 1: the 70B is listed but not reachable.** Public AI lists `swiss-ai/apertus-v1.5-70b` (MODEL_70B), but it
+  refused every call: the smoke test's 6 calls and 3 probes 15 minutes apart, 9 of 9 calls over 41 minutes (21 HTTP
+  requests, all HTTP 429; `docs/runs/2026-10-15_rashad_70B-smoke_devA3-devB3`). The 8B answered all 6 smoke cases.
+- **Step 2 not run** (the 70B answered nothing); **nothing adopted.**
+- **Step 3:** technical report: one sentence under the ablation table (no larger model reachable) and a Limitations
+  bullet on why the submission is the 8B; PDF 6 pages; README unchanged.
 - `scripts/paired_run.py` has an arm field `model` (sets `MODEL` for that arm's cases; `src/llm.py`'s fallbacks kept per
   arm) and `--call-log` (one line per model call: latency, tokens, answering model, cache hit).
 

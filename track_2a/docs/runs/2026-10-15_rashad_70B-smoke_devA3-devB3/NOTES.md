@@ -12,4 +12,6 @@ label). The 8B arm answered all 6 in 1.3–1.7 s per call; every 8B response bod
 (`8B/calls.jsonl`), so the arm switch sends what it should.
 
 **Probes** (`probes.jsonl`, `probe.py` in the scratchpad: one minimal request to `swiss-ai/apertus-v1.5-70b`, 8 tokens,
-one attempt): see the lines there; the decisions file says what follows from them.
+one attempt) at 10:47, 11:02 and 11:17 UTC: HTTP 429 after 27.0, 27.2 and 26.0 s. With the smoke test, 9 of 9 calls
+(21 HTTP requests) refused over 41 minutes: the 70B was not reachable, and the interleaved run of step 2 did not run
+(decisions file).
