@@ -1,0 +1,45 @@
+INFO Worker processes: 2
+[0;93m2026-10-15 13:02:06.546271869 [W:onnxruntime:Default, telemetry.cc:800 operator()] Failed to persist telemetry device ID; using an in-memory identifier[m
+INFO [3/41] v1.1-row-41-B -> entailment
+INFO [8/41] v1.1-row-253-B -> entailment
+INFO [9/41] v1.1-row-275-B -> entailment
+INFO [29/41] v1.1-row-1264-B -> contradiction
+INFO [31/41] v1.1-row-1303-B -> contradiction
+INFO [40/41] v1.1-row-1449-B -> contradiction
+INFO [1/41] v1.1-row-23-B -> entailment
+INFO [10/41] v1.1-row-279-B -> entailment
+INFO [28/41] v1.1-row-1229-B -> contradiction
+INFO [30/41] v1.1-row-1284-B -> contradiction
+INFO [32/41] v1.1-row-1330-B -> contradiction
+INFO [33/41] v1.1-row-1331-B -> contradiction
+INFO [35/41] v1.1-row-1344-B -> contradiction
+INFO [41/41] v1.1-row-1470-B -> contradiction
+INFO [2/41] v1.1-row-33-B -> entailment
+INFO [4/41] v1.1-row-123-B -> entailment
+INFO [5/41] v1.1-row-149-B -> entailment
+INFO [6/41] v1.1-row-151-B -> entailment
+INFO [7/41] v1.1-row-156-B -> entailment
+INFO [11/41] v1.1-row-282-B -> entailment
+INFO [12/41] v1.1-row-349-B -> contradiction
+INFO [13/41] v1.1-row-386-B -> entailment
+INFO [14/41] v1.1-row-562-B -> neutral
+INFO [15/41] v1.1-row-575-B -> neutral
+INFO [16/41] v1.1-row-702-B -> neutral
+INFO [17/41] v1.1-row-811-B -> neutral
+INFO [18/41] v1.1-row-818-B -> neutral
+INFO [19/41] v1.1-row-832-B -> neutral
+INFO [20/41] v1.1-row-846-B -> neutral
+INFO [21/41] v1.1-row-913-B -> neutral
+INFO [22/41] v1.1-row-922-B -> neutral
+INFO [23/41] v1.1-row-929-B -> neutral
+INFO [24/41] v1.1-row-1012-B -> contradiction
+INFO [25/41] v1.1-row-1054-B -> contradiction
+INFO [26/41] v1.1-row-1061-B -> contradiction
+INFO [27/41] v1.1-row-1091-B -> contradiction
+INFO [34/41] v1.1-row-1336-B -> contradiction
+INFO [36/41] v1.1-row-1345-B -> contradiction
+INFO [37/41] v1.1-row-1367-B -> contradiction
+INFO [38/41] v1.1-row-1419-B -> contradiction
+INFO [39/41] v1.1-row-1434-B -> contradiction
+INFO Wrote 41 responses to /output/predictions.jsonl
+INFO No failures.

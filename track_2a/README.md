@@ -94,7 +94,9 @@ docker run --rm --read-only --tmpfs /tmp -e BASE_URL -e API_KEY \
   ghcr.io/rashad18236/hackapertus-voting-nli:latest --input /data/cases.jsonl --output /output/predictions.jsonl
 ```
 
-`BASE_URL` and `API_KEY` are taken from the shell (export them first); `MODEL` may be passed the same way.
+`BASE_URL` and `API_KEY` are taken from the shell (export them first); `MODEL` may be passed the same way. Without `MODEL` the model name is `swiss-ai/Apertus-v1.5-8B`; Public AI refuses that name (HTTP 403, every case
+then gets the neutral fallback), so with Public AI as `BASE_URL` add `-e MODEL` with `MODEL=swiss-ai/apertus-v1.5-8b`
+(tested on 15 October 2026).
 `/output` must be writable for the container's user.
 
 **Not political advice.** The system only checks whether a claim agrees with the text of an official voting

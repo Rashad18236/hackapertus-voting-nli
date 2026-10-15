@@ -44,6 +44,10 @@ One line per event, UTC. If the session is restarted with "continue", work goes 
 - (12:41) Sealed run done (task A 12:33:52–12:37:53, task B 12:37:53–12:41:12 UTC): both exit 0, 173 of 173 responses each, 0 failed calls, 0 unreadable answers; final by the rule (no rerun). Scored with the starter at 12:41:42: task A Macro-F1 0.9886, evidence 0.9746 (115 of 118); task B 0.9598.
 - **(12:42) The sealed numbers have been read. NOTHING is changed after reading them: no code, default, prompt, threshold, rule or run.**
 
+- (12:45–13:02) Step 1d, no model calls: replay table of the sealed run's own answers (two passes; reproduces 345 of 346 labels, every evidence: row 1077-A's second look is a chain of three calls); local time through the same image at 1.0 and 0.3 s per request, pooled and per date (CPUs 2–3, 4 GB): pooled task A 0.0253 / 0.0349 s, task B 0.0108 / 0.0130 s per case; REF SCORE pooled 0.898 / 0.893. `sealed_report.json`, `error_types_A.json` (task A errors: 2 reading, 0 routing), run.json and NOTES written.
+- (13:03) `examples/predictions.jsonl`: the submission image (by digest) on `examples/cases.jsonl` through `make run`, real endpoint, fresh answers (no cache hit): 2 lines, both entailment, check_format clean.
+- (13:05) README command tested as written: `docker pull` and `docker run` of `latest` (= IMAGE_DIGEST) exit 0 with one line per id. In this sandbox the container needs the proxy flags; with them, every call is refused with HTTP 403 because the default model name `swiss-ai/Apertus-v1.5-8B` is not one Public AI's key may use (`src/llm.py`'s model-name fallback handles 404 and 400, not 403). With `-e MODEL` (`swiss-ai/apertus-v1.5-8b`) both cases are answered. Command unchanged; one note added under it. No code changed (the session's rule); reported for Rashad.
+
 ## Running
 
 - Health checks of the endpoint (every 10 minutes from 11:53), then the one rerun of the sealed run.

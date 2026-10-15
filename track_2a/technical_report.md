@@ -249,6 +249,15 @@ Through the final image [FIN]: task A **0.990**, evidence **1.000** (65 of 65), 
 **0.901 / 0.902**. Session 13's image (A6 off): 0.981, 0.985, 0.977. 90 of 94 task A cases are routed; the 4 others are claims
 about a committee in votes that have none, answered by the BM25 fallback.
 
+**Sealed test** [SEALED] (three dates, 173 rows, run once; section 1). Coverage: the 9 booklets parse completely, 27 of
+27 votes with every part valid (9 per language), the languages of each date agree. The rules named the part of 171 of
+173 task A claims, Apertus (AP-part) the other 2; the parser placed the vote of 150 cases, Apertus reading the contents
+(AP-structure, 3 calls) the other 23: one ballot whose title the parser misread in all three languages (the coverage
+check compares parts and pages, not titles). No case fell back; the 25 cases Apertus placed were all answered
+correctly; A6 looked again 3 times and fixed 3. Errors by class: task A 2, both reading (the gold passage was in the
+part sent; 0 routing); task B 7: 2 unrelated passages called contradictions (another ballot), 5 other reading errors.
+0 failed calls, 0 labels written by Python, one backend, 0 gateway cache hits.
+
 ## 7. Limitations
 
 - **Tuned on dev.** Prompts, router patterns and parser checks were written with dev in view; val confirms; the

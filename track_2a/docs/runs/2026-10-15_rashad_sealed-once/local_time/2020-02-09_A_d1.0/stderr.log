@@ -1,0 +1,45 @@
+INFO Worker processes: 2
+INFO [1/42] v1.1-row-53-A -> entailment
+INFO [2/42] v1.1-row-74-A -> entailment
+INFO [5/42] v1.1-row-178-A -> entailment
+INFO [7/42] v1.1-row-195-A -> entailment
+INFO [3/42] v1.1-row-111-A -> entailment
+INFO [9/42] v1.1-row-251-A -> entailment
+INFO [4/42] v1.1-row-124-A -> entailment
+INFO [11/42] v1.1-row-374-A -> entailment
+INFO [10/42] v1.1-row-276-A -> entailment
+INFO [13/42] v1.1-row-417-A -> entailment
+INFO [14/42] v1.1-row-428-A -> entailment
+INFO [16/42] v1.1-row-512-A -> neutral
+INFO [17/42] v1.1-row-520-A -> neutral
+INFO [23/42] v1.1-row-735-A -> neutral
+INFO [19/42] v1.1-row-524-A -> neutral
+INFO [25/42] v1.1-row-790-A -> neutral
+INFO [29/42] v1.1-row-905-A -> neutral
+INFO [20/42] v1.1-row-551-A -> neutral
+INFO [22/42] v1.1-row-715-A -> neutral
+INFO [31/42] v1.1-row-972-A -> neutral
+INFO [26/42] v1.1-row-858-A -> neutral
+INFO [35/42] v1.1-row-1180-A -> contradiction
+INFO [27/42] v1.1-row-860-A -> neutral
+INFO [36/42] v1.1-row-1182-A -> contradiction
+INFO [30/42] v1.1-row-916-A -> neutral
+INFO [38/42] v1.1-row-1202-A -> contradiction
+INFO [33/42] v1.1-row-1105-A -> contradiction
+INFO [37/42] v1.1-row-1185-A -> contradiction
+INFO [39/42] v1.1-row-1222-A -> entailment
+INFO [41/42] v1.1-row-1398-A -> contradiction
+INFO [6/42] v1.1-row-184-A -> entailment
+INFO [8/42] v1.1-row-201-A -> entailment
+INFO [12/42] v1.1-row-376-A -> entailment
+INFO [15/42] v1.1-row-494-A -> entailment
+INFO [18/42] v1.1-row-523-A -> neutral
+INFO [21/42] v1.1-row-704-A -> neutral
+INFO [24/42] v1.1-row-771-A -> neutral
+INFO [28/42] v1.1-row-866-A -> neutral
+INFO [32/42] v1.1-row-1095-A -> contradiction
+INFO [34/42] v1.1-row-1121-A -> contradiction
+INFO [40/42] v1.1-row-1311-A -> contradiction
+INFO [42/42] v1.1-row-1487-A -> contradiction
+INFO Wrote 42 responses to /output/predictions.jsonl
+INFO No failures.

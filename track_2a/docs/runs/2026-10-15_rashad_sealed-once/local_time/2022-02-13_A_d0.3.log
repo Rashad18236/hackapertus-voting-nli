@@ -1,0 +1,3 @@
+/tmp/claude-0/-home-user-hackapertus-voting-nli/b37c5c3d-3d22-5372-8403-2cf8846d98e2/scratchpad/s16/sets/2022-02-13_A.jsonl: 90 cases, 97 requests, exit 0, 90 responses, replay misses 1
+  wall 33.497 s, in flight 29.189 s, local 4.307 s = 0.0479 s per case
+  to first request 3.013 s, gaps 1.15 s (median 0.0041 s, p95 0.0448 s, max 0.057 s), tail 0.145 s
